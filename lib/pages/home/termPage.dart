@@ -40,7 +40,7 @@ class WebViewExampleState extends State<termPage> {
       url: murl,
       appBar: new AppBar(
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text("Term of Service",style: TextStyle(fontSize: 20, color: Colors.white),),
+        title: new Text("Terms of Service",style: TextStyle(fontSize: 20, color: Colors.white),),
         leading:  IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white,),
           onPressed: () {

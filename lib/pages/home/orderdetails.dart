@@ -418,22 +418,22 @@ class _OrderDetailsState extends State<OrderDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 50,),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  getOrders();
-                                },
-                                  //padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  child: Icon(Icons.refresh,color: Colors.white,),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Container(
+                        //   width: MediaQuery.of(context).size.width,
+                        //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: Row(
+                        //     crossAxisAlignment: CrossAxisAlignment.end,
+                        //     children: [
+                        //       GestureDetector(
+                        //         onTap: (){
+                        //           getOrders();
+                        //         },
+                        //           //padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //           child: Icon(Icons.refresh,color: Colors.white,),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                         Container(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                             child: Text(outletDesciption, style: TextStyle(
@@ -484,10 +484,19 @@ class _OrderDetailsState extends State<OrderDetails> {
                               Text('Order on Hold',style: TextStyle(color: Colors.white, fontSize: 18),),
                               Spacer(),
                               Visibility(
-                                visible: sttn == '1' ? true:false,
+                                //visible: sttn == '1' ? true:false,
                                 child: GestureDetector(
-                                  onTap: (){
+                                  onTap: ()async{
 
+                                    Prefs.load();
+                                    String token = Prefs.getString('token');
+                                    String myt = "'{'newState': 'Canceled'}'";
+                                    Map<String, String> headers = {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'};
+                                    Map<String, String> body = {'newState': 'Canceled'};
+                                    String url = 'https://drinklink-prod-be.azurewebsites.net/api/Orders/' + id;
+
+                                    final response = await http.patch(url,headers: headers, body: myt);
+                                    print(response.body);
                                   },
                                   child: Container(
                                       width: 90,

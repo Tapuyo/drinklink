@@ -301,7 +301,7 @@ class _setPageState extends State<setPage> {
                     labelStyle: new TextStyle(
                         color: Colors.white
                     ),
-                    labelText: 'Billing to: Address, City, Country(separeted with: ,)',
+                    labelText: 'Billing to: Address, City, Country(separated with: ,)',
                   ),
 
 
@@ -437,7 +437,7 @@ class _setPageState extends State<setPage> {
         confirmDialog(title,message,linkpayment);
       }
     }catch(e){
-      _showDialog1('DinkLink', 'Please login first.');
+      _showDialog1('DrinkLink', 'Please login first.');
     }
 
   }

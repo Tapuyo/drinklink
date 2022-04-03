@@ -259,7 +259,7 @@ class _MoreDetailsState extends State<MoreDetails> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{

@@ -61,7 +61,7 @@ class _SignPageState extends State<SignIn> {
         title: "Sign in",
         content: Container(
           child: Center(
-            child: Text('Username or password incorrect.'),
+            child: Text('You have entered an invalid username or password'),
           ),
         ),
         buttons: [
@@ -137,7 +137,7 @@ class _SignPageState extends State<SignIn> {
 
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                  child: Text('Enter your credential and start using app', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
+                  child: Text('Enter your credentials and start using app.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
               ),
               SizedBox(height: 150,),
 
@@ -147,7 +147,7 @@ class _SignPageState extends State<SignIn> {
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   controller: emailController,
                   decoration: new InputDecoration(
-                      hintText: "User Name",
+                      hintText: "Email",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
                       labelStyle: new TextStyle(
                           color: const Color(0xFF424242)

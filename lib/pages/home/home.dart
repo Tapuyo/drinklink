@@ -345,7 +345,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
   Future<List<Store>> getStore() async{
-    String setext = seedit.text;
+    String setext = seedit.text.toLowerCase();
 
     List<Store> myList = [];
     Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
@@ -405,7 +405,8 @@ class _HomePageState extends State<HomePage> {
 
           myList.add(store);
         }else{
-          if(setext == u['name']){
+          String storename = u['name'].toString().toLowerCase();
+          if(storename.contains(setext)){
             print(u['name']);
             String id,name,address,description,delivery,pickup,area,city,image;
 
@@ -509,6 +510,11 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       InkWell(
                         onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => HomePage()),
@@ -546,6 +552,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => orderPage()),
@@ -578,6 +589,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => setPage()),
@@ -610,6 +626,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => termPage()),
@@ -642,6 +663,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       InkWell(
                         onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
                           //Navigator.of(context).popAndPushNamed('/home');
                           if(token == '' || token == null){
                             Navigator.pushReplacement(
@@ -813,7 +839,7 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{
@@ -915,7 +941,7 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{

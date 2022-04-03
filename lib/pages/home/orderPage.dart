@@ -47,7 +47,7 @@ class _setPageState extends State<orderPage> {
     var jsondata = json.decode(response.body);
 
 
-
+    print(json.decode(response.body));
     for (var i = 0; i < jsondata.length ; i++){
 
       var jsondata1 = await json.decode(response.body)[i]['items'];
@@ -73,6 +73,9 @@ class _setPageState extends State<orderPage> {
         dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() + ' days';
       }
       String bar = json.decode(response.body)[i]['tableId'].toString();
+      if(bar == null || bar == 'null'){
+        bar = '';
+      }
       String cState = json.decode(response.body)[i]['currentState'].toString();
       if(cState == '0'){
         stt = 'Order Created';
@@ -163,7 +166,7 @@ class _setPageState extends State<orderPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{

@@ -29,6 +29,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> {
+  int tipid = 0;
   String idCard = '0';
   String discountID = '';
   int lengtofsub = 0;
@@ -308,7 +309,7 @@ class _MenuPageState extends State<MenuPage> {
     String url = ApiCon.baseurl + '/places/' + id.toString();
     final response = await http.get(url,headers: headers);
     //print(response.body.toString());
-    Discount tb = Discount("","No Dicount", 0);
+    Discount tb = Discount("","No Discount", 0);
 
     mydicount.add(tb);
     var jsondata = json.decode(response.body)['discounts'];
@@ -395,6 +396,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+
       home: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
@@ -435,195 +437,241 @@ class _MenuPageState extends State<MenuPage> {
                 //   )
                 // ],
               ),
-            // endDrawer: Drawer(
-            //
-            //   child: Container(
-            //       padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-            //       color: Colors.black,
-            //       child: Column(
-            //         children: [
-            //           InkWell(
-            //             onTap: (){
-            //
-            //             },
-            //             child: Container(
-            //               height: 50,
-            //               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   SizedBox(
-            //                     width: 10,
-            //                   ),
-            //                   Icon(Icons.home,size: 30, color: Colors.white,),
-            //                   SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   GestureDetector(
-            //                     onTap: (){
-            //
-            //                     },
-            //                     child: Text(
-            //                       "Home",
-            //                       style: TextStyle(
-            //                         color: Colors.white,
-            //                         fontSize: 20,
-            //                         fontWeight: FontWeight.w500,
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //           InkWell(
-            //             onTap: (){
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(builder: (context) => orderPage()),
-            //               );
-            //             },
-            //             child: Container(
-            //               height: 50,
-            //               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   SizedBox(
-            //                     width: 10,
-            //                   ),
-            //                   Icon(Icons.wine_bar_sharp,size: 30, color: Colors.white,),
-            //                   SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   Text(
-            //                     "My Orders",
-            //                     style: TextStyle(
-            //                       color: Colors.white,
-            //                       fontSize: 20,
-            //                       fontWeight: FontWeight.w500,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //           InkWell(
-            //             onTap: (){
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(builder: (context) => setPage()),
-            //               );
-            //             },
-            //             child: Container(
-            //               height: 50,
-            //               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   SizedBox(
-            //                     width: 10,
-            //                   ),
-            //                   Icon(Icons.settings,size: 30, color: Colors.white,),
-            //                   SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   Text(
-            //                     "Settings v1.0.122",
-            //                     style: TextStyle(
-            //                       color: Colors.white,
-            //                       fontSize: 20,
-            //                       fontWeight: FontWeight.w500,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //           InkWell(
-            //             onTap: (){
-            //               Navigator.push(
-            //                 context,
-            //                 MaterialPageRoute(builder: (context) => termPage()),
-            //               );
-            //             },
-            //             child: Container(
-            //               height: 50,
-            //               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   SizedBox(
-            //                     width: 10,
-            //                   ),
-            //                   Icon(FontAwesome.angle_double_up,size: 30, color: Colors.white,),
-            //                   SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   Text(
-            //                     "Terms of Service",
-            //                     style: TextStyle(
-            //                       color: Colors.white,
-            //                       fontSize: 20,
-            //                       fontWeight: FontWeight.w500,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //           InkWell(
-            //             onTap: (){
-            //               //Navigator.of(context).popAndPushNamed('/home');
-            //               if(token == ''){
-            //                 Navigator.push(
-            //                   context,
-            //                   MaterialPageRoute(builder: (context) => SignIn()),
-            //                 );
-            //               }else{
-            //                 setState(() {
-            //                   setState(() {
-            //                     Prefs.load();
-            //                     Prefs.setString('token', '');
-            //                     Prefs.setString('bfName', '');
-            //                     Prefs.setString('blMame', '');
-            //                     Prefs.setString('billName', '');
-            //                     Prefs.setString('billAdd', '');
-            //                     Prefs.setString('billEmail', '');
-            //                   });
-            //                 });
-            //               }
-            //
-            //             },
-            //             child: Container(
-            //               height: 50,
-            //               padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-            //               child: Row(
-            //                 mainAxisAlignment: MainAxisAlignment.start,
-            //                 children: <Widget>[
-            //                   SizedBox(
-            //                     width: 10,
-            //                   ),
-            //                   Icon(MaterialCommunityIcons.human,size: 30, color: Colors.white,),
-            //                   SizedBox(
-            //                     width: 20,
-            //                   ),
-            //                   Text(token == '' ?
-            //                   "Sign In / Register":"Sign Out",
-            //                     style: TextStyle(
-            //                       color: Colors.white,
-            //                       fontSize: 20,
-            //                       fontWeight: FontWeight.w500,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ),
-            //         ],
-            //       )
-            //   ),
-            // ),
+              endDrawer: Drawer(
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                  color: Colors.black,
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.home,size: 30, color: Colors.white,),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                onTap: (){
+
+                                },
+                                child: Text(
+                                  "Home",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => orderPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.wine_bar_sharp,size: 30, color: Colors.white,),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "My Orders",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => setPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(Icons.settings,size: 30, color: Colors.white,),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Settings v1.0.122",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => termPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(FontAwesome.angle_double_up,size: 30, color: Colors.white,),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Terms of Service",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          //Navigator.of(context).popAndPushNamed('/home');
+                          if(token == '' || token == null){
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignIn()),
+                            );
+                          }else{
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => HomePage()),
+                            );
+                            setState(() {
+                              setState(() {
+                                Prefs.load();
+                                Prefs.setString('token', '');
+                                Prefs.setString('bfName', '');
+                                Prefs.setString('blMame', '');
+                                Prefs.setString('billName', '');
+                                Prefs.setString('billAdd', '');
+                                Prefs.setString('billEmail', '');
+                              });
+                            });
+                          }
+
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(MaterialCommunityIcons.human,size: 30, color: Colors.white,),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(token == '' || token == null || token.isEmpty?
+                              "Sign In / Register":"Sign Out",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Visibility(
+                      //           visible: orderList.length > 0 ? true:false,
+                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                      //       mybodyRec(),
+                      //       SizedBox(height: 20,)
+                      //     ],
+                      //   ),
+                      // )
+                    ],
+                  )
+              ),
+            ),
               backgroundColor: Colors.transparent,
               body: myorig(),
 
@@ -642,11 +690,11 @@ class _MenuPageState extends State<MenuPage> {
 
             Container(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(desc, style: TextStyle(
+                child: Text(desc != null ? desc:'', style: TextStyle(
                   color: Colors.deepOrange, fontSize: 16,),)),
             Container(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(title, style: TextStyle(color: Colors.white,
+                child: Text(title != null ? title:'', style: TextStyle(color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.bold),)),
             Container(
@@ -659,7 +707,7 @@ class _MenuPageState extends State<MenuPage> {
                     visible: isWorkingDay,
                     child: Container(
                         child: Text(
-                          wk, style: TextStyle(
+                          wk != null ? wk:'', style: TextStyle(
                             color: Colors.white),)
                     ),
                   ),
@@ -703,11 +751,11 @@ class _MenuPageState extends State<MenuPage> {
 
                   Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(desc, style: TextStyle(
+                      child: Text(desc != null ? desc:'', style: TextStyle(
                         color: Colors.deepOrange, fontSize: 16,),)),
                   Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(title, style: TextStyle(color: Colors.white,
+                      child: Text(title != null ? title:'', style: TextStyle(color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.bold),)),
                   Container(
@@ -719,7 +767,7 @@ class _MenuPageState extends State<MenuPage> {
                           visible: isWorkingDay,
                           child: Container(
                               child: Text(
-                                wk, style: TextStyle(
+                                wk != null ? wk:'', style: TextStyle(
                                   color: Colors.white),)
                           ),
                         ),
@@ -837,7 +885,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text(finaltot.toStringAsFixed(2), style: TextStyle(color: Colors.white,
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold),),
-                            Text('AED',
+                            Text(' AED',
                               style: TextStyle(color: Colors.white, fontSize: 25),),
                           ],
                         ),
@@ -912,18 +960,21 @@ class _MenuPageState extends State<MenuPage> {
                           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: GestureDetector(
                             onTap: () {
-                              setState((){
-                                Prefs.load();
-                                Prefs.setInt('Quant', myOrder.length);
-                                Prefs.setDouble('Price', finaltot);
-                                double percentagefee = (fee/100) * finaltot;
+                              if(myOrder.length > 0){
+                                setState((){
+                                  Prefs.load();
+                                  Prefs.setInt('Quant', myOrder.length);
+                                  Prefs.setDouble('Price', finaltot);
+                                  double percentagefee = (fee/100) * finaltot;
 
-                                finaltotwithdiscount = finaltot + percentagefee;
-                                print('Percentage fee:' + fee.toString() + ' - ' + percentagefee.toString() + ' - ' + finaltot.toString());
-                                subbodybool = 2;
-                                _pcb = false;
-                                _pc.close();
-                              });
+                                  finaltotwithdiscount = finaltot + percentagefee;
+                                  print('Percentage fee:' + fee.toString() + ' - ' + percentagefee.toString() + ' - ' + finaltot.toString());
+                                  subbodybool = 2;
+                                  _pcb = false;
+                                  _pc.close();
+                                });
+                              }
+
                             },
                             child: Container(
                                 width: MediaQuery
@@ -944,7 +995,7 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     Text('PROCEED TO PAYMENT', style: TextStyle(
                                         color: Colors.white, fontSize: 20),),
-                                    Text('(Time to collect order. ' + timecol.toString() + 'min)',
+                                    Text('(Time to collect order. ' + timecol.toStringAsFixed(0) + ' mins)',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 14),),
                                   ],
@@ -992,7 +1043,7 @@ class _MenuPageState extends State<MenuPage> {
                 padding: EdgeInsets.fromLTRB(5,5,5,5),
                 child: Row(
                   children: [
-                    Text(strings[i].name.toString(), style: TextStyle(color: Colors.white54),),
+                    Text(strings[i].name.toString() != null ? strings[i].name.toString():'', style: TextStyle(color: Colors.white54),),
                   ],
                 ),
               ):Container(),
@@ -1015,7 +1066,7 @@ class _MenuPageState extends State<MenuPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{
@@ -1042,17 +1093,17 @@ class _MenuPageState extends State<MenuPage> {
                                     children: [
                                       Container(
                                         width: MediaQuery.of(context).size.width / 2,
-                                        child: Text(snapshot.data[index].Name,style: GoogleFonts.lato(
+                                        child: Text(snapshot.data[index].Name != null ? snapshot.data[index].Name:'',style: GoogleFonts.lato(
                                           textStyle: TextStyle(color: Colors.deepOrange, letterSpacing: .5, fontSize: 18),
                                         ),),
                                       ),
                                       SizedBox(height: 5,),
                                       Row(
                                         children: [
-                                          Text(snapshot.data[index].Price,style: GoogleFonts.lato(
+                                          Text(snapshot.data[index].Price != null ? snapshot.data[index].Price:'',style: GoogleFonts.lato(
                                             textStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.white, letterSpacing: .5, fontSize: 14),
                                           ),),
-                                          Text('AED',style: GoogleFonts.lato(
+                                          Text(' AED',style: GoogleFonts.lato(
                                             textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 14),
                                           ),),
                                         ],
@@ -1347,7 +1398,7 @@ class _MenuPageState extends State<MenuPage> {
               if (!snapshot.hasData) {
                 return Container(
                   child: Center(
-                    child: Text('Empty'),
+                    child: CircularProgressIndicator(),
                   ),
                 );
               }else{
@@ -1425,7 +1476,7 @@ class _MenuPageState extends State<MenuPage> {
                             //height: 60,
                             width: MediaQuery.of(context).size.width / 1.8,
                             padding: EdgeInsets.fromLTRB(0,5,0,5),
-                            child: Text(name,style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
+                            child: Text(name != null ? name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
                         ),
                       ],
                     )
@@ -1443,7 +1494,7 @@ class _MenuPageState extends State<MenuPage> {
                       if (!snapshot.hasData) {
                         return Container(
                           child: Center(
-                            child: Text('Empty'),
+                            child: CircularProgressIndicator(),
                           ),
                         );
                       }else{
@@ -1491,7 +1542,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 //height: 60,
                                                 width: MediaQuery.of(context).size.width / 1.8,
                                                 padding: EdgeInsets.fromLTRB(0,5,0,5),
-                                                child: Text(snapshot.data[index].name,style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
+                                                child: Text(snapshot.data[index].name != null ? snapshot.data[index].name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
                                             ),
                                           ],
                                         ),
@@ -1566,7 +1617,7 @@ class _MenuPageState extends State<MenuPage> {
                           height: 60,
                           width: MediaQuery.of(context).size.width / 1.8,
                           padding: EdgeInsets.fromLTRB(0,5,0,5),
-                          child: Text(name,style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
+                          child: Text(name != null ? name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
                       ),
                     ],
                   ),
@@ -1781,7 +1832,8 @@ class _MenuPageState extends State<MenuPage> {
                                                             .withOpacity(.5),),
                                                       SizedBox(width: 10,),
                                                       Text(strings[i].mx[index]
-                                                          .name.toString(),
+                                                          .name.toString() != null ? strings[i].mx[index]
+                                                          .name.toString():'',
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 12),),
@@ -1822,7 +1874,7 @@ class _MenuPageState extends State<MenuPage> {
                     children: [
                       Icon(Icons.add_circle_outline, color: Colors.white54,),
                       SizedBox(width: 5,),
-                      Text(strings[i].name.toString(),
+                      Text(strings[i].name.toString() != null ? strings[i].name.toString():'',
                         style: TextStyle(color: Colors.white54),),
 
                     ],
@@ -1850,7 +1902,7 @@ class _MenuPageState extends State<MenuPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{
@@ -1879,35 +1931,77 @@ class _MenuPageState extends State<MenuPage> {
                                     children: [
                                       Container(
                                         width: MediaQuery.of(context).size.width / 2,
-                                        child: Text(snapshot.data[index].name,style: GoogleFonts.lato(
+                                        child: Text(snapshot.data[index].name != null ? snapshot.data[index].name:'',style: GoogleFonts.lato(
                                           textStyle: TextStyle(color: Colors.deepOrange, letterSpacing: .5, fontSize: 18),
                                         ),),
                                       ),
                                       SizedBox(height: 5,),
                                       Container(
                                           width: MediaQuery.of(context).size.width / 2,
-                                          child: Text(snapshot.data[index].desciption
+                                          child: Text(snapshot.data[index].desciption != 'null' ? snapshot.data[index].desciption:''
                                             ,style: GoogleFonts.lato(
                                               textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 12),
                                             ),)
                                       ),
                                       SizedBox(height: 5,),
-                                      Row(
-                                        children: [
-                                          Text(snapshot.data[index].price,style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                          ),),
-                                          Text('AED',style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                          ),),
-                                        ],
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Text(snapshot.data[index].price != 'null' ? snapshot.data[index].price:'',style: GoogleFonts.lato(
+                                              textStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.white, letterSpacing: .5, fontSize: 14),
+                                            ),),
+                                            Text(' AED',style: GoogleFonts.lato(
+                                              textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 14),
+                                            ),),
+                                          ],
+                                        ),
                                       ),
+                                      Container(
+                                          padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
+                                        child:snapshot.data[index].allowIce ? Row(
+                                          children: [
+                                            Visibility(
+                                                visible: snapshot.data[index].allowIce,
+                                                child: GestureDetector(
+                                                  onTap: (){
+                                                  setState(() {
+                                                    if(snapshot.data[index].addIce == false){
+                                                      snapshot.data[index].addIce = true;
+                                                    }else{
+                                                      snapshot.data[index].addIce = false;
+                                                    }
+                                                  });
+                                                  },
+                                                  child: Container(
+                                                    padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(color: Colors.white),
+                                                      borderRadius: BorderRadius.circular(10),
+                                                      color: snapshot.data[index].addIce == false ? Colors.transparent:Colors.white.withOpacity(.2)
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Container(
+                                                            color: Colors.transparent,
+                                                            width: 30,
+                                                            height: 30,
+                                                            child: Image.asset('assets/images/ic_ice_cubes.png')
+                                                        ),Text(snapshot.data[index].addIce == false ?"Allow iced":"ice",style: TextStyle(color: Colors.white),)
+                                                      ],
+                                                    ),
+                                                  )
+                                                )
+                                            ),
+                                          ],
+                                        ):null
+                                      ),
+
+
+
                                       SizedBox(height: snapshot.data[index].imagePath.toString().isNotEmpty == true ? 10:0,),
-                                      Visibility(
-                                        visible: snapshot.data[index].imagePath.toString().isNotEmpty == true ? true:false,
-                                        child: GestureDetector(
+                                      Container(
+                                        child: snapshot.data[index].imagePath.toString().isNotEmpty == true ? GestureDetector(
                                           onTap: (){
-                                            print( 'Image Path: ' + snapshot.data[index].imagePath);
                                             Alert(
                                               context: context,
                                               title: "Image",
@@ -1932,7 +2026,7 @@ class _MenuPageState extends State<MenuPage> {
                                             ).show();
                                           },
                                           child: Icon(Icons.photo, color: Colors.white,),
-                                        ),
+                                        ):null,
                                       ),
 
 
@@ -1989,7 +2083,7 @@ class _MenuPageState extends State<MenuPage> {
                                           // }
                                         },
                                         child: Container(
-                                            height: 60,
+                                            height: 40,
                                             child: Center(
                                                 child: Text('-',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.deepOrange),)
                                             )
@@ -2078,32 +2172,26 @@ class _MenuPageState extends State<MenuPage> {
                               )
                           ),
                         ),
-                        Visibility(
-                          visible: snapshot.data[index].mixer == null ? false:true,
-                          child: Container(
-                            //visible: snapshot.data[index].mixer == null ? false:true,
-                            child: snapshot.data[index].mixer == null ? Container(
+                        Container(
+                          //visible: snapshot.data[index].mixer == null ? false:true,
+                          child: snapshot.data[index].mixer.isEmpty ? Container(
 
-                            ):Container(
-                                width: MediaQuery.of(context).size.width,
-                                child: Container(
-                                  height: snapshot.data[index].mixer == 0 ? 0:30,
-                                  child: ListView(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
-                                      scrollDirection: Axis.horizontal,
-                                      children: [
-                                        Container(
-                                           // color: Colors.green,
-                                            child: getTextWidgets(snapshot.data[index].mixer, index)),
-                                      ]
-                                  ),
-                                )),
-                          ),
+                          ):Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Container(
+                                height: snapshot.data[index].mixer.isEmpty ? 0:30,
+                                child: ListView(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      Container(
+                                        // color: Colors.green,
+                                          child: getTextWidgets(snapshot.data[index].mixer, index)),
+                                    ]
+                                ),
+                              )),
                         ),
-                        Visibility(
-                            visible: snapshot.data[index].mixer == null ? false:true,
-                            child: SizedBox(height: snapshot.data[index].mixer == null ? 0:10,)
-                        ),
+                        SizedBox(height: snapshot.data[index].mixer.isEmpty  ? 0:10,)
                       ],
                     );
                   }
@@ -2167,8 +2255,8 @@ class _MenuPageState extends State<MenuPage> {
              });
               mci ++;
             }
-
-            Drinks store = Drinks(jsondata[i]['id'].toString(),u['id'].toString(),u['name'].toString(),u['description'].toString(),u['price'].toString(),0,u['drinkCategoryId'].toString(),mix,'','',u['price'].toString(),[],u['imagePath']);
+//s['allowIce']
+            Drinks store = Drinks(jsondata[i]['id'].toString(),u['id'].toString(),u['name'].toString(),u['description'].toString(),u['price'].toString(),0,u['drinkCategoryId'].toString(),mix,'','',u['price'].toString(),[],u['imagePath'],u['allowIce'],false);
 
             setState(() {
               myDrinks.add(store);
@@ -2218,7 +2306,7 @@ class _MenuPageState extends State<MenuPage> {
 
                   Drinks store = Drinks(s['drinkCategoryId'].toString(),
                       s['id'].toString(), s['name'].toString(),
-                      s['description'].toString(), s['price'].toString(),0,s['drinkCategoryId'].toString(),mix,'','',s['price'].toString(),[],s['imagePath']);
+                      s['description'].toString(), s['price'].toString(),0,s['drinkCategoryId'].toString(),mix,'','',s['price'].toString(),[],s['imagePath'],s['allowIce'],false);
 
                  setState(() {
                    myDrinks.add(store);
@@ -2268,7 +2356,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                 double totdiscount = ((finaltot * double.parse(snapshot.data[index].discountpercentage.toString())) / 100);
 
-                                mdicount =  totdiscount.toStringAsFixed(2) + 'AED';
+                                mdicount =  totdiscount.toStringAsFixed(2) + ' AED';
                                 discount = double.parse(snapshot.data[index].discountpercentage.toString());
                                 if(discount > 0){
                                     double totwithdiscount = finaltot - totdiscount;
@@ -2466,7 +2554,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text("Order (" + myOrder.length.toString() + "item):", style: TextStyle(color: Colors.white, fontSize: 20),),
                             Spacer(),
                             Text(finaltot.toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text('AED', style: TextStyle(color: Colors.white, fontSize: 16),),
+                            Text(' AED', style: TextStyle(color: Colors.white, fontSize: 16),),
 
                           ],
                         )
@@ -2531,14 +2619,14 @@ class _MenuPageState extends State<MenuPage> {
                         showDialog(
                           context: context,
                           builder: (context) {
-                            int tipid = 0;
+
                             return StatefulBuilder(
                               builder: (context, mState) {
                                 return AlertDialog(
                                   title: Text("Tip"),
                                   content: Container(
 
-                                    height: 500.0,
+                                    height: 450.0,
                                     width: 300.0,
                                     padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                                     child: new Column(
@@ -2588,7 +2676,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 0? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 0? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("No tip", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2631,7 +2719,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     finaltotwithdiscount = chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ 'AED';
+                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 1;
@@ -2641,7 +2729,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 1? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 1? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("5%", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2683,7 +2771,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     finaltotwithdiscount = chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ 'AED';
+                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 2;
@@ -2693,7 +2781,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 2? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 2? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("10%", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2736,7 +2824,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     finaltotwithdiscount = chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ 'AED';
+                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 3;
@@ -2746,7 +2834,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 3? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 3? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("15%", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2789,7 +2877,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     finaltotwithdiscount = chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ 'AED';
+                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 4;
@@ -2799,7 +2887,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 4? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 4? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("20%", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2852,7 +2940,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 5? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 5? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("5 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2904,7 +2992,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 6? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 6? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("10 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -2957,7 +3045,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 7? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 7? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("15 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -3010,7 +3098,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Entypo.circle, color: tipid == 8? Colors.deepOrange:Colors.black.withOpacity(.5),),
+                                                    Icon(Icons.circle, color: tipid == 8? Colors.deepOrange:Colors.black.withOpacity(.5),),
                                                     SizedBox(width: 10,),
                                                     Text("20 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
 
@@ -3020,6 +3108,8 @@ class _MenuPageState extends State<MenuPage> {
                                               )
                                           ),
                                         ),
+                                        SizedBox(height: 20,),
+                                        Text('Full TIP amount goes to the staff!',style: TextStyle(fontSize: 12),textAlign: TextAlign.center, )
 
 
                                       ],
@@ -3132,25 +3222,25 @@ class _MenuPageState extends State<MenuPage> {
                                   width: MediaQuery.of(context).size.width / 2,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: vipcharge == false? Colors.white.withOpacity(.5): Colors.transparent,
+                                      color: vipcharge == true? Colors.white.withOpacity(.5): Colors.transparent,
                                       border: Border.all(
-                                        color: vipcharge == true? Colors.white: Colors.transparent, //                   <--- border color
+                                        color: vipcharge == false? Colors.white: Colors.transparent, //                   <--- border color
                                         width: 1.0,
                                       ),
                                     ),
 
                                     padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                    child: Center(child: Text('VIP Charge '+vip.toString() + 'AED', style: TextStyle(color: Colors.white, fontSize: 16),)),
+                                    child: Center(child: Text('VIP Charge '+vip.toString() + '0 AED', style: TextStyle(color: Colors.white, fontSize: 16),)),
                                 ),
                               ),
 
                               Spacer(),
                               Visibility(
                                   visible: vipcharge == true ? true:false,
-                                  child: Text(vip.toString(), style: TextStyle(color: Colors.white54, fontSize: 14),)),
+                                  child: Text(vip.toString() + '0', style: TextStyle(color: Colors.white54, fontSize: 14),)),
                               Visibility(
                                   visible: vipcharge == true ? true:false,
-                                  child: Text('AED', style: TextStyle(color: Colors.white54, fontSize: 12),)),
+                                  child: Text(' AED', style: TextStyle(color: Colors.white54, fontSize: 12),)),
                             ],
                           )
                       ),
@@ -3165,7 +3255,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text('Service charge:', style: TextStyle(color: Colors.white, fontSize: 14),),
                             Spacer(),
                             Text(((fee/100) * finaltot).toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
-                            Text('AED', style: TextStyle(color: Colors.white, fontSize: 14),),
+                            Text(' AED', style: TextStyle(color: Colors.white, fontSize: 14),),
                           ],
                         )
                     ),
@@ -3179,7 +3269,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text('TOTAL:', style: TextStyle(color: Colors.deepOrange, fontSize: 20),),
                             Spacer(),
                             Text(finaltotwithdiscount.toStringAsFixed(2), style: TextStyle(color: Colors.deepOrange, fontSize: 20, fontWeight: FontWeight.bold),),
-                            Text('AED', style: TextStyle(color: Colors.deepOrange, fontSize: 18),),
+                            Text(' AED', style: TextStyle(color: Colors.deepOrange, fontSize: 18),),
                           ],
                         )
                     ),
@@ -3495,7 +3585,7 @@ class _MenuPageState extends State<MenuPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: Text('Empty'),
+                  child: CircularProgressIndicator(),
                 ),
               );
             }else{
@@ -4233,8 +4323,11 @@ class Drinks{
   String origPrice;
   List<chossenMixer> ChMixer;
   String imagePath;
+  bool allowIce;
+  bool addIce;
 
-  Drinks(this.drinkid,this.id, this.name,this.desciption,this.price,this.Quant,this.drinkCategoryId, this.mixer,this.mid,this.mprice,this.origPrice,this.ChMixer,this.imagePath);
+
+  Drinks(this.drinkid,this.id, this.name,this.desciption,this.price,this.Quant,this.drinkCategoryId, this.mixer,this.mid,this.mprice,this.origPrice,this.ChMixer,this.imagePath,this.allowIce,this.addIce);
 }
 
 class chossenMixer{

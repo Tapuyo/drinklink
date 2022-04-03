@@ -16,12 +16,11 @@ class _SignPageState extends State<SignUp> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
-  final usernameController = TextEditingController();
   SignUp() async{
     String em = emailController.text;
     String pss = passController.text;
     String pssc = passConfirmController.text;
-    String uname = usernameController.text;
+
     print('Singup');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {
@@ -29,7 +28,7 @@ class _SignPageState extends State<SignUp> {
         "email": em,
         "passwordConfirmed": pss,
         "password": pssc,
-        "userName": uname
+        "userName": em
       },
     };
     var body = json.encode(map['data']);
@@ -48,7 +47,7 @@ class _SignPageState extends State<SignUp> {
         title: "Sign up",
         content: Container(
           child: Center(
-            child: Text(response.body.toString()),
+            child: Text('Fill in email and password'),
           ),
         ),
         buttons: [
@@ -97,7 +96,7 @@ class _SignPageState extends State<SignUp> {
               ),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: Text('Welcome to drinklink', style: TextStyle(wordSpacing: 5,color: Colors.deepOrange, fontSize: 16),)
+                  child: Text('Welcome to DrinkLink', style: TextStyle(wordSpacing: 1,color: Colors.deepOrange, fontSize: 16),)
               ),
               Divider(
                 color: Colors.deepOrange,
@@ -109,21 +108,7 @@ class _SignPageState extends State<SignUp> {
                   child: Text('Only registered users can have their card details saved.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
               ),
               SizedBox(height: 20,),
-              Container(
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                child: TextField(
-                  controller: usernameController,
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                  decoration: new InputDecoration(
-                      hintText: "User Name",
-                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
 
-                ),
-              ),
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
