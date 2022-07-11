@@ -1,53 +1,87 @@
 import 'dart:convert';
-import 'package:driklink/pages/login/signin.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
+import 'package:driklink/pages/login/signin.dart';
+import 'package:driklink/pages/login/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class SignUp extends StatefulWidget {
+class ResetPass extends StatefulWidget {
+  String email;
+  ResetPass(this.email);
   @override
-  _SignPageState createState() => _SignPageState();
+  _ResetPassPageState createState() => _ResetPassPageState(this.email);
 }
 
-class _SignPageState extends State<SignUp> {
-  bool checkedValue = false;
-  final emailController = TextEditingController();
+class _ResetPassPageState extends State<ResetPass> {
+  String email;
+  _ResetPassPageState(this.email);
+  final codeController = TextEditingController();
   final passController = TextEditingController();
-  final passConfirmController = TextEditingController();
-  SignUp() async{
-    String em = emailController.text;
-    String pss = passController.text;
-    String pssc = passConfirmController.text;
+  final confirmpassController = TextEditingController();
 
-    print('Singup');
-    Map<String, String> headers = {"Content-Type": "application/json"};
-    Map map = {
-      'data':{
-        "email": em,
-        "passwordConfirmed": pss,
-        "password": pssc,
-        "userName": em
-      },
-    };
-    var body = json.encode(map['data']);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users';
-    final response = await http.post(url,headers: headers, body: body);
-    //var jsondata = json.decode(response.headers);
-    print(response.body.toString());
-    if(response.statusCode == 200){
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SignIn()),
-      );
+
+  ResetPassword() async{
+    String em = codeController.text;
+    String pss = passController.text;
+    String cpss = confirmpassController.text;
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(email);
+
+    if(pss == cpss) {
+      print('login');
+      Map<String, String> headers = {"Content-Type": "application/json"};
+      Map map = {
+        'data': {
+          "resetToken": em,
+          "password": pss,
+          "passwordConfirmed": cpss,
+        },
+      };
+      var body = json.encode(map['data']);
+      String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/$encoded/resetpassword';
+      final response = await http.post(url, headers: headers, body: body);
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => SignIn()),
+        );
+        print('200');
+      } else {
+        Alert(
+          context: context,
+          title: "Reset Password",
+          content: Container(
+            child: Center(
+              child: Text('Something went wrong.'),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+
+          ],
+        ).show();
+        print('error');
+      }
     }else{
       Alert(
         context: context,
-        title: "Sign up",
+        title: "Reset password",
         content: Container(
           child: Center(
-            child: Text(response.body.toString()),
+            child: Text('Password mismatched'),
           ),
         ),
         buttons: [
@@ -65,6 +99,20 @@ class _SignPageState extends State<SignUp> {
     }
   }
 
+
+
+  forgotpassword(String email)async{
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(email);
+
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/$encoded/resetcode' ;
+
+    final response = await http.get(url,headers: headers);
+    print(response.body.toString());
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,10 +129,7 @@ class _SignPageState extends State<SignUp> {
                 padding: EdgeInsets.fromLTRB(15, 50, 0, 0),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignIn()),
-                    );
+                    Navigator.pop(context);
                   },
                   child: Icon(Icons.arrow_back, color: Colors.white,size: 30,),
                 ),
@@ -92,11 +137,11 @@ class _SignPageState extends State<SignUp> {
               SizedBox(height: 20,),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: Text('REGISTER', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),)
+                  child: Text('RESET PASSWORD', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),)
               ),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: Text('Welcome to DrinkLink', style: TextStyle(wordSpacing: 1,color: Colors.deepOrange, fontSize: 16),)
+                  child: Text('Enjoy Drinklink Our Old Friend', style: TextStyle(wordSpacing: 5,color: Colors.deepOrange, fontSize: 16),)
               ),
               Divider(
                 color: Colors.deepOrange,
@@ -105,83 +150,70 @@ class _SignPageState extends State<SignUp> {
 
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                  child: Text('Only registered users can have their card details saved.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
+                  child: Text('Code has send to your email.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
               ),
-              SizedBox(height: 20,),
-
-              Container(
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                child: TextField(
-                  controller: emailController,
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                  decoration: new InputDecoration(
-                      hintText: "Email",
-                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
-                ),
-              ),
-
-              Container(
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                child: TextField(
-                  controller: passController,
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                  obscureText: true,
-                  decoration: new InputDecoration(
-                      hintText: "Password",
-                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                child: TextField(
-                  controller: passConfirmController,
-                  style: TextStyle(color: Colors.white, fontSize: 25),
-                  obscureText: true,
-                  decoration: new InputDecoration(
-                      hintText: "Confirmed Password",
-                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
-                ),
-              ),
-
-              SizedBox(height: 10,),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                  child: Text('Minimum length 8 characters. At least ONE digit and ONE upper case letter.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
+                  child: GestureDetector(
+                      onTap: (){
+                        forgotpassword("johnpaultapuyo@gmail.com");
+                      },
+                      child: Text('Resend code.', style: TextStyle(wordSpacing: 3,color: Colors.deepOrange, fontSize: 16),))
               ),
+              SizedBox(height: 150,),
+
               Container(
-                //padding: EdgeInsets.fromLTRB(0, 10, 15, 5),
-                  child: CheckboxListTile(
-                    checkColor: Colors.white,
-                    title: Text("I have read and agree to", style: TextStyle(color: Colors.white, fontSize: 20)),
-                    value: checkedValue,
-                    onChanged: (newValue) {
-                      setState(() {
-                        checkedValue = newValue;
-                      });
-                    },
-                    controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
-                  )
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  controller: codeController,
+                  decoration: new InputDecoration(
+                      hintText: "Reset Code",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle: new TextStyle(
+                          color: const Color(0xFF424242)
+                      )
+                  ),
+
+                ),
               ),
+
               Container(
-                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                  child: Text('Terms of Service', style: TextStyle(color: Colors.white, fontSize: 20,decoration: TextDecoration.underline),)
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  obscureText: true,
+                  controller: passController,
+                  decoration: new InputDecoration(
+                      hintText: "New Password",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle: new TextStyle(
+                          color: const Color(0xFF424242)
+                      )
+                  ),
+
+                ),
               ),
-              SizedBox(height: 30,),
+
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  obscureText: true,
+                  controller: confirmpassController,
+                  decoration: new InputDecoration(
+                      hintText: "Confirm Password",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle: new TextStyle(
+                          color: const Color(0xFF424242)
+                      )
+                  ),
+
+                ),
+              ),
+
+
+              SizedBox(height: 150,),
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
                 child: Row(
@@ -194,7 +226,7 @@ class _SignPageState extends State<SignUp> {
                           color: Colors.deepOrange,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            SignUp();
+                            ResetPassword();
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -205,7 +237,7 @@ class _SignPageState extends State<SignUp> {
                               //   width: 30.0,
                               // ),
                               //SizedBox(width: 10,),
-                              Text('REGISTER', style: TextStyle(color: Colors.white, fontSize: 18),)
+                              Text('RESET PASSWORD', style: TextStyle(color: Colors.white, fontSize: 18),)
                             ],
                           )
                       ),
@@ -213,6 +245,7 @@ class _SignPageState extends State<SignUp> {
                   ],
                 ),
               ),
+
             ],
           ),
         ),

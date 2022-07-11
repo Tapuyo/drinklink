@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
+import 'package:driklink/pages/login/resetpassemail.dart';
+import 'package:driklink/pages/login/resetpassword.dart';
 import 'package:driklink/pages/login/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -96,6 +98,17 @@ class _SignPageState extends State<SignIn> {
     print(response.statusCode);
   }
 
+  forgotpassword(String email)async{
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(email);
+
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/$encoded/resetcode' ;
+
+    final response = await http.get(url,headers: headers);
+    print(response.body.toString());
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +186,8 @@ class _SignPageState extends State<SignIn> {
 
                 ),
               ),
+
+
               SizedBox(height: 150,),
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
@@ -205,17 +220,25 @@ class _SignPageState extends State<SignIn> {
                   ],
                 ),
               ),
-              // Container(
-              //     width: MediaQuery.of(context).size.width,
-              //     padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         Text('Forgot password?', style: TextStyle(color: Colors.white, fontSize: 16,decoration: TextDecoration.underline,),),
-              //
-              //       ],
-              //     )
-              // ),
+              Container(
+                  width: MediaQuery.of(context).size.width,
+                  padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                          onTap:(){
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => ResetPassEmail()),
+                            );
+                            // forgotpassword('john@mail.com');
+                          },
+                          child: Text('Forgot password?', style: TextStyle(color: Colors.white, fontSize: 16),)),
+
+                    ],
+                  )
+              ),
               Container(
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.fromLTRB(15, 10, 15, 5),

@@ -95,6 +95,7 @@ class _MenuPageState extends State<MenuPage> {
   String cardholderName =  '';
   String scheme =  '';
   String cardToken =  '';
+  Color contColor = Colors.green;
 
   counteraddord1(String addminus){
     if(addminus == 'add') {
@@ -807,6 +808,8 @@ class _MenuPageState extends State<MenuPage> {
             children: [
               GestureDetector(
                 onTap: () {
+                  //Call change color
+                  blickFunct();
                   if (_pc.isPanelOpen == false) {
                     _pc.open();
                     setState(() {
@@ -846,6 +849,7 @@ class _MenuPageState extends State<MenuPage> {
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: GestureDetector(
                         onTap: () {
+
                           if (_pc.isPanelOpen == false) {
                             _pc.open();
                             setState(() {
@@ -983,7 +987,7 @@ class _MenuPageState extends State<MenuPage> {
                                     .width,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color:  myOrder.length > 0 ? Colors.green:Colors.grey,
+                                  color:  myOrder.length > 0 ? contColor:Colors.grey,
                                   border: Border.all(
                                     color: Colors.white,
                                     //                   <--- border color
@@ -995,7 +999,7 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     Text('PROCEED TO PAYMENT', style: TextStyle(
                                         color: Colors.white, fontSize: 20),),
-                                    Text('(Time to collect order. ' + timecol.toStringAsFixed(0) + ' mins)',
+                                    Text('(Time to collect order: ' + timecol.toStringAsFixed(0) + ' mins)',
                                       style: TextStyle(
                                           color: Colors.white, fontSize: 14),),
                                   ],
@@ -1015,6 +1019,20 @@ class _MenuPageState extends State<MenuPage> {
           ),
         ),
       );
+    }
+  }
+
+  blickFunct()async{
+    for (var i = 0; i < 50; i++) {
+      await Future.delayed(Duration(milliseconds: 400));
+      setState(() {
+        if(i.isEven){
+          contColor = Colors.greenAccent;
+        }else{
+          contColor = Colors.green;
+        }
+
+      });
     }
   }
 
@@ -1986,7 +2004,7 @@ class _MenuPageState extends State<MenuPage> {
                                                             width: 30,
                                                             height: 30,
                                                             child: Image.asset('assets/images/ic_ice_cubes.png')
-                                                        ),Text(snapshot.data[index].addIce == false ?"Allow iced":"ice",style: TextStyle(color: Colors.white),)
+                                                        ),Text(snapshot.data[index].addIce == false ?"Add ice":"ice",style: TextStyle(color: Colors.white),)
                                                       ],
                                                     ),
                                                   )
@@ -4197,8 +4215,6 @@ class _MenuPageState extends State<MenuPage> {
                 print(myDrinks[i].ChMixer[z].cmid);
                 print(myDrinks[i].ChMixer[z].cname);
                 print(myDrinks[i].ChMixer[z].cprice);
-
-
                 // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
                 //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
                 //   mx.add(mixerOrd);
@@ -4206,15 +4222,9 @@ class _MenuPageState extends State<MenuPage> {
                 //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
                 //   mx.add(mixerOrd);
                 // }
-
-
                 MixerOrd mixerOrd = MixerOrd(myDrinks[i].ChMixer[z].cmid, myDrinks[i].ChMixer[z].cprice.toString(),myDrinks[i].ChMixer[z].cname);
                 mx.add(mixerOrd);
-
-
-
               }
-
               Order ord = Order(myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name, myDrinks[i].Quant, myDrinks[i].price,mx,myDrinks[i].origPrice);
               setState(() {
                 myOrder.add(ord);
