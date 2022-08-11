@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/orderdetails.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     String token = Prefs.getString('token');
     print(token);
     Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
-    final response = await http.get('https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
+    final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
     var jsondata = json.decode(response.body);
 
 
@@ -306,7 +307,7 @@ class _MoreDetailsState extends State<MoreDetails> {
     String token = Prefs.getString('token');
     print(token);
     Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
-    final response = await http.get('https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
+    final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
     var jsondata = json.decode(response.body);
 
 

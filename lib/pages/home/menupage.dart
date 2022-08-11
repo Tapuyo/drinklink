@@ -202,7 +202,7 @@ class _MenuPageState extends State<MenuPage> {
     try{
       String mytoken = Prefs.getString('token');
       Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + mytoken};
-      final response = await http.get('https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/savedCards',headers: headers);
+      final response = await http.get(ApiCon.baseurl + '/users/currentUser/savedCards',headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
 
@@ -1138,37 +1138,19 @@ class _MenuPageState extends State<MenuPage> {
                                       GestureDetector(
                                         onTap: (){
                                           int drinkId = Prefs.getInt('drinkId');
-                                          if(myOrder[index].Quant > 0 ) {
+                                          if(myOrder[index].Quant > 1 ) {
                                             setState(() {
                                               myOrder[index].Quant =
                                                   myOrder[index].Quant - 1;
                                             });
+                                          }else{
+                                            setState(() {
+                                              myOrder.removeAt(index);
+                                            });
+
                                           }
 
-                                          // counteraddord2('minus');
-                                          // bool exists = myOrder.any((myOrder) => myOrder.CatId == snapshot.data[index].CatId);
-                                          // if(exists == false){
-                                          //   Order tmp = Order(snapshot.data[index].drinkId,snapshot.data[index].CatId, snapshot.data[index].Name, myOrder[index].Quant,snapshot.data[index].Price);
-                                          //   myOrder.add(tmp);
-                                          // }else{
-                                          //   for(var i = 0; i < myOrder.length; i++){
-                                          //     if(myOrder[i].CatId == snapshot.data[index].CatId){
-                                          //       print(myOrder[i].Name);
-                                          //       int tq = myOrder[i].Quant;
-                                          //       print(tq);
-                                          //       int newtq = tq - 1;
-                                          //       myOrder.removeAt(i);
-                                          //       Order tmp = Order(snapshot.data[index].drinkId,snapshot.data[index].CatId, snapshot.data[index].Name, newtq,snapshot.data[index].Price);
-                                          //       myOrder.add(tmp);
-                                          //     }
-                                          //   }
-                                          // }
-                                          //
-                                          // for(var i = 0; i < temporder.length; i++){
-                                          //   print(myOrder[i].CatId);
-                                          //   print(myOrder[i].Name);
-                                          //   print(myOrder[i].Quant);
-                                          // }
+
                                           callcompute();
                                         },
                                         child: Container(
@@ -1722,14 +1704,23 @@ class _MenuPageState extends State<MenuPage> {
                                               onTap: () {
                                                 Navigator.pop(context);
                                               },
-                                              child: Icon(
-                                                Icons.arrow_downward_outlined,
-                                                color: Colors.deepOrange,),
+                                              child:  SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                  children: [
+                                                    Text("Cencel",
+                                                      style: TextStyle(
+                                                          color: Colors.deepOrange,
+                                                          fontSize: 16),),
+
+                                                  ],
+                                                ),
+                                              )
                                             ),
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () {
-
+                                                Navigator.pop(context);
                                                 List<chossenMixer> newChs = myDrinks[ind].ChMixer;
 
                                                 chossenMixer chs = chossenMixer(chid, chname, chprice);
@@ -1748,7 +1739,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     strings[i].name = chs.cname.toString();
                                                 });
 
-                                                Navigator.pop(context);
+
                                               },
                                               child: Text("Done",
                                                 style: TextStyle(
@@ -1760,50 +1751,50 @@ class _MenuPageState extends State<MenuPage> {
                                       ),
                                       SizedBox(height: 5,),
 
-                                      Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            20, 20, 20, 5),
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            print('none');
-                                            modsetState(() {
-                                              strings[i].name = '';
-                                              select = null;
-                                            });
-
-                                            myDrinks[ind].mid = '';
-                                            myDrinks[ind].mprice = '';
-                                            setState(() {
-                                              myDrinks[ind].price = myDrinks[ind].origPrice;
-                                              myDrinks = [];
-                                              myTempCart = getDrinks();
-                                            });
-                                          },
-                                          child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10, 0, 10, 0),
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.circle,
-                                                    color: select == null
-                                                        ? Colors.deepOrange
-                                                        : Colors.black
-                                                        .withOpacity(.5),),
-                                                  SizedBox(width: 10,),
-                                                  Text("Cancel",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 12),),
-                                                  Spacer(),
-                                                  Text("0 AED",
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 16),),
-                                                ],
-                                              )
-                                          ),
-                                        ),
-                                      ),
+                                      // Container(
+                                      //   padding: EdgeInsets.fromLTRB(
+                                      //       20, 20, 20, 5),
+                                      //   child: GestureDetector(
+                                      //     onTap: () {
+                                      //       print('none');
+                                      //       modsetState(() {
+                                      //         strings[i].name = '';
+                                      //         select = null;
+                                      //       });
+                                      //
+                                      //       myDrinks[ind].mid = '';
+                                      //       myDrinks[ind].mprice = '';
+                                      //       setState(() {
+                                      //         myDrinks[ind].price = myDrinks[ind].origPrice;
+                                      //         myDrinks = [];
+                                      //         myTempCart = getDrinks();
+                                      //       });
+                                      //     },
+                                      //     child: Container(
+                                      //         padding: EdgeInsets.fromLTRB(
+                                      //             10, 0, 10, 0),
+                                      //         child: Row(
+                                      //           children: [
+                                      //             Icon(Icons.circle,
+                                      //               color: select == null
+                                      //                   ? Colors.deepOrange
+                                      //                   : Colors.black
+                                      //                   .withOpacity(.5),),
+                                      //             SizedBox(width: 10,),
+                                      //             Text("Cancel",
+                                      //               style: TextStyle(
+                                      //                   color: Colors.black,
+                                      //                   fontSize: 12),),
+                                      //             Spacer(),
+                                      //             Text("0 AED",
+                                      //               style: TextStyle(
+                                      //                   color: Colors.black,
+                                      //                   fontSize: 16),),
+                                      //           ],
+                                      //         )
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       //body
                                       Container(
                                         color: Colors.white,
@@ -2569,7 +2560,8 @@ class _MenuPageState extends State<MenuPage> {
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: Row(
                           children: [
-                            Text("Order (" + myOrder.length.toString() + "item):", style: TextStyle(color: Colors.white, fontSize: 20),),
+                            Text("Order (" + myOrder.length.toString(), style: TextStyle(color: Colors.white, fontSize: 20),),
+                            Text(myOrder.length > 1 ? " items):":" item):", style: TextStyle(color: Colors.white, fontSize: 20),),
                             Spacer(),
                             Text(finaltot.toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
                             Text(' AED', style: TextStyle(color: Colors.white, fontSize: 16),),
@@ -2581,6 +2573,7 @@ class _MenuPageState extends State<MenuPage> {
                     GestureDetector(
                       onTap: (){
                         Alert(
+                          closeIcon: Icon(Icons.circle, color: Colors.white,size: 1,),
                           context: context,
                           title: "Discount",
                           content: showDiscount(),
@@ -2593,14 +2586,7 @@ class _MenuPageState extends State<MenuPage> {
                               onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
                               color: Color(0xFF2b2b61).withOpacity(.7),
                             ),
-                            DialogButton(
-                              child: Text(
-                                "Save",
-                                style: TextStyle(color: Colors.white, fontSize: 20),
-                              ),
-                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                              color: Colors.deepOrange,
-                            )
+
                           ],
                         ).show();
                         // showDialog(
@@ -3748,8 +3734,7 @@ class _MenuPageState extends State<MenuPage> {
     String nname = su.replaceAll(new RegExp(r'[^\w\s]+'),'');
     String em = nname + "@gmail.com";
     print(nname);
-    String pss = "Asd12345678";
-    String pssc = "Asd12345678";
+    String pss = "Asd12345678!";
     String uname = nname;
     print('Singup');
     Prefs.load();
@@ -3759,17 +3744,19 @@ class _MenuPageState extends State<MenuPage> {
       'data':{
         "email": em,
         "passwordConfirmed": pss,
-        "password": pssc,
+        "password": pss,
         "userName": uname
       },
     };
     var body = json.encode(map['data']);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users';
+    print(body);
+    String url = ApiCon.baseurl + '/auth/users';
     final response = await http.post(url,headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
+    print(response.statusCode);
     if(response.statusCode == 200){
-
+      print(response.statusCode);
       logintoPay(uname,pss);
 
     }
@@ -3780,7 +3767,7 @@ class _MenuPageState extends State<MenuPage> {
   logintoPay(String uname,pass) async{
  //   String nname = uname.replaceAll(new RegExp(r'[^\w\s]+'),'');
 
-    print(uname);
+    print('login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {
       'data':{
@@ -3789,9 +3776,10 @@ class _MenuPageState extends State<MenuPage> {
       },
     };
     var body = json.encode(map['data']);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/Token';
+    String url = ApiCon.baseurl +  '/auth/Token';
     final response = await http.post(url,headers: headers, body: body);
-
+    print(response.body);
+    print(response.statusCode);
     if(response.statusCode == 200){
       String token = json.decode(response.body)['token'];
       print(token);
@@ -3812,7 +3800,7 @@ class _MenuPageState extends State<MenuPage> {
     String myt = "'" + ntoken + "'";
     final bod = jsonEncode({'token':  ntoken,'clientAppPlatform': 'ios'});
     Map<String, String> headers = {'Authorization': 'Bearer ' + su,'Content-Type': 'application/json', 'api-version':'1.1'};
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/currentUser/notificationToken';
+    String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
 
     final response = await http.patch(url,headers: headers, body: bod);
     print(response.body);
@@ -3980,7 +3968,7 @@ class _MenuPageState extends State<MenuPage> {
 
     var body = json.encode(map);
     print(body.toString());
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/orders';
+    String url = ApiCon.baseurl + '/orders';
     final response = await http.post(url,headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     //print(response.body.toString());

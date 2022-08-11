@@ -22,7 +22,7 @@ class _HomePageState extends State<PaymentSample> {
   getConsult() async{
 
     Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
-    String url = "https://drinklink-prod-be.azurewebsites.net/api/";
+    String url = "https://drinklink-preprod-be.azurewebsites.net/api/";
     //String url = "http://10.0.2.2:3000/";
     final response = await http.get(url,headers: headers);
 

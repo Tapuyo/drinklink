@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:driklink/auth_provider.dart';
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/login/resetpassemail.dart';
@@ -9,6 +11,7 @@ import 'package:driklink/pages/login/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SignIn extends StatefulWidget {
@@ -19,7 +22,7 @@ class SignIn extends StatefulWidget {
 class _SignPageState extends State<SignIn> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
-  login() async{
+  login(BuildContext context) async{
     String em = emailController.text;
     String pss = passController.text;
     print('login');
@@ -31,9 +34,9 @@ class _SignPageState extends State<SignIn> {
       },
     };
     var body = json.encode(map['data']);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/Token';
+    String url = ApiCon.baseurl + '/auth/Token';
     final response = await http.post(url,headers: headers, body: body);
-
+    print(response.body);
     if(response.statusCode == 200 || response.statusCode == 201){
       String token = json.decode(response.body)['token'];
       print(json.decode(response.body)['token']);
@@ -43,6 +46,7 @@ class _SignPageState extends State<SignIn> {
       String asd = Prefs.getString('token');
       print(asd);
       setNotif(token,em);
+      context.read<AuthProvider>().setToken(token);
 
         setState(() {
           Prefs.load();
@@ -91,7 +95,7 @@ class _SignPageState extends State<SignIn> {
     String myt = "'" + ntoken + "'";
     final bod = jsonEncode({'token':  ntoken,'clientAppPlatform': 'ios'});
     Map<String, String> headers = {'Authorization': 'Bearer ' + su,'Content-Type': 'application/json', 'api-version':'1.1'};
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/currentUser/notificationToken';
+    String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
 
     final response = await http.patch(url,headers: headers, body: bod);
     print('notif response: ');
@@ -103,7 +107,7 @@ class _SignPageState extends State<SignIn> {
     String encoded = stringToBase64.encode(email);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/$encoded/resetcode' ;
+    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode' ;
 
     final response = await http.get(url,headers: headers);
     print(response.body.toString());
@@ -160,7 +164,7 @@ class _SignPageState extends State<SignIn> {
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   controller: emailController,
                   decoration: new InputDecoration(
-                      hintText: "Email",
+                      hintText: "Username",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
                       labelStyle: new TextStyle(
                           color: const Color(0xFF424242)
@@ -201,7 +205,7 @@ class _SignPageState extends State<SignIn> {
                           color: Colors.deepOrange,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            login();
+                            login(context);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

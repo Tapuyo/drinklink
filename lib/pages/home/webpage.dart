@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -120,7 +121,7 @@ class WebViewExampleState extends State<WebPage> {
       "finalPrice": 70.0
     };
     var body = json.encode(map);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/orders';
+    String url = ApiCon.baseurl + '/orders';
     final response = await http.post(url,headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());

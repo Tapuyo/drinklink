@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/login/resetpassword.dart';
@@ -27,7 +28,7 @@ class _ResetPassPageState extends State<ResetPassEmail> {
     String encoded = stringToBase64.encode(emailController.text);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/$encoded/resetcode' ;
+    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode' ;
 
     final response = await http.get(url,headers: headers);
     print(response.body.toString());
@@ -56,7 +57,10 @@ class _ResetPassPageState extends State<ResetPassEmail> {
                 padding: EdgeInsets.fromLTRB(15, 50, 0, 0),
                 child: GestureDetector(
                   onTap: (){
-                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
                   },
                   child: Icon(Icons.arrow_back, color: Colors.white,size: 30,),
                 ),

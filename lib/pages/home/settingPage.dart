@@ -1,4 +1,5 @@
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/savecard.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -428,7 +429,7 @@ class _setPageState extends State<setPage> {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + token
       };
-      String url = 'https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/savedCards';
+      String url = ApiCon.baseurl + '/users/currentUser/savedCards';
       final response = await http.post(url, headers: headers);
       print(json.decode(response.body));
       if (response.statusCode == 200) {

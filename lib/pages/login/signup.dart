@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/login/signin.dart';
 import 'package:http/http.dart' as http;
 import 'package:driklink/pages/home/menupage.dart';
@@ -14,9 +15,11 @@ class SignUp extends StatefulWidget {
 class _SignPageState extends State<SignUp> {
   bool checkedValue = false;
   final emailController = TextEditingController();
+  final usernameController = TextEditingController();
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
   SignUp() async{
+    String euser = usernameController.text;
     String em = emailController.text;
     String pss = passController.text;
     String pssc = passConfirmController.text;
@@ -28,11 +31,11 @@ class _SignPageState extends State<SignUp> {
         "email": em,
         "passwordConfirmed": pss,
         "password": pssc,
-        "userName": em
+        "userName": euser
       },
     };
     var body = json.encode(map['data']);
-    String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users';
+    String url =  ApiCon.baseurl + '/auth/users';
     final response = await http.post(url,headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
@@ -42,26 +45,71 @@ class _SignPageState extends State<SignUp> {
         MaterialPageRoute(builder: (context) => SignIn()),
       );
     }else{
-      Alert(
-        context: context,
-        title: "Sign up",
-        content: Container(
-          child: Center(
-            child: Text(response.body.toString()),
-          ),
-        ),
-        buttons: [
-          DialogButton(
-            child: Text(
-              "Close",
-              style: TextStyle(color: Colors.white, fontSize: 20),
+      if(response.body.toString().contains('DuplicateUserName')){
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Username is already taken."),
             ),
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-            color: Color(0xFF2b2b61).withOpacity(.7),
           ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
 
-        ],
-      ).show();
+          ],
+        ).show();
+      }else if(response.body.toString().contains('DuplicateEmail:')){
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Email is already taken."),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+
+          ],
+        ).show();
+      }
+      else {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text(response.body.toString()),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+
+          ],
+        ).show();
+      }
     }
   }
 
@@ -128,6 +176,22 @@ class _SignPageState extends State<SignUp> {
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
+                  controller: usernameController,
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  decoration: new InputDecoration(
+                      hintText: "Username",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle: new TextStyle(
+                          color: const Color(0xFF424242)
+                      )
+                  ),
+
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
                   controller: passController,
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   obscureText: true,
@@ -148,7 +212,7 @@ class _SignPageState extends State<SignUp> {
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   obscureText: true,
                   decoration: new InputDecoration(
-                      hintText: "Confirmed Password",
+                      hintText: "Confirm Password",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
                       labelStyle: new TextStyle(
                           color: const Color(0xFF424242)
@@ -194,7 +258,31 @@ class _SignPageState extends State<SignUp> {
                           color: Colors.deepOrange,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            SignUp();
+                            if(checkedValue){
+                              SignUp();
+                            }else{
+                              Alert(
+                                context: context,
+                                title: "Sign up",
+                                content: Container(
+                                  child: Center(
+                                    child: Text("Please check terms and service to proceed"),
+                                  ),
+                                ),
+                                buttons: [
+                                  DialogButton(
+                                    child: Text(
+                                      "Close",
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                    onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                    color: Color(0xFF2b2b61).withOpacity(.7),
+                                  ),
+
+                                ],
+                              ).show();
+                            }
+
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

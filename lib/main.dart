@@ -1,3 +1,4 @@
+import 'package:driklink/auth_provider.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -7,17 +8,26 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'routes/route_generator.dart';
 import 'routes/routes.dart';
-import 'utils/themebloc/theme_bloc.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Prefs.load();
-  runApp( MyApp()
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => AuthProvider()),
+    ],
+    child:  MyApp(),
+  ),
+  // runApp( MyApp()
 
     // EasyLocalization(
     //   child: MyApp(),
@@ -42,15 +52,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeBloc(),
-      child: BlocBuilder<ThemeBloc, ThemeState>(
-        builder: _buildWithTheme,
-      ),
-    );
-  }
-
-  Widget _buildWithTheme(BuildContext context, ThemeState state) {
     return MaterialApp(
       builder: (context, child) {
         return ResponsiveWrapper.builder(
@@ -64,18 +65,19 @@ class MyApp extends StatelessWidget {
       initialRoute: Routes.splash,
       onGenerateRoute: RouteGenerator.generateRoute,
       //localizationsDelegates: [
-        // GlobalMaterialLocalizations.delegate,
-        // GlobalWidgetsLocalizations.delegate,
-        // GlobalCupertinoLocalizations.delegate,
-        // DefaultCupertinoLocalizations.delegate,
-        // EasyLocalization.of(context).delegate,
+      // GlobalMaterialLocalizations.delegate,
+      // GlobalWidgetsLocalizations.delegate,
+      // GlobalCupertinoLocalizations.delegate,
+      // DefaultCupertinoLocalizations.delegate,
+      // EasyLocalization.of(context).delegate,
       //],
       // supportedLocales: EasyLocalization.of(context).supportedLocales,
       // locale: EasyLocalization.of(context).locale,
       debugShowCheckedModeBanner: false,
-      theme: state.themeData,
     );
   }
+
+
 }
 
 class MyBehavior extends ScrollBehavior {

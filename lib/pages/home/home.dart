@@ -1,3 +1,4 @@
+import 'package:driklink/auth_provider.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/home/orderPage.dart';
@@ -6,12 +7,14 @@ import 'package:driklink/pages/home/settingPage.dart';
 import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/pages/login/signin.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:driklink/auth_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
+import 'package:provider/provider.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -38,7 +41,7 @@ class _HomePageState extends State<HomePage> {
       String myt = "'" + ftoken + "'";
       final bod = jsonEncode({'token':  ftoken,'clientAppPlatform': 'ios'});
       Map<String, String> headers = {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json', 'api-version':'1.1'};
-      String url = 'https://drinklink-prod-be.azurewebsites.net/api/auth/users/currentUser/notificationToken';
+      String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
 
       final response = await http.patch(url,headers: headers, body: bod);
       print(response.body);
@@ -184,8 +187,7 @@ class _HomePageState extends State<HomePage> {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + mytoken
       };
-      final response = await http.get(
-          'https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/orders?pageSize=5&pageNumber=1',
+      final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=5&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
@@ -476,6 +478,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String _token = context.read<AuthProvider>().token;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
@@ -669,12 +672,14 @@ class _HomePageState extends State<HomePage> {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
                           //Navigator.of(context).popAndPushNamed('/home');
-                          if(token == '' || token == null){
+                          if(_token == '' || _token == null){
+
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
                             );
                           }else{
+                            context.read<AuthProvider>().setToken('');
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => HomePage()),
@@ -706,7 +711,7 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(token == '' || token == null || token.isEmpty?
+                              Text(_token == '' || _token == null || _token.isEmpty?
                                 "Sign In / Register":"Sign Out",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -738,9 +743,9 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               backgroundColor: Colors.transparent,
-              body: SingleChildScrollView(
+              body: Container(
                 child: Container(
-                  height: MediaQuery.of(context).size.height - 100,
+                  height: MediaQuery.of(context).size.height - 80,
                   child: Stack(
                     children: [
                       Container(
@@ -755,7 +760,10 @@ class _HomePageState extends State<HomePage> {
 
                             SizedBox(height: 10,),
                             SingleChildScrollView(
-                              child: mybody(),
+                              child: SizedBox(
+                                height: MediaQuery.of(context).size.height - 300,
+                                child: mybody(),
+                              )
                             ),
 
                           ],
@@ -934,7 +942,6 @@ class _HomePageState extends State<HomePage> {
 
   mybody(){
     return Container(
-      height: MediaQuery.of(context).size.height - 200,
       child: FutureBuilder(
           future: getStore(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -947,7 +954,7 @@ class _HomePageState extends State<HomePage> {
             }else{
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
+                 // physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index){
                     return  GestureDetector(
                       onTap: (){

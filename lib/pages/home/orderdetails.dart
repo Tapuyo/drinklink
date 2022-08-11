@@ -81,7 +81,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     String token = Prefs.getString('token');
     print(token);
     Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
-    final response = await http.get('https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
+    final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
     var jsondata = json.decode(response.body);
     print(response.body);
 
@@ -493,7 +493,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                     String myt = "'{'newState': 'Canceled'}'";
                                     Map<String, String> headers = {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'};
                                     Map<String, String> body = {'newState': 'Canceled'};
-                                    String url = 'https://drinklink-prod-be.azurewebsites.net/api/Orders/' + id;
+                                    String url = ApiCon.baseurl + '/Orders/' + id;
 
                                     final response = await http.patch(url,headers: headers, body: myt);
                                     print(response.body);

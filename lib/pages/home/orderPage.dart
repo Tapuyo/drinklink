@@ -43,7 +43,7 @@ class _setPageState extends State<orderPage> {
     String token = Prefs.getString('token');
     print(token);
     Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
-    final response = await http.get('https://drinklink-prod-be.azurewebsites.net/api/users/currentUser/orders?pageSize=20&pageNumber=1',headers: headers);
+    final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=20&pageNumber=1',headers: headers);
     var jsondata = json.decode(response.body);
 
 
