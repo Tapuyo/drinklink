@@ -28,6 +28,7 @@ class _setPageState extends State<setPage> {
   void initState() {
     super.initState();
     getDetails();
+
   }
   getDetails(){
     Prefs.load();
@@ -277,6 +278,9 @@ class _setPageState extends State<setPage> {
                 child: Container(
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                   child: TextField(
+                    onChanged: (val){
+                      print(val);
+                    },
                     controller: billlast,
                     style: TextStyle(color: Colors.white),
                     decoration: new InputDecoration(

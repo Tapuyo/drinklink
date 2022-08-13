@@ -346,7 +346,7 @@ class _HomePageState extends State<HomePage> {
       dtofdy = 0;
     }
   }
-  Future<List<Store>> getStore() async{
+  Future<List<Store>> getStore() async {
     String setext = seedit.text.toLowerCase();
 
     List<Store> myList = [];
