@@ -29,20 +29,6 @@ void main() async{
   ),
   // runApp( MyApp()
 
-    // EasyLocalization(
-    //   child: MyApp(),
-    //   supportedLocales: [
-    //     Locale('en', 'US'),
-    //     //Locale('de', 'DE'),
-    //     //Locale('ar', 'DZ'),
-    //     Locale('es', 'ES'),
-    //     Locale('it', 'IT'),
-    //     Locale('pt', 'PT'),
-    //     //Locale('fr', 'FR'),
-    //   ],
-    //   path: 'assets/languages',
-    // ),
-
 
   );
 }
