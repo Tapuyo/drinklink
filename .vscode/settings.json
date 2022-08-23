@@ -1,0 +1,25 @@
+// {
+//     // "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\2.0.6"
+//     "dart.flutterSdkPaths": [
+//         "C:/Users/carga/fvm/versions",
+//        ".fvm/flutter_sdk"
+
+// ],
+// "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\dev"
+// }
+
+{
+    "dart.flutterSdkPaths": [
+        "C:/Users/carga/fvm/versions",
+       ".fvm/flutter_sdk"
+],
+    // Remove .fvm files from search
+    "search.exclude": {
+      "**/.fvm": true
+    },
+    // Remove from file watching
+    "files.watcherExclude": {
+      "**/.fvm": true
+    },
+    "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\2.0.6"
+  }

@@ -16,12 +16,10 @@ import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:provider/provider.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
-
 
 class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -31,85 +29,87 @@ class _HomePageState extends State<HomePage> {
   String token;
   List<Order> orderList = [];
   Future ord;
+
   @override
-  setNotif(String ftoken)async{
-    try{
+  setNotif(String ftoken) async {
+    try {
       Prefs.load();
       String token = Prefs.getString('token');
       String email = Prefs.getString('email');
       print("my token: " + token);
       String myt = "'" + ftoken + "'";
-      final bod = jsonEncode({'token':  ftoken,'clientAppPlatform': 'ios'});
-      Map<String, String> headers = {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json', 'api-version':'1.1'};
+      final bod = jsonEncode({'token': ftoken, 'clientAppPlatform': 'ios'});
+      Map<String, String> headers = {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'api-version': '1.1'
+      };
       String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
 
-      final response = await http.patch(url,headers: headers, body: bod);
+      final response = await http.patch(url, headers: headers, body: bod);
       print(response.body);
       print(response.statusCode);
       print('set notif \n \n ');
-    }catch(e){
-
-    }
+    } catch (e) {}
   }
+
   void initState() {
     Prefs.load();
     super.initState();
     // myList = [];
     // myStore = getStore();
+
     getDayofweek();
     getToke();
     bool snd = true;
     bool art = true;
     String firsttime = Prefs.getString('first');
-    if(firsttime == null){
+    if (firsttime == null) {
       Prefs.setBool('sound', true);
       Prefs.setBool('alert', true);
       Prefs.setString('first', 'install');
-    }else {
+    } else {
       print('First:' + firsttime);
       print(Prefs.getBool('sound'));
     }
 
-   try{
-     if(Prefs.getBool('sound') != null){
-       snd = Prefs.getBool('sound');
-       //art = Prefs.getBool('alert');
-     }else{
-       Prefs.setBool('sound', true);
-       //Prefs.setBool('alert', true);
-       snd = true;
-       art = true;
-     }
+    try {
+      if (Prefs.getBool('sound') != null) {
+        snd = Prefs.getBool('sound');
+        //art = Prefs.getBool('alert');
+      } else {
+        Prefs.setBool('sound', true);
+        //Prefs.setBool('alert', true);
+        snd = true;
+        art = true;
+      }
+    } catch (e) {
+      Prefs.setBool('sound', true);
+      //Prefs.setBool('alert', true);
+      snd = true;
+      //art = true;
+    }
 
-   }catch (e){
-     Prefs.setBool('sound', true);
-     //Prefs.setBool('alert', true);
-     snd = true;
-     //art = true;
-   }
-
-    try{
-      if(Prefs.getBool('alert') != null){
+    try {
+      if (Prefs.getBool('alert') != null) {
         //snd = Prefs.getBool('sound');
         art = Prefs.getBool('alert');
-      }else{
+      } else {
         //Prefs.setBool('sound', true);
         Prefs.setBool('alert', true);
         //snd = true;
         art = true;
       }
-
-    }catch (e){
+    } catch (e) {
       //Prefs.setBool('sound', true);
       Prefs.setBool('alert', true);
       //snd = true;
       art = true;
     }
-   print(Prefs.getBool('sound'));
+    print(Prefs.getBool('sound'));
     FirebaseMessaging.instance.requestPermission(
       alert: art,
       sound: snd,
-
     );
 
     FirebaseMessaging.instance
@@ -122,22 +122,19 @@ class _HomePageState extends State<HomePage> {
       print(message);
     });
 
-
-
     FirebaseMessaging.instance
         .getToken(
-        vapidKey:
-        'BGpdLRsMJKvFDD9odfPk92uBg-JbQbyoiZdah0XlUyrjG4SDgUsE1iC_kdRgt4Kn0CO7K3RTswPZt61NNuO0XoA')
+            vapidKey:
+                'BGpdLRsMJKvFDD9odfPk92uBg-JbQbyoiZdah0XlUyrjG4SDgUsE1iC_kdRgt4Kn0CO7K3RTswPZt61NNuO0XoA')
         .then(setToken);
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
     _tokenStream.listen(setToken);
 
-    FirebaseMessaging.instance.getToken().then((value){
+    FirebaseMessaging.instance.getToken().then((value) {
       print("This is the token" + value);
 
       setNotif(value);
     });
-
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
@@ -160,7 +157,6 @@ class _HomePageState extends State<HomePage> {
       //     });
     });
 
-
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
     });
@@ -171,12 +167,11 @@ class _HomePageState extends State<HomePage> {
       sound: true,
     );
 
-
     orderList = [];
     ord = getOrders();
   }
 
-  Future<List<Order>> getOrders() async{
+  Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
@@ -187,21 +182,21 @@ class _HomePageState extends State<HomePage> {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + mytoken
       };
-      final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=5&pageNumber=1',
+      final response = await http.get(
+          ApiCon.baseurl + '/users/currentUser/orders?pageSize=5&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
-
       for (var i = 0; i < jsondata.length; i++) {
-        String cState = json.decode(response.body)[i]['currentState']
-            .toString();
+        String cState =
+            json.decode(response.body)[i]['currentState'].toString();
         //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
-        List <MyItems> newItem = [];
+        List<MyItems> newItem = [];
         for (var x in jsondata1) {
-          MyItems nt = new MyItems(
-              x['drink']['name'], x['quantity'].toString());
+          MyItems nt =
+              new MyItems(x['drink']['name'], x['quantity'].toString());
 
           newItem.add(nt);
         }
@@ -211,24 +206,16 @@ class _HomePageState extends State<HomePage> {
         String dt = '';
         String stt = '';
         final toDayDate = DateTime.now();
-        var different = toDayDate
-            .difference(DateTime.parse(st))
-            .inMinutes;
+        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
         if (different < 60) {
-          dt = toDayDate
-              .difference(DateTime.parse(st))
-              .inMinutes
-              .toString() + ' mins';
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' mins';
         } else if (different > 60 && different < 1440) {
-          dt = toDayDate
-              .difference(DateTime.parse(st))
-              .inHours
-              .toString() + ' hours';
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hours';
         } else {
-          dt = toDayDate
-              .difference(DateTime.parse(st))
-              .inDays
-              .toString() + ' days';
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' days';
         }
         String bar = json.decode(response.body)[i]['tableId'].toString();
         // String cState = json.decode(response.body)[i]['currentState'].toString();
@@ -260,40 +247,35 @@ class _HomePageState extends State<HomePage> {
             json.decode(response.body)[i]['facilityId'].toString());
         print("OUTLET NAME: " + outletname);
         setState(() {
-          Order myorder = new Order(
-              dt.toString(),
-              newItem,
-              bar,
-              stt,
-              cState,
-              outletname,
-              newItem.length.toString(),
-              mprice);
+          Order myorder = new Order(dt.toString(), newItem, bar, stt, cState,
+              outletname, newItem.length.toString(), mprice);
 
           orderList.add(myorder);
         });
         // }
 
-
       }
       return orderList;
-    }catch (e){
+    } catch (e) {
       return null;
     }
   }
 
-  Future<String> getFacilityInfo(String id)async{
+  Future<String> getFacilityInfo(String id) async {
     String name = '';
     print('Getting outlet info');
     print(id);
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/';
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
-    for (var u in jsondata){
-      if(u['id'].toString()==id){
+    for (var u in jsondata) {
+      if (u['id'].toString() == id) {
         print(u['name']);
         return u['name'];
       }
@@ -312,65 +294,136 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  getToke(){
-    try{
-
-
+  getToke() {
+    try {
       token = Prefs.getString('token');
       String em = Prefs.getString('email');
       print(token);
       print('Your email ' + em);
-    }catch (e){
+    } catch (e) {
       token = '';
     }
   }
-  getDayofweek(){
+
+  getDayofweek() {
     DateTime date = DateTime.now();
     String dateFormat = DateFormat('EEEE').format(date);
     print(dateFormat);
-    if(dateFormat == 'Monday'){
+    if (dateFormat == 'Monday') {
       dtofdy = 1;
-    }else if(dateFormat == 'Tuesday'){
+    } else if (dateFormat == 'Tuesday') {
       dtofdy = 2;
-    }else if(dateFormat == 'Wednesday'){
+    } else if (dateFormat == 'Wednesday') {
       dtofdy = 3;
-    }else if(dateFormat == 'Thursday'){
+    } else if (dateFormat == 'Thursday') {
       dtofdy = 4;
-    }else if(dateFormat == 'Friday'){
+    } else if (dateFormat == 'Friday') {
       dtofdy = 5;
-    }else if(dateFormat == 'Saturday'){
+    } else if (dateFormat == 'Saturday') {
       dtofdy = 6;
-    }else if(dateFormat == 'Sunday'){
+    } else if (dateFormat == 'Sunday') {
       dtofdy = 0;
-    }else{
+    } else {
       dtofdy = 0;
     }
   }
+
   Future<List<Store>> getStore() async {
     String setext = seedit.text.toLowerCase();
 
     List<Store> myList = [];
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + ApiCon.storeUrl;
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
-      for (var u in jsondata){
-        if(setext == ''){
+    for (var u in jsondata) {
+      if (setext == '') {
+        print(u['name']);
+        String id,
+            name,
+            address,
+            description,
+            delivery,
+            pickup,
+            area,
+            city,
+            image;
+
+        id = u['id'].toString();
+
+        if (u['name'] == null) {
+          name = '';
+        } else {
+          name = u['name'];
+        }
+        if (u['address'] == null) {
+          address = '';
+        } else {
+          address = u['address'];
+        }
+        // if(u['description'] == null){
+        //   description = '';
+        // }else{
+        //   description = u['description'];
+        // }
+        if (u['isTableDeliveryEnabled'] == null) {
+          delivery = '';
+        } else {
+          delivery = u['isTableDeliveryEnabled'].toString();
+        }
+        if (u['isPickupEnabled'] == null) {
+          pickup = '';
+        } else {
+          pickup = u['isPickupEnabled'].toString();
+        }
+        if (u['area'] == null) {
+          area = '';
+        } else {
+          area = u['area'];
+        }
+        if (u['city'] == null) {
+          city = '';
+        } else {
+          city = u['city'];
+        }
+        if (u['coverImagePath'] == null) {
+          image = '';
+        } else {
+          image = u['coverImagePath'];
+        }
+        Store store = Store(id, name, address, 'description', delivery, pickup,
+            area, city, image);
+
+        myList.add(store);
+      } else {
+        String storename = u['name'].toString().toLowerCase();
+        if (storename.contains(setext)) {
           print(u['name']);
-          String id,name,address,description,delivery,pickup,area,city,image;
+          String id,
+              name,
+              address,
+              description,
+              delivery,
+              pickup,
+              area,
+              city,
+              image;
 
           id = u['id'].toString();
 
-          if(u['name'] == null){
+          if (u['name'] == null) {
             name = '';
-          }else{
+          } else {
             name = u['name'];
           }
-          if(u['address'] == null){
+          if (u['address'] == null) {
             address = '';
-          }else{
+          } else {
             address = u['address'];
           }
           // if(u['description'] == null){
@@ -378,95 +431,42 @@ class _HomePageState extends State<HomePage> {
           // }else{
           //   description = u['description'];
           // }
-          if(u['isTableDeliveryEnabled'] == null){
+          if (u['isTableDeliveryEnabled'] == null) {
             delivery = '';
-          }else{
+          } else {
             delivery = u['isTableDeliveryEnabled'].toString();
           }
-          if(u['isPickupEnabled'] == null){
+          if (u['isPickupEnabled'] == null) {
             pickup = '';
-          }else{
+          } else {
             pickup = u['isPickupEnabled'].toString();
           }
-          if(u['area'] == null){
+          if (u['area'] == null) {
             area = '';
-          }else{
+          } else {
             area = u['area'];
           }
-          if(u['city'] == null){
+          if (u['city'] == null) {
             city = '';
-          }else{
+          } else {
             city = u['city'];
           }
-          if(u['coverImagePath'] == null){
+          if (u['coverImagePath'] == null) {
             image = '';
-          }else{
+          } else {
             image = u['coverImagePath'];
           }
-          Store store = Store(id,name,address,'description',delivery,pickup,area,city,image);
+          Store store = Store(id, name, address, 'description', delivery,
+              pickup, area, city, image);
 
           myList.add(store);
-        }else{
-          String storename = u['name'].toString().toLowerCase();
-          if(storename.contains(setext)){
-            print(u['name']);
-            String id,name,address,description,delivery,pickup,area,city,image;
-
-            id = u['id'].toString();
-
-            if(u['name'] == null){
-              name = '';
-            }else{
-              name = u['name'];
-            }
-            if(u['address'] == null){
-              address = '';
-            }else{
-              address = u['address'];
-            }
-            // if(u['description'] == null){
-            //   description = '';
-            // }else{
-            //   description = u['description'];
-            // }
-            if(u['isTableDeliveryEnabled'] == null){
-              delivery = '';
-            }else{
-              delivery = u['isTableDeliveryEnabled'].toString();
-            }
-            if(u['isPickupEnabled'] == null){
-              pickup = '';
-            }else{
-              pickup = u['isPickupEnabled'].toString();
-            }
-            if(u['area'] == null){
-              area = '';
-            }else{
-              area = u['area'];
-            }
-            if(u['city'] == null){
-              city = '';
-            }else{
-              city = u['city'];
-            }
-            if(u['coverImagePath'] == null){
-              image = '';
-            }else{
-              image = u['coverImagePath'];
-            }
-            Store store = Store(id,name,address,'description',delivery,pickup,area,city,image);
-
-            myList.add(store);
-          }
         }
-
       }
+    }
 
     print(myList.length);
     return myList;
   }
-
-
 
   toggleDrawer() async {
     if (_scaffoldKey.currentState.isDrawerOpen) {
@@ -484,35 +484,39 @@ class _HomePageState extends State<HomePage> {
       home: WillPopScope(
         onWillPop: () async => false,
         child: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/images/bkgdefault.png"), fit: BoxFit.cover)),
-            child: Scaffold(
-              key: _scaffoldKey,
-              appBar: AppBar(
-                automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-                    onPressed: () {
-
-                      orderList = [];
-                      ord = getOrders();
-                      _scaffoldKey.currentState.openEndDrawer();
-                    },
-                  )
-                ],
-              ),
-              endDrawer: Drawer(
-                child: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/images/bkgdefault.png"),
+                  fit: BoxFit.cover)),
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    size: 35,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    orderList = [];
+                    ord = getOrders();
+                    _scaffoldKey.currentState.openEndDrawer();
+                  },
+                )
+              ],
+            ),
+            endDrawer: Drawer(
+              child: Container(
                   padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
                   color: Colors.black,
                   child: Column(
                     children: [
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -532,14 +536,16 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.home,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.home,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
                               GestureDetector(
-                                onTap: (){
-
-                                },
+                                onTap: () {},
                                 child: Text(
                                   "Home",
                                   style: TextStyle(
@@ -554,7 +560,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -562,7 +568,8 @@ class _HomePageState extends State<HomePage> {
                           }
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => orderPage()),
+                            MaterialPageRoute(
+                                builder: (context) => orderPage()),
                           );
                         },
                         child: Container(
@@ -574,7 +581,11 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.wine_bar_sharp,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.wine_bar_sharp,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -591,7 +602,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -611,7 +622,11 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.settings,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.settings,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -628,7 +643,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -648,7 +663,11 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(FontAwesome.angle_double_up,size: 30, color: Colors.white,),
+                              Icon(
+                                FontAwesome.angle_double_up,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -665,24 +684,24 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
                           //Navigator.of(context).popAndPushNamed('/home');
-                          if(_token == '' || _token == null){
-
+                          if (_token == '' || _token == null) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
                             );
-                          }else{
+                          } else {
                             context.read<AuthProvider>().setToken('');
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => HomePage()),
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
                             );
                             setState(() {
                               setState(() {
@@ -696,7 +715,6 @@ class _HomePageState extends State<HomePage> {
                               });
                             });
                           }
-
                         },
                         child: Container(
                           height: 50,
@@ -707,19 +725,24 @@ class _HomePageState extends State<HomePage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(MaterialCommunityIcons.human,size: 30, color: Colors.white,),
+                              Icon(
+                                MaterialCommunityIcons.human,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(_token == '' || _token == null || _token.isEmpty?
-                                "Sign In / Register":"Sign Out",
+                              Text(
+                                _token == '' || _token == null || _token.isEmpty
+                                    ? "Sign In / Register"
+                                    : "Sign Out",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -731,113 +754,133 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Visibility(
-                                visible: orderList.length > 0 ? true:false,
-                                child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                                visible: orderList.length > 0 ? true : false,
+                                child: Text(
+                                  'Most recent orders',
+                                  style: TextStyle(color: Colors.white),
+                                )),
                             mybodyRec(),
-                            SizedBox(height: 20,)
+                            SizedBox(
+                              height: 20,
+                            )
                           ],
                         ),
                       )
                     ],
-                  )
-                ),
-              ),
-              backgroundColor: Colors.transparent,
-              body: Container(
-                child: Container(
-                  height: MediaQuery.of(context).size.height - 80,
-                  child: Stack(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-
-                            Text('Home', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),),
-                            Text('Choose featured places or search', style: TextStyle(color: Colors.deepOrange, fontSize: 16,),),
-
-                            SizedBox(height: 10,),
-                            SingleChildScrollView(
-                              child: SizedBox(
-                                height: MediaQuery.of(context).size.height - 300,
-                                child: mybody(),
-                              )
-                            ),
-
-                          ],
+                  )),
+            ),
+            backgroundColor: Colors.transparent,
+            body: Container(
+              height: MediaQuery.of(context).size.height - 80,
+              child: Stack(
+                children: [
+                  Container(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Home',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
-                          child: TextField(
-                            style: TextStyle( fontSize: 20.0,color: Colors.white70,
-                              height: 1,),
-                            onChanged: (value){
-                              setState(() {
-
-                              });
-                            },
-                            controller: seedit,
-                            decoration: new InputDecoration(
-
-                                filled: true,
-                                hintStyle: new TextStyle(color: Colors.white70, fontSize: 20),
-                                hintText: "Enter name, area or address",
-                                fillColor: Colors.transparent),
+                        Text(
+                          'Choose featured places or search',
+                          style: TextStyle(
+                            color: Colors.deepOrange,
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
-                          child: Row(
-                            children: [
-
-                              Expanded(
-                                child: FlatButton(
-                                    height: 50,
-                                    minWidth: double.infinity,
-                                    color: Colors.deepOrange,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    onPressed: () {
-                                      //getOrders();
-                                      getStore();
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        // Image.asset(
-                                        //   'assets/images/applelogo.png',
-                                        //   height: 30.0,
-                                        //   width: 30.0,
-                                        // ),
-                                        //SizedBox(width: 10,),
-                                        Text('SEARCH', style: TextStyle(color: Colors.white, fontSize: 18),)
-                                      ],
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
+                        SizedBox(
+                          height: 10,
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
-
-            )
+                  Container(
+                    padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
+                    child: SingleChildScrollView(
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height - 300,
+                        child: mybody(),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                      child: TextField(
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white70,
+                          height: 1,
+                        ),
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        controller: seedit,
+                        decoration: new InputDecoration(
+                            filled: true,
+                            hintStyle: new TextStyle(
+                                color: Colors.white70, fontSize: 20),
+                            hintText: "Enter name, area or address",
+                            fillColor: Colors.transparent),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: FlatButton(
+                              height: 50,
+                              minWidth: double.infinity,
+                              color: Colors.deepOrange,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              onPressed: () {
+                                //getOrders();
+                                getStore();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // Image.asset(
+                                  //   'assets/images/applelogo.png',
+                                  //   height: 30.0,
+                                  //   width: 30.0,
+                                  // ),
+                                  //SizedBox(width: 10,),
+                                  Text(
+                                    'SEARCH',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  mybodyRec(){
+  mybodyRec() {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
       height: 250,
@@ -847,28 +890,27 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  //child: CircularProgressIndicator(),
-                ),
+                    //child: CircularProgressIndicator(),
+                    ),
               );
-            }else{
+            } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index){
-                    return  GestureDetector(
-                      onTap: (){
-
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => OrderDetails('')),
+                          MaterialPageRoute(
+                              builder: (context) => OrderDetails('')),
                         );
                       },
-                      child:Container(
-                        height: 500,
+                      child: Container(
+                          height: 500,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF2b2b61).withOpacity(.5),
-
                           ),
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                           child: Row(
@@ -878,69 +920,130 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data[index].outlet,style: TextStyle(color: Colors.deepOrange, fontSize: 20),),
-                                  SizedBox(height: 10,),
+                                  Text(
+                                    snapshot.data[index].outlet,
+                                    style: TextStyle(
+                                        color: Colors.deepOrange, fontSize: 20),
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Container(
-                                    height: 20,width: MediaQuery.of(context).size.width / 2 + 30,
+                                    height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 +
+                                            30,
                                     child: Row(
                                       children: [
-                                        Text('Order (' + snapshot.data[index].itemcount + ' item):',style: TextStyle(color: Colors.white, fontSize: 14),),
+                                        Text(
+                                          'Order (' +
+                                              snapshot.data[index].itemcount +
+                                              ' item):',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                         Spacer(),
-                                        Text(snapshot.data[index].price + ' AED):',style: TextStyle(color: Colors.white, fontSize: 14),),
+                                        Text(
+                                          snapshot.data[index].price + ' AED):',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Container(
-                                    height: 20,width: MediaQuery.of(context).size.width / 2 + 30,
+                                    height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 +
+                                            30,
                                     child: Row(
                                       children: [
-                                        Text('Collect before:',style: TextStyle(color: Colors.white, fontSize: 14),),
+                                        Text(
+                                          'Collect before:',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                         Spacer(),
-                                        Text(snapshot.data[index].itemcount + ' AED):',style: TextStyle(color: Colors.deepOrange, fontSize: 14),),
+                                        Text(
+                                          snapshot.data[index].itemcount +
+                                              ' AED):',
+                                          style: TextStyle(
+                                              color: Colors.deepOrange,
+                                              fontSize: 14),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Container(
-                                    height: 20,width: MediaQuery.of(context).size.width / 2 + 30,
+                                    height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 +
+                                            30,
                                     child: Row(
                                       children: [
-                                        Text('Status:',style: TextStyle(color: Colors.white, fontSize: 14),),
+                                        Text(
+                                          'Status:',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                         Spacer(),
-                                        Text(snapshot.data[index].cState,style: TextStyle(color: Colors.green, fontSize: 14),),
+                                        Text(
+                                          snapshot.data[index].cState,
+                                          style: TextStyle(
+                                              color: Colors.green,
+                                              fontSize: 14),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
                                   Container(
-                                    height: 20,width: MediaQuery.of(context).size.width / 2 + 30,
+                                    height: 20,
+                                    width:
+                                        MediaQuery.of(context).size.width / 2 +
+                                            30,
                                     child: Row(
                                       children: [
-                                        Text('Created:',style: TextStyle(color: Colors.white, fontSize: 14),),
+                                        Text(
+                                          'Created:',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 14),
+                                        ),
                                         Spacer(),
-                                        Text(snapshot.data[index].timestamp,style: TextStyle(color: Colors.deepOrange, fontSize: 14),),
+                                        Text(
+                                          snapshot.data[index].timestamp,
+                                          style: TextStyle(
+                                              color: Colors.deepOrange,
+                                              fontSize: 14),
+                                        ),
                                       ],
                                     ),
                                   )
                                 ],
                               )
-
                             ],
-                          )
-                      ),
+                          )),
                     );
-                  }
-              );
-
+                  });
             }
-          }
-
-      ),
+          }),
     );
   }
 
-  mybody(){
+  mybody() {
     return Container(
       child: FutureBuilder(
           future: getStore(),
@@ -951,57 +1054,64 @@ class _HomePageState extends State<HomePage> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }else{
+            } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                 // physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index){
-                    return  GestureDetector(
-                      onTap: (){
-
+                  // physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => MenuPage(snapshot.data[index].id,snapshot.data[index].name,snapshot.data[index].address)),
+                          MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                  snapshot.data[index].id,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].address)),
                         );
                       },
-                      child:Container(
+                      child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                           color: Colors.transparent,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                color: Colors.transparent,
+                                  color: Colors.transparent,
                                   width: 60,
                                   height: 60,
-                                  child: Image.network(ApiCon.baseurl + snapshot.data[index].image)
+                                  child: Image.network(ApiCon.baseurl +
+                                      snapshot.data[index].image)),
+                              SizedBox(
+                                width: 10,
                               ),
-                              SizedBox(width: 10,),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data[index].name,style: TextStyle(color: Colors.white, fontSize: 20),),
-                                  Text(snapshot.data[index].address,style: TextStyle(color: Colors.white70, fontSize: 14),),
+                                  Text(
+                                    snapshot.data[index].name,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].address,
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 14),
+                                  ),
                                 ],
                               )
-
                             ],
-                          )
-                      ),
+                          )),
                     );
-                  }
-              );
-
+                  });
             }
-          }
-
-      ),
+          }),
     );
   }
 }
 
-class Store{
+class Store {
   final String id;
   final String name;
   final String address;
@@ -1012,12 +1122,11 @@ class Store{
   final String city;
   final String image;
 
-
-
-  Store(this.id, this.name, this.address, this.description,this.delivery,this.pickup,this.area,this.city,this.image);
+  Store(this.id, this.name, this.address, this.description, this.delivery,
+      this.pickup, this.area, this.city, this.image);
 }
 
-class Order{
+class Order {
   final String timestamp;
   final List<MyItems> itemslist;
   final String barid;
@@ -1027,11 +1136,13 @@ class Order{
   final String itemcount;
   final String price;
 
-  Order(this.timestamp,this.itemslist,this.barid,this.cState,this.sttn,this.outlet,this.itemcount,this.price);
+  Order(this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
+      this.outlet, this.itemcount, this.price);
 }
-class MyItems{
+
+class MyItems {
   final String itemsname;
   final String itemsquantity;
 
-  MyItems(this.itemsname,this.itemsquantity);
+  MyItems(this.itemsname, this.itemsquantity);
 }
