@@ -1720,10 +1720,15 @@ class _MenuPageState extends State<MenuPage> {
                                             Spacer(),
                                             GestureDetector(
                                               onTap: () {
+                                                setState(() {
+                                                if(myDrinks[ind].ChMixer.isNotEmpty) {
+                                                  myDrinks[ind].ChMixer.removeWhere((element) => element.cname == strings[i].name);
+                                                }
                                                 Navigator.pop(context);
                                                 List<chossenMixer> newChs = myDrinks[ind].ChMixer;
 
                                                 chossenMixer chs = chossenMixer(chid, chname, chprice);
+                                                print(chs);
 
                                                 newChs.add(chs);
                                                 print(chs.cmid.toString());
@@ -1733,7 +1738,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                                 print(strings[i].mx.length);
 
-                                                setState(() {
+
                                                     double tot = double.parse(myDrinks[ind].origPrice) + double.parse(chprice);
                                                     myDrinks[ind].price = tot.toStringAsFixed(2);
                                                     strings[i].name = chs.cname.toString();
@@ -1814,6 +1819,7 @@ class _MenuPageState extends State<MenuPage> {
                                                   chname = strings[i].mx[index].name;
                                                   chprice = strings[i].mx[index].price;
                                                   myindex = index;
+                                                  print(chid);
 
                                                   myDrinks[ind].mid = strings[i].mx[index].id;
                                                   myDrinks[ind].mprice = strings[i].mx[index].price;
