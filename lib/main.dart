@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  ensureInitializedawait Firebase.initializeApp();
+  await Firebase.initializeApp();
   await Prefs.load();
   runApp(
     MultiProvider(
