@@ -86,6 +86,8 @@ class _MenuPageState extends State<MenuPage> {
   double discount = 0;
   double tip = 0;
   double charge = 0;
+  int selectedIndex=0;
+  String cname='';
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
@@ -1661,7 +1663,7 @@ class _MenuPageState extends State<MenuPage> {
     String chname = '';
     String chprice = '';
     int myindex = 0;
-
+    int chmid;
     if(strings.length <= 0){
       list.add(Container());
     }else {
@@ -1708,7 +1710,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 100,
                                                 child: Row(
                                                   children: [
-                                                    Text("Cencel",
+                                                    Text("Cancel",
                                                       style: TextStyle(
                                                           color: Colors.deepOrange,
                                                           fontSize: 16),),
@@ -1818,7 +1820,10 @@ class _MenuPageState extends State<MenuPage> {
                                                   chid = strings[i].mx[index].id;
                                                   chname = strings[i].mx[index].name;
                                                   chprice = strings[i].mx[index].price;
+
                                                   myindex = index;
+                                                  print(myindex);
+                                                  print(index);
                                                   print(chid);
 
                                                   myDrinks[ind].mid = strings[i].mx[index].id;
@@ -1833,20 +1838,22 @@ class _MenuPageState extends State<MenuPage> {
 
                                                   select = myindex;
                                                 });
-
                                               },
                                               child: Container(
+
                                                   padding: EdgeInsets.fromLTRB(
                                                       0, 0, 0, 20),
                                                   child: Row(
-                                                    children: [
-                                                      Icon(Icons.circle,
-                                                        color: select == index
+                                                    children:  [
+                                                        Icon(Icons.circle,
+                                                        color: myDrinks[ind].mid == strings[i].mx[index]
+                                                            .id
                                                             ? Colors.deepOrange
                                                             : Colors.black
                                                             .withOpacity(.5),),
                                                       SizedBox(width: 10,),
-                                                      Text(strings[i].mx[index]
+
+                                                      Text (strings[i].mx[index]
                                                           .name.toString() != null ? strings[i].mx[index]
                                                           .name.toString():'',
                                                         style: TextStyle(
@@ -1859,6 +1866,7 @@ class _MenuPageState extends State<MenuPage> {
                                                         style: TextStyle(
                                                             color: Colors.black,
                                                             fontSize: 16),),
+
                                                     ],
                                                   )
                                               ),
