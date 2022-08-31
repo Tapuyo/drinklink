@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   Future myStore;
   int dtofdy = 0;
   String token;
+  String stoken;
   List<Order> orderList = [];
   Future ord;
 
@@ -479,6 +480,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
+    String token = Prefs.getString('token');
+    if (_token.isNotEmpty) {
+      stoken = _token;
+    } else {
+      stoken = token;
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
@@ -734,7 +742,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 20,
                               ),
                               Text(
-                                _token == '' || _token == null || _token.isEmpty
+                                stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
                                     : "Sign Out",
                                 style: TextStyle(
