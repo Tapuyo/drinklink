@@ -92,6 +92,7 @@ class _MenuPageState extends State<MenuPage> {
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
+  bool _validate = false;
 
   String maskedPan = '';
   String expiry = '';
@@ -2737,10 +2738,10 @@ class _MenuPageState extends State<MenuPage> {
                                     var splitag = spliter.split(".");
                                     var splitag1 = splitag[0];
                                     var splitag2 = splitag[1];
-                                    var secs1 = splitag2.substring(0, 1);
-                                    var secs2 = splitag2.substring(1, 2);
 
                                     try {
+                                      var secs1 = splitag2.substring(0, 1);
+                                      var secs2 = splitag2.substring(1, 2);
                                       var secs3 = splitag2.substring(2, 3);
                                       print(secs3);
 
@@ -4191,6 +4192,7 @@ class _MenuPageState extends State<MenuPage> {
                           hintStyle: TextStyle(color: Colors.white54),
                           labelStyle: new TextStyle(color: Colors.white),
                           labelText: 'Send bill to email',
+                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
                         ),
                       ),
                     ),
@@ -4229,8 +4231,27 @@ class _MenuPageState extends State<MenuPage> {
                                 onPressed: () {
                                   //samplecheck();
                                   if (billadd.text != '' ||
-                                      billemail.text != '' ||
-                                      billname.text != '') {
+                                      billadd.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
+
+                                  if (billname.text != '' ||
+                                      billname.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
+
+                                  if (billemail.text != '' ||
+                                      billemail.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
+
+                                  if (_validate == true) {
                                     tokenChecker();
                                   } else {
                                     Alert(
@@ -4541,10 +4562,10 @@ class _MenuPageState extends State<MenuPage> {
     String firsname = '';
     String lastname = '';
     try {
-      firsname = fullname[0].trim();
-      lastname = fullname[1].trim();
+      firsname = fullname[0];
+      lastname = fullname[1];
     } catch (e) {
-      _showDialog('DinkLink', 'Please input full name.');
+      // _showDialog('DinkLink', 'Please input full name.');
     }
 
     print(token);
@@ -4688,6 +4709,7 @@ class _MenuPageState extends State<MenuPage> {
     var body = json.encode(map);
     print(body.toString());
     String url = ApiCon.baseurl + '/orders';
+    String _cm = '';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     //print(response.body.toString());
@@ -4699,7 +4721,13 @@ class _MenuPageState extends State<MenuPage> {
       print('error');
       print(response.statusCode.toString());
       print(response.body.toString());
-      _showDialog('DinkLink', response.body.toString());
+      if (response.body.toString().isEmpty) {
+        _cm = '[' + response.statusCode.toString() + '] ' + 'No data found!';
+      } else {
+        _cm = response.body.toString();
+      }
+      _showDialog('DinkLink', _cm);
+      return;
     }
   }
 
