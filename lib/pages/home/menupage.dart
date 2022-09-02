@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanoid/nanoid.dart';
+
 //import 'package:nanoid/non_secure.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -22,10 +23,13 @@ import 'package:driklink/data/pref_manager.dart';
 import 'package:uuid/uuid.dart';
 
 class MenuPage extends StatefulWidget {
-  String id,title,desc;
-  MenuPage(this.id,this.title,this.desc);
+  String id, title, desc;
+
+  MenuPage(this.id, this.title, this.desc);
+
   @override
-  _MenuPageState createState() => _MenuPageState(this.id,this.title,this.desc);
+  _MenuPageState createState() =>
+      _MenuPageState(this.id, this.title, this.desc);
 }
 
 class _MenuPageState extends State<MenuPage> {
@@ -44,8 +48,10 @@ class _MenuPageState extends State<MenuPage> {
   String selectedmenu = '';
   String selectedmenu1 = '';
   int subbodybool = 0;
-  String id,title,desc;
-  _MenuPageState(this.id,this.title,this.desc);
+  String id, title, desc;
+
+  _MenuPageState(this.id, this.title, this.desc);
+
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future subMenu;
   Future myStore;
@@ -86,21 +92,22 @@ class _MenuPageState extends State<MenuPage> {
   double discount = 0;
   double tip = 0;
   double charge = 0;
-  int selectedIndex=0;
-  String cname='';
+  int selectedIndex = 0;
+  String cname = '';
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
+  bool _validate = false;
 
   String maskedPan = '';
-  String expiry  =   '';
-  String cardholderName =  '';
-  String scheme =  '';
-  String cardToken =  '';
+  String expiry = '';
+  String cardholderName = '';
+  String scheme = '';
+  String cardToken = '';
   Color contColor = Colors.green;
 
-  counteraddord1(String addminus){
-    if(addminus == 'add') {
+  counteraddord1(String addminus) {
+    if (addminus == 'add') {
       setState(() {
         order1 = order1 + 1;
         if (order1 < 10) {
@@ -109,13 +116,13 @@ class _MenuPageState extends State<MenuPage> {
           ord1 = order1.toString();
         }
       });
-    }else{
+    } else {
       setState(() {
         order1 = order1 - 1;
-        if(order1 < 0){
+        if (order1 < 0) {
           order1 = 0;
           ord1 = '00';
-        }else {
+        } else {
           if (order1 < 10) {
             ord1 = '0' + order1.toString();
           } else {
@@ -124,65 +131,69 @@ class _MenuPageState extends State<MenuPage> {
         }
       });
     }
-    if(order1 > 0 || order2 > 0){
+    if (order1 > 0 || order2 > 0) {
       setState(() {
         btnaddcolor = true;
       });
-    }else{
+    } else {
       setState(() {
         btnaddcolor = false;
       });
     }
   }
-  counteraddord2(String addminus){
-    if(addminus == 'add') {
+
+  counteraddord2(String addminus) {
+    if (addminus == 'add') {
       //setState(() {
-        order2 = order2 + 1;
-        if (order2 < 10) {
+      order2 = order2 + 1;
+      if (order2 < 10) {
+        ord2 = '0' + order2.toString();
+      } else {
+        ord2 = order2.toString();
+      }
+      //});
+    } else {
+      //setState(() {
+      order2 = order2 - 1;
+      if (order2 < 0) {
+        order2 = 0;
+        ord2 = '00';
+      } else {
+        if (order2 < 10 || order2 > 0) {
           ord2 = '0' + order2.toString();
         } else {
-          ord2 = order2.toString();
+          ord2 = order1.toString();
         }
-      //});
-    }else{
-      //setState(() {
-        order2 = order2 - 1;
-        if(order2 < 0){
-          order2 = 0;
-          ord2 = '00';
-        }else {
-          if (order2 < 10 || order2 > 0) {
-            ord2 = '0' + order2.toString();
-          } else {
-            ord2 = order1.toString();
-          }
-        }
+      }
       //});
     }
-    if(order2 > 0){
+    if (order2 > 0) {
       //setState(() {
-        btnaddcolor = true;
+      btnaddcolor = true;
       //});
-    }else{
+    } else {
       //setState(() {
-        btnaddcolor = false;
+      btnaddcolor = false;
       //});
     }
   }
-  getToke(){
-    try{
+
+  getToke() {
+    try {
       Prefs.load();
       token = Prefs.getString('token');
-    }catch (e){
+    } catch (e) {
       token = '';
     }
   }
-  loadBill()async {
+
+  loadBill() async {
     Prefs.load();
     billname.text = Prefs.getString('billName');
     billadd.text = Prefs.getString('billAdd');
     billemail.text = Prefs.getString('billEmail');
   }
+
   @override
   void initState() {
     super.initState();
@@ -200,104 +211,123 @@ class _MenuPageState extends State<MenuPage> {
     myCardFuture = getCard();
   }
 
-  Future<List<CardDetails>> getCard()async{
-    try{
+  Future<List<CardDetails>> getCard() async {
+    try {
       String mytoken = Prefs.getString('token');
-      Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + mytoken};
-      final response = await http.get(ApiCon.baseurl + '/users/currentUser/savedCards',headers: headers);
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + mytoken
+      };
+      final response = await http.get(
+          ApiCon.baseurl + '/users/currentUser/savedCards',
+          headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
 
-
-      for (var u in jsondata){
+      for (var u in jsondata) {
         var mask = u['maskedPan'];
         var fullname = mask.split('******');
         String latmask = "******" + fullname[1].trim().toString();
 
-        CardDetails tmc = new CardDetails(u['id'].toString(),u['maskedPan'],u['expiry'],u['cardholderName'],u['scheme'],u['cardToken'],false,latmask);
+        CardDetails tmc = new CardDetails(
+            u['id'].toString(),
+            u['maskedPan'],
+            u['expiry'],
+            u['cardholderName'],
+            u['scheme'],
+            u['cardToken'],
+            false,
+            latmask);
 
         myCardList.add(tmc);
       }
       return myCardList;
-    }catch(e){
+    } catch (e) {
       return null;
     }
-
   }
 
-
-  getVipcharge() async{
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+  getVipcharge() async {
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body);
-
 
     vip = double.parse(jsondata['vipOrderCharge'].toString());
     timecol = double.parse(jsondata['timeToCollect'].toString());
-    if(jsondata['isServiceChargeEnabled'].toString() == 'true') {
+    if (jsondata['isServiceChargeEnabled'].toString() == 'true') {
       charge = jsondata['serviceChargePercentage'];
-    }else{
+    } else {
       charge = 0;
     }
   }
-  getDayofweek(){
+
+  getDayofweek() {
     DateTime date = DateTime.now();
     String dateFormat = DateFormat('EEEE').format(date);
     print(dateFormat);
-    if(dateFormat == 'Monday'){
+    if (dateFormat == 'Monday') {
       dtofdy = 1;
-    }else if(dateFormat == 'Tuesday'){
+    } else if (dateFormat == 'Tuesday') {
       dtofdy = 2;
-    }else if(dateFormat == 'Wednesday'){
+    } else if (dateFormat == 'Wednesday') {
       dtofdy = 3;
-    }else if(dateFormat == 'Thursday'){
+    } else if (dateFormat == 'Thursday') {
       dtofdy = 4;
-    }else if(dateFormat == 'Friday'){
+    } else if (dateFormat == 'Friday') {
       dtofdy = 5;
-    }else if(dateFormat == 'Saturday'){
+    } else if (dateFormat == 'Saturday') {
       dtofdy = 6;
-    }else if(dateFormat == 'Sunday'){
+    } else if (dateFormat == 'Sunday') {
       dtofdy = 0;
-    }else{
+    } else {
       dtofdy = 0;
     }
     getSched();
   }
-  getSched() async{
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+
+  getSched() async {
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
-    for (var u in jsondata){
-      if(u['dayOfWeek'] == dtofdy){
+    for (var u in jsondata) {
+      if (u['dayOfWeek'] == dtofdy) {
         String st = '2020-07-20T' + u['startTime'];
         String et = '2020-07-20T' + u['endTime'];
-        String nst =  DateFormat.jm().format(DateTime.parse(st));
-        String net =  DateFormat.jm().format(DateTime.parse(et));
+        String nst = DateFormat.jm().format(DateTime.parse(st));
+        String net = DateFormat.jm().format(DateTime.parse(et));
         setState(() {
           wk = "Working hours " + nst + " - " + net;
           isWorkingDay = u['isWorkingDay'];
         });
-
       }
     }
   }
 
-  Future<List<Table>> getTable() async{
+  Future<List<Table>> getTable() async {
     mytable.clear();
     print(id.toString());
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['tables'];
-    for (var u in jsondata){
-      String tableid,tablename;
+    for (var u in jsondata) {
+      String tableid, tablename;
       tableid = u['id'].toString();
       tablename = u['name'].toString();
-      Table tb = Table(tableid,tablename);
+      Table tb = Table(tableid, tablename);
 
       mytable.add(tb);
     }
@@ -305,25 +335,29 @@ class _MenuPageState extends State<MenuPage> {
     print('Table list: ' + mytable.length.toString());
     return mytable;
   }
-  Future<List<Discount>> getDiscount() async{
+
+  Future<List<Discount>> getDiscount() async {
     mydicount.clear();
     print(id.toString());
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
-    Discount tb = Discount("","No Discount", 0);
+    Discount tb = Discount("", "No Discount", 0);
 
     mydicount.add(tb);
     var jsondata = json.decode(response.body)['discounts'];
-    for (var u in jsondata){
-      String id,name;
+    for (var u in jsondata) {
+      String id, name;
       double percentage = 0;
       id = u['id'].toString();
       name = u['name'].toString();
       percentage = u['percentage'];
 
-      Discount tb = Discount(id,name,percentage);
+      Discount tb = Discount(id, name, percentage);
 
       mydicount.add(tb);
     }
@@ -332,62 +366,62 @@ class _MenuPageState extends State<MenuPage> {
     return mydicount;
   }
 
-  Future<List<Store>> getStore() async{
+  Future<List<Store>> getStore() async {
     print(id.toString());
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['menu'];
-    for (var u in jsondata){
-      String id,name,des,image,cat;
+    for (var u in jsondata) {
+      String id, name, des, image, cat;
 
       print(u['subCategories'].toString());
       id = u['id'].toString();
       cat = u['facilityId'].toString();
       name = u['name'];
-      if(u['subCategories'].toString() == '[]'){
+      if (u['subCategories'].toString() == '[]') {
         des = 'Menu';
-      }else {
+      } else {
         des = 'Sub';
       }
       image = u['iconId'].toString();
-      Store store = Store(id,name,des,image,u['facilityId'].toString());
+      Store store = Store(id, name, des, image, u['facilityId'].toString());
 
       myList.add(store);
-
     }
-
 
     return myList;
   }
 
-  Future<List<SubMenu>> getSub() async{
+  Future<List<SubMenu>> getSub() async {
     myMenu = [];
     print('call');
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
 
-      for (var i = 0; i < jsondata.length - 1; i++){
-        if(jsondata[i]['id'].toString() == sub){
-          print(jsondata[i]['name'].toString() + '|' + sub);
-          var jsondata1 = json.decode(response.body)['menu'][i]['subCategories'];
-          for (var u in jsondata1){
-            print(u['name']);
-            SubMenu store = SubMenu(u['id'].toString(),u['name'].toString(),u['iconId'].toString(),u['facilityId'].toString());
+    for (var i = 0; i < jsondata.length - 1; i++) {
+      if (jsondata[i]['id'].toString() == sub) {
+        print(jsondata[i]['name'].toString() + '|' + sub);
+        var jsondata1 = json.decode(response.body)['menu'][i]['subCategories'];
+        for (var u in jsondata1) {
+          print(u['name']);
+          SubMenu store = SubMenu(u['id'].toString(), u['name'].toString(),
+              u['iconId'].toString(), u['facilityId'].toString());
 
-
-              myMenu.add(store);
-
-          }
-
+          myMenu.add(store);
         }
-
-
       }
+    }
 
     setState(() {
       lengtofsub = myMenu.length * 80;
@@ -399,55 +433,57 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-
       home: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage("assets/images/bkgdefault.png"), fit: BoxFit.cover)),
+                  image: AssetImage("assets/images/bkgdefault.png"),
+                  fit: BoxFit.cover)),
           child: Scaffold(
-              key: _scaffoldKey,
-              appBar: AppBar(
-                //automaticallyImplyLeading: false,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: IconButton(
-                  icon: Icon(Icons.arrow_back, size: 35, color: Colors.white,),
-                  onPressed: () {
-                    if(subbodybool == 1){
-                      setState(() {
-                        subbodybool = 0;
-                      });
-                    }else if(subbodybool == 2){
-                      setState(() {
-                        subbodybool = 1;
-                      });
-                    }
-                    else {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    }
-
-                  },
+            key: _scaffoldKey,
+            appBar: AppBar(
+              //automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 35,
+                  color: Colors.white,
                 ),
-                // actions: [
-                //   IconButton(
-                //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-                //     onPressed: () {
-                //       _scaffoldKey.currentState.openEndDrawer();
-                //     },
-                //   )
-                // ],
+                onPressed: () {
+                  if (subbodybool == 1) {
+                    setState(() {
+                      subbodybool = 0;
+                    });
+                  } else if (subbodybool == 2) {
+                    setState(() {
+                      subbodybool = 1;
+                    });
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  }
+                },
               ),
-              endDrawer: Drawer(
+              // actions: [
+              //   IconButton(
+              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+              //     onPressed: () {
+              //       _scaffoldKey.currentState.openEndDrawer();
+              //     },
+              //   )
+              // ],
+            ),
+            endDrawer: Drawer(
               child: Container(
                   padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
                   color: Colors.black,
                   child: Column(
                     children: [
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -467,14 +503,16 @@ class _MenuPageState extends State<MenuPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.home,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.home,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
                               GestureDetector(
-                                onTap: (){
-
-                                },
+                                onTap: () {},
                                 child: Text(
                                   "Home",
                                   style: TextStyle(
@@ -489,7 +527,7 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -497,7 +535,8 @@ class _MenuPageState extends State<MenuPage> {
                           }
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => orderPage()),
+                            MaterialPageRoute(
+                                builder: (context) => orderPage()),
                           );
                         },
                         child: Container(
@@ -509,7 +548,11 @@ class _MenuPageState extends State<MenuPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.wine_bar_sharp,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.wine_bar_sharp,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -526,7 +569,7 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -546,7 +589,11 @@ class _MenuPageState extends State<MenuPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(Icons.settings,size: 30, color: Colors.white,),
+                              Icon(
+                                Icons.settings,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -563,7 +610,7 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
@@ -583,7 +630,11 @@ class _MenuPageState extends State<MenuPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(FontAwesome.angle_double_up,size: 30, color: Colors.white,),
+                              Icon(
+                                FontAwesome.angle_double_up,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
@@ -600,22 +651,23 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       InkWell(
-                        onTap: (){
+                        onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
                             _scaffoldKey.currentState.openDrawer();
                           } else {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
                           //Navigator.of(context).popAndPushNamed('/home');
-                          if(token == '' || token == null){
+                          if (token == '' || token == null) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
                             );
-                          }else{
+                          } else {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => HomePage()),
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
                             );
                             setState(() {
                               setState(() {
@@ -629,7 +681,6 @@ class _MenuPageState extends State<MenuPage> {
                               });
                             });
                           }
-
                         },
                         child: Container(
                           height: 50,
@@ -640,19 +691,24 @@ class _MenuPageState extends State<MenuPage> {
                               SizedBox(
                                 width: 10,
                               ),
-                              Icon(MaterialCommunityIcons.human,size: 30, color: Colors.white,),
+                              Icon(
+                                MaterialCommunityIcons.human,
+                                size: 30,
+                                color: Colors.white,
+                              ),
                               SizedBox(
                                 width: 20,
                               ),
-                              Text(token == '' || token == null || token.isEmpty?
-                              "Sign In / Register":"Sign Out",
+                              Text(
+                                token == '' || token == null || token.isEmpty
+                                    ? "Sign In / Register"
+                                    : "Sign Out",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-
                             ],
                           ),
                         ),
@@ -672,34 +728,38 @@ class _MenuPageState extends State<MenuPage> {
                       //   ),
                       // )
                     ],
-                  )
-              ),
+                  )),
             ),
-              backgroundColor: Colors.transparent,
-              body: myorig(),
-
-          )
-      ),
+            backgroundColor: Colors.transparent,
+            body: myorig(),
+          )),
     );
   }
 
-  myorig(){
-    if(subbodybool == 2){
+  myorig() {
+    if (subbodybool == 2) {
       return Container(
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             Container(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(desc != null ? desc:'', style: TextStyle(
-                  color: Colors.deepOrange, fontSize: 16,),)),
+                child: Text(
+                  desc != null ? desc : '',
+                  style: TextStyle(
+                    color: Colors.deepOrange,
+                    fontSize: 16,
+                  ),
+                )),
             Container(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text(title != null ? title:'', style: TextStyle(color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),)),
+                child: Text(
+                  title != null ? title : '',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold),
+                )),
             Container(
               height: 30,
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -710,40 +770,39 @@ class _MenuPageState extends State<MenuPage> {
                     visible: isWorkingDay,
                     child: Container(
                         child: Text(
-                          wk != null ? wk:'', style: TextStyle(
-                            color: Colors.white),)
-                    ),
+                          wk != null ? wk : '',
+                          style: TextStyle(color: Colors.white),
+                        )),
                   ),
                   Spacer(),
                   Container(
                       padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                      color: isWorkingDay == true ? Colors.green:Colors.red,
-                      child: Text(isWorkingDay == true ?'online':'offline', style: TextStyle(
-                          color: Colors.white),)
-                  )
+                      color: isWorkingDay == true ? Colors.green : Colors.red,
+                      child: Text(
+                        isWorkingDay == true ? 'online' : 'offline',
+                        style: TextStyle(color: Colors.white),
+                      ))
                 ],
               ),
             ),
-            SizedBox(height: 5,),
+            SizedBox(
+              height: 5,
+            ),
             Divider(
               color: Colors.deepOrange,
               thickness: 2,
             ),
-
-            Expanded(child: payment(),)
-
+            Expanded(
+              child: payment(),
+            )
           ],
         ),
       );
-    }else {
+    } else {
       return SlidingUpPanel(
-
         color: Colors.transparent,
         controller: _pc,
-        maxHeight: MediaQuery
-            .of(context)
-            .size
-            .height - 200,
+        maxHeight: MediaQuery.of(context).size.height - 200,
         body: Stack(
           children: [
             Container(
@@ -751,16 +810,24 @@ class _MenuPageState extends State<MenuPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(desc != null ? desc:'', style: TextStyle(
-                        color: Colors.deepOrange, fontSize: 16,),)),
+                      child: Text(
+                        desc != null ? desc : '',
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontSize: 16,
+                        ),
+                      )),
                   Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text(title != null ? title:'', style: TextStyle(color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold),)),
+                      child: Text(
+                        title != null ? title : '',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      )),
                   Container(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Row(
@@ -770,21 +837,26 @@ class _MenuPageState extends State<MenuPage> {
                           visible: isWorkingDay,
                           child: Container(
                               child: Text(
-                                wk != null ? wk:'', style: TextStyle(
-                                  color: Colors.white),)
-                          ),
+                                wk != null ? wk : '',
+                                style: TextStyle(color: Colors.white),
+                              )),
                         ),
                         Spacer(),
                         Container(
                             padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                            color: isWorkingDay == true ? Colors.green:Colors.red,
-                            child: Text(isWorkingDay == true ?'online':'offline', style: TextStyle(
-                                color: Colors.white),)
-                        )
+                            color: isWorkingDay == true
+                                ? Colors.green
+                                : Colors.red,
+                            child: Text(
+                              isWorkingDay == true ? 'online' : 'offline',
+                              style: TextStyle(color: Colors.white),
+                            ))
                       ],
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Divider(
                     color: Colors.deepOrange,
                     thickness: 2,
@@ -792,16 +864,14 @@ class _MenuPageState extends State<MenuPage> {
                   Expanded(
                     child: Container(
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(0,0,0,200),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 200),
                         child: mybody(),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
-
           ],
         ),
         panel: Visibility(
@@ -826,10 +896,7 @@ class _MenuPageState extends State<MenuPage> {
                 },
                 child: Container(
                     height: 97,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width,
+                    width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
                       borderRadius: new BorderRadius.only(
                         topLeft: const Radius.circular(15.0),
@@ -844,14 +911,11 @@ class _MenuPageState extends State<MenuPage> {
                           end: const FractionalOffset(1.0, 0.0),
                           stops: [0.0, 1.0],
                           tileMode: TileMode.clamp),
-
                     ),
-
                     child: Container(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: GestureDetector(
                         onTap: () {
-
                           if (_pc.isPanelOpen == false) {
                             _pc.open();
                             setState(() {
@@ -880,44 +944,49 @@ class _MenuPageState extends State<MenuPage> {
                                     });
                                   }
                                 },
-                                child: Icon(_pcb == false
-                                    ? FontAwesome.angle_double_up
-                                    : FontAwesome.angle_double_down,
-                                  color: Colors.white, size: 45,)),
-                            Text('VIEW ORDER', style: TextStyle(color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),),
+                                child: Icon(
+                                  _pcb == false
+                                      ? FontAwesome.angle_double_up
+                                      : FontAwesome.angle_double_down,
+                                  color: Colors.white,
+                                  size: 45,
+                                )),
+                            Text(
+                              'VIEW ORDER',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
                             Spacer(),
-                            Text(finaltot.toStringAsFixed(2), style: TextStyle(color: Colors.white,
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold),),
-                            Text(' AED',
-                              style: TextStyle(color: Colors.white, fontSize: 25),),
+                            Text(
+                              finaltot.toStringAsFixed(2),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              ' AED',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 25),
+                            ),
                           ],
                         ),
                       ),
-                    )
-                ),
+                    )),
               ),
-
               Container(
                 color: Color(0xFF2b2b61).withOpacity(1),
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height - 300,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                height: MediaQuery.of(context).size.height - 300,
+                width: MediaQuery.of(context).size.width,
                 child: SingleChildScrollView(
                   child: Container(
                     padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
                     child: Column(
                       children: [
-
                         Visibility(
-                          visible: myOrder.length > 0 ? true:false,
+                          visible: myOrder.length > 0 ? true : false,
                           child: Container(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: GestureDetector(
@@ -933,10 +1002,7 @@ class _MenuPageState extends State<MenuPage> {
                                 });
                               },
                               child: Container(
-                                  width: MediaQuery
-                                      .of(context)
-                                      .size
-                                      .width,
+                                  width: MediaQuery.of(context).size.width,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.transparent,
@@ -947,18 +1013,17 @@ class _MenuPageState extends State<MenuPage> {
                                     ),
                                   ),
                                   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: Center(child: Text('RESET ORDER',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),))
-                              ),
+                                  child: Center(
+                                      child: Text(
+                                        'RESET ORDER',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
+                                      ))),
                             ),
                           ),
                         ),
                         Container(
-                          height: MediaQuery
-                              .of(context)
-                              .size
-                              .height - 470,
+                          height: MediaQuery.of(context).size.height - 470,
                           //color: Colors.white,
                           child: mycart(),
                         ),
@@ -966,30 +1031,34 @@ class _MenuPageState extends State<MenuPage> {
                           padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: GestureDetector(
                             onTap: () {
-                              if(myOrder.length > 0){
-                                setState((){
+                              if (myOrder.length > 0) {
+                                setState(() {
                                   Prefs.load();
                                   Prefs.setInt('Quant', myOrder.length);
                                   Prefs.setDouble('Price', finaltot);
-                                  double percentagefee = (fee/100) * finaltot;
+                                  double percentagefee = (fee / 100) * finaltot;
 
-                                  finaltotwithdiscount = finaltot + percentagefee;
-                                  print('Percentage fee:' + fee.toString() + ' - ' + percentagefee.toString() + ' - ' + finaltot.toString());
+                                  finaltotwithdiscount =
+                                      finaltot + percentagefee;
+                                  print('Percentage fee:' +
+                                      fee.toString() +
+                                      ' - ' +
+                                      percentagefee.toString() +
+                                      ' - ' +
+                                      finaltot.toString());
                                   subbodybool = 2;
                                   _pcb = false;
                                   _pc.close();
                                 });
                               }
-
                             },
                             child: Container(
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
+                                width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color:  myOrder.length > 0 ? contColor:Colors.grey,
+                                  color: myOrder.length > 0
+                                      ? contColor
+                                      : Colors.grey,
                                   border: Border.all(
                                     color: Colors.white,
                                     //                   <--- border color
@@ -999,24 +1068,27 @@ class _MenuPageState extends State<MenuPage> {
                                 padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: Column(
                                   children: [
-                                    Text('PROCEED TO PAYMENT', style: TextStyle(
-                                        color: Colors.white, fontSize: 20),),
-                                    Text('(Time to collect order: ' + timecol.toStringAsFixed(0) + ' mins)',
+                                    Text(
+                                      'PROCEED TO PAYMENT',
                                       style: TextStyle(
-                                          color: Colors.white, fontSize: 14),),
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    Text(
+                                      '(Time to collect order: ' +
+                                          timecol.toStringAsFixed(0) +
+                                          ' mins)',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 14),
+                                    ),
                                   ],
-                                )
-                            ),
+                                )),
                           ),
                         ),
-
-
                       ],
                     ),
                   ),
                 ),
               ),
-
             ],
           ),
         ),
@@ -1024,59 +1096,55 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
-  blickFunct()async{
+  blickFunct() async {
     for (var i = 0; i < 50; i++) {
       await Future.delayed(Duration(milliseconds: 400));
       setState(() {
-        if(i.isEven){
+        if (i.isEven) {
           contColor = Colors.greenAccent;
-        }else{
+        } else {
           contColor = Colors.green;
         }
-
       });
     }
   }
 
-  Widget getCartMixWidgets(List<MixerOrd> strings, int ind)
-  {
+  Widget getCartMixWidgets(List<MixerOrd> strings, int ind) {
     int select;
     List<Widget> list = new List<Widget>();
 
-    for(var i = 0; i < strings.length; i++){
-      list.add(
-
-          Container(
-            padding: EdgeInsets.fromLTRB(0,0,10,0),
-            child: GestureDetector(
-              onTap: (){
-
-              },
-              child: strings[i].name.toString() != ''? new Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                      color: Colors.white54.withOpacity(.5)
-                  ),
-
-                ), //
-                padding: EdgeInsets.fromLTRB(5,5,5,5),
-                child: Row(
-                  children: [
-                    Text(strings[i].name.toString() != null ? strings[i].name.toString():'', style: TextStyle(color: Colors.white54),),
-                  ],
+    for (var i = 0; i < strings.length; i++) {
+      list.add(Container(
+        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+        child: GestureDetector(
+          onTap: () {},
+          child: strings[i].name.toString() != ''
+              ? new Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.white54.withOpacity(.5)),
+            ), //
+            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+            child: Row(
+              children: [
+                Text(
+                  strings[i].name.toString() != null
+                      ? strings[i].name.toString()
+                      : '',
+                  style: TextStyle(color: Colors.white54),
                 ),
-              ):Container(),
+              ],
             ),
           )
-
-      );
+              : Container(),
+        ),
+      ));
     }
     return new Row(children: list);
   }
 
   //cart
-  mycart(){
+  mycart() {
     return Container(
       color: Color(0xFF2b2b61).withOpacity(.5),
       height: MediaQuery.of(context).size.height,
@@ -1089,15 +1157,13 @@ class _MenuPageState extends State<MenuPage> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }else{
+            } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                  itemBuilder: (context, index){
-                    return  GestureDetector(
-                      onTap: (){
-                        setState(() {
-
-                        });
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {});
                       },
                       child: Column(
                         children: [
@@ -1109,86 +1175,125 @@ class _MenuPageState extends State<MenuPage> {
                                 children: [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: MediaQuery.of(context).size.width / 2,
-                                        child: Text(snapshot.data[index].Name != null ? snapshot.data[index].Name:'',style: GoogleFonts.lato(
-                                          textStyle: TextStyle(color: Colors.deepOrange, letterSpacing: .5, fontSize: 18),
-                                        ),),
+                                        width:
+                                        MediaQuery.of(context).size.width /
+                                            2,
+                                        child: Text(
+                                          snapshot.data[index].Name != null
+                                              ? snapshot.data[index].Name
+                                              : '',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                color: Colors.deepOrange,
+                                                letterSpacing: .5,
+                                                fontSize: 18),
+                                          ),
+                                        ),
                                       ),
-                                      SizedBox(height: 5,),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                       Row(
                                         children: [
-                                          Text(snapshot.data[index].Price != null ? snapshot.data[index].Price:'',style: GoogleFonts.lato(
-                                            textStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                          ),),
-                                          Text(' AED',style: GoogleFonts.lato(
-                                            textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                          ),),
+                                          Text(
+                                            snapshot.data[index].Price != null
+                                                ? snapshot.data[index].Price
+                                                : '',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  letterSpacing: .5,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          Text(
+                                            ' AED',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  letterSpacing: .5,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
                                         ],
                                       ),
-
                                     ],
                                   ),
                                   Spacer(),
-
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           int drinkId = Prefs.getInt('drinkId');
-                                          if(myOrder[index].Quant > 1 ) {
+                                          if (myOrder[index].Quant > 1) {
                                             setState(() {
                                               myOrder[index].Quant =
                                                   myOrder[index].Quant - 1;
                                             });
-                                          }else{
+                                          } else {
                                             setState(() {
                                               myOrder.removeAt(index);
                                             });
-
                                           }
-
 
                                           callcompute();
                                         },
                                         child: Container(
                                             height: 60,
                                             child: Center(
-                                                child: Text('-',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.deepOrange),)
-                                            )
-                                        ),
+                                                child: Text(
+                                                  '-',
+                                                  style: TextStyle(
+                                                      fontSize: 50,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.deepOrange),
+                                                ))),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       Container(
-
                                           height: 60,
                                           child: Center(
                                             //snapshot.data[index].Quant.toString()
-                                              child: Text(myOrder[index].Quant.toString(),style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),)
-                                          )
-                                      ),
+                                              child: Text(
+                                                myOrder[index].Quant.toString(),
+                                                style: TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ))),
                                     ],
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           int drinkId = Prefs.getInt('drinkId');
                                           setState(() {
-                                            myOrder[index].Quant =  myOrder[index].Quant + 1;
+                                            myOrder[index].Quant =
+                                                myOrder[index].Quant + 1;
                                           });
                                           // counteraddord2('add');
                                           // bool exists = myOrder.any((myOrder) => myOrder.CatId == snapshot.data[index].CatId);
@@ -1220,49 +1325,48 @@ class _MenuPageState extends State<MenuPage> {
                                         child: Container(
                                             height: 60,
                                             child: Center(
-                                                child: Text('+',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.deepOrange),)
-                                            )
-                                        ),
+                                                child: Text(
+                                                  '+',
+                                                  style: TextStyle(
+                                                      fontSize: 30,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.deepOrange),
+                                                ))),
                                       ),
-
                                     ],
                                   ),
-
                                 ],
-                              )
-                          ),
+                              )),
                           Container(
                             //visible: snapshot.data[index].mixer == null ? false:true,
-                            child: snapshot.data[index].mxir != null ? Container(
+                            child: snapshot.data[index].mxir != null
+                                ? Container(
                                 height: 50,
                                 width: MediaQuery.of(context).size.width,
                                 child: ListView(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     scrollDirection: Axis.horizontal,
                                     children: [
-                                      getCartMixWidgets(snapshot.data[index].mxir, index),
-                                      SizedBox(width: 10,)
-                                    ]
-
-
-                                )
-                            ):null,
+                                      getCartMixWidgets(
+                                          snapshot.data[index].mxir, index),
+                                      SizedBox(
+                                        width: 10,
+                                      )
+                                    ]))
+                                : null,
                           ),
                         ],
                       ),
                     );
-                  }
-              );
-
+                  });
             }
-          }
-
-      ),
+          }),
     );
   }
 
-  mybody(){
-    if(subbodybool == 1){
+  mybody() {
+    if (subbodybool == 1) {
       return Container(
         color: Color(0xFF2b2b61).withOpacity(.5),
         //height: MediaQuery.of(context).size.height - 200,
@@ -1271,7 +1375,7 @@ class _MenuPageState extends State<MenuPage> {
         child: Column(
           children: [
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 setState(() {
                   selectedmenu = '';
                   subbodybool = 0;
@@ -1290,8 +1394,11 @@ class _MenuPageState extends State<MenuPage> {
                               color: Colors.white10,
                             ),
                             padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Text('Menu', style: TextStyle(color: Colors.white, fontSize: 18),)
-                        )
+                            child: Text(
+                              'Menu',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 18),
+                            ))
                       ],
                     ),
                   ),
@@ -1303,23 +1410,28 @@ class _MenuPageState extends State<MenuPage> {
                         Container(
                             width: MediaQuery.of(context).size.width / 1.5,
                             padding: EdgeInsets.fromLTRB(0, 10, 10, 10),
-                            child: Text('> ' + selectedmenu, style: TextStyle(color: Colors.white, fontSize: 18),)
-                        )
+                            child: Text(
+                              '> ' + selectedmenu,
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 18),
+                            ))
                       ],
                     ),
                   ),
-
                 ],
               ),
             ),
-            SizedBox(height: 10,),
-            Divider(color: Colors.white,),
+            SizedBox(
+              height: 10,
+            ),
+            Divider(
+              color: Colors.white,
+            ),
             Container(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
               child: Row(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
                   Container(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                     child: Container(
@@ -1327,21 +1439,24 @@ class _MenuPageState extends State<MenuPage> {
                         width: 50,
                         height: 50,
                         //'assets/images/menu' + image.toString() + '.png'
-                        child: Image.asset('assets/images/menu' +  iconid + '.png')
-                    ),
+                        child: Image.asset(
+                            'assets/images/menu' + iconid + '.png')),
                   ),
-                  SizedBox(width: 10,),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Container(
                       height: 60,
                       width: MediaQuery.of(context).size.width / 2,
                       padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
-                      child: Text(selectedmenu1, style: TextStyle(color: Colors.white, fontSize: 18),)
-                  ),
-
+                      child: Text(
+                        selectedmenu1,
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      )),
                   Spacer(),
                   GestureDetector(
-                    onTap: (){
-                      if(orderlenght > 0) {
+                    onTap: () {
+                      if (orderlenght > 0) {
                         setState(() {
                           ord3 = ord1;
                           order1 = 0;
@@ -1356,44 +1471,45 @@ class _MenuPageState extends State<MenuPage> {
                       }
                     },
                     child: Container(
-                        //width: 90,
+                      //width: 90,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: orderlenght > 0 ?  Colors.green:Colors.white10,
+                          color:
+                          orderlenght > 0 ? Colors.green : Colors.white10,
                           border: Border.all(
-                            color: Colors.white, //                   <--- border color
+                            color: Colors
+                                .white, //                   <--- border color
                             width: 2.0,
                           ),
                         ),
                         padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                        child: Center(child: Text('ADD', style: TextStyle(color: Colors.white, fontSize: 20),))
-                    ),
+                        child: Center(
+                            child: Text(
+                              'ADD',
+                              style: TextStyle(color: Colors.white, fontSize: 20),
+                            ))),
                   )
-
                 ],
               ),
             ),
-            Divider(color: Colors.white,),
-
+            Divider(
+              color: Colors.white,
+            ),
             Container(
               // padding: EdgeInsets.fromLTRB(0,0,0,150),
               child: mylistt(),
             )
-
-
           ],
         ),
       );
-    }else  if(subbodybool == 2) {
+    } else if (subbodybool == 2) {
       return Container(
         child: payment(),
       );
-    }
-    else{
+    } else {
       return Container(
         color: Color(0xFF2b2b61).withOpacity(.5),
         height: MediaQuery.of(context).size.height - 250,
-
         child: FutureBuilder(
             future: myStore,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -1403,47 +1519,44 @@ class _MenuPageState extends State<MenuPage> {
                     child: CircularProgressIndicator(),
                   ),
                 );
-              }else{
+              } else {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
-                    itemBuilder: (context, index){
-                      return  subbody(snapshot.data[index].id,snapshot.data[index].ImageUrl,snapshot.data[index].Name,snapshot.data[index].Description,snapshot.data[index].cat);
-                    }
-                );
-
+                    itemBuilder: (context, index) {
+                      return subbody(
+                          snapshot.data[index].id,
+                          snapshot.data[index].ImageUrl,
+                          snapshot.data[index].Name,
+                          snapshot.data[index].Description,
+                          snapshot.data[index].cat);
+                    });
               }
-            }
-
-        ),
+            }),
       );
     }
-
   }
 
-
   String selectedindex = '';
-  subbody(String id,image,name,cat, fac){
 
-    if(cat == 'Sub'){
+  subbody(String id, image, name, cat, fac) {
+    if (cat == 'Sub') {
       return GestureDetector(
-          onTap: (){
+          onTap: () {
             setState(() {
               selectedindex = id;
             });
           },
           child: ExpansionTile(
             key: Key(id.toString()),
-            initiallyExpanded : selectedindex == id ? true:false,
+            initiallyExpanded: selectedindex == id ? true : false,
             trailing: Icon(
               Icons.keyboard_arrow_down,
               color: Colors.white,
             ),
-            onExpansionChanged: (value){
+            onExpansionChanged: (value) {
               print("Expand: " + id.toString());
               setState(() {
-
                 iconid = image.toString();
-
 
                 print(id);
                 sub = id;
@@ -1454,7 +1567,6 @@ class _MenuPageState extends State<MenuPage> {
                 myTempCart = getDrinks();
               });
             },
-
             title: Container(
                 padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                 color: Colors.transparent,
@@ -1466,26 +1578,29 @@ class _MenuPageState extends State<MenuPage> {
                         width: 50,
                         height: 50,
                         child: Image.asset(
-                            'assets/images/menu' + image.toString() + '.png',
-                        )
+                          'assets/images/menu' + image.toString() + '.png',
+                        )),
+                    SizedBox(
+                      width: 20,
                     ),
-                    SizedBox(width: 20,),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                            //height: 60,
+                          //height: 60,
                             width: MediaQuery.of(context).size.width / 1.8,
-                            padding: EdgeInsets.fromLTRB(0,5,0,5),
-                            child: Text(name != null ? name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
-                        ),
+                            padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                            child: Text(
+                              name != null ? name : '',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20),
+                              textAlign: TextAlign.left,
+                            )),
                       ],
                     )
-
                   ],
-                )
-            ),
+                )),
             children: [
               Container(
                 color: Color(0xFF2b2b61).withOpacity(.5),
@@ -1499,19 +1614,25 @@ class _MenuPageState extends State<MenuPage> {
                             child: CircularProgressIndicator(),
                           ),
                         );
-                      }else{
+                      } else {
                         return ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             itemCount: snapshot.data.length,
-                            itemBuilder: (context, index){
+                            itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    iconid = snapshot.data[index].image.toString();
+                                    iconid =
+                                        snapshot.data[index].image.toString();
                                     Prefs.load();
-                                    Prefs.setInt('Facility', int.parse(snapshot.data[index].facility));
+                                    Prefs.setInt(
+                                        'Facility',
+                                        int.parse(
+                                            snapshot.data[index].facility));
                                     int fac = Prefs.getInt('Facility');
-                                    print('MyFac ' + snapshot.data[index].facility.toString());
+                                    print('MyFac ' +
+                                        snapshot.data[index].facility
+                                            .toString());
                                     selectedmenu = name;
                                     selectedmenu1 = snapshot.data[index].name;
                                     subbodybool = 1;
@@ -1525,138 +1646,150 @@ class _MenuPageState extends State<MenuPage> {
                                     padding: EdgeInsets.fromLTRB(55, 0, 22, 10),
                                     color: Colors.transparent,
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Container(
-                                          color: Colors.transparent,
-                                          width: 50,
-                                          height: 50,
-                                          child: Image.asset(
-                                              'assets/images/menu' + snapshot.data[index].image.toString() +'.png',
-                                          )
+                                            color: Colors.transparent,
+                                            width: 50,
+                                            height: 50,
+                                            child: Image.asset(
+                                              'assets/images/menu' +
+                                                  snapshot.data[index].image
+                                                      .toString() +
+                                                  '.png',
+                                            )),
+                                        SizedBox(
+                                          width: 10,
                                         ),
-                                        SizedBox(width: 10,),
                                         Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                           children: [
                                             Container(
-                                                //height: 60,
-                                                width: MediaQuery.of(context).size.width / 1.8,
-                                                padding: EdgeInsets.fromLTRB(0,5,0,5),
-                                                child: Text(snapshot.data[index].name != null ? snapshot.data[index].name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
-                                            ),
+                                              //height: 60,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                    1.8,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    0, 5, 0, 5),
+                                                child: Text(
+                                                  snapshot.data[index].name !=
+                                                      null
+                                                      ? snapshot
+                                                      .data[index].name
+                                                      : '',
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20),
+                                                  textAlign: TextAlign.left,
+                                                )),
                                           ],
                                         ),
                                         Spacer(),
-
                                         Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                           children: [
                                             Container(
                                                 height: 60,
                                                 child: Center(
-                                                    child: Icon(Icons.arrow_forward_ios, size: 15, color: Colors.white,)
-                                                )
-                                            ),
+                                                    child: Icon(
+                                                      Icons.arrow_forward_ios,
+                                                      size: 15,
+                                                      color: Colors.white,
+                                                    ))),
                                           ],
                                         ),
-
                                       ],
-                                    )
-                                ),
+                                    )),
                               );
-                            }
-                        );
-
+                            });
                       }
-                    }
-
-                ),
+                    }),
               )
             ],
-          )
-      );
-    }else{
+          ));
+    } else {
       return GestureDetector(
-          onTap: (){
-            setState(() {
-              iconid = image.toString();
-              print('MyFac ' + fac.toString());
-              Prefs.load();
-              Prefs.setInt('Facility', int.parse(fac));
-              int faci = Prefs.getInt('Facility');
-              print('MyFac ' + faci.toString());
-              selectedmenu = name;
-              selectedmenu1 = name;
-              subbodybool = 1;
-              dri = id;
-              myDrinks = [];
-              myTempCart = getDrinks();
-            });
-          },
-          child: Container(
-              padding: EdgeInsets.fromLTRB(25, 0, 22, 10),
-              color: Colors.transparent,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                      color: Colors.transparent,
-                      width: 50,
-                      height: 50,
-                      child: Image.asset(
-                          'assets/images/menu' + image.toString() + '.png',
-                      )
-                  ),
-                  SizedBox(width: 20,),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: 60,
-                          width: MediaQuery.of(context).size.width / 1.8,
-                          padding: EdgeInsets.fromLTRB(0,5,0,5),
-                          child: Text(name != null ? name:'',style: TextStyle(color: Colors.white, fontSize: 20),textAlign: TextAlign.left,)
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                          height: 60,
-                          child: Center(
-                              child: Icon(Icons.arrow_forward_ios, size: 15, color: Colors.white)
-                          )
-                      ),
-                    ],
-                  ),
-
-                ],
-              )
-          ),
+        onTap: () {
+          setState(() {
+            iconid = image.toString();
+            print('MyFac ' + fac.toString());
+            Prefs.load();
+            Prefs.setInt('Facility', int.parse(fac));
+            int faci = Prefs.getInt('Facility');
+            print('MyFac ' + faci.toString());
+            selectedmenu = name;
+            selectedmenu1 = name;
+            subbodybool = 1;
+            dri = id;
+            myDrinks = [];
+            myTempCart = getDrinks();
+          });
+        },
+        child: Container(
+            padding: EdgeInsets.fromLTRB(25, 0, 22, 10),
+            color: Colors.transparent,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    color: Colors.transparent,
+                    width: 50,
+                    height: 50,
+                    child: Image.asset(
+                      'assets/images/menu' + image.toString() + '.png',
+                    )),
+                SizedBox(
+                  width: 20,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        child: Text(
+                          name != null ? name : '',
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          textAlign: TextAlign.left,
+                        )),
+                  ],
+                ),
+                Spacer(),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                        height: 60,
+                        child: Center(
+                            child: Icon(Icons.arrow_forward_ios,
+                                size: 15, color: Colors.white))),
+                  ],
+                ),
+              ],
+            )),
       );
     }
-
   }
+
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(10),
-      border: Border.all(
-          color: Colors.white54.withOpacity(.5)
-      ),
-
+      border: Border.all(color: Colors.white54.withOpacity(.5)),
     );
   }
 
-  Widget getTextWidgets(List<Mixer> strings, int ind)
-  {
+  Widget getTextWidgets(List<Mixer> strings, int ind) {
     int select;
     List<Widget> list = new List<Widget>();
     String chid = '';
@@ -1664,259 +1797,315 @@ class _MenuPageState extends State<MenuPage> {
     String chprice = '';
     int myindex = 0;
     int chmid;
-    if(strings.length <= 0){
+    String mname;
+    if (strings.length <= 0) {
       list.add(Container());
-    }else {
+    } else {
       for (var i = 0; i < strings.length; i++) {
-        list.add(
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: GestureDetector(
-                onTap: () {
-                  //print(strings[i].id.toString());
-                  for (var x = 0; x < strings[i].mx.length; x++) {
-                    // print(strings[i].mx[x].name.toString());
-                    // print(strings[i].mx[x].price.toString());
+        list.add(Container(
+          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+          child: GestureDetector(
+            onTap: () {
+              //print(strings[i].id.toString());
+              for (var x = 0; x < strings[i].mx.length; x++) {
+                // print(strings[i].mx[x].name.toString());
+                // print(strings[i].mx[x].price.toString());
 
+              }
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter modsetState
+                          /*You can rename this!*/) {
+                        return SingleChildScrollView(
+                          child: Container(
+                            height: 500,
+                            color: Colors.white,
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        GestureDetector(
+                                            onTap: () {
+                                              if (myDrinks[ind]
+                                                  .ChMixer
+                                                  .isNotEmpty)
+                                                strings[i].name = mname;
+                                              Navigator.pop(context);
 
-                  }
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return StatefulBuilder(
-                          builder: (BuildContext context,
-                              StateSetter modsetState
-                              /*You can rename this!*/) {
-                            return SingleChildScrollView(
-                              child: Container(
-                                height: 500,
-                                color: Colors.white,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start,
-                                    children: <Widget>[
-                                      Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            20, 20, 20, 0),
-                                        child: Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child:  SizedBox(
-                                                width: 100,
-                                                child: Row(
-                                                  children: [
-                                                    Text("Cancel",
-                                                      style: TextStyle(
-                                                          color: Colors.deepOrange,
-                                                          fontSize: 16),),
-
-                                                  ],
-                                                ),
-                                              )
-                                            ),
-                                            Spacer(),
-                                            GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                if(myDrinks[ind].ChMixer.isNotEmpty) {
-                                                  myDrinks[ind].ChMixer.removeWhere((element) => element.cname == strings[i].name);
-                                                }
-                                                Navigator.pop(context);
-                                                List<chossenMixer> newChs = myDrinks[ind].ChMixer;
-
-                                                chossenMixer chs = chossenMixer(chid, chname, chprice);
-                                                print(chs);
-
-                                                newChs.add(chs);
-                                                print(chs.cmid.toString());
-                                                print(chs.cname.toString());
-                                                print(chs.cprice.toString());
-                                                myDrinks[ind].ChMixer = newChs;
-
-                                                print(strings[i].mx.length);
-
-
-                                                    double tot = double.parse(myDrinks[ind].origPrice) + double.parse(chprice);
-                                                    myDrinks[ind].price = tot.toStringAsFixed(2);
-                                                    strings[i].name = chs.cname.toString();
-                                                });
-
-
-                                              },
-                                              child: Text("Done",
-                                                style: TextStyle(
-                                                    color: Colors.deepOrange,
-                                                    fontSize: 16),),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 5,),
-
-                                      // Container(
-                                      //   padding: EdgeInsets.fromLTRB(
-                                      //       20, 20, 20, 5),
-                                      //   child: GestureDetector(
-                                      //     onTap: () {
-                                      //       print('none');
-                                      //       modsetState(() {
-                                      //         strings[i].name = '';
-                                      //         select = null;
-                                      //       });
-                                      //
-                                      //       myDrinks[ind].mid = '';
-                                      //       myDrinks[ind].mprice = '';
-                                      //       setState(() {
-                                      //         myDrinks[ind].price = myDrinks[ind].origPrice;
-                                      //         myDrinks = [];
-                                      //         myTempCart = getDrinks();
-                                      //       });
-                                      //     },
-                                      //     child: Container(
-                                      //         padding: EdgeInsets.fromLTRB(
-                                      //             10, 0, 10, 0),
-                                      //         child: Row(
-                                      //           children: [
-                                      //             Icon(Icons.circle,
-                                      //               color: select == null
-                                      //                   ? Colors.deepOrange
-                                      //                   : Colors.black
-                                      //                   .withOpacity(.5),),
-                                      //             SizedBox(width: 10,),
-                                      //             Text("Cancel",
-                                      //               style: TextStyle(
-                                      //                   color: Colors.black,
-                                      //                   fontSize: 12),),
-                                      //             Spacer(),
-                                      //             Text("0 AED",
-                                      //               style: TextStyle(
-                                      //                   color: Colors.black,
-                                      //                   fontSize: 16),),
-                                      //           ],
-                                      //         )
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      //body
-                                      Container(
-                                        color: Colors.white,
-                                        padding: EdgeInsets.fromLTRB(
-                                            20, 0, 20, 0),
-                                        height: 400,
-                                        child: ListView.builder(
-                                          padding: EdgeInsets.all(10.0),
-                                          shrinkWrap: false,
-                                          itemCount: strings[i].mx.length,
-                                          itemBuilder: (BuildContext context,
-                                              int index) {
-                                            return GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  chid = strings[i].mx[index].id;
-                                                  chname = strings[i].mx[index].name;
-                                                  chprice = strings[i].mx[index].price;
-
-                                                  myindex = index;
-                                                  print(myindex);
-                                                  print(index);
-                                                  print(chid);
-
-                                                  myDrinks[ind].mid = strings[i].mx[index].id;
-                                                  myDrinks[ind].mprice = strings[i].mx[index].price;
-                                                });
-
-
-
-                                                modsetState(() {
-                                                  myDrinks[ind].mid = strings[i].mx[index].id;
-                                                  myDrinks[ind].mprice = strings[i].mx[index].price;
-
-                                                  select = myindex;
-                                                });
-                                              },
-                                              child: Container(
-
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 20),
-                                                  child: Row(
-                                                    children:  [
-                                                        Icon(Icons.circle,
-                                                        color: myDrinks[ind].mid == strings[i].mx[index]
-                                                            .id
-                                                            ? Colors.deepOrange
-                                                            : Colors.black
-                                                            .withOpacity(.5),),
-                                                      SizedBox(width: 10,),
-
-                                                      Text (strings[i].mx[index]
-                                                          .name.toString() != null ? strings[i].mx[index]
-                                                          .name.toString():'',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 12),),
-                                                      Spacer(),
-                                                      Text(strings[i].mx[index]
-                                                          .price.toString() +
-                                                          " AED",
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16),),
-
-                                                    ],
-                                                  )
+                                            },
+                                            child: SizedBox(
+                                              width: 100,
+                                              child: Row(
+                                                children: [
+                                                  Text(
+                                                    "Cancel",
+                                                    style: TextStyle(
+                                                        color: Colors.deepOrange,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
                                               ),
-                                            );
+                                            )),
+                                        Spacer(),
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (myDrinks[ind]
+                                                  .ChMixer
+                                                  .isNotEmpty) {
+                                                myDrinks[ind].ChMixer.removeWhere(
+                                                        (element) =>
+                                                    element.cname ==
+                                                        mname);
+                                              }
+                                              Navigator.pop(context);
+                                              List<chossenMixer> newChs =
+                                                  myDrinks[ind].ChMixer;
+
+                                              chossenMixer chs = chossenMixer(
+                                                  chid, chname, chprice);
+                                              print(chs);
+
+                                              newChs.add(chs);
+                                              print(chs.cmid.toString());
+                                              print(chs.cname.toString());
+                                              print(chs.cprice.toString());
+                                              myDrinks[ind].ChMixer = newChs;
+
+                                              print(strings[i].mx.length);
+
+                                              double tot = double.parse(
+                                                  myDrinks[ind].origPrice) +
+                                                  double.parse(chprice);
+                                              myDrinks[ind].price =
+                                                  tot.toStringAsFixed(2);
+                                              strings[i].name =
+                                                  chs.cname.toString();
+                                            });
                                           },
+                                          child: Text(
+                                            "Done",
+                                            style: TextStyle(
+                                                color: Colors.deepOrange,
+                                                fontSize: 16),
+                                          ),
                                         ),
-                                      )
-
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+
+                                  // Container(
+                                  //   padding: EdgeInsets.fromLTRB(
+                                  //       20, 20, 20, 5),
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       print('none');
+                                  //       modsetState(() {
+                                  //         strings[i].name = '';
+                                  //         select = null;
+                                  //       });
+                                  //
+                                  //       myDrinks[ind].mid = '';
+                                  //       myDrinks[ind].mprice = '';
+                                  //       setState(() {
+                                  //         myDrinks[ind].price = myDrinks[ind].origPrice;
+                                  //         myDrinks = [];
+                                  //         myTempCart = getDrinks();
+                                  //       });
+                                  //     },
+                                  //     child: Container(
+                                  //         padding: EdgeInsets.fromLTRB(
+                                  //             10, 0, 10, 0),
+                                  //         child: Row(
+                                  //           children: [
+                                  //             Icon(Icons.circle,
+                                  //               color: select == null
+                                  //                   ? Colors.deepOrange
+                                  //                   : Colors.black
+                                  //                   .withOpacity(.5),),
+                                  //             SizedBox(width: 10,),
+                                  //             Text("Cancel",
+                                  //               style: TextStyle(
+                                  //                   color: Colors.black,
+                                  //                   fontSize: 12),),
+                                  //             Spacer(),
+                                  //             Text("0 AED",
+                                  //               style: TextStyle(
+                                  //                   color: Colors.black,
+                                  //                   fontSize: 16),),
+                                  //           ],
+                                  //         )
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  //body
+                                  Container(
+                                    color: Colors.white,
+                                    padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                    height: 400,
+                                    child: ListView.builder(
+                                      padding: EdgeInsets.all(10.0),
+                                      shrinkWrap: false,
+                                      itemCount: strings[i].mx.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              chid = strings[i].mx[index].id;
+                                              chname = strings[i].mx[index].name;
+                                              chprice = strings[i].mx[index].price;
+
+                                              myindex = index;
+                                              print(myindex);
+                                              print(index);
+                                              print(chid);
+
+                                              myDrinks[ind].mid =
+                                                  strings[i].mx[index].id;
+                                              myDrinks[ind].mprice =
+                                                  strings[i].mx[index].price;
+                                              mname = strings[i].name;
+                                            });
+
+                                            modsetState(() {
+                                              strings[i].name = '';
+                                              myDrinks[ind].mid =
+                                                  strings[i].mx[index].id;
+                                              myDrinks[ind].mprice =
+                                                  strings[i].mx[index].price;
+                                              select = myindex;
+                                              int Row = index;
+                                            });
+                                          },
+                                          child: Container(
+                                              padding:
+                                              EdgeInsets.fromLTRB(0, 0, 0, 20),
+                                              child: Row(
+                                                children: [
+                                                  if (strings[i].name.toString() ==
+                                                      strings[i].mx[index].name)
+                                                    (Icon(
+                                                      Icons.circle,
+                                                      color: strings[i]
+                                                          .name
+                                                          .toString() ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .name
+                                                          ? Colors.deepOrange[700]
+                                                          : Colors.blue
+                                                          .withOpacity(.5),
+                                                    ))
+                                                  else
+                                                    (Icon(
+                                                      Icons.circle,
+                                                      color: myDrinks[ind].mid ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .id
+                                                          ? Colors.deepOrange[700]
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    )),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child: SingleChildScrollView(
+                                                      scrollDirection:
+                                                      Axis.horizontal,
+                                                      child: Text(
+                                                        strings[i]
+                                                            .mx[index]
+                                                            .name
+                                                            .toString() !=
+                                                            null
+                                                            ? strings[i]
+                                                            .mx[index]
+                                                            .name
+                                                            .toString()
+                                                            : '',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 12),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    strings[i]
+                                                        .mx[index]
+                                                        .price
+                                                        .toString() +
+                                                        " AED",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              )),
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
                               ),
-                            );
-                          });
-                    },
-                  );
+                            ),
+                          ),
+                        );
+                      });
                 },
-                child: new Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                        color: Colors.white54.withOpacity(.5)
-                    ),
-
-                  ), //
-                  padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                  child: Row(
-                    children: [
-                      Icon(Icons.add_circle_outline, color: Colors.white54,),
-                      SizedBox(width: 5,),
-                      Text(strings[i].name.toString() != null ? strings[i].name.toString():'',
-                        style: TextStyle(color: Colors.white54),),
-
-                    ],
+              );
+            },
+            child: new Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: Colors.white54.withOpacity(.5)),
+              ), //
+              padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white54,
                   ),
-                ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    strings[i].name.toString() != null
+                        ? strings[i].name.toString()
+                        : '',
+                    style: TextStyle(color: Colors.white54),
+                  ),
+                ],
               ),
-            )
-        );
+            ),
+          ),
+        ));
       }
-
     }
     return new Row(children: list);
   }
 
   //my list
-  mylistt(){
-
+  mylistt() {
     return Container(
-      padding: EdgeInsets.fromLTRB(0,0,0,0),
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       color: Color(0xFF2b2b61).withOpacity(.5),
       height: MediaQuery.of(context).size.height - 450,
       child: FutureBuilder(
@@ -1928,19 +2117,17 @@ class _MenuPageState extends State<MenuPage> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }else{
+            } else {
               return ListView.builder(
-                  padding: EdgeInsets.fromLTRB(0,0,0,150),
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 150),
                   //physics: NeverScrollableScrollPhysics(),
                   itemCount: snapshot.data.length,
-                  itemBuilder: (context, index){
-                    return  Column(
+                  itemBuilder: (context, index) {
+                    return Column(
                       children: [
                         GestureDetector(
-                          onTap: (){
-                            setState(() {
-
-                            });
+                          onTap: () {
+                            setState(() {});
                           },
                           child: Container(
                               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -1950,132 +2137,243 @@ class _MenuPageState extends State<MenuPage> {
                                 children: [
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Container(
-                                        width: MediaQuery.of(context).size.width / 2,
-                                        child: Text(snapshot.data[index].name != null ? snapshot.data[index].name:'',style: GoogleFonts.lato(
-                                          textStyle: TextStyle(color: Colors.deepOrange, letterSpacing: .5, fontSize: 18),
-                                        ),),
+                                        width:
+                                        MediaQuery.of(context).size.width /
+                                            2,
+                                        child: Text(
+                                          snapshot.data[index].name != null
+                                              ? snapshot.data[index].name
+                                              : '',
+                                          style: GoogleFonts.lato(
+                                            textStyle: TextStyle(
+                                                color: Colors.deepOrange,
+                                                letterSpacing: .5,
+                                                fontSize: 18),
+                                          ),
+                                        ),
                                       ),
-                                      SizedBox(height: 5,),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
                                       Container(
-                                          width: MediaQuery.of(context).size.width / 2,
-                                          child: Text(snapshot.data[index].desciption != 'null' ? snapshot.data[index].desciption:''
-                                            ,style: GoogleFonts.lato(
-                                              textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 12),
-                                            ),)
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width /
+                                              2,
+                                          child: Text(
+                                            snapshot.data[index].desciption !=
+                                                'null'
+                                                ? snapshot
+                                                .data[index].desciption
+                                                : '',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  letterSpacing: .5,
+                                                  fontSize: 12),
+                                            ),
+                                          )),
+                                      SizedBox(
+                                        height: 5,
                                       ),
-                                      SizedBox(height: 5,),
                                       Container(
                                         child: Row(
                                           children: [
-                                            Text(snapshot.data[index].price != 'null' ? snapshot.data[index].price:'',style: GoogleFonts.lato(
-                                              textStyle: TextStyle(fontWeight: FontWeight.bold,color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                            ),),
-                                            Text(' AED',style: GoogleFonts.lato(
-                                              textStyle: TextStyle(color: Colors.white, letterSpacing: .5, fontSize: 14),
-                                            ),),
+                                            Text(
+                                              snapshot.data[index].price !=
+                                                  'null'
+                                                  ? snapshot.data[index].price
+                                                  : '',
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    letterSpacing: .5,
+                                                    fontSize: 14),
+                                              ),
+                                            ),
+                                            Text(
+                                              ' AED',
+                                              style: GoogleFonts.lato(
+                                                textStyle: TextStyle(
+                                                    color: Colors.white,
+                                                    letterSpacing: .5,
+                                                    fontSize: 14),
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
                                       Container(
-                                          padding: EdgeInsets.fromLTRB(0, 2, 0, 2),
-                                        child:snapshot.data[index].allowIce ? Row(
-                                          children: [
-                                            Visibility(
-                                                visible: snapshot.data[index].allowIce,
-                                                child: GestureDetector(
-                                                  onTap: (){
-                                                  setState(() {
-                                                    if(snapshot.data[index].addIce == false){
-                                                      snapshot.data[index].addIce = true;
-                                                    }else{
-                                                      snapshot.data[index].addIce = false;
-                                                    }
-                                                  });
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(color: Colors.white),
-                                                      borderRadius: BorderRadius.circular(10),
-                                                      color: snapshot.data[index].addIce == false ? Colors.transparent:Colors.white.withOpacity(.2)
-                                                    ),
-                                                    child: Row(
-                                                      children: [
-                                                        Container(
-                                                            color: Colors.transparent,
-                                                            width: 30,
-                                                            height: 30,
-                                                            child: Image.asset('assets/images/ic_ice_cubes.png')
-                                                        ),Text(snapshot.data[index].addIce == false ?"Add ice":"ice",style: TextStyle(color: Colors.white),)
-                                                      ],
-                                                    ),
-                                                  )
-                                                )
-                                            ),
-                                          ],
-                                        ):null
+                                          padding:
+                                          EdgeInsets.fromLTRB(0, 2, 0, 2),
+                                          child: snapshot.data[index].allowIce
+                                              ? Row(
+                                            children: [
+                                              Visibility(
+                                                  visible: snapshot
+                                                      .data[index]
+                                                      .allowIce,
+                                                  child: GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          if (snapshot
+                                                              .data[
+                                                          index]
+                                                              .addIce ==
+                                                              false) {
+                                                            snapshot
+                                                                .data[
+                                                            index]
+                                                                .addIce = true;
+                                                          } else {
+                                                            snapshot
+                                                                .data[
+                                                            index]
+                                                                .addIce = false;
+                                                          }
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        padding:
+                                                        EdgeInsets
+                                                            .fromLTRB(
+                                                            2,
+                                                            0,
+                                                            5,
+                                                            0),
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                                color: Colors
+                                                                    .white),
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                10),
+                                                            color: snapshot
+                                                                .data[
+                                                            index]
+                                                                .addIce ==
+                                                                false
+                                                                ? Colors
+                                                                .transparent
+                                                                : Colors
+                                                                .white
+                                                                .withOpacity(
+                                                                .2)),
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                width: 30,
+                                                                height:
+                                                                30,
+                                                                child: Image
+                                                                    .asset(
+                                                                    'assets/images/ic_ice_cubes.png')),
+                                                            Text(
+                                                              snapshot.data[index].addIce ==
+                                                                  false
+                                                                  ? "Add ice"
+                                                                  : "ice",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ))),
+                                            ],
+                                          )
+                                              : null),
+                                      SizedBox(
+                                        height: snapshot.data[index].imagePath
+                                            .toString()
+                                            .isNotEmpty ==
+                                            true
+                                            ? 10
+                                            : 0,
                                       ),
-
-
-
-                                      SizedBox(height: snapshot.data[index].imagePath.toString().isNotEmpty == true ? 10:0,),
                                       Container(
-                                        child: snapshot.data[index].imagePath.toString().isNotEmpty == true ? GestureDetector(
-                                          onTap: (){
+                                        child: snapshot.data[index].imagePath
+                                            .toString()
+                                            .isNotEmpty ==
+                                            true
+                                            ? GestureDetector(
+                                          onTap: () {
                                             Alert(
                                               context: context,
                                               title: "Image",
                                               content: Container(
                                                 child: Container(
-                                                    color: Colors.transparent,
+                                                    color: Colors
+                                                        .transparent,
                                                     width: 200,
                                                     height: 200,
-                                                    child: Image.network(ApiCon.baseurl + snapshot.data[index].imagePath)
-                                                ),
+                                                    child: Image.network(
+                                                        ApiCon.baseurl +
+                                                            snapshot
+                                                                .data[
+                                                            index]
+                                                                .imagePath)),
                                               ),
                                               buttons: [
                                                 DialogButton(
                                                   child: Text(
                                                     "Close",
-                                                    style: TextStyle(color: Colors.white, fontSize: 20),
+                                                    style: TextStyle(
+                                                        color:
+                                                        Colors.white,
+                                                        fontSize: 20),
                                                   ),
-                                                  onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                                  color: Colors.deepOrange,
+                                                  onPressed: () =>
+                                                      Navigator.of(
+                                                          context,
+                                                          rootNavigator:
+                                                          true)
+                                                          .pop(),
+                                                  color:
+                                                  Colors.deepOrange,
                                                 )
                                               ],
                                             ).show();
                                           },
-                                          child: Icon(Icons.photo, color: Colors.white,),
-                                        ):null,
+                                          child: Icon(
+                                            Icons.photo,
+                                            color: Colors.white,
+                                          ),
+                                        )
+                                            : null,
                                       ),
-
-
                                     ],
                                   ),
                                   Spacer(),
-
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: (){
+                                        onTap: () {
                                           setState(() {
-                                            if(myDrinks[index].Quant > 0) {
-                                              myDrinks[index].Quant = myDrinks[index].Quant - 1;
+                                            if (myDrinks[index].Quant > 0) {
+                                              myDrinks[index].Quant =
+                                                  myDrinks[index].Quant - 1;
                                             }
-                                            if(orderlenght > 0) {
+                                            if (orderlenght > 0) {
                                               orderlenght = orderlenght - 1;
                                             }
                                           });
-                                          if(orderlenght > 0){
+                                          if (orderlenght > 0) {
                                             setState(() {
                                               btnaddcolor = true;
                                             });
-                                          }else{
+                                          } else {
                                             setState(() {
                                               btnaddcolor = false;
                                             });
@@ -2108,50 +2406,84 @@ class _MenuPageState extends State<MenuPage> {
                                         child: Container(
                                             height: 40,
                                             child: Center(
-                                                child: Text('-',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.deepOrange),)
-                                            )
-                                        ),
+                                                child: Text(
+                                                  '-',
+                                                  style: TextStyle(
+                                                      fontSize: 50,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.deepOrange),
+                                                ))),
                                       ),
                                     ],
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       Container(
                                           height: 60,
                                           child: Center(
-                                              child: Text(snapshot.data[index].Quant.toString(),style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),)
-                                          )
-                                      ),
+                                              child: Text(
+                                                snapshot.data[index].Quant
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    fontSize: 30,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ))),
                                     ],
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
                                     children: [
                                       GestureDetector(
-                                        onTap: (){
-
+                                        onTap: () {
                                           setState(() {
-                                            Prefs.setInt('drinkCatId', int.parse(snapshot.data[index].drinkCategoryId.toString()));
-                                            Prefs.setInt('drinkId', int.parse(snapshot.data[index].id.toString()));
-                                            myDrinks[index].Quant =  myDrinks[index].Quant + 1;
+                                            Prefs.setInt(
+                                                'drinkCatId',
+                                                int.parse(snapshot
+                                                    .data[index].drinkCategoryId
+                                                    .toString()));
+                                            Prefs.setInt(
+                                                'drinkId',
+                                                int.parse(snapshot
+                                                    .data[index].id
+                                                    .toString()));
+                                            myDrinks[index].Quant =
+                                                myDrinks[index].Quant + 1;
                                             orderlenght = orderlenght + 1;
                                           });
-                                          for(var i = 0; i < myDrinks.length; i++){
-                                            print(myDrinks[i].id.toString() + " | " + myDrinks[i].drinkCategoryId.toString() + " | " + myDrinks[i].name.toString() + " | " + myDrinks[i].Quant.toString() + " | " + myDrinks[i].price.toString());
-
+                                          for (var i = 0;
+                                          i < myDrinks.length;
+                                          i++) {
+                                            print(myDrinks[i].id.toString() +
+                                                " | " +
+                                                myDrinks[i]
+                                                    .drinkCategoryId
+                                                    .toString() +
+                                                " | " +
+                                                myDrinks[i].name.toString() +
+                                                " | " +
+                                                myDrinks[i].Quant.toString() +
+                                                " | " +
+                                                myDrinks[i].price.toString());
                                           }
-                                          if(orderlenght > 0){
+                                          if (orderlenght > 0) {
                                             setState(() {
-                                            btnaddcolor = true;
+                                              btnaddcolor = true;
                                             });
-                                          }else{
+                                          } else {
                                             setState(() {
-                                            btnaddcolor = false;
+                                              btnaddcolor = false;
                                             });
                                           }
                                           // counteraddord2('add');
@@ -2179,173 +2511,208 @@ class _MenuPageState extends State<MenuPage> {
                                           //   print(temporder[i].Name);
                                           //   print(temporder[i].Quant);
                                           // }
-
                                         },
                                         child: Container(
                                             height: 60,
                                             child: Center(
-                                                child: Text('+',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.deepOrange),)
-                                            )
-                                        ),
+                                                child: Text(
+                                                  '+',
+                                                  style: TextStyle(
+                                                      fontSize: 30,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.deepOrange),
+                                                ))),
                                       ),
                                     ],
                                   ),
-
                                 ],
-                              )
-                          ),
+                              )),
                         ),
                         Container(
                           //visible: snapshot.data[index].mixer == null ? false:true,
-                          child: snapshot.data[index].mixer.isEmpty ? Container(
-
-                          ):Container(
+                          child: snapshot.data[index].mixer.isEmpty
+                              ? Container()
+                              : Container(
                               width: MediaQuery.of(context).size.width,
                               child: Container(
-                                height: snapshot.data[index].mixer.isEmpty ? 0:30,
+                                height: snapshot.data[index].mixer.isEmpty
+                                    ? 0
+                                    : 40,
                                 child: ListView(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10),
                                     scrollDirection: Axis.horizontal,
                                     children: [
                                       Container(
                                         // color: Colors.green,
-                                          child: getTextWidgets(snapshot.data[index].mixer, index)),
-                                    ]
-                                ),
+                                          child: getTextWidgets(
+                                              snapshot.data[index].mixer,
+                                              index)),
+                                    ]),
                               )),
                         ),
-                        SizedBox(height: snapshot.data[index].mixer.isEmpty  ? 0:10,)
+                        SizedBox(
+                          height: snapshot.data[index].mixer.isEmpty ? 0 : 10,
+                        )
                       ],
                     );
-                  }
-              );
-
+                  });
             }
-          }
-
-      ),
+          }),
     );
-
   }
 
-  Future<List<Drinks>> getDrinks() async{
+  Future<List<Drinks>> getDrinks() async {
     myDrinks = [];
     print('drinks');
     print(dri);
     print(drisub);
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
     String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
 
-    String feeable = json.decode(response.body)['isServiceChargeEnabled'].toString();
-    if(feeable == 'true'){
-      fee = double.parse(json.decode(response.body)['serviceChargePercentage'].toString());
-    }else{
+    String feeable =
+    json.decode(response.body)['isServiceChargeEnabled'].toString();
+    if (feeable == 'true') {
+      fee = double.parse(
+          json.decode(response.body)['serviceChargePercentage'].toString());
+    } else {
       fee = 0;
     }
 
-
-    for (var i = 0; i < jsondata.length - 1; i++){
-      if(jsondata[i]['id'].toString() == dri){
-
+    for (var i = 0; i < jsondata.length - 1; i++) {
+      if (jsondata[i]['id'].toString() == dri) {
         print(jsondata[i]['name'].toString() + '|' + dri);
-        if(jsondata[i]['subCategories'].toString() == '[]'){
+        if (jsondata[i]['subCategories'].toString() == '[]') {
           var jsondata1 = json.decode(response.body)['menu'][i]['drinks'];
           int mi = 0;
-          for (var u in jsondata1){
+          for (var u in jsondata1) {
             print(u['name']);
             List<Mixer> mix = [];
             int mci = 0;
-            var jsondata2 = await json.decode(response.body)['menu'][i]['drinks'][mi]['mixerCategories'];
-            for (var m in jsondata2){
+            var jsondata2 = await json.decode(response.body)['menu'][i]
+            ['drinks'][mi]['mixerCategories'];
+            for (var m in jsondata2) {
               List<MixerCat> mixCat = [];
-              try{
-                var jsondata3 = await json.decode(response.body)['menu'][i]['drinks'][mi]['mixerCategories'][mci]['mixers'];
+              try {
+                var jsondata3 = await json.decode(response.body)['menu'][i]
+                ['drinks'][mi]['mixerCategories'][mci]['mixers'];
                 for (var mc in jsondata3) {
-                  MixerCat mymixCat = MixerCat(mc['id'].toString(), mc['name'].toString(),mc['price'].toString());
+                  MixerCat mymixCat = MixerCat(mc['id'].toString(),
+                      mc['name'].toString(), mc['price'].toString());
                   setState(() {
                     mixCat.add(mymixCat);
                   });
                 }
-              }catch (e){
+              } catch (e) {
                 print("empty mixer");
               }
-              Mixer mymix = Mixer(m['id'], m['name'],mixCat);
-             setState(() {
-               mix.add(mymix);
-             });
-              mci ++;
+              Mixer mymix = Mixer(m['id'], m['name'], mixCat);
+              setState(() {
+                mix.add(mymix);
+              });
+              mci++;
             }
 //s['allowIce']
-            Drinks store = Drinks(jsondata[i]['id'].toString(),u['id'].toString(),u['name'].toString(),u['description'].toString(),u['price'].toString(),0,u['drinkCategoryId'].toString(),mix,'','',u['price'].toString(),[],u['imagePath'],u['allowIce'],false);
+            Drinks store = Drinks(
+                jsondata[i]['id'].toString(),
+                u['id'].toString(),
+                u['name'].toString(),
+                u['description'].toString(),
+                u['price'].toString(),
+                0,
+                u['drinkCategoryId'].toString(),
+                mix,
+                '',
+                '',
+                u['price'].toString(),
+                [],
+                u['imagePath'],
+                u['allowIce'],
+                false);
 
             setState(() {
               myDrinks.add(store);
             });
             mi++;
           }
-        }else {
-          var jsondata1 = json.decode(response.body)['menu'][i]['subCategories'];
-          for (var v = 0; v < jsondata1.length - 1; v++){
-            if(jsondata1[i]['id'].toString() == drisub){
+        } else {
+          var jsondata1 =
+          json.decode(response.body)['menu'][i]['subCategories'];
+          for (var v = 0; v < jsondata1.length - 1; v++) {
+            if (jsondata1[i]['id'].toString() == drisub) {
               print(jsondata1[i]['id'].toString() + '|' + drisub);
-              var jsondata2 = json.decode(response.body)['menu'][i]['subCategories'][v]['drinks'];
+              var jsondata2 = json.decode(response.body)['menu'][i]
+              ['subCategories'][v]['drinks'];
               int mi = 0;
-              for (var s in jsondata2){
+              for (var s in jsondata2) {
                 //if(s['drinkCategoryId'] == drisub) {
-                  print(s['name']);
+                print(s['name']);
 
-                  List<Mixer> mix = [];
-                  int mci = 0;
-                  var jsondata2 = await json.decode(response.body)['menu'][i]['subCategories'][v]['drinks'][0]['mixerCategories'];
-                  for (var m in jsondata2) {
-                    print(m['name']);
-                    List<MixerCat> mixCat = [];
+                List<Mixer> mix = [];
+                int mci = 0;
+                var jsondata2 = await json.decode(response.body)['menu'][i]
+                ['subCategories'][v]['drinks'][0]['mixerCategories'];
+                for (var m in jsondata2) {
+                  print(m['name']);
+                  List<MixerCat> mixCat = [];
 
-                  try{
-                    var jsondata3 = await json.decode(response.body)['menu'][i]['subCategories'][v]['drinks'][mi]['mixerCategories'][mci]['mixers'];
+                  try {
+                    var jsondata3 = await json.decode(response.body)['menu'][i]
+                    ['subCategories'][v]['drinks'][mi]
+                    ['mixerCategories'][mci]['mixers'];
 
                     for (var mc in jsondata3) {
                       print(mc['name'].toString());
-                      MixerCat mymixCat = MixerCat(
-                          mc['id'].toString(), mc['name'].toString(),
-                          mc['price'].toString());
+                      MixerCat mymixCat = MixerCat(mc['id'].toString(),
+                          mc['name'].toString(), mc['price'].toString());
                       setState(() {
                         mixCat.add(mymixCat);
                       });
                     }
-                  }catch (e){
+                  } catch (e) {
                     print('empty mixer');
                   }
 
-                    Mixer mymix = Mixer(m['id'], m['name'],mixCat);
-                   setState(() {
-                     mix.add(mymix);
-                   });
-                    mci ++;
-                  }
+                  Mixer mymix = Mixer(m['id'], m['name'], mixCat);
+                  setState(() {
+                    mix.add(mymix);
+                  });
+                  mci++;
+                }
 
-                  Drinks store = Drinks(s['drinkCategoryId'].toString(),
-                      s['id'].toString(), s['name'].toString(),
-                      s['description'].toString(), s['price'].toString(),0,s['drinkCategoryId'].toString(),mix,'','',s['price'].toString(),[],s['imagePath'],s['allowIce'],false);
+                Drinks store = Drinks(
+                    s['drinkCategoryId'].toString(),
+                    s['id'].toString(),
+                    s['name'].toString(),
+                    s['description'].toString(),
+                    s['price'].toString(),
+                    0,
+                    s['drinkCategoryId'].toString(),
+                    mix,
+                    '',
+                    '',
+                    s['price'].toString(),
+                    [],
+                    s['imagePath'],
+                    s['allowIce'],
+                    false);
 
-                 setState(() {
-                   myDrinks.add(store);
-                 });
+                setState(() {
+                  myDrinks.add(store);
+                });
                 //}
-                  mi++;
+                mi++;
               }
             }
           }
         }
-
-
-
       }
-
-
     }
     print('My drinks: ' + myDrinks.length.toString());
     return myDrinks;
@@ -2353,197 +2720,203 @@ class _MenuPageState extends State<MenuPage> {
 
   Widget showDiscount() {
     return Container(
-      height: 300.0, // Change as per your requirement
-      width: 300.0, // Change as per your requirement
-      child: Column(
-        children: [
-          Container(
-            height: 200.0,
-            child: FutureBuilder(
-                future: getDiscount(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container(
+        height: 300.0, // Change as per your requirement
+        width: 300.0, // Change as per your requirement
+        child: Column(
+          children: [
+            Container(
+              height: 200.0,
+              child: FutureBuilder(
+                  future: getDiscount(),
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (!snapshot.hasData) {
+                      return Container();
+                    } else {
+                      return ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  //
+                                  //Prefs.setString('discountId', snapshot.data[index].discountid);
+                                  discountID = snapshot.data[index].discountid;
 
-                    );
-                  } else {
-                    return ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                //
-                                //Prefs.setString('discountId', snapshot.data[index].discountid);
-                                discountID = snapshot.data[index].discountid;
+                                  double totdiscount = ((finaltot *
+                                      double.parse(snapshot
+                                          .data[index].discountpercentage
+                                          .toString())) /
+                                      100);
 
-                                double totdiscount = ((finaltot * double.parse(snapshot.data[index].discountpercentage.toString())) / 100);
-
-                                mdicount =  totdiscount.toStringAsFixed(2) + ' AED';
-                                discount = double.parse(snapshot.data[index].discountpercentage.toString());
-                                if(discount > 0){
-                                    double totwithdiscount = finaltot - totdiscount;
+                                  mdicount =
+                                      totdiscount.toStringAsFixed(2) + ' AED';
+                                  discount = double.parse(snapshot
+                                      .data[index].discountpercentage
+                                      .toString());
+                                  if (discount > 0) {
+                                    double totwithdiscount =
+                                        finaltot - totdiscount;
                                     double tmptot;
-                                    if(vipcharge == true) {
+                                    if (vipcharge == true) {
                                       tmptot = totwithdiscount + tip + vip;
-                                    }else{
+                                    } else {
                                       tmptot = totwithdiscount + tip;
                                     }
-                                    double chr =  tmptot * (charge / 100);
+                                    double chr = tmptot * (charge / 100);
                                     double temp = tmptot + chr;
 
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
                                     var splitag1 = splitag[0];
                                     var splitag2 = splitag[1];
-                                    var secs1 = splitag2.substring(0,1);
-                                    var secs2 = splitag2.substring(1,2);
 
-                                    try{
-                                      var secs3 = splitag2.substring(2,3);
+                                    try {
+                                      var secs1 = splitag2.substring(0, 1);
+                                      var secs2 = splitag2.substring(1, 2);
+                                      var secs3 = splitag2.substring(2, 3);
                                       print(secs3);
 
-                                      if(double.parse(secs3) <= 5){
-                                        String compl = splitag1 + "." + secs1 + secs2;
+                                      if (double.parse(secs3) <= 5) {
+                                        String compl =
+                                            splitag1 + "." + secs1 + secs2;
 
-                                        finaltotwithdiscount = double.parse(compl);
-                                      }else{
-                                        finaltotwithdiscount =  double.parse((temp).toStringAsFixed(2));
+                                        finaltotwithdiscount =
+                                            double.parse(compl);
+                                      } else {
+                                        finaltotwithdiscount = double.parse(
+                                            (temp).toStringAsFixed(2));
                                       }
-                                    }catch(e){
-                                      finaltotwithdiscount =  double.parse((temp).toStringAsFixed(2));
+                                    } catch (e) {
+                                      finaltotwithdiscount = double.parse(
+                                          (temp).toStringAsFixed(2));
                                     }
-
-
-
 
                                     Alert(
                                       context: context,
                                       title: "DISCOUNT CARD",
-                                      content: Text('You WILL NOT receive your Order unless you PRESENT valid DISCOUNT CARD',textAlign: TextAlign.center,),
+                                      content: Text(
+                                        'You WILL NOT receive your Order unless you PRESENT valid DISCOUNT CARD',
+                                        textAlign: TextAlign.center,
+                                      ),
                                       buttons: [
-
                                         DialogButton(
                                           child: Text(
                                             'OK',
-                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
                                           ),
                                           onPressed: () {
-                                            Navigator.of(context, rootNavigator: true).pop();
+                                            Navigator.of(context,
+                                                rootNavigator: true)
+                                                .pop();
                                             Navigator.pop(context);
                                           },
                                           color: Colors.deepOrange,
                                         )
                                       ],
                                     ).show();
+                                  } else {
+                                    double totwithdiscount = finaltot;
+                                    double tmptot;
+                                    if (vipcharge == true) {
+                                      tmptot = totwithdiscount + tip + vip;
+                                    } else {
+                                      tmptot = totwithdiscount + tip;
+                                    }
+                                    double chr = tmptot * (charge / 100);
+                                    double temp = tmptot + chr;
 
-                                }else{
-                                  double totwithdiscount = finaltot;
-                                  double tmptot;
-                                  if(vipcharge == true) {
-                                    tmptot = totwithdiscount + tip + vip;
-                                  }else{
-                                    tmptot = totwithdiscount + tip;
+                                    finaltotwithdiscount = temp;
+                                    Navigator.pop(context);
                                   }
-                                  double chr =  tmptot * (charge / 100);
-                                  double temp = tmptot + chr;
-
-                                  finaltotwithdiscount = temp;
-                                  Navigator.pop(context);
-                                }
-                              });
-
-
-                            },
-                            child: Container(
-                                child: Card(
-                                  color: Colors.black45.withOpacity(.5),
-                                  child: Container(
-                                      height: 40,
-                                      width: 300,
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(10, 2, 10, 2),
-                                        child: Row(
-                                          children: [
-                                            Text(snapshot.data[index].discountname,
-                                              style: TextStyle(
-                                                  fontSize: 16, color: Colors.white),),
-                                            Spacer(),
-                                            Text(snapshot.data[index].discountpercentage.toString() + '%',
-                                              style: TextStyle(
-                                                  fontSize: 16, color: Colors.white),)
-                                          ],
-                                        ),
-                                      )
-                                  ),
-                                )
-                            ),
-                          );
-                        }
-                    );
-                  }
-                }
-
+                                });
+                              },
+                              child: Container(
+                                  child: Card(
+                                    color: Colors.black45.withOpacity(.5),
+                                    child: Container(
+                                        height: 40,
+                                        width: 300,
+                                        child: Container(
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                snapshot.data[index].discountname,
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white),
+                                              ),
+                                              Spacer(),
+                                              Text(
+                                                snapshot.data[index]
+                                                    .discountpercentage
+                                                    .toString() +
+                                                    '%',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white),
+                                              )
+                                            ],
+                                          ),
+                                        )),
+                                  )),
+                            );
+                          });
+                    }
+                  }),
             ),
-          ),
-
-        ],
-      )
-    );
+          ],
+        ));
   }
+
   Widget showTable() {
     return Container(
       height: 300.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement
       child: Container(
-
         child: FutureBuilder(
             future: getTable(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
               if (!snapshot.hasData) {
-                return Container(
-
-                );
-              }else{
+                return Container();
+              } else {
                 return ListView.builder(
                     itemCount: snapshot.data.length,
-                    itemBuilder: (context, index){
-                      return  GestureDetector(
-                        onTap: (){
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
                           setState(() {
                             choosetb = snapshot.data[index].tablename;
                           });
                           Navigator.pop(context);
                         },
                         child: Container(
-                          child: Card(
-                            color: Colors.black45.withOpacity(.5),
-                            child: Container(
-                              //height: 40,
-                              padding: EdgeInsets.fromLTRB(5,5,5,5),
-                              width: 300,
-                              child: Center(
-                                  child: Text(snapshot.data[index].tablename,style: TextStyle(fontSize: 20,color: Colors.white),)),
-                            ),
-                          )
-                        ),
+                            child: Card(
+                              color: Colors.black45.withOpacity(.5),
+                              child: Container(
+                                //height: 40,
+                                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                                width: 300,
+                                child: Center(
+                                    child: Text(
+                                      snapshot.data[index].tablename,
+                                      style:
+                                      TextStyle(fontSize: 20, color: Colors.white),
+                                    )),
+                              ),
+                            )),
                       );
-                    }
-                );
-
+                    });
               }
-            }
-
-        ),
+            }),
       ),
     );
   }
 
-
-
-
-
-  payment(){
+  payment() {
     return Container(
       color: Color(0xFF2b2b61).withOpacity(.7),
       height: 10000,
@@ -2555,9 +2928,16 @@ class _MenuPageState extends State<MenuPage> {
               height: 50,
               width: MediaQuery.of(context).size.width,
               padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
-              child: Text('PAYMENT', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),)
+              child: Text(
+                'PAYMENT',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+              )),
+          Divider(
+            color: Colors.white,
           ),
-          Divider(color: Colors.white,),
           Expanded(
             child: SingleChildScrollView(
               child: Container(
@@ -2566,28 +2946,46 @@ class _MenuPageState extends State<MenuPage> {
                   //mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-
                     Container(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: Row(
                           children: [
-                            Text("Order (" + myOrder.length.toString(), style: TextStyle(color: Colors.white, fontSize: 20),),
-                            Text(myOrder.length > 1 ? " items):":" item):", style: TextStyle(color: Colors.white, fontSize: 20),),
+                            Text(
+                              "Order (" + myOrder.length.toString(),
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20),
+                            ),
+                            Text(
+                              myOrder.length > 1 ? " items):" : " item):",
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 20),
+                            ),
                             Spacer(),
-                            Text(finaltot.toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                            Text(' AED', style: TextStyle(color: Colors.white, fontSize: 16),),
-
+                            Text(finaltot.toStringAsFixed(2),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              ' AED',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 16),
+                            ),
                           ],
-                        )
+                        )),
+                    Divider(
+                      color: Colors.white,
                     ),
-                    Divider(color: Colors.white,),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         Alert(
-                          closeIcon: Icon(Icons.circle, color: Colors.white,size: 1,),
+                          closeIcon: Icon(
+                            Icons.circle,
+                            color: Colors.white,
+                            size: 1,
+                          ),
                           context: context,
                           title: "Discount",
                           content: showDiscount(),
@@ -2595,12 +2993,14 @@ class _MenuPageState extends State<MenuPage> {
                             DialogButton(
                               child: Text(
                                 "Cancel",
-                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                              onPressed: () =>
+                                  Navigator.of(context, rootNavigator: true)
+                                      .pop(),
                               color: Color(0xFF2b2b61).withOpacity(.7),
                             ),
-
                           ],
                         ).show();
                         // showDialog(
@@ -2618,71 +3018,94 @@ class _MenuPageState extends State<MenuPage> {
                           padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                           child: Row(
                             children: [
-                              Text('Discount', style: TextStyle(color: Colors.white, fontSize: 20),),
-                              SizedBox(width: 100,),
-                              Icon(Icons.keyboard_arrow_down_sharp, color: Colors.white,),
+                              Text(
+                                'Discount',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              SizedBox(
+                                width: 100,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                color: Colors.white,
+                              ),
                               Spacer(),
                               Visibility(
-                                  visible: discount <= 0 ? false:true,
-                                  child: Text(mdicount, style: TextStyle(color: Colors.white, fontSize: 20),)),
+                                  visible: discount <= 0 ? false : true,
+                                  child: Text(
+                                    mdicount,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  )),
                             ],
-                          )
-                      ),
+                          )),
                     ),
-                    Divider(color: Colors.white,),
+                    Divider(
+                      color: Colors.white,
+                    ),
                     GestureDetector(
-                      onTap: (){
+                      onTap: () {
                         double mytip = 0;
 
                         showDialog(
                           context: context,
                           builder: (context) {
-
                             return StatefulBuilder(
                               builder: (context, mState) {
                                 return AlertDialog(
                                   title: Text("Tip"),
                                   content: Container(
-
                                     height: 450.0,
                                     width: 300.0,
                                     padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
                                     child: new Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
                                       children: <Widget>[
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 0? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   mtip = '0';
                                                   tip = 0;
                                                   double ch = charge / 100;
                                                   //finaltotwithdiscount = finaltotwithdiscount;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
                                                 });
                                                 mState(() {
@@ -2691,53 +3114,74 @@ class _MenuPageState extends State<MenuPage> {
                                               },
                                               child: Container(
                                                 width: 300.0,
-
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 0? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("No tip", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 0
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "No tip",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 1? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tip = (finaltot * .05);
                                                   //finaltotwithdiscount = finaltotwithdiscount;
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
+                                                  mtip =
+                                                      tip.toStringAsFixed(2) +
+                                                          ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 1;
@@ -2747,49 +3191,72 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 1? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("5%", style: TextStyle(color: Colors.black, fontSize: 16),),
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 1
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "5%",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 2? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 2;
                                                   tip = (finaltot * .10);
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
+                                                  mtip =
+                                                      tip.toStringAsFixed(2) +
+                                                          ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 2;
@@ -2799,50 +3266,72 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 2? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("10%", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 2
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "10%",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 3? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 3;
                                                   tip = (finaltot * .15);
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
+                                                  mtip =
+                                                      tip.toStringAsFixed(2) +
+                                                          ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 3;
@@ -2852,50 +3341,72 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 3? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("15%", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 3
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "15%",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 4? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 4;
                                                   tip = (finaltot * .20);
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
-                                                  mtip = tip.toStringAsFixed(2)+ ' AED';
+                                                  mtip =
+                                                      tip.toStringAsFixed(2) +
+                                                          ' AED';
                                                 });
                                                 mState(() {
                                                   tipid = 4;
@@ -2905,48 +3416,68 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 4? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("20%", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 4
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "20%",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 5? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 5;
                                                   tip = 5;
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
                                                   mtip = '5 AED';
                                                 });
@@ -2958,47 +3489,68 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 5? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("5 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 5
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "5 AED",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 6? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 6;
                                                   tip = 10;
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
                                                   mtip = '10 AED';
                                                 });
@@ -3010,48 +3562,68 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 6? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("10 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 6
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "10 AED",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 7? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 7;
                                                   tip = 15;
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
                                                   mtip = '15 AED';
                                                 });
@@ -3063,48 +3635,68 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 7? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("15 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 7
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "15 AED",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
                                         Divider(),
                                         Container(
-                                          padding: EdgeInsets.fromLTRB(10,2,10,2),
+                                          padding:
+                                          EdgeInsets.fromLTRB(10, 2, 10, 2),
                                           // decoration: BoxDecoration(
                                           //     border: Border.all(color: tipid == 6? Colors.deepOrange:Colors.transparent,)
                                           // ),
                                           child: GestureDetector(
-                                              onTap: (){
+                                              onTap: () {
                                                 setState(() {
                                                   tipid = 8;
-                                                  tip =  20;
+                                                  tip = 20;
                                                   double ch = charge / 100;
-                                                  if(discount > 0){
-                                                    double discountwithtot = finaltot * (discount / 100);
+                                                  if (discount > 0) {
+                                                    double discountwithtot =
+                                                        finaltot *
+                                                            (discount / 100);
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = (finaltot - discountwithtot) + tip + vip;
-                                                    }else{
-                                                      temp = (finaltot - discountwithtot) + tip;
+                                                    if (vipcharge == true) {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip +
+                                                          vip;
+                                                    } else {
+                                                      temp = (finaltot -
+                                                          discountwithtot) +
+                                                          tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
-
-                                                  }else{
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
+                                                  } else {
                                                     double temp;
-                                                    if(vipcharge == true) {
-                                                      temp = finaltot + tip + vip;
-                                                    }else{
+                                                    if (vipcharge == true) {
+                                                      temp =
+                                                          finaltot + tip + vip;
+                                                    } else {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    finaltotwithdiscount = chr + temp;
+                                                    finaltotwithdiscount =
+                                                        chr + temp;
                                                   }
                                                   mtip = '20 AED';
                                                 });
@@ -3116,20 +3708,34 @@ class _MenuPageState extends State<MenuPage> {
                                                 width: 300.0,
                                                 child: Row(
                                                   children: [
-                                                    Icon(Icons.circle, color: tipid == 8? Colors.deepOrange:Colors.black.withOpacity(.5),),
-                                                    SizedBox(width: 10,),
-                                                    Text("20 AED", style: TextStyle(color: Colors.black, fontSize: 16),),
-
-
+                                                    Icon(
+                                                      Icons.circle,
+                                                      color: tipid == 8
+                                                          ? Colors.deepOrange
+                                                          : Colors.black
+                                                          .withOpacity(.5),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text(
+                                                      "20 AED",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ],
                                                 ),
-                                              )
-                                          ),
+                                              )),
                                         ),
-                                        SizedBox(height: 20,),
-                                        Text('Full TIP amount goes to the staff!',style: TextStyle(fontSize: 12),textAlign: TextAlign.center, )
-
-
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Text(
+                                          'Full TIP amount goes to the staff!',
+                                          style: TextStyle(fontSize: 12),
+                                          textAlign: TextAlign.center,
+                                        )
                                       ],
                                     ),
                                   ),
@@ -3158,13 +3764,23 @@ class _MenuPageState extends State<MenuPage> {
                                       child: new Container(
                                         width: 300,
                                         height: 50.0,
-                                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                        padding:
+                                        EdgeInsets.fromLTRB(10, 0, 10, 0),
                                         decoration: new BoxDecoration(
                                           color: Colors.deepOrange,
-                                          border: new Border.all(color: Colors.white, width: 2.0),
-                                          borderRadius: new BorderRadius.circular(10.0),
+                                          border: new Border.all(
+                                              color: Colors.white, width: 2.0),
+                                          borderRadius:
+                                          new BorderRadius.circular(10.0),
                                         ),
-                                        child: new Center(child: new Text('Save', style: new TextStyle(fontSize: 18.0, color: Colors.white),),),
+                                        child: new Center(
+                                          child: new Text(
+                                            'Save',
+                                            style: new TextStyle(
+                                                fontSize: 18.0,
+                                                color: Colors.white),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -3180,19 +3796,31 @@ class _MenuPageState extends State<MenuPage> {
                           padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                           child: Row(
                             children: [
-                              Text('Tip', style: TextStyle(color: Colors.white, fontSize: 20),),
-                              SizedBox(width: 154,),
-                              Icon(Icons.keyboard_arrow_down_sharp, color: Colors.white,),
+                              Text(
+                                'Tip',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 20),
+                              ),
+                              SizedBox(
+                                width: 154,
+                              ),
+                              Icon(
+                                Icons.keyboard_arrow_down_sharp,
+                                color: Colors.white,
+                              ),
                               Spacer(),
                               Visibility(
-                                  visible: mtip == '0'? false:true,
-                                  child: Text(mtip, style: TextStyle(color: Colors.white, fontSize: 20),)),
+                                  visible: mtip == '0' ? false : true,
+                                  child: Text(
+                                    mtip,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  )),
                             ],
-                          )
-                      ),
+                          )),
                     ),
                     Visibility(
-                      visible: vip > 0 ? true:false,
+                      visible: vip > 0 ? true : false,
                       child: Container(
                           height: 50,
                           width: MediaQuery.of(context).size.width,
@@ -3200,34 +3828,37 @@ class _MenuPageState extends State<MenuPage> {
                           child: Row(
                             children: [
                               GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-
-                                    if(vipcharge == true){
+                                    if (vipcharge == true) {
                                       //finaltotwithdiscount = finaltotwithdiscount - vip;
                                       double ch = charge / 100;
-                                      if(discount > 0){
-                                        double discountwithtot = finaltot * (discount / 100);
-                                        double temp = (finaltot - discountwithtot) + tip;
+                                      if (discount > 0) {
+                                        double discountwithtot =
+                                            finaltot * (discount / 100);
+                                        double temp =
+                                            (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
                                         finaltotwithdiscount = chr + temp;
-
-                                      }else{
+                                      } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
                                         finaltotwithdiscount = chr + temp;
                                       }
                                       vipcharge = false;
-                                    }else{
+                                    } else {
                                       //finaltotwithdiscount = finaltotwithdiscount + vip;
                                       double ch = charge / 100;
-                                      if(discount > 0){
-                                        double discountwithtot = finaltot * (discount / 100);
-                                        double temp = (finaltot - discountwithtot) + tip + vip;
+                                      if (discount > 0) {
+                                        double discountwithtot =
+                                            finaltot * (discount / 100);
+                                        double temp =
+                                            (finaltot - discountwithtot) +
+                                                tip +
+                                                vip;
                                         double chr = temp * ch;
                                         finaltotwithdiscount = chr + temp;
-
-                                      }else{
+                                      } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
                                         finaltotwithdiscount = chr + temp;
@@ -3238,59 +3869,104 @@ class _MenuPageState extends State<MenuPage> {
                                 },
                                 child: Container(
                                   width: MediaQuery.of(context).size.width / 2,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: vipcharge == true? Colors.white.withOpacity(.5): Colors.transparent,
-                                      border: Border.all(
-                                        color: vipcharge == false? Colors.white: Colors.transparent, //                   <--- border color
-                                        width: 1.0,
-                                      ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: vipcharge == true
+                                        ? Colors.white.withOpacity(.5)
+                                        : Colors.transparent,
+                                    border: Border.all(
+                                      color: vipcharge == false
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      //                   <--- border color
+                                      width: 1.0,
                                     ),
-
-                                    padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
-                                    child: Center(child: Text('VIP Charge '+vip.toString() + '0 AED', style: TextStyle(color: Colors.white, fontSize: 16),)),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
+                                  child: Center(
+                                      child: Text(
+                                        'VIP Charge ' + vip.toString() + '0 AED',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                                 ),
                               ),
-
                               Spacer(),
                               Visibility(
-                                  visible: vipcharge == true ? true:false,
-                                  child: Text(vip.toString() + '0', style: TextStyle(color: Colors.white54, fontSize: 14),)),
+                                  visible: vipcharge == true ? true : false,
+                                  child: Text(
+                                    vip.toString() + '0',
+                                    style: TextStyle(
+                                        color: Colors.white54, fontSize: 14),
+                                  )),
                               Visibility(
-                                  visible: vipcharge == true ? true:false,
-                                  child: Text(' AED', style: TextStyle(color: Colors.white54, fontSize: 12),)),
+                                  visible: vipcharge == true ? true : false,
+                                  child: Text(
+                                    ' AED',
+                                    style: TextStyle(
+                                        color: Colors.white54, fontSize: 12),
+                                  )),
                             ],
-                          )
-                      ),
+                          )),
                     ),
-                    Divider(color: Colors.white,),
+                    Divider(
+                      color: Colors.white,
+                    ),
                     Container(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: Row(
                           children: [
-                            Text('Service charge:', style: TextStyle(color: Colors.white, fontSize: 14),),
+                            Text(
+                              'Service charge:',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 14),
+                            ),
                             Spacer(),
-                            Text(((fee/100) * finaltot).toStringAsFixed(2), style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),),
-                            Text(' AED', style: TextStyle(color: Colors.white, fontSize: 14),),
+                            Text(
+                              ((fee / 100) * finaltot).toStringAsFixed(2),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              ' AED',
+                              style:
+                              TextStyle(color: Colors.white, fontSize: 14),
+                            ),
                           ],
-                        )
+                        )),
+                    Divider(
+                      color: Colors.white,
                     ),
-                    Divider(color: Colors.white,),
                     Container(
                         height: 50,
                         width: MediaQuery.of(context).size.width,
                         padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                         child: Row(
                           children: [
-                            Text('TOTAL:', style: TextStyle(color: Colors.deepOrange, fontSize: 20),),
+                            Text(
+                              'TOTAL:',
+                              style: TextStyle(
+                                  color: Colors.deepOrange, fontSize: 20),
+                            ),
                             Spacer(),
-                            Text(finaltotwithdiscount.toStringAsFixed(2), style: TextStyle(color: Colors.deepOrange, fontSize: 20, fontWeight: FontWeight.bold),),
-                            Text(' AED', style: TextStyle(color: Colors.deepOrange, fontSize: 18),),
+                            Text(
+                              finaltotwithdiscount.toStringAsFixed(2),
+                              style: TextStyle(
+                                  color: Colors.deepOrange,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              ' AED',
+                              style: TextStyle(
+                                  color: Colors.deepOrange, fontSize: 18),
+                            ),
                           ],
-                        )
-                    ),
+                        )),
                     //
                     Container(
                         color: Colors.white.withOpacity(.2),
@@ -3303,30 +3979,33 @@ class _MenuPageState extends State<MenuPage> {
                             borderRadius: BorderRadius.circular(10),
                             color: Color(0xFF2b2b61),
                             //color: Colors.white
-
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               GestureDetector(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
                                     pickdine = true;
                                   });
                                 },
                                 child: Container(
-
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: pickdine == true ? Colors.white.withOpacity(.2):Color(0xFF2b2b61).withOpacity(.7),
+                                      color: pickdine == true
+                                          ? Colors.white.withOpacity(.2)
+                                          : Color(0xFF2b2b61).withOpacity(.7),
                                     ),
-                                    padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                    child: Text('PICK UP', style: TextStyle(color: Colors.white, fontSize: 16),)
-                                ),
+                                    padding:
+                                    EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                    child: Text(
+                                      'PICK UP',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    )),
                               ),
                               GestureDetector(
-                                onTap: (){
-
+                                onTap: () {
                                   setState(() {
                                     pickdine = false;
                                   });
@@ -3342,26 +4021,26 @@ class _MenuPageState extends State<MenuPage> {
                                 child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: pickdine == false ? Colors.white.withOpacity(.2):Color(0xFF2b2b61).withOpacity(.7),
+                                      color: pickdine == false
+                                          ? Colors.white.withOpacity(.2)
+                                          : Color(0xFF2b2b61).withOpacity(.7),
                                     ),
-                                    padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
-                                    child: Text('DINE IN', style: TextStyle(color: Colors.white, fontSize: 16),)
-                                ),
+                                    padding:
+                                    EdgeInsets.fromLTRB(40, 10, 40, 10),
+                                    child: Text(
+                                      'DINE IN',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    )),
                               ),
                             ],
                           ),
-                        )
-                    ),
-
-
-
-
-
+                        )),
 
                     Container(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Visibility(
-                        visible: pickdine == false? true:false,
+                        visible: pickdine == false ? true : false,
                         child: Container(
                             color: Colors.white.withOpacity(.2),
                             //height: 70,
@@ -3371,52 +4050,71 @@ class _MenuPageState extends State<MenuPage> {
                               children: [
                                 Expanded(
                                     flex: 4,
-                                    child: Text('Ask server for your table number', style: TextStyle(color: Colors.white, fontSize: 14, wordSpacing: 5),)
-                                ),
+                                    child: Text(
+                                      'Ask server for your table number',
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          wordSpacing: 5),
+                                    )),
                                 //Spacer(),
                                 Expanded(
                                   flex: 4,
                                   child: GestureDetector(
-                                    onTap:(){
-                                      Alert(
-                                        context: context,
-                                        title: "Table list",
-                                        content: showTable(),
-                                        buttons: [
-                                          DialogButton(
-                                            child: Text(
-                                              "Cancel",
-                                              style: TextStyle(color: Colors.white, fontSize: 20),
+                                      onTap: () {
+                                        Alert(
+                                          context: context,
+                                          title: "Table list",
+                                          content: showTable(),
+                                          buttons: [
+                                            DialogButton(
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                              onPressed: () => Navigator.of(
+                                                  context,
+                                                  rootNavigator: true)
+                                                  .pop(),
+                                              color: Color(0xFF2b2b61)
+                                                  .withOpacity(.7),
                                             ),
-                                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                            color: Color(0xFF2b2b61).withOpacity(.7),
-                                          ),
-                                          DialogButton(
-                                            child: Text(
-                                              "Save",
-                                              style: TextStyle(color: Colors.white, fontSize: 20),
-                                            ),
-                                            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                            color: Colors.deepOrange,
-                                          )
-                                        ],
-                                      ).show();
-                                      // showDialog(
-                                      //     context: context,
-                                      //     builder: (BuildContext context) {
-                                      //       return AlertDialog(
-                                      //         title: Text('Table list'),
-                                      //         content: showTable(),
-                                      //       );
-                                      //     });
-                                    },
-                                    child: Text(choosetb, style: TextStyle(color: Colors.white, fontSize: 16),)
-                                  ),
+                                            DialogButton(
+                                              child: Text(
+                                                "Save",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
+                                              ),
+                                              onPressed: () => Navigator.of(
+                                                  context,
+                                                  rootNavigator: true)
+                                                  .pop(),
+                                              color: Colors.deepOrange,
+                                            )
+                                          ],
+                                        ).show();
+                                        // showDialog(
+                                        //     context: context,
+                                        //     builder: (BuildContext context) {
+                                        //       return AlertDialog(
+                                        //         title: Text('Table list'),
+                                        //         content: showTable(),
+                                        //       );
+                                        //     });
+                                      },
+                                      child: Text(
+                                        choosetb,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
+                                      )),
                                 ),
                                 Expanded(
                                   flex: 1,
                                   child: GestureDetector(
-                                      onTap: (){
+                                      onTap: () {
                                         Alert(
                                           context: context,
                                           title: "Table List",
@@ -3425,61 +4123,80 @@ class _MenuPageState extends State<MenuPage> {
                                             DialogButton(
                                               child: Text(
                                                 "Cancel",
-                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
                                               ),
-                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                              color: Color(0xFF2b2b61).withOpacity(.7),
+                                              onPressed: () => Navigator.of(
+                                                  context,
+                                                  rootNavigator: true)
+                                                  .pop(),
+                                              color: Color(0xFF2b2b61)
+                                                  .withOpacity(.7),
                                             ),
                                             DialogButton(
                                               child: Text(
                                                 "Save",
-                                                style: TextStyle(color: Colors.white, fontSize: 20),
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20),
                                               ),
-                                              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+                                              onPressed: () => Navigator.of(
+                                                  context,
+                                                  rootNavigator: true)
+                                                  .pop(),
                                               color: Colors.deepOrange,
                                             )
                                           ],
                                         ).show();
                                       },
-                                      child: Icon(Icons.keyboard_arrow_down_sharp, color: Colors.white,)),
+                                      child: Icon(
+                                        Icons.keyboard_arrow_down_sharp,
+                                        color: Colors.white,
+                                      )),
                                 )
                               ],
-                            )
-                        ),
+                            )),
                       ),
                     ),
 
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Visibility(
-                        visible: myCardList.length > 0 ? true:false,
+                        visible: myCardList.length > 0 ? true : false,
                         child: Container(
                           padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                           child: Text('Select card or Enter card below.', style: TextStyle(color: Colors.deepOrange,fontSize: 16),),
-                      )
-                    ),
+                          child: Text(
+                            'Select card or Enter card below.',
+                            style: TextStyle(
+                                color: Colors.deepOrange, fontSize: 16),
+                          ),
+                        )),
                     Visibility(
-                        visible: myCardList.length > 0 ? true:false,
-                        child: Container(
-                          //padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                          child: showCardDetails(),
-                        ),
+                      visible: myCardList.length > 0 ? true : false,
+                      child: Container(
+                        //padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                        child: showCardDetails(),
+                      ),
                     ),
-                    SizedBox(height: 10,),
-                    Divider(color: Colors.white,),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Divider(
+                      color: Colors.white,
+                    ),
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                       child: TextField(
                         controller: billname,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
-                            hintText: "Billing name: First name, Last name",
-                            hintStyle: TextStyle(color: Colors.white54),
-                          labelStyle: new TextStyle(
-                              color: Colors.white
-                          ),
+                          hintText: "Billing name: First name, Last name",
+                          hintStyle: TextStyle(color: Colors.white54),
+                          labelStyle: new TextStyle(color: Colors.white),
                           labelText: 'Billing name: First name, Last name',
                         ),
-
                       ),
                     ),
                     Container(
@@ -3488,14 +4205,12 @@ class _MenuPageState extends State<MenuPage> {
                         controller: billadd,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
-                            hintText: "Billing to: Address, City, Country",
-                            hintStyle: TextStyle(color: Colors.white54),
-                          labelStyle: new TextStyle(
-                              color: Colors.white
-                          ),
-                          labelText: 'Billing to: Address, City, Country(separated with: ,)',
+                          hintText: "Billing to: Address, City, Country",
+                          hintStyle: TextStyle(color: Colors.white54),
+                          labelStyle: new TextStyle(color: Colors.white),
+                          labelText:
+                          'Billing to: Address, City, Country(separated with: ,)',
                         ),
-
                       ),
                     ),
                     Container(
@@ -3504,67 +4219,94 @@ class _MenuPageState extends State<MenuPage> {
                         controller: billemail,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
-                            hintText: "Send bill to email",
-                            hintStyle: TextStyle(color: Colors.white54),
-                          labelStyle: new TextStyle(
-                              color: Colors.white
-                          ),
+                          hintText: "Send bill to email",
+                          hintStyle: TextStyle(color: Colors.white54),
+                          labelStyle: new TextStyle(color: Colors.white),
                           labelText: 'Send bill to email',
+                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
                         ),
-
                       ),
                     ),
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       //padding: EdgeInsets.fromLTRB(0, 10, 15, 5),
                         child: CheckboxListTile(
                           checkColor: Colors.white,
-                          title: Text("Save billing details", style: TextStyle(color: Colors.white, fontSize: 20)),
+                          title: Text("Save billing details",
+                              style: TextStyle(color: Colors.white, fontSize: 20)),
                           value: checkedValue,
                           onChanged: (newValue) {
                             setState(() {
                               checkedValue = newValue;
                             });
                           },
-                          controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
-                        )
+                          controlAffinity: ListTileControlAffinity
+                              .leading, //  <-- leading Checkbox
+                        )),
+                    SizedBox(
+                      height: 10,
                     ),
-                    SizedBox(height: 10,),
                     Container(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
                       child: Row(
                         children: [
-
                           Expanded(
                             child: FlatButton(
                                 height: 50,
                                 minWidth: double.infinity,
                                 color: Colors.deepOrange,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                onPressed: (){
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                onPressed: () {
                                   //samplecheck();
-                                  if(billadd.text != '' || billemail.text != '' || billname.text != '') {
-                                    tokenChecker();
+                                  if (billadd.text != '' ||
+                                      billadd.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
 
-                                  }else{
+                                  if (billname.text != '' ||
+                                      billname.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
+
+                                  if (billemail.text != '' ||
+                                      billemail.text.isNotEmpty) {
+                                    _validate = true;
+                                  } else {
+                                    _validate = false;
+                                  }
+
+                                  if (_validate == true) {
+                                    tokenChecker();
+                                  } else {
                                     Alert(
                                       context: context,
                                       title: "DRINKLINK",
-                                      content: Text('Please fill up the billing details.'),
+                                      content: Text(
+                                          'Please fill up the billing details.'),
                                       buttons: [
                                         DialogButton(
                                           child: Text(
                                             "Close",
-                                            style: TextStyle(color: Colors.white, fontSize: 20),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20),
                                           ),
-                                          onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                                          color: Color(0xFF2b2b61).withOpacity(.7),
+                                          onPressed: () => Navigator.of(context,
+                                              rootNavigator: true)
+                                              .pop(),
+                                          color:
+                                          Color(0xFF2b2b61).withOpacity(.7),
                                         ),
-
                                       ],
                                     ).show();
                                   }
-
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -3575,10 +4317,13 @@ class _MenuPageState extends State<MenuPage> {
                                     //   width: 30.0,
                                     // ),
                                     //SizedBox(width: 10,),
-                                    Text('PAY NOW', style: TextStyle(color: Colors.white, fontSize: 18),)
+                                    Text(
+                                      'PAY NOW',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    )
                                   ],
-                                )
-                            ),
+                                )),
                           ),
                         ],
                       ),
@@ -3593,8 +4338,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-
-  showCardDetails(){
+  showCardDetails() {
     return Container(
       height: 60 * myCardList.length.toDouble(),
       child: FutureBuilder(
@@ -3606,16 +4350,14 @@ class _MenuPageState extends State<MenuPage> {
                   child: CircularProgressIndicator(),
                 ),
               );
-            }else{
+            } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index){
-                    return  GestureDetector(
-                      onTap: (){
-
-                      },
-                      child:Container(
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
                           color: Colors.transparent,
                           child: Row(
@@ -3628,28 +4370,42 @@ class _MenuPageState extends State<MenuPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CheckboxListTile(
-                                      title: Text(snapshot.data[index].scheme,style: TextStyle(color: Colors.white),),
-                                      value: idCard == snapshot.data[index].cardid ? true:false,
+                                      title: Text(
+                                        snapshot.data[index].scheme,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      value:
+                                      idCard == snapshot.data[index].cardid
+                                          ? true
+                                          : false,
                                       onChanged: (newValue) {
                                         setState(() {
-                                          if(idCard == snapshot.data[index].cardid){
+                                          if (idCard ==
+                                              snapshot.data[index].cardid) {
                                             idCard = '';
                                             maskedPan = '';
-                                            expiry  =   '';
-                                            cardholderName =  '';
-                                            scheme =  '';
-                                            cardToken =  '';
-                                          }else{
-                                             idCard = snapshot.data[index].cardid;
-                                             maskedPan = snapshot.data[index].maskedPan;
-                                             expiry  =   snapshot.data[index].expiry;
-                                             cardholderName =  snapshot.data[index].cardholderName;
-                                             scheme =  snapshot.data[index].scheme;
-                                             cardToken =  snapshot.data[index].cardToken;
+                                            expiry = '';
+                                            cardholderName = '';
+                                            scheme = '';
+                                            cardToken = '';
+                                          } else {
+                                            idCard =
+                                                snapshot.data[index].cardid;
+                                            maskedPan =
+                                                snapshot.data[index].maskedPan;
+                                            expiry =
+                                                snapshot.data[index].expiry;
+                                            cardholderName = snapshot
+                                                .data[index].cardholderName;
+                                            scheme =
+                                                snapshot.data[index].scheme;
+                                            cardToken =
+                                                snapshot.data[index].cardToken;
                                           }
                                         });
                                       },
-                                      controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                                      controlAffinity: ListTileControlAffinity
+                                          .leading, //  <-- leading Checkbox
                                     ),
                                     // Checkbox(
                                     //     value: snapshot.data[index].select,
@@ -3668,32 +4424,39 @@ class _MenuPageState extends State<MenuPage> {
                                   ],
                                 ),
                               ),
-
-                              SizedBox(width: 10,),
+                              SizedBox(
+                                width: 10,
+                              ),
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data[index].cardholderName,style: TextStyle(color: Colors.white, fontSize: 20),),
-                                  Text(snapshot.data[index].showmask + "  " + snapshot.data[index].expiry, style: TextStyle(color: Colors.white70, fontSize: 14),),
+                                  Text(
+                                    snapshot.data[index].cardholderName,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].showmask +
+                                        "  " +
+                                        snapshot.data[index].expiry,
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 14),
+                                  ),
                                 ],
                               )
-
                             ],
-                          )
-                      ),
+                          )),
                     );
-                  }
-              );
-
+                  });
             }
-          }
-
-      ),
+          }),
     );
   }
-  samplecheck(){
-    String url = 'https://paypage.ngenius-payments.com/?outletId=c5d48ba0-f539-42b1-8ea4-346f5ea8493b&orderRef=18aa8912-e777-46de-88b9-bbb13c523c95&paymentRef=78f1eb4f-956a-4d9c-86ad-dbab5b7d6f65&state=AUTHORISED&3ds_status=SUCCESS&authResponse_success=true&authResponse_authorizationCode=413977';
+
+  samplecheck() {
+    String url =
+        'https://paypage.ngenius-payments.com/?outletId=c5d48ba0-f539-42b1-8ea4-346f5ea8493b&orderRef=18aa8912-e777-46de-88b9-bbb13c523c95&paymentRef=78f1eb4f-956a-4d9c-86ad-dbab5b7d6f65&state=AUTHORISED&3ds_status=SUCCESS&authResponse_success=true&authResponse_authorizationCode=413977';
     var divurl = url.split('=');
     //print(divurl[0].trim());
     //print(divurl[1].trim());
@@ -3705,57 +4468,55 @@ class _MenuPageState extends State<MenuPage> {
     //print(divurl[4].trim());
     //print(divurl[5].trim());
   }
-  tokenChecker()async{
-    Navigator.of(context).push(
-        new PageRouteBuilder(
-            opaque: false,
-            barrierDismissible:true,
-            pageBuilder: (BuildContext context, _, __) {
-              return Center(
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-                  width: 150,
-                  height: 150,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: new SizedBox(
-                      height: 50.0,
-                      width: 50.0,
-                      child: new CircularProgressIndicator(
-                        value: null,
-                        strokeWidth: 7.0,
-                      ),
-                    ),
+
+  tokenChecker() async {
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
                   ),
                 ),
-              );
-            }
-        )
-    );
+              ),
+            ),
+          );
+        }));
     Prefs.load();
     String tk = Prefs.getString('token');
-    if(tk == null || tk == ''){
+    if (tk == null || tk == '') {
       SignUpPay();
-    }else {
-
+    } else {
       OrderNow();
       //getPaymentLink();
 
     }
   }
-  SignUpPay() async{
+
+  SignUpPay() async {
     String su = uuid.v1();
-    String nname = su.replaceAll(new RegExp(r'[^\w\s]+'),'');
+    String nname = su.replaceAll(new RegExp(r'[^\w\s]+'), '');
     String em = nname + "@gmail.com";
     print(nname);
     String pss = "Asd12345678!";
     String uname = nname;
     print('Singup');
     Prefs.load();
-    Prefs.setString('email',em);
+    Prefs.setString('email', em);
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {
-      'data':{
+      'data': {
         "email": em,
         "passwordConfirmed": pss,
         "password": pss,
@@ -3765,62 +4526,63 @@ class _MenuPageState extends State<MenuPage> {
     var body = json.encode(map['data']);
     print(body);
     String url = ApiCon.baseurl + '/auth/users';
-    final response = await http.post(url,headers: headers, body: body);
+    final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     print(response.statusCode);
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print(response.statusCode);
-      logintoPay(uname,pss);
-
+      logintoPay(uname, pss);
     }
   }
 
-
-
-  logintoPay(String uname,pass) async{
- //   String nname = uname.replaceAll(new RegExp(r'[^\w\s]+'),'');
+  logintoPay(String uname, pass) async {
+    //   String nname = uname.replaceAll(new RegExp(r'[^\w\s]+'),'');
 
     print('login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {
-      'data':{
+      'data': {
         "userName": uname,
         "password": pass,
       },
     };
     var body = json.encode(map['data']);
-    String url = ApiCon.baseurl +  '/auth/Token';
-    final response = await http.post(url,headers: headers, body: body);
+    String url = ApiCon.baseurl + '/auth/Token';
+    final response = await http.post(url, headers: headers, body: body);
     print(response.body);
     print(response.statusCode);
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       String token = json.decode(response.body)['token'];
       print(token);
       setState(() {
         Prefs.setString('token', token);
       });
-      setNotif(token,uname);
+      setNotif(token, uname);
       OrderNow();
       //getPaymentLink();
     }
   }
-  setNotif(String su,email)async{
 
+  setNotif(String su, email) async {
     print(email);
     Prefs.load();
     String ntoken = Prefs.getString('notifToken');
     print("my token: " + ntoken);
     String myt = "'" + ntoken + "'";
-    final bod = jsonEncode({'token':  ntoken,'clientAppPlatform': 'ios'});
-    Map<String, String> headers = {'Authorization': 'Bearer ' + su,'Content-Type': 'application/json', 'api-version':'1.1'};
+    final bod = jsonEncode({'token': ntoken, 'clientAppPlatform': 'ios'});
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + su,
+      'Content-Type': 'application/json',
+      'api-version': '1.1'
+    };
     String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
 
-    final response = await http.patch(url,headers: headers, body: bod);
+    final response = await http.patch(url, headers: headers, body: bod);
     print(response.body);
   }
 
-  OrderNow() async{
+  OrderNow() async {
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
@@ -3830,13 +4592,12 @@ class _MenuPageState extends State<MenuPage> {
     var fullname = ename.split(' ');
     String firsname = '';
     String lastname = '';
-    try{
-      firsname = fullname[0].trim();
-      lastname = fullname[1].trim();
-     }catch(e){
-       _showDialog('DinkLink','Please input full name.');
-     }
-
+    try {
+      firsname = fullname[0];
+      lastname = fullname[1];
+    } catch (e) {
+      // _showDialog('DinkLink', 'Please input full name.');
+    }
 
     print(token);
     int facility = Prefs.getInt('Facility');
@@ -3846,30 +4607,29 @@ class _MenuPageState extends State<MenuPage> {
 
     List<PayDrinks> myPydr = [];
 
-    for(var i = 0; i < myOrder.length; i++){
-
+    for (var i = 0; i < myOrder.length; i++) {
       //print(myOrder[i].drinkId.toString() + "," + myOrder[i].CatId + ","  + myOrder[i].CatId.toString() + "," + myOrder[i].Name.toString() + myOrder[i].Quant.toString() + "," + myOrder[i].Price.toString());
       //PayOrder ord = PayOrder(myOrder[i].CatId.toString(), myOrder[i].drinkId.toString(), myOrder[i].Price.toString());
-      PayOrder ord = PayOrder(myOrder[i].drinkId.toString(), myOrder[i].CatId.toString(), myOrder[i].origPrice.toString());
+      PayOrder ord = PayOrder(myOrder[i].drinkId.toString(),
+          myOrder[i].CatId.toString(), myOrder[i].origPrice.toString());
       PayMixer ord1;
 
-      for(var jo = 0; jo < myOrder[i].mxir.length; jo ++){
-        if(myOrder[i].mxir[jo].id.toString() != ''){
-          ord1 = PayMixer(myOrder[i].mxir[jo].id.toString(), myOrder[i].mxir[jo].price.toString());
-          for(var j = 0; j < myOrder[i].mxir.length; j++){
+      for (var jo = 0; jo < myOrder[i].mxir.length; jo++) {
+        if (myOrder[i].mxir[jo].id.toString() != '') {
+          ord1 = PayMixer(myOrder[i].mxir[jo].id.toString(),
+              myOrder[i].mxir[jo].price.toString());
+          for (var j = 0; j < myOrder[i].mxir.length; j++) {
             print(myOrder[i].mxir[j].id.toString());
           }
-        }else{
+        } else {
           ord1 = null;
         }
-
       }
 
-
-
-
-      double price = double.parse(myOrder[i].Quant.toString()) * double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(),price.toString(),ord,ord1);
+      double price = double.parse(myOrder[i].Quant.toString()) *
+          double.parse(myOrder[i].Price.toString());
+      PayDrinks pydr =
+      PayDrinks(myOrder[i].Quant.toString(), price.toString(), ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -3897,22 +4657,21 @@ class _MenuPageState extends State<MenuPage> {
     double finalcharge = charge / 100;
 
     double vpc = 0;
-    if(vipcharge == true){
+    if (vipcharge == true) {
       vpc = vip;
-    }else{
+    } else {
       vpc = 0;
     }
 
-
-
-
     print(cardToken);
 
-
-    Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
     Map<String, String> items = {"items": drinksorderall.toString()};
     Map map;
-    if(cardToken == '' ){
+    if (cardToken == '') {
       map = {
         "billingAddress": {
           "address": eaddress,
@@ -3942,10 +4701,9 @@ class _MenuPageState extends State<MenuPage> {
         //   "scheme": scheme
         // }
 
-
         //'discount': discount
       };
-    }else{
+    } else {
       map = {
         "billingAddress": {
           "address": eaddress,
@@ -3969,12 +4727,11 @@ class _MenuPageState extends State<MenuPage> {
 
         "savedCard": {
           "cardToken": cardToken,
-          "cardholderName" : cardholderName,
+          "cardholderName": cardholderName,
           "expiry": expiry,
           "maskedPan": maskedPan,
           "scheme": scheme
         }
-
 
         //'discount': discount
       };
@@ -3983,25 +4740,33 @@ class _MenuPageState extends State<MenuPage> {
     var body = json.encode(map);
     print(body.toString());
     String url = ApiCon.baseurl + '/orders';
-    final response = await http.post(url,headers: headers, body: body);
+    String _cm = '';
+    final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     //print(response.body.toString());
-    if(response.statusCode == 200 || response.statusCode == 201){
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
       getPaymentLink(json.decode(response.body)['paymentOrderCode'].toString());
-    }else{
+    } else {
       print('error');
       print(response.statusCode.toString());
       print(response.body.toString());
-      _showDialog('DinkLink',response.body.toString());
+      if (response.body.toString().isEmpty) {
+        _cm = '[' + response.statusCode.toString() + '] ' + 'No data found!';
+      } else {
+        _cm = response.body.toString();
+      }
+      _showDialog('DinkLink', _cm);
+      return;
     }
-
   }
-  double roundDouble(double value, int places){
+
+  double roundDouble(double value, int places) {
     double mod = pow(10.0, places);
     return ((value * mod).round().toDouble() / mod);
   }
+
   _showDialog(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -4014,22 +4779,21 @@ class _MenuPageState extends State<MenuPage> {
               borderRadius: BorderRadius.all(Radius.circular(8))),
           title: Text(
             title,
-            style: TextStyle(color: Colors.white,fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           content: Text(
             message,
-            style: TextStyle(color: Colors.white,fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             FlatButton(
               child: Text(
                 'Close',
-                style: TextStyle(color: Colors.white,fontSize: 18),
+                style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-
               },
             )
           ],
@@ -4038,19 +4802,17 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String code) async{
+  getPaymentLink(String code) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
-    String expiry  =   Prefs.getString('expiry');
-    String cardholderName =  Prefs.getString('cardholderName');
-    String scheme =  Prefs.getString('scheme');
-    String cardToken =  Prefs.getString('cardToken');
+    String expiry = Prefs.getString('expiry');
+    String cardholderName = Prefs.getString('cardholderName');
+    String scheme = Prefs.getString('scheme');
+    String cardToken = Prefs.getString('cardToken');
     var idn = nanoid();
     //String tranid = idn.replaceAll(new RegExp(r'[^\w\s]_+'),'');
     print(code);
-
-
 
     // String totalPrice = '0';
     //
@@ -4120,54 +4882,56 @@ class _MenuPageState extends State<MenuPage> {
 
     String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
     //if(response.statusCode == 200){
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => WebPage(jsondata.toString())),
-      // );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => WebPage(jsondata.toString())),
+    // );
     Navigator.pop(context);
 
-      final result = await Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString())),
-      );
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString())),
+    );
 
-      if(result != 'failed'){
-        print(result);
-        if(checkedValue == true){
-          Prefs.load();
-          Prefs.setString('billName', billname.text);
-          Prefs.setString('billAdd', billadd.text);
-          Prefs.setString('billEmail', billemail.text);
-        }
-
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => OrderDetails('')),
-        );
-      }else{
-        print(result);
-        _showDialog('DinkLink','Payment failed');
+    if (result != 'failed') {
+      print(result);
+      if (checkedValue == true) {
+        Prefs.load();
+        Prefs.setString('billName', billname.text);
+        Prefs.setString('billAdd', billadd.text);
+        Prefs.setString('billEmail', billemail.text);
       }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OrderDetails('')),
+      );
+    } else {
+      print(result);
+      _showDialog('DinkLink', result);
+    }
     //}
   }
 
-  checkUrlRes(String code)async {
+  checkUrlRes(String code) async {
     await Prefs.load();
     String billn = billname.text;
     String billa = billadd.text;
     String bille = billemail.text;
     String myurl = 'https://dlpp.somee.com/api/orders/?ref=' + code;
-    Map<String, String> headers = {"Content-Type": "application/json; charset=utf-8"};
-    final response = await http.get(myurl,headers: headers);
+    Map<String, String> headers = {
+      "Content-Type": "application/json; charset=utf-8"
+    };
+    final response = await http.get(myurl, headers: headers);
     var jsondata = json.decode(response.body);
 
     print(jsondata.toString());
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
-    }else{
+    } else {
       Navigator.of(context).pop();
       Alert(
         title: "Something went wrong!",
@@ -4181,28 +4945,26 @@ class _MenuPageState extends State<MenuPage> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
             color: Colors.deepOrange,
           )
-        ], context: null,
+        ],
+        context: null,
       ).show();
     }
     //Navigator.of(context).pop();
   }
 
-
-
-
-  Future<List<Order>> getOrder() async{
-    if(myOrder.length <= 0){
+  Future<List<Order>> getOrder() async {
+    if (myOrder.length <= 0) {
       setState(() {
         myOrder = [];
       });
     }
 
-
-
-    for(var i = 0; i < myDrinks.length; i++){
+    for (var i = 0; i < myDrinks.length; i++) {
       bool _isILike;
-      if(myDrinks[i].Quant > 0) {
-        var contain = myOrder.where((element) => element.drinkId == myDrinks[i].id && element.Price == myDrinks[i].mprice);
+      if (myDrinks[i].Quant > 0) {
+        var contain = myOrder.where((element) =>
+        element.drinkId == myDrinks[i].id &&
+            element.Price == myDrinks[i].mprice);
         if (contain.isEmpty) {
           _isILike = false;
           if (myDrinks[i].Quant > 0) {
@@ -4211,9 +4973,9 @@ class _MenuPageState extends State<MenuPage> {
             //     myDrinks[i].name.toString() + " | " +
             //     myDrinks[i].Quant.toString() + " | " +
             //     myDrinks[i].mid.toString());
-            List <MixerOrd> mx = [];
-            if(myDrinks[i].ChMixer.length > 0){
-              for(var z = 0; z < myDrinks[i].ChMixer.length; z++){
+            List<MixerOrd> mx = [];
+            if (myDrinks[i].ChMixer.length > 0) {
+              for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
                 print(myDrinks[i].ChMixer[z].cmid);
                 print(myDrinks[i].ChMixer[z].cname);
                 print(myDrinks[i].ChMixer[z].cprice);
@@ -4224,38 +4986,52 @@ class _MenuPageState extends State<MenuPage> {
                 //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
                 //   mx.add(mixerOrd);
                 // }
-                MixerOrd mixerOrd = MixerOrd(myDrinks[i].ChMixer[z].cmid, myDrinks[i].ChMixer[z].cprice.toString(),myDrinks[i].ChMixer[z].cname);
+                MixerOrd mixerOrd = MixerOrd(
+                    myDrinks[i].ChMixer[z].cmid,
+                    myDrinks[i].ChMixer[z].cprice.toString(),
+                    myDrinks[i].ChMixer[z].cname);
                 mx.add(mixerOrd);
               }
-              Order ord = Order(myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name, myDrinks[i].Quant, myDrinks[i].price,mx,myDrinks[i].origPrice);
+              Order ord = Order(
+                  myDrinks[i].id,
+                  myDrinks[i].drinkCategoryId,
+                  myDrinks[i].name,
+                  myDrinks[i].Quant,
+                  myDrinks[i].price,
+                  mx,
+                  myDrinks[i].origPrice);
               setState(() {
                 myOrder.add(ord);
               });
-            }else{
-
-              List <MixerOrd> mx = [];
-              if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
-                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
+            } else {
+              List<MixerOrd> mx = [];
+              if (myDrinks[i].mid == null || myDrinks[i].mid == '') {
+                MixerOrd mixerOrd = MixerOrd(
+                    myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
                 mx.add(mixerOrd);
-              }else{
-                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
+              } else {
+                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
+                    myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
                 mx.add(mixerOrd);
               }
 
-              Order ord = Order(myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name, myDrinks[i].Quant, myDrinks[i].price,mx,myDrinks[i].origPrice);
+              Order ord = Order(
+                  myDrinks[i].id,
+                  myDrinks[i].drinkCategoryId,
+                  myDrinks[i].name,
+                  myDrinks[i].Quant,
+                  myDrinks[i].price,
+                  mx,
+                  myDrinks[i].origPrice);
               setState(() {
                 myOrder.add(ord);
               });
             }
-
-
-
-
           }
         } else {
           _isILike = true;
 
-          for(var z = 0; z < myDrinks[i].ChMixer.length; z++){
+          for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
             print(myDrinks[i].ChMixer[z].cmid);
           }
 
@@ -4273,16 +5049,14 @@ class _MenuPageState extends State<MenuPage> {
           // });
         }
       }
-
     }
-
 
     return myOrder;
   }
 
-  callcompute()async{
+  callcompute() async {
     finaltot = 0;
-    for(var i = 0; i < myOrder.length; i++){
+    for (var i = 0; i < myOrder.length; i++) {
       double tot = double.parse(myOrder[i].Price) * myOrder[i].Quant;
       setState(() {
         finaltot = finaltot + tot;
@@ -4299,29 +5073,28 @@ class _MenuPageState extends State<MenuPage> {
       myTempCart = getDrinks();
     });
   }
-
-
 }
 
-class Store{
+class Store {
   final String id;
   final String Name;
   final String Description;
   final String ImageUrl;
   final String cat;
 
-  Store(this.id,this.Name, this.Description, this.ImageUrl,this.cat);
+  Store(this.id, this.Name, this.Description, this.ImageUrl, this.cat);
 }
 
-class SubMenu{
+class SubMenu {
   final String id;
   final String name;
   final String image;
   final String facility;
-  SubMenu(this.id,this.name,this.image,this.facility);
+
+  SubMenu(this.id, this.name, this.image, this.facility);
 }
 
-class Drinks{
+class Drinks {
   final String drinkid;
   final String id;
   final String name;
@@ -4338,45 +5111,59 @@ class Drinks{
   bool allowIce;
   bool addIce;
 
-
-  Drinks(this.drinkid,this.id, this.name,this.desciption,this.price,this.Quant,this.drinkCategoryId, this.mixer,this.mid,this.mprice,this.origPrice,this.ChMixer,this.imagePath,this.allowIce,this.addIce);
+  Drinks(
+      this.drinkid,
+      this.id,
+      this.name,
+      this.desciption,
+      this.price,
+      this.Quant,
+      this.drinkCategoryId,
+      this.mixer,
+      this.mid,
+      this.mprice,
+      this.origPrice,
+      this.ChMixer,
+      this.imagePath,
+      this.allowIce,
+      this.addIce);
 }
 
-class chossenMixer{
+class chossenMixer {
   String cmid;
   String cname;
   String cprice;
-  chossenMixer(this.cmid,this.cname,this.cprice);
+
+  chossenMixer(this.cmid, this.cname, this.cprice);
 }
-class Mixer{
+
+class Mixer {
   final int id;
   String name;
   final List<MixerCat> mx;
 
-  Mixer(this.id,this.name,this.mx);
+  Mixer(this.id, this.name, this.mx);
 }
-class MixerCat{
+
+class MixerCat {
   final String id;
   final String name;
   final String price;
 
-  MixerCat(this.id,this.name,this.price);
-
+  MixerCat(this.id, this.name, this.price);
 }
 
-
-class TempOrder{
+class TempOrder {
   final String id;
   final String CatId;
   final String Name;
   int Quant;
   final String Price;
 
-
-  TempOrder(this.id,this.CatId,this.Name,this.Quant,this.Price);
+  TempOrder(this.id, this.CatId, this.Name, this.Quant, this.Price);
 }
 
-class Order{
+class Order {
   final String drinkId;
   final String CatId;
   final String Name;
@@ -4385,18 +5172,17 @@ class Order{
   List<MixerOrd> mxir;
   final String origPrice;
 
-  Order(this.drinkId,this.CatId,this.Name,this.Quant,this.Price,this.mxir,this.origPrice);
+  Order(this.drinkId, this.CatId, this.Name, this.Quant, this.Price, this.mxir,
+      this.origPrice);
 }
 
-class MixerOrd{
+class MixerOrd {
   String id;
   String price;
   String name;
 
-  MixerOrd(this.id,this.price,this.name);
+  MixerOrd(this.id, this.price, this.name);
 }
-
-
 
 class UserORder {
   final String CatId;
@@ -4404,35 +5190,30 @@ class UserORder {
   int Quant;
   final String Price;
 
-  UserORder(this.CatId,this.Name,this.Quant,this.Price);
+  UserORder(this.CatId, this.Name, this.Quant, this.Price);
 
-  Map toJson() => {
-    'id': CatId,
-    'name': Name,
-    'quant': Quant,
-    'price': Price
-  };
+  Map toJson() => {'id': CatId, 'name': Name, 'quant': Quant, 'price': Price};
 }
 
-class Table{
+class Table {
   final String tableid;
   final String tablename;
 
-  Table(this.tableid,this.tablename);
+  Table(this.tableid, this.tablename);
 }
-class Discount{
+
+class Discount {
   final String discountid;
   final String discountname;
   final double discountpercentage;
 
-  Discount(this.discountid,this.discountname,this.discountpercentage);
+  Discount(this.discountid, this.discountname, this.discountpercentage);
 }
 
 class PayOrder {
   String id;
   String catid;
   String price;
-
 
   PayOrder(this.id, this.catid, this.price);
 
@@ -4461,24 +5242,30 @@ class PayDrinks {
   PayOrder payOrd;
   PayMixer mixOrd;
 
-  PayDrinks(this.quantity,this.price,[this.payOrd,this.mixOrd]);
+  PayDrinks(this.quantity, this.price, [this.payOrd, this.mixOrd]);
 
   Map toJson() {
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;
     Map mi = this.mixOrd != null ? this.mixOrd.toJson() : null;
 
-    if(mi == null){
-      return {'drink': author, 'quantity': quantity, 'price': price, };
-    }else{
-      return {'drink': author,'selectedMixer': mi, 'quantity': quantity, 'price': price, };
+    if (mi == null) {
+      return {
+        'drink': author,
+        'quantity': quantity,
+        'price': price,
+      };
+    } else {
+      return {
+        'drink': author,
+        'selectedMixer': mi,
+        'quantity': quantity,
+        'price': price,
+      };
     }
-
-
   }
 }
 
-
-class CardDetails{
+class CardDetails {
   final String cardid;
   final String maskedPan;
   final String expiry;
@@ -4488,8 +5275,6 @@ class CardDetails{
   bool select;
   final String showmask;
 
-
-  CardDetails(this.cardid,this.maskedPan,this.expiry,this.cardholderName,this.scheme,this.cardToken,this.select,this.showmask);
+  CardDetails(this.cardid, this.maskedPan, this.expiry, this.cardholderName,
+      this.scheme, this.cardToken, this.select, this.showmask);
 }
-
-

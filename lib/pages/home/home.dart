@@ -27,6 +27,7 @@ class _HomePageState extends State<HomePage> {
   Future myStore;
   int dtofdy = 0;
   String token;
+  String stoken;
   List<Order> orderList = [];
   Future ord;
 
@@ -124,8 +125,8 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.instance
         .getToken(
-            vapidKey:
-                'BGpdLRsMJKvFDD9odfPk92uBg-JbQbyoiZdah0XlUyrjG4SDgUsE1iC_kdRgt4Kn0CO7K3RTswPZt61NNuO0XoA')
+        vapidKey:
+        'BGpdLRsMJKvFDD9odfPk92uBg-JbQbyoiZdah0XlUyrjG4SDgUsE1iC_kdRgt4Kn0CO7K3RTswPZt61NNuO0XoA')
         .then(setToken);
     _tokenStream = FirebaseMessaging.instance.onTokenRefresh;
     _tokenStream.listen(setToken);
@@ -189,14 +190,14 @@ class _HomePageState extends State<HomePage> {
 
       for (var i = 0; i < jsondata.length; i++) {
         String cState =
-            json.decode(response.body)[i]['currentState'].toString();
+        json.decode(response.body)[i]['currentState'].toString();
         //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
         List<MyItems> newItem = [];
         for (var x in jsondata1) {
           MyItems nt =
-              new MyItems(x['drink']['name'], x['quantity'].toString());
+          new MyItems(x['drink']['name'], x['quantity'].toString());
 
           newItem.add(nt);
         }
@@ -479,6 +480,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
+    String token = Prefs.getString('token');
+    if (_token.isNotEmpty) {
+      stoken = _token;
+    } else {
+      stoken = token;
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
@@ -734,7 +742,7 @@ class _HomePageState extends State<HomePage> {
                                 width: 20,
                               ),
                               Text(
-                                _token == '' || _token == null || _token.isEmpty
+                                stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
                                     : "Sign Out",
                                 style: TextStyle(
@@ -890,8 +898,8 @@ class _HomePageState extends State<HomePage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                    //child: CircularProgressIndicator(),
-                    ),
+                  //child: CircularProgressIndicator(),
+                ),
               );
             } else {
               return ListView.builder(
@@ -931,8 +939,8 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     height: 20,
                                     width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
+                                    MediaQuery.of(context).size.width / 2 +
+                                        30,
                                     child: Row(
                                       children: [
                                         Text(
@@ -959,8 +967,8 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     height: 20,
                                     width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
+                                    MediaQuery.of(context).size.width / 2 +
+                                        30,
                                     child: Row(
                                       children: [
                                         Text(
@@ -986,8 +994,8 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     height: 20,
                                     width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
+                                    MediaQuery.of(context).size.width / 2 +
+                                        30,
                                     child: Row(
                                       children: [
                                         Text(
@@ -1012,8 +1020,8 @@ class _HomePageState extends State<HomePage> {
                                   Container(
                                     height: 20,
                                     width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
+                                    MediaQuery.of(context).size.width / 2 +
+                                        30,
                                     child: Row(
                                       children: [
                                         Text(
