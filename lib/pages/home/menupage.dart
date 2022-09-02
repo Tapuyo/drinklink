@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanoid/nanoid.dart';
+
 //import 'package:nanoid/non_secure.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -23,7 +24,9 @@ import 'package:uuid/uuid.dart';
 
 class MenuPage extends StatefulWidget {
   String id, title, desc;
+
   MenuPage(this.id, this.title, this.desc);
+
   @override
   _MenuPageState createState() =>
       _MenuPageState(this.id, this.title, this.desc);
@@ -46,7 +49,9 @@ class _MenuPageState extends State<MenuPage> {
   String selectedmenu1 = '';
   int subbodybool = 0;
   String id, title, desc;
+
   _MenuPageState(this.id, this.title, this.desc);
+
   final _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future subMenu;
   Future myStore;
@@ -1532,6 +1537,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   String selectedindex = '';
+
   subbody(String id, image, name, cat, fac) {
     if (cat == 'Sub') {
       return GestureDetector(
@@ -1791,6 +1797,7 @@ class _MenuPageState extends State<MenuPage> {
     String chprice = '';
     int myindex = 0;
     int chmid;
+    String mname;
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -1826,7 +1833,12 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty)
+                                              strings[i].name = mname;
                                           Navigator.pop(context);
+
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1851,7 +1863,7 @@ class _MenuPageState extends State<MenuPage> {
                                             myDrinks[ind].ChMixer.removeWhere(
                                                 (element) =>
                                                     element.cname ==
-                                                    strings[i].name);
+                                                    mname);
                                           }
                                           Navigator.pop(context);
                                           List<chossenMixer> newChs =
@@ -1963,15 +1975,17 @@ class _MenuPageState extends State<MenuPage> {
                                               strings[i].mx[index].id;
                                           myDrinks[ind].mprice =
                                               strings[i].mx[index].price;
+                                          mname = strings[i].name;
                                         });
 
                                         modsetState(() {
+                                          strings[i].name = '';
                                           myDrinks[ind].mid =
                                               strings[i].mx[index].id;
                                           myDrinks[ind].mprice =
                                               strings[i].mx[index].price;
-
                                           select = myindex;
+                                          int Row = index;
                                         });
                                       },
                                       child: Container(
@@ -1979,14 +1993,31 @@ class _MenuPageState extends State<MenuPage> {
                                               EdgeInsets.fromLTRB(0, 0, 0, 20),
                                           child: Row(
                                             children: [
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid ==
-                                                        strings[i].mx[index].id
-                                                    ? Colors.deepOrange
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
+                                              if (strings[i].name.toString() ==
+                                                  strings[i].mx[index].name)
+                                                (Icon(
+                                                  Icons.circle,
+                                                  color: strings[i]
+                                                              .name
+                                                              .toString() ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .name
+                                                      ? Colors.deepOrange[700]
+                                                      : Colors.blue
+                                                          .withOpacity(.5),
+                                                ))
+                                              else
+                                                (Icon(
+                                                  Icons.circle,
+                                                  color: myDrinks[ind].mid ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .id
+                                                      ? Colors.deepOrange[700]
+                                                      : Colors.black
+                                                          .withOpacity(.5),
+                                                )),
                                               SizedBox(
                                                 width: 10,
                                               ),
@@ -3846,8 +3877,8 @@ class _MenuPageState extends State<MenuPage> {
                                     border: Border.all(
                                       color: vipcharge == false
                                           ? Colors.white
-                                          : Colors
-                                              .transparent, //                   <--- border color
+                                          : Colors.transparent,
+                                      //                   <--- border color
                                       width: 1.0,
                                     ),
                                   ),
@@ -5059,6 +5090,7 @@ class SubMenu {
   final String name;
   final String image;
   final String facility;
+
   SubMenu(this.id, this.name, this.image, this.facility);
 }
 
@@ -5101,6 +5133,7 @@ class chossenMixer {
   String cmid;
   String cname;
   String cprice;
+
   chossenMixer(this.cmid, this.cname, this.cprice);
 }
 
