@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   String stoken;
   List<Order> orderList = [];
   Future ord;
+  bool _ontap;
 
   @override
   setNotif(String ftoken) async {
@@ -812,7 +813,9 @@ class _HomePageState extends State<HomePage> {
                     padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
                     child: SingleChildScrollView(
                       child: SizedBox(
-                        height: MediaQuery.of(context).size.height - 300,
+                        height: _ontap == true
+                            ? MediaQuery.of(context).size.height - 300
+                            : MediaQuery.of(context).size.height - 600,
                         child: mybody(),
                       ),
                     ),
@@ -827,8 +830,18 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.white70,
                           height: 1,
                         ),
+                        onTap: () {
+                          setState(() {
+                            _ontap = false;
+                          });
+                        },
+                        onSubmitted: (value) {
+                          _ontap = true;
+                        },
                         onChanged: (value) {
-                          setState(() {});
+                          setState(() {
+                            getStore();
+                          });
                         },
                         controller: seedit,
                         decoration: new InputDecoration(
