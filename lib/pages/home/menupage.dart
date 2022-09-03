@@ -1028,7 +1028,7 @@ class _MenuPageState extends State<MenuPage> {
                           child: mycart(),
                         ),
                         Container(
-                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          padding: EdgeInsets.fromLTRB(0, 100, 0, 10),
                           child: GestureDetector(
                             onTap: () {
                               if (myOrder.length > 0) {
@@ -4261,26 +4261,34 @@ class _MenuPageState extends State<MenuPage> {
                                     borderRadius: BorderRadius.circular(8)),
                                 onPressed: () {
                                   //samplecheck();
-                                  if (billadd.text != '' ||
-                                      billadd.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
-                                  }
 
-                                  if (billname.text != '' ||
-                                      billname.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
-                                  }
+                                  // if (billadd.text != '' ||
+                                  //     billadd.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
 
-                                  if (billemail.text != '' ||
-                                      billemail.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
-                                  }
+                                  // if (billname.text != '' ||
+                                  //     billname.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
+
+                                  // if (billemail.text != '' ||
+                                  //     billemail.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
+
+                                  _validate =
+                                      Prefs.getBoolValtext(billadd.text);
+                                  _validate =
+                                      Prefs.getBoolValtext(billname.text);
+                                  _validate =
+                                      Prefs.getBoolValtext(billemail.text);
 
                                   if (_validate == true) {
                                     tokenChecker();
