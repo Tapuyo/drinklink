@@ -986,6 +986,12 @@ class _MenuPageState extends State<MenuPage> {
                     child: Column(
                       children: [
                         Visibility(
+                          visible: myOrder.length > 0 ? false : true,
+                          child: SizedBox(
+                            height: 67,
+                          ),
+                        ),
+                        Visibility(
                           visible: myOrder.length > 0 ? true : false,
                           child: Container(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -1023,12 +1029,13 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         ),
                         Container(
+                          // color: Colors.red,
                           height: MediaQuery.of(context).size.height - 470,
                           //color: Colors.white,
                           child: mycart(),
                         ),
                         Container(
-                          padding: EdgeInsets.fromLTRB(0, 100, 0, 10),
+                          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: GestureDetector(
                             onTap: () {
                               if (myOrder.length > 0) {
@@ -1833,12 +1840,9 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          if (myDrinks[ind]
-                                              .ChMixer
-                                              .isNotEmpty)
-                                              strings[i].name = mname;
+                                          if (myDrinks[ind].ChMixer.isNotEmpty)
+                                            strings[i].name = mname;
                                           Navigator.pop(context);
-
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1862,8 +1866,7 @@ class _MenuPageState extends State<MenuPage> {
                                               .isNotEmpty) {
                                             myDrinks[ind].ChMixer.removeWhere(
                                                 (element) =>
-                                                    element.cname ==
-                                                    mname);
+                                                    element.cname == mname);
                                           }
                                           Navigator.pop(context);
                                           List<chossenMixer> newChs =
