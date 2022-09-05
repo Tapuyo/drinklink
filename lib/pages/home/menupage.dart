@@ -98,7 +98,6 @@ class _MenuPageState extends State<MenuPage> {
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
-  bool _validate = false;
 
   String maskedPan = '';
   String expiry = '';
@@ -4288,15 +4287,47 @@ class _MenuPageState extends State<MenuPage> {
                                   // } else {
                                   //   _validate = false;
                                   // }
+                                  bool _validate1;
+                                  bool _validate2;
+                                  bool _validate3;
+                                  bool _validate4;
+                                  bool _validate5;
 
-                                  _validate =
+                                  _validate1 =
                                       Prefs.getBoolValtext(billadd.text);
-                                  _validate =
+                                  _validate2 =
                                       Prefs.getBoolValtext(billname.text);
-                                  _validate =
+                                  _validate3 =
                                       Prefs.getBoolValtext(billemail.text);
 
-                                  if (_validate == true) {
+                                  String ename = billname.text;
+                                  var fullname = ename.split(' ');
+                                  String firsname = '';
+                                  String lastname = '';
+
+                                  try {
+                                    firsname = fullname[0];
+                                    lastname = fullname[1];
+                                    _validate4 = Prefs.getBoolValtext(firsname);
+                                    _validate5 = Prefs.getBoolValtext(lastname);
+                                    if (_validate4 == false ||
+                                        _validate5 == false) {
+                                      _showDialog('DinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else {
+                                      _validate4 = _validate4;
+                                      _validate5 = _validate5;
+                                    }
+                                  } catch (e) {
+                                    // _showDialog('DinkLink', 'Please input full name.');
+                                  }
+
+                                  if (_validate1 == true &&
+                                      _validate2 == true &&
+                                      _validate3 == true &&
+                                      _validate4 == true &&
+                                      _validate5 == true) {
                                     setState(() {
                                       isloading = true;
                                       tokenChecker();
@@ -4304,7 +4335,7 @@ class _MenuPageState extends State<MenuPage> {
                                   } else {
                                     Alert(
                                       context: context,
-                                      title: "DRINKLINK",
+                                      title: "DrinkLink",
                                       content: Text(
                                           'Please fill up the billing details.'),
                                       buttons: [
@@ -4939,7 +4970,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DrinkLink', "Failed payment");
+      _showDialog('DinkLink', 'Payment Failed');
     }
     //}
   }
