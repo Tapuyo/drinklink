@@ -93,13 +93,10 @@ class _ResetPassPageState extends State<ResetPassEmail> {
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
                   child: Text(
-                    'Code will be sent to your email.',
+                    'Code will be send to your email.',
                     style: TextStyle(
                         wordSpacing: 3, color: Colors.white, fontSize: 16),
                   )),
-              SizedBox(
-                height: 150,
-              ),
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
