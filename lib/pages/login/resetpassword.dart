@@ -156,7 +156,7 @@ class _ResetPassPageState extends State<ResetPass> {
 
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                  child: Text('Code has send to your email.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
+                  child: Text('Code has been sent to your email.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
               ),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
