@@ -4939,7 +4939,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DinkLink', result);
+      _showDialog('DrinkLink', "Failed payment");
     }
     //}
   }
@@ -4997,6 +4997,7 @@ class _MenuPageState extends State<MenuPage> {
             element.drinkId == myDrinks[i].id &&
             element.Price == myDrinks[i].mprice);
         if (contain.isEmpty) {
+          print("Order Already Placed!");
           _isILike = false;
           if (myDrinks[i].Quant > 0) {
             // print(myDrinks[i].id.toString() + " | " +
