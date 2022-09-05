@@ -4970,7 +4970,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DinkLink', 'Payment Failed');
+      _showDialog('DinkLink', 'Failed payment');
     }
     //}
   }
