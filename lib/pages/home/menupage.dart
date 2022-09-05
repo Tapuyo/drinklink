@@ -21,6 +21,7 @@ import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:uuid/uuid.dart';
+import 'package:driklink/provider/payment_provider.dart';
 
 class MenuPage extends StatefulWidget {
   String id, title, desc;
@@ -105,6 +106,8 @@ class _MenuPageState extends State<MenuPage> {
   String scheme = '';
   String cardToken = '';
   Color contColor = Colors.green;
+
+  bool isloading;
 
   counteraddord1(String addminus) {
     if (addminus == 'add') {
@@ -4226,7 +4229,7 @@ class _MenuPageState extends State<MenuPage> {
                           hintStyle: TextStyle(color: Colors.white54),
                           labelStyle: new TextStyle(color: Colors.white),
                           labelText: 'Send bill to email',
-                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                          // errorText: _validate ? 'Value Can\'t Be Empty' : null,
                         ),
                       ),
                     ),
@@ -4294,7 +4297,10 @@ class _MenuPageState extends State<MenuPage> {
                                       Prefs.getBoolValtext(billemail.text);
 
                                   if (_validate == true) {
-                                    tokenChecker();
+                                    setState(() {
+                                      isloading = true;
+                                      tokenChecker();
+                                    });
                                   } else {
                                     Alert(
                                       context: context,
@@ -4481,7 +4487,8 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   tokenChecker() async {
-    Navigator.of(context).push(new PageRouteBuilder(
+    Navigator.of(context).push(
+      new PageRouteBuilder(
         opaque: false,
         barrierDismissible: true,
         pageBuilder: (BuildContext context, _, __) {
@@ -4491,25 +4498,33 @@ class _MenuPageState extends State<MenuPage> {
               width: 150,
               height: 150,
               color: Colors.transparent,
-              child: Center(
-                child: new SizedBox(
-                  height: 50.0,
-                  width: 50.0,
-                  child: new CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 7.0,
-                  ),
-                ),
-              ),
+              child: isloading == true
+                  ? Center(
+                      child: new SizedBox(
+                        height: 50.0,
+                        width: 50.0,
+                        child: new CircularProgressIndicator(
+                          value: null,
+                          strokeWidth: 7.0,
+                        ),
+                      ),
+                    )
+                  : Center(),
             ),
           );
-        }));
+        },
+      ),
+    );
+
     Prefs.load();
+
     String tk = Prefs.getString('token');
+
     if (tk == null || tk == '') {
       SignUpPay();
     } else {
       OrderNow();
+      isloading = false;
       //getPaymentLink();
 
     }
@@ -4769,7 +4784,8 @@ class _MenuPageState extends State<MenuPage> {
         _cm = response.body.toString();
       }
       _showDialog('DinkLink', _cm);
-      return;
+
+      return false;
     }
   }
 
@@ -4891,7 +4907,11 @@ class _MenuPageState extends State<MenuPage> {
     // var jsondata = json.decode(response.body)['mainUrl'];
     // print("This is the reponse: "+ jsondata.toString());
 
-    String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    // String linkpayment =
+    //     'https://paypage.sandbox.ngenius-payments.com/?code=' + code;
+    String linkpayment = ApiCon.paymenturl + '?code=' + code;
+
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -4918,7 +4938,7 @@ class _MenuPageState extends State<MenuPage> {
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
     } else {
-      print(result);
+      print(result + 'payment mode');
       _showDialog('DinkLink', result);
     }
     //}
