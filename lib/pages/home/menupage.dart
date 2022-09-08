@@ -4938,11 +4938,7 @@ class _MenuPageState extends State<MenuPage> {
     // var jsondata = json.decode(response.body)['mainUrl'];
     // print("This is the reponse: "+ jsondata.toString());
 
-    // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
-    // String linkpayment =
-    //     'https://paypage.sandbox.ngenius-payments.com/?code=' + code;
-    String linkpayment = ApiCon.paymenturl + '?code=' + code;
-
+    String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
