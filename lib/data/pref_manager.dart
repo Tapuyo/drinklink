@@ -94,6 +94,27 @@ class Prefs {
     return val;
   }
 
+  static bool getBoolValtoken({bool def = false}) {
+    bool val;
+    String token = Prefs.getString('token');
+    if (token.isNotEmpty) {
+      val = true;
+    }
+
+    return val;
+  }
+
+  static bool getBoolValtext(String text) {
+    bool val;
+    if (text.isNotEmpty) {
+      val = true;
+    } else {
+      val = false;
+    }
+
+    return val;
+  }
+
   static void clear() {
     _prefs.clear();
   }

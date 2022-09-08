@@ -30,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   String stoken;
   List<Order> orderList = [];
   Future ord;
+  bool _ontap;
 
   @override
   setNotif(String ftoken) async {
@@ -57,6 +58,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     Prefs.load();
     super.initState();
+    _ontap = true;
+
     // myList = [];
     // myStore = getStore();
 
@@ -466,6 +469,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     print(myList.length);
+
     return myList;
   }
 
@@ -490,396 +494,434 @@ class _HomePageState extends State<HomePage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
-        onWillPop: () async => false,
-        child: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/bkgdefault.png"),
-                  fit: BoxFit.cover)),
-          child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    size: 35,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    orderList = [];
-                    ord = getOrders();
-                    _scaffoldKey.currentState.openEndDrawer();
-                  },
-                )
-              ],
-            ),
-            endDrawer: Drawer(
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Home",
+        onWillPop: () async {
+          setState(() {
+            _ontap = true;
+          });
+
+          return false;
+        },
+        child: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+              seedit.clear();
+              _ontap = true;
+            }
+          },
+          child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/images/bkgdefault.png"),
+                    fit: BoxFit.cover)),
+            child: Scaffold(
+              key: _scaffoldKey,
+              appBar: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                actions: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.menu,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      orderList = [];
+                      ord = getOrders();
+                      _scaffoldKey.currentState.openEndDrawer();
+                    },
+                  )
+                ],
+              ),
+              endDrawer: Drawer(
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                    color: Colors.black,
+                    child: Column(
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.home,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Text(
+                                    "Home",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => orderPage()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  Icons.wine_bar_sharp,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "My Orders",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => orderPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.wine_bar_sharp,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "My Orders",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => setPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.settings,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Settings v1.0.122",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => termPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesome.angle_double_up,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Terms of Service",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (_token == '' || _token == null) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            context.read<AuthProvider>().setToken('');
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()),
+                                  builder: (context) => setPage()),
                             );
-                            setState(() {
-                              setState(() {
-                                Prefs.load();
-                                Prefs.setString('token', '');
-                                Prefs.setString('bfName', '');
-                                Prefs.setString('blMame', '');
-                                Prefs.setString('billName', '');
-                                Prefs.setString('billAdd', '');
-                                Prefs.setString('billEmail', '');
-                              });
-                            });
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                MaterialCommunityIcons.human,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                stoken == '' || stoken == null || stoken.isEmpty
-                                    ? "Sign In / Register"
-                                    : "Sign Out",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Visibility(
-                                visible: orderList.length > 0 ? true : false,
-                                child: Text(
-                                  'Most recent orders',
-                                  style: TextStyle(color: Colors.white),
-                                )),
-                            mybodyRec(),
-                            SizedBox(
-                              height: 20,
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-            backgroundColor: Colors.transparent,
-            body: Container(
-              height: MediaQuery.of(context).size.height - 80,
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Home',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Choose featured places or search',
-                          style: TextStyle(
-                            color: Colors.deepOrange,
-                            fontSize: 16,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
-                    child: SingleChildScrollView(
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height - 300,
-                        child: mybody(),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
-                      child: TextField(
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white70,
-                          height: 1,
-                        ),
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                        controller: seedit,
-                        decoration: new InputDecoration(
-                            filled: true,
-                            hintStyle: new TextStyle(
-                                color: Colors.white70, fontSize: 20),
-                            hintText: "Enter name, area or address",
-                            fillColor: Colors.transparent),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FlatButton(
-                              height: 50,
-                              minWidth: double.infinity,
-                              color: Colors.deepOrange,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              onPressed: () {
-                                //getOrders();
-                                getStore();
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  // Image.asset(
-                                  //   'assets/images/applelogo.png',
-                                  //   height: 30.0,
-                                  //   width: 30.0,
-                                  // ),
-                                  //SizedBox(width: 10,),
-                                  Text(
-                                    'SEARCH',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  )
-                                ],
-                              ),
+                                Icon(
+                                  Icons.settings,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Settings v1.0.122",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => termPage()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  FontAwesome.angle_double_up,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  "Terms of Service",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            //Navigator.of(context).popAndPushNamed('/home');
+                            if (_token == '' || _token == null) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()),
+                              );
+                            } else {
+                              context.read<AuthProvider>().setToken('');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('bfName', '');
+                                  Prefs.setString('blMame', '');
+                                  Prefs.setString('billName', '');
+                                  Prefs.setString('billAdd', '');
+                                  Prefs.setString('billEmail', '');
+                                });
+                              });
+                            }
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  MaterialCommunityIcons.human,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  stoken == '' ||
+                                          stoken == null ||
+                                          stoken.isEmpty
+                                      ? "Sign In / Register"
+                                      : "Sign Out",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        Row(children: [
+                          Container(
+                            padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Visibility(
+                                    visible:
+                                        orderList.length > 0 ? true : false,
+                                    child: Text(
+                                      'Most recent orders',
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                                mybodyRec(),
+                                SizedBox(
+                                  height: 20,
+                                )
+                              ],
+                            ),
+                          ),
+                        ]),
+                      ],
+                    )),
+              ),
+              backgroundColor: Colors.transparent,
+              body: Container(
+                height: MediaQuery.of(context).size.height - 80,
+                child: Stack(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Home',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            'Choose featured places or search',
+                            style: TextStyle(
+                              color: Colors.deepOrange,
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ],
+                    Container(
+                      padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
+                      child: SingleChildScrollView(
+                        child: SizedBox(
+                          height: _ontap == true
+                              ? MediaQuery.of(context).size.height - 300
+                              : MediaQuery.of(context).size.height - 600,
+                          child: mybody(),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                        child: TextField(
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white70,
+                            height: 1,
+                          ),
+                          onTap: () {
+                            setState(() {
+                              _ontap = false;
+                            });
+                          },
+                          onSubmitted: (value) {
+                            _ontap = true;
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              getStore();
+                            });
+                          },
+                          controller: seedit,
+                          decoration: new InputDecoration(
+                              filled: true,
+                              hintStyle: new TextStyle(
+                                  color: Colors.white70, fontSize: 20),
+                              hintText: "Enter name, area or address",
+                              fillColor: Colors.transparent),
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: FlatButton(
+                                height: 50,
+                                minWidth: double.infinity,
+                                color: Colors.deepOrange,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                onPressed: () {
+                                  //getOrders();
+                                  getStore();
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // Image.asset(
+                                    //   'assets/images/applelogo.png',
+                                    //   height: 30.0,
+                                    //   width: 30.0,
+                                    // ),
+                                    //SizedBox(width: 10,),
+                                    Text(
+                                      'SEARCH',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

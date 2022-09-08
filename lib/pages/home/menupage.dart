@@ -1,3 +1,4 @@
+
 import 'dart:math';
 
 import 'package:driklink/pages/home/home.dart';
@@ -21,6 +22,10 @@ import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:uuid/uuid.dart';
+import 'package:driklink/provider/payment_provider.dart';
+import 'package:collection/equality.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
 class MenuPage extends StatefulWidget {
   String id, title, desc;
@@ -97,7 +102,6 @@ class _MenuPageState extends State<MenuPage> {
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
-  bool _validate = false;
 
   String maskedPan = '';
   String expiry = '';
@@ -105,6 +109,8 @@ class _MenuPageState extends State<MenuPage> {
   String scheme = '';
   String cardToken = '';
   Color contColor = Colors.green;
+
+  bool isloading;
 
   counteraddord1(String addminus) {
     if (addminus == 'add') {
@@ -986,6 +992,12 @@ class _MenuPageState extends State<MenuPage> {
                     child: Column(
                       children: [
                         Visibility(
+                          visible: myOrder.length > 0 ? false : true,
+                          child: SizedBox(
+                            height: 67,
+                          ),
+                        ),
+                        Visibility(
                           visible: myOrder.length > 0 ? true : false,
                           child: Container(
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -1023,6 +1035,7 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         ),
                         Container(
+                          // color: Colors.red,
                           height: MediaQuery.of(context).size.height - 470,
                           //color: Colors.white,
                           child: mycart(),
@@ -1833,12 +1846,9 @@ class _MenuPageState extends State<MenuPage> {
                                       children: [
                                         GestureDetector(
                                             onTap: () {
-                                              if (myDrinks[ind]
-                                                  .ChMixer
-                                                  .isNotEmpty)
+                                              if (myDrinks[ind].ChMixer.isNotEmpty)
                                                 strings[i].name = mname;
                                               Navigator.pop(context);
-
                                             },
                                             child: SizedBox(
                                               width: 100,
@@ -1862,17 +1872,11 @@ class _MenuPageState extends State<MenuPage> {
                                                   .isNotEmpty) {
                                                 myDrinks[ind].ChMixer.removeWhere(
                                                         (element) =>
-                                                    element.cname ==
-                                                        mname);
+                                                    element.cname == mname);
                                               }
                                               Navigator.pop(context);
                                               List<chossenMixer> newChs =
-                                                  myDrinks[ind].ChMixer;
-
-                                              chossenMixer chs = chossenMixer(
-                                                  chid, chname, chprice);
                                               print(chs);
-
                                               newChs.add(chs);
                                               print(chs.cmid.toString());
                                               print(chs.cname.toString());
@@ -4223,7 +4227,7 @@ class _MenuPageState extends State<MenuPage> {
                           hintStyle: TextStyle(color: Colors.white54),
                           labelStyle: new TextStyle(color: Colors.white),
                           labelText: 'Send bill to email',
-                          errorText: _validate ? 'Value Can\'t Be Empty' : null,
+                          // errorText: _validate ? 'Value Can\'t Be Empty' : null,
                         ),
                       ),
                     ),
@@ -4261,33 +4265,76 @@ class _MenuPageState extends State<MenuPage> {
                                     borderRadius: BorderRadius.circular(8)),
                                 onPressed: () {
                                   //samplecheck();
-                                  if (billadd.text != '' ||
-                                      billadd.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
+
+                                  // if (billadd.text != '' ||
+                                  //     billadd.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
+
+                                  // if (billname.text != '' ||
+                                  //     billname.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
+
+                                  // if (billemail.text != '' ||
+                                  //     billemail.text.isNotEmpty) {
+                                  //   _validate = true;
+                                  // } else {
+                                  //   _validate = false;
+                                  // }
+                                  bool _validate1;
+                                  bool _validate2;
+                                  bool _validate3;
+                                  bool _validate4;
+                                  bool _validate5;
+
+                                  _validate1 =
+                                      Prefs.getBoolValtext(billadd.text);
+                                  _validate2 =
+                                      Prefs.getBoolValtext(billname.text);
+                                  _validate3 =
+                                      Prefs.getBoolValtext(billemail.text);
+
+                                  String ename = billname.text;
+                                  var fullname = ename.split(' ');
+                                  String firsname = '';
+                                  String lastname = '';
+
+                                  try {
+                                    firsname = fullname[0];
+                                    lastname = fullname[1];
+                                    _validate4 = Prefs.getBoolValtext(firsname);
+                                    _validate5 = Prefs.getBoolValtext(lastname);
+                                    if (_validate4 == false ||
+                                        _validate5 == false) {
+                                      _showDialog('DinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else {
+                                      _validate4 = _validate4;
+                                      _validate5 = _validate5;
+                                    }
+                                  } catch (e) {
+                                    // _showDialog('DinkLink', 'Please input full name.');
                                   }
 
-                                  if (billname.text != '' ||
-                                      billname.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
-                                  }
-
-                                  if (billemail.text != '' ||
-                                      billemail.text.isNotEmpty) {
-                                    _validate = true;
-                                  } else {
-                                    _validate = false;
-                                  }
-
-                                  if (_validate == true) {
-                                    tokenChecker();
+                                  if (_validate1 == true &&
+                                      _validate2 == true &&
+                                      _validate3 == true &&
+                                      _validate4 == true &&
+                                      _validate5 == true) {
+                                    setState(() {
+                                      isloading = true;
+                                      tokenChecker();
+                                    });
                                   } else {
                                     Alert(
                                       context: context,
-                                      title: "DRINKLINK",
+                                      title: "DrinkLink",
                                       content: Text(
                                           'Please fill up the billing details.'),
                                       buttons: [
@@ -4470,7 +4517,8 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   tokenChecker() async {
-    Navigator.of(context).push(new PageRouteBuilder(
+    Navigator.of(context).push(
+      new PageRouteBuilder(
         opaque: false,
         barrierDismissible: true,
         pageBuilder: (BuildContext context, _, __) {
@@ -4480,7 +4528,8 @@ class _MenuPageState extends State<MenuPage> {
               width: 150,
               height: 150,
               color: Colors.transparent,
-              child: Center(
+              child: isloading == true
+                  ? Center(
                 child: new SizedBox(
                   height: 50.0,
                   width: 50.0,
@@ -4489,16 +4538,23 @@ class _MenuPageState extends State<MenuPage> {
                     strokeWidth: 7.0,
                   ),
                 ),
-              ),
+              )
+                  : Center(),
             ),
           );
-        }));
+        },
+      ),
+    );
+
     Prefs.load();
+
     String tk = Prefs.getString('token');
+
     if (tk == null || tk == '') {
       SignUpPay();
     } else {
       OrderNow();
+      isloading = false;
       //getPaymentLink();
 
     }
@@ -4758,7 +4814,8 @@ class _MenuPageState extends State<MenuPage> {
         _cm = response.body.toString();
       }
       _showDialog('DinkLink', _cm);
-      return;
+
+      return false;
     }
   }
 
@@ -4880,7 +4937,11 @@ class _MenuPageState extends State<MenuPage> {
     // var jsondata = json.decode(response.body)['mainUrl'];
     // print("This is the reponse: "+ jsondata.toString());
 
-    String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    // String linkpayment =
+    //     'https://paypage.sandbox.ngenius-payments.com/?code=' + code;
+    String linkpayment = ApiCon.paymenturl + '?code=' + code;
+
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -4907,8 +4968,8 @@ class _MenuPageState extends State<MenuPage> {
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
     } else {
-      print(result);
-      _showDialog('DinkLink', result);
+      print(result + 'payment mode');
+      _showDialog('DinkLink', 'Failed payment');
     }
     //}
   }
@@ -4958,14 +5019,12 @@ class _MenuPageState extends State<MenuPage> {
         myOrder = [];
       });
     }
-
     for (var i = 0; i < myDrinks.length; i++) {
       bool _isILike;
       if (myDrinks[i].Quant > 0) {
-        var contain = myOrder.where((element) =>
-        element.drinkId == myDrinks[i].id &&
-            element.Price == myDrinks[i].mprice);
-        if (contain.isEmpty) {
+        var contain =
+            myOrder.where((element) => element.drinkId == myDrinks[i].id);
+        if (contain.isNotEmpty) {
           _isILike = false;
           if (myDrinks[i].Quant > 0) {
             // print(myDrinks[i].id.toString() + " | " +
@@ -4973,74 +5032,197 @@ class _MenuPageState extends State<MenuPage> {
             //     myDrinks[i].name.toString() + " | " +
             //     myDrinks[i].Quant.toString() + " | " +
             //     myDrinks[i].mid.toString());
-            List<MixerOrd> mx = [];
             if (myDrinks[i].ChMixer.length > 0) {
-              for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-                print(myDrinks[i].ChMixer[z].cmid);
-                print(myDrinks[i].ChMixer[z].cname);
-                print(myDrinks[i].ChMixer[z].cprice);
-                // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
-                //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
-                //   mx.add(mixerOrd);
-                // }else{
-                //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
-                //   mx.add(mixerOrd);
-                // }
-                MixerOrd mixerOrd = MixerOrd(
-                    myDrinks[i].ChMixer[z].cmid,
-                    myDrinks[i].ChMixer[z].cprice.toString(),
-                    myDrinks[i].ChMixer[z].cname);
-                mx.add(mixerOrd);
+              // List tmp1 = [];
+              // List tmp2 = [];
+              // for (var name in contain.single.mxir) {
+              //   tmp1.add(name.name);
+              // }
+              //
+              // print(tmp1);
+              // for (var name in myDrinks[i].mixer) {
+              //   tmp2.add(name.name);
+              // }
+              List element1 = [];
+              for(var name1 in contain){
+                for (var name in name1.mxir) {
+                  element1.add(name.id);
+              }}
+                List element2 = [];
+                for (var name in myDrinks[i].ChMixer) {
+                  element2.add(name.cmid);
+                  setState(() {
+                  });
+                }
+             // if (listEquals(element2,element1)){
+               if (element2.every((item) => element1.contains(item))) {
+              print(element1.length);
+                 print(element2.length);
+                for (var j = 0; j < myOrder.length; j++) {
+                  if (myOrder[j].drinkId == myDrinks[i].id ) {
+                      bool result = computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
+                      print(result);
+                      if(result ) {
+                        myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                      }else if(result && element1.length != element2.length){
+                        List<MixerOrd> mx = [];
+                        for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                          MixerOrd mixerOrd = MixerOrd(
+                              myDrinks[i].ChMixer[z].cmid,
+                              myDrinks[i].ChMixer[z].cprice.toString(),
+                              myDrinks[i].ChMixer[z].cname);
+                          mx.add(mixerOrd);
+                        }
+                        Order ord = Order(
+                            myDrinks[i].id,
+                            myDrinks[i].drinkCategoryId,
+                            myDrinks[i].name,
+                            myDrinks[i].Quant,
+                            myDrinks[i].price,
+                            mx,
+                            myDrinks[i].origPrice);
+                        setState(() {
+                          myOrder.add(ord);
+                        });
+                      }
+
+                  }
+                }
+              } else if( element2.every((item) => element1.contains(item)) && element1.length == element2.length)  {
+                 _isILike = true;
+                 print(2);
+                 List<MixerOrd> mx = [];
+                 for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                   // print(myDrinks[i].ChMixer[z].cmid);
+                   // print(myDrinks[i].ChMixer[z].cname);
+                   // print(myDrinks[i].ChMixer[z].cprice);
+                   // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
+                   //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
+                   //   mx.add(mixerOrd);
+                   // }else{
+                   //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
+                   //   mx.add(mixerOrd);
+                   // }
+                   MixerOrd mixerOrd = MixerOrd(
+                       myDrinks[i].ChMixer[z].cmid,
+                       myDrinks[i].ChMixer[z].cprice.toString(),
+                       myDrinks[i].ChMixer[z].cname);
+                   mx.add(mixerOrd);
+                 }
+                 Order ord = Order(
+                     myDrinks[i].id,
+                     myDrinks[i].drinkCategoryId,
+                     myDrinks[i].name,
+                     myDrinks[i].Quant,
+                     myDrinks[i].price,
+                     mx,
+                     myDrinks[i].origPrice);
+                 setState(() {
+                   myOrder.add(ord);
+                 });
+                 // Order ord = Order(
+                 //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
+                 //     myDrinks[i].Quant, myDrinks[i].price);
+                 // setState(() {
+                 //   myOrder.add(ord);
+                 // });
+               }
+               else {
+                _isILike = true;
+                print(2);
+                List<MixerOrd> mx = [];
+                for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                  // print(myDrinks[i].ChMixer[z].cmid);
+                  // print(myDrinks[i].ChMixer[z].cname);
+                  // print(myDrinks[i].ChMixer[z].cprice);
+                  // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
+                  //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
+                  //   mx.add(mixerOrd);
+                  // }else{
+                  //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
+                  //   mx.add(mixerOrd);
+                  // }
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].ChMixer[z].cmid,
+                      myDrinks[i].ChMixer[z].cprice.toString(),
+                      myDrinks[i].ChMixer[z].cname);
+                  mx.add(mixerOrd);
+                }
+                Order ord = Order(
+                    myDrinks[i].id,
+                    myDrinks[i].drinkCategoryId,
+                    myDrinks[i].name,
+                    myDrinks[i].Quant,
+                    myDrinks[i].price,
+                    mx,
+                    myDrinks[i].origPrice);
+                setState(() {
+                  myOrder.add(ord);
+                });
+                // Order ord = Order(
+                //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
+                //     myDrinks[i].Quant, myDrinks[i].price);
+                // setState(() {
+                //   myOrder.add(ord);
+                // });
               }
-              Order ord = Order(
-                  myDrinks[i].id,
-                  myDrinks[i].drinkCategoryId,
-                  myDrinks[i].name,
-                  myDrinks[i].Quant,
-                  myDrinks[i].price,
-                  mx,
-                  myDrinks[i].origPrice);
-              setState(() {
-                myOrder.add(ord);
-              });
-            } else {
+              } else {
               List<MixerOrd> mx = [];
               if (myDrinks[i].mid == null || myDrinks[i].mid == '') {
                 MixerOrd mixerOrd = MixerOrd(
                     myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
                 mx.add(mixerOrd);
+                for (var j = 0; j < myOrder.length; j++) {
+                  if (myOrder[j].drinkId == myDrinks[i].id) {
+                    //myOrder.removeAt(j);
+                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                  }
+                }
               } else {
                 MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
                     myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
                 mx.add(mixerOrd);
-              }
 
-              Order ord = Order(
-                  myDrinks[i].id,
-                  myDrinks[i].drinkCategoryId,
-                  myDrinks[i].name,
-                  myDrinks[i].Quant,
-                  myDrinks[i].price,
-                  mx,
-                  myDrinks[i].origPrice);
-              setState(() {
-                myOrder.add(ord);
-              });
+                for (var j = 0; j < myOrder.length; j++) {
+                  if (myOrder[j].drinkId == myDrinks[i].id) {
+                    //myOrder.removeAt(j);
+                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                  }
+                }
+              }
             }
-          }
+            }
         } else {
           _isILike = true;
-
+          List<MixerOrd> mx = [];
           for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
             print(myDrinks[i].ChMixer[z].cmid);
+            print(myDrinks[i].ChMixer[z].cname);
+            print(myDrinks[i].ChMixer[z].cprice);
+            // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
+            //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
+            //   mx.add(mixerOrd);
+            // }else{
+            //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
+            //   mx.add(mixerOrd);
+            // }
+            MixerOrd mixerOrd = MixerOrd(
+                myDrinks[i].ChMixer[z].cmid,
+                myDrinks[i].ChMixer[z].cprice.toString(),
+                myDrinks[i].ChMixer[z].cname);
+            mx.add(mixerOrd);
           }
-
-          for (var j = 0; j < myOrder.length; j++) {
-            if (myOrder[j].drinkId == myDrinks[i].id) {
-              //myOrder.removeAt(j);
-              myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-            }
-          }
+          Order ord = Order(
+              myDrinks[i].id,
+              myDrinks[i].drinkCategoryId,
+              myDrinks[i].name,
+              myDrinks[i].Quant,
+              myDrinks[i].price,
+              mx,
+              myDrinks[i].origPrice);
+          setState(() {
+            myOrder.add(ord);
+          });
           // Order ord = Order(
           //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
           //     myDrinks[i].Quant, myDrinks[i].price);
@@ -5052,6 +5234,27 @@ class _MenuPageState extends State<MenuPage> {
     }
 
     return myOrder;
+  }
+
+  bool computeList(List<chossenMixer> temp1,List<MixerOrd> temp2){
+       List element3 = [];
+       for (var name in temp1) {
+         element3.add(name.cmid);
+       }
+       List element4 = [];
+       for (var name in temp2) {
+         element4.add(name.id);
+         setState(() {
+         });
+       }
+       print('asdasd');
+       print(element3);
+       print(element4);
+       if (const IterableEquality().equals(element3,element4)) {
+         return true;
+       }else{
+         return false;
+       }
   }
 
   callcompute() async {

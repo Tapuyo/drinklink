@@ -26,15 +26,14 @@ class _ResetPassPageState extends State<ResetPass> {
   final passController = TextEditingController();
   final confirmpassController = TextEditingController();
 
-
-  ResetPassword() async{
+  ResetPassword() async {
     String em = codeController.text;
     String pss = passController.text;
     String cpss = confirmpassController.text;
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(email);
 
-    if(pss == cpss) {
+    if (pss == cpss) {
       print('login');
       Map<String, String> headers = {"Content-Type": "application/json"};
       Map map = {
@@ -73,12 +72,11 @@ class _ResetPassPageState extends State<ResetPass> {
               onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
               color: Color(0xFF2b2b61).withOpacity(.7),
             ),
-
           ],
         ).show();
         print('error');
       }
-    }else{
+    } else {
       Alert(
         context: context,
         title: "Reset password",
@@ -96,25 +94,21 @@ class _ResetPassPageState extends State<ResetPass> {
             onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
             color: Color(0xFF2b2b61).withOpacity(.7),
           ),
-
         ],
       ).show();
     }
   }
 
-
-
-  forgotpassword(String email)async{
+  forgotpassword(String email) async {
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(email);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
-    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode' ;
+    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode';
 
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(url, headers: headers);
     print(response.body.toString());
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -131,43 +125,65 @@ class _ResetPassPageState extends State<ResetPass> {
               Container(
                 padding: EdgeInsets.fromLTRB(15, 50, 0, 0),
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => ResetPassEmail()),
                     );
                   },
-                  child: Icon(Icons.arrow_back, color: Colors.white,size: 30,),
+                  child: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
               ),
-              SizedBox(height: 20,),
-              Container(
-                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: Text('RESET PASSWORD', style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold),)
+              SizedBox(
+                height: 20,
               ),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                  child: Text('Enjoy Drinklink Our Old Friend', style: TextStyle(wordSpacing: 5,color: Colors.deepOrange, fontSize: 16),)
-              ),
+                  child: Text(
+                    'RESET PASSWORD',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  )),
+              Container(
+                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  child: Text(
+                    'Enjoy Drinklink Our Old Friend',
+                    style: TextStyle(
+                        wordSpacing: 5, color: Colors.deepOrange, fontSize: 16),
+                  )),
               Divider(
                 color: Colors.deepOrange,
                 thickness: 2,
               ),
-
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
-                  child: Text('Code has send to your email.', style: TextStyle(wordSpacing: 3,color: Colors.white, fontSize: 16),)
-              ),
+                  child: Text(
+                    'Code has been sent to your email.',
+                    style: TextStyle(
+                        wordSpacing: 3, color: Colors.white, fontSize: 16),
+                  )),
               Container(
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
                   child: GestureDetector(
-                      onTap: (){
-                       // forgotpassword("johnpaultapuyo@gmail.com");
+                      onTap: () {
+                        // forgotpassword("johnpaultapuyo@gmail.com");
                       },
-                      child: Text('Resend code.', style: TextStyle(wordSpacing: 3,color: Colors.deepOrange, fontSize: 16),))
+                      child: Text(
+                        'Resend code.',
+                        style: TextStyle(
+                            wordSpacing: 3,
+                            color: Colors.deepOrange,
+                            fontSize: 16),
+                      ))),
+              SizedBox(
+                height: 150,
               ),
-              SizedBox(height: 150,),
-
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
@@ -176,14 +192,10 @@ class _ResetPassPageState extends State<ResetPass> {
                   decoration: new InputDecoration(
                       hintText: "Reset Code",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
+                      labelStyle:
+                          new TextStyle(color: const Color(0xFF424242))),
                 ),
               ),
-
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
@@ -193,14 +205,10 @@ class _ResetPassPageState extends State<ResetPass> {
                   decoration: new InputDecoration(
                       hintText: "New Password",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
+                      labelStyle:
+                          new TextStyle(color: const Color(0xFF424242))),
                 ),
               ),
-
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
@@ -210,27 +218,24 @@ class _ResetPassPageState extends State<ResetPass> {
                   decoration: new InputDecoration(
                       hintText: "Confirm Password",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
-                      labelStyle: new TextStyle(
-                          color: const Color(0xFF424242)
-                      )
-                  ),
-
+                      labelStyle:
+                          new TextStyle(color: const Color(0xFF424242))),
                 ),
               ),
-
-
-              SizedBox(height: 150,),
+              SizedBox(
+                height: 150,
+              ),
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
                 child: Row(
                   children: [
-
                     Expanded(
                       child: FlatButton(
                           height: 50,
                           minWidth: double.infinity,
                           color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
                             ResetPassword();
                           },
@@ -243,22 +248,21 @@ class _ResetPassPageState extends State<ResetPass> {
                               //   width: 30.0,
                               // ),
                               //SizedBox(width: 10,),
-                              Text('RESET PASSWORD', style: TextStyle(color: Colors.white, fontSize: 18),)
+                              Text(
+                                'RESET PASSWORD',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )
                             ],
-                          )
-                      ),
+                          )),
                     ),
                   ],
                 ),
               ),
-
             ],
           ),
         ),
       ),
     );
   }
-
 }
-
-
