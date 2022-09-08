@@ -5051,7 +5051,7 @@ class _MenuPageState extends State<MenuPage> {
               List element1 = [];
               for(var name1 in contain){
                 for (var name in name1.mxir) {
-                  element1.add(name.id);git
+                  element1.add(name.id);
               }}
                 List element2 = [];
                 for (var name in myDrinks[i].ChMixer) {
