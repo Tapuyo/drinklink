@@ -5064,21 +5064,81 @@ class _MenuPageState extends State<MenuPage> {
              // if (listEquals(element2,element1)){
                if (element2.every((item) => element1.contains(item))) {
                  print("contain na tawn");
-
+              print(element1.length);
+                 print(element2.length);
                 for (var j = 0; j < myOrder.length; j++) {
                   print('asdasd');
                   if (myOrder[j].drinkId == myDrinks[i].id ) {
-
+print("ANI NISULOD");
                       bool result = computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
                       print(result);
-                      if(result) {
+                      if(result ) {
+                        print("im here");
                         myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                      }else if(result && element1.length != element2.length){
+                        List<MixerOrd> mx = [];
+                        for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                          MixerOrd mixerOrd = MixerOrd(
+                              myDrinks[i].ChMixer[z].cmid,
+                              myDrinks[i].ChMixer[z].cprice.toString(),
+                              myDrinks[i].ChMixer[z].cname);
+                          mx.add(mixerOrd);
+                        }
+                        Order ord = Order(
+                            myDrinks[i].id,
+                            myDrinks[i].drinkCategoryId,
+                            myDrinks[i].name,
+                            myDrinks[i].Quant,
+                            myDrinks[i].price,
+                            mx,
+                            myDrinks[i].origPrice);
+                        setState(() {
+                          myOrder.add(ord);
+                        });
                       }
 
                   }
                 }
-                // _showDialog("Drinklink", "You already chossen this item comb. Click View Order and add more!");
-              } else {
+              } else if( element2.every((item) => element1.contains(item)) && element1.length == element2.length)  {
+                 _isILike = true;
+                 print(2);
+                 List<MixerOrd> mx = [];
+                 for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                   // print(myDrinks[i].ChMixer[z].cmid);
+                   // print(myDrinks[i].ChMixer[z].cname);
+                   // print(myDrinks[i].ChMixer[z].cprice);
+                   // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
+                   //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
+                   //   mx.add(mixerOrd);
+                   // }else{
+                   //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
+                   //   mx.add(mixerOrd);
+                   // }
+                   MixerOrd mixerOrd = MixerOrd(
+                       myDrinks[i].ChMixer[z].cmid,
+                       myDrinks[i].ChMixer[z].cprice.toString(),
+                       myDrinks[i].ChMixer[z].cname);
+                   mx.add(mixerOrd);
+                 }
+                 Order ord = Order(
+                     myDrinks[i].id,
+                     myDrinks[i].drinkCategoryId,
+                     myDrinks[i].name,
+                     myDrinks[i].Quant,
+                     myDrinks[i].price,
+                     mx,
+                     myDrinks[i].origPrice);
+                 setState(() {
+                   myOrder.add(ord);
+                 });
+                 // Order ord = Order(
+                 //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
+                 //     myDrinks[i].Quant, myDrinks[i].price);
+                 // setState(() {
+                 //   myOrder.add(ord);
+                 // });
+               }
+               else {
                 _isILike = true;
                 print(2);
                 List<MixerOrd> mx = [];
