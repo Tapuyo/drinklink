@@ -1034,6 +1034,7 @@ class _MenuPageState extends State<MenuPage> {
                           // color: Colors.red,
                           height: MediaQuery.of(context).size.height - 470,
                           //color: Colors.white,
+
                           child: mycart(),
                         ),
                         Container(
@@ -1350,6 +1351,7 @@ class _MenuPageState extends State<MenuPage> {
                             //visible: snapshot.data[index].mixer == null ? false:true,
                             child: snapshot.data[index].mxir != null
                                 ? Container(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     height: 50,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView(
@@ -2550,6 +2552,8 @@ class _MenuPageState extends State<MenuPage> {
                                         children: [
                                           Container(
                                               // color: Colors.green,
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 0, 0, 0),
                                               child: getTextWidgets(
                                                   snapshot.data[index].mixer,
                                                   index)),
