@@ -5051,29 +5051,23 @@ class _MenuPageState extends State<MenuPage> {
               List element1 = [];
               for(var name1 in contain){
                 for (var name in name1.mxir) {
-                  element1.add(name.id);
-                  print("lord" + element1.toString());
+                  element1.add(name.id);git
               }}
                 List element2 = [];
                 for (var name in myDrinks[i].ChMixer) {
                   element2.add(name.cmid);
-                  print("lord" + element2.toString());
                   setState(() {
                   });
                 }
              // if (listEquals(element2,element1)){
                if (element2.every((item) => element1.contains(item))) {
-                 print("contain na tawn");
               print(element1.length);
                  print(element2.length);
                 for (var j = 0; j < myOrder.length; j++) {
-                  print('asdasd');
                   if (myOrder[j].drinkId == myDrinks[i].id ) {
-print("ANI NISULOD");
                       bool result = computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
                       print(result);
                       if(result ) {
-                        print("im here");
                         myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                       }else if(result && element1.length != element2.length){
                         List<MixerOrd> mx = [];
