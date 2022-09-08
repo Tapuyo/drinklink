@@ -25,6 +25,7 @@ class ApiCon {
 
   static String paymenturl() {
     bool isPro = true;
+    bool isPro = false;
 
     String url;
     String prepro = 'https://paypage.sandbox.ngenius-payments.com/';
