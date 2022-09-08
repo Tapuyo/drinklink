@@ -1038,6 +1038,7 @@ class _MenuPageState extends State<MenuPage> {
                           // color: Colors.red,
                           height: MediaQuery.of(context).size.height - 470,
                           //color: Colors.white,
+
                           child: mycart(),
                         ),
                         Container(
@@ -1354,19 +1355,19 @@ class _MenuPageState extends State<MenuPage> {
                             //visible: snapshot.data[index].mixer == null ? false:true,
                             child: snapshot.data[index].mxir != null
                                 ? Container(
-                                height: 50,
-                                width: MediaQuery.of(context).size.width,
-                                child: ListView(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      getCartMixWidgets(
-                                          snapshot.data[index].mxir, index),
-                                      SizedBox(
-                                        width: 10,
-                                      )
-                                    ]))
+                                    height: 50,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          getCartMixWidgets(
+                                              snapshot.data[index].mxir, index),
+                                          SizedBox(
+                                            width: 10,
+                                          )
+                                        ]))
                                 : null,
                           ),
                         ],
@@ -2542,23 +2543,23 @@ class _MenuPageState extends State<MenuPage> {
                           child: snapshot.data[index].mixer.isEmpty
                               ? Container()
                               : Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: Container(
-                                height: snapshot.data[index].mixer.isEmpty
-                                    ? 0
-                                    : 40,
-                                child: ListView(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 10),
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      Container(
-                                        // color: Colors.green,
-                                          child: getTextWidgets(
-                                              snapshot.data[index].mixer,
-                                              index)),
-                                    ]),
-                              )),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Container(
+                                    height: snapshot.data[index].mixer.isEmpty
+                                        ? 0
+                                        : 40,
+                                    child: ListView(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 10),
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          Container(
+                                              // color: Colors.green,
+                                              child: getTextWidgets(
+                                                  snapshot.data[index].mixer,
+                                                  index)),
+                                        ]),
+                                  )),
                         ),
                         SizedBox(
                           height: snapshot.data[index].mixer.isEmpty ? 0 : 10,
@@ -4943,10 +4944,7 @@ class _MenuPageState extends State<MenuPage> {
     // print("This is the reponse: "+ jsondata.toString());
 
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
-    // String linkpayment =
-    //     'https://paypage.sandbox.ngenius-payments.com/?code=' + code;
-    String linkpayment = ApiCon.paymenturl + '?code=' + code;
-
+    String linkpayment = ApiCon.paymenturl() + '?code=' + code;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -5067,9 +5065,9 @@ class _MenuPageState extends State<MenuPage> {
                   if (myOrder[j].drinkId == myDrinks[i].id ) {
                       bool result = computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
                       print(result);
-                      if(result ) {
+                      if(result && contain.first.mxir.length == myDrinks[i].ChMixer.length) {
                         myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                      }else if(result && element1.length != element2.length){
+                      }else if(result && contain.first.mxir.length != myDrinks[i].ChMixer.length){
                         List<MixerOrd> mx = [];
                         for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
                           MixerOrd mixerOrd = MixerOrd(
@@ -5089,6 +5087,28 @@ class _MenuPageState extends State<MenuPage> {
                         setState(() {
                           myOrder.add(ord);
                         });
+                      }
+                      else {
+                        print('okokokokoko');
+                        // List<MixerOrd> mx = [];
+                        // for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                        //   MixerOrd mixerOrd = MixerOrd(
+                        //       myDrinks[i].ChMixer[z].cmid,
+                        //       myDrinks[i].ChMixer[z].cprice.toString(),
+                        //       myDrinks[i].ChMixer[z].cname);
+                        //   mx.add(mixerOrd);
+                        // }
+                        // Order ord = Order(
+                        //     myDrinks[i].id,
+                        //     myDrinks[i].drinkCategoryId,
+                        //     myDrinks[i].name,
+                        //     myDrinks[i].Quant = myDrinks[i].Quant ,
+                        //     myDrinks[i].price,
+                        //     mx,
+                        //     myDrinks[i].origPrice);
+                        // setState(() {
+                        //   myOrder.add(ord);
+                        // });
                       }
 
                   }

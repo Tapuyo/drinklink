@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:driklink/pages/Api.dart';
 
 class PaymentProvider extends ChangeNotifier {
-  String paycon = ApiCon.paymenturl;
+  String paycon = ApiCon.paymenturl();
   String paymenturl = '';
   String paymentMessage = '';
   bool isPaymentlinkurl;
