@@ -13,7 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nanoid/nanoid.dart';
-
+// ignore: deprecated_member_use
+import 'package:collection/equality.dart';
 //import 'package:nanoid/non_secure.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -22,10 +23,7 @@ import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:uuid/uuid.dart';
-import 'package:driklink/provider/payment_provider.dart';
-import 'package:collection/equality.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:convert';
 
 class MenuPage extends StatefulWidget {
   String id, title, desc;
@@ -1875,8 +1873,13 @@ class _MenuPageState extends State<MenuPage> {
                                                     element.cname == mname);
                                               }
                                               Navigator.pop(context);
-                                              List<chossenMixer> newChs =
+                                               List<chossenMixer> newChs =
+                                                  myDrinks[ind].ChMixer;
+
+                                              chossenMixer chs = chossenMixer(
+                                                  chid, chname, chprice);
                                               print(chs);
+
                                               newChs.add(chs);
                                               print(chs.cmid.toString());
                                               print(chs.cname.toString());
