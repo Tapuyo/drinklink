@@ -3971,11 +3971,11 @@ class _MenuPageState extends State<MenuPage> {
     String url = ApiCon.baseurl + '/orders';
     final response = await http.post(url,headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
-    //print(response.body.toString());
+    print(response.body.toString());
     if(response.statusCode == 200 || response.statusCode == 201){
       print('success');
       print(response.body.toString());
-      getPaymentLink(json.decode(response.body)['paymentOrderCode'].toString());
+      getPaymentLink(json.decode(response.body)['paymentLink'].toString());
     }else{
       print('error');
       print(response.statusCode.toString());
@@ -4103,8 +4103,8 @@ class _MenuPageState extends State<MenuPage> {
     // final response = await http.post(url,headers: headers, body: body);
     // var jsondata = json.decode(response.body)['mainUrl'];
     // print("This is the reponse: "+ jsondata.toString());
-
-    String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    String linkpayment = code;
+    print(linkpayment);
     //if(response.statusCode == 200){
       // Navigator.push(
       //   context,
@@ -4477,5 +4477,4 @@ class CardDetails{
 
   CardDetails(this.cardid,this.maskedPan,this.expiry,this.cardholderName,this.scheme,this.cardToken,this.select,this.showmask);
 }
-
 
