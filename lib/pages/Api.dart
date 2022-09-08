@@ -24,7 +24,6 @@ class ApiCon {
   }
 
   static String paymenturl() {
-    bool isPro = true;
     bool isPro = false;
 
     String url;
