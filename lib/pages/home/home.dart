@@ -1142,7 +1142,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     snapshot.data[index].name,
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                        color: Colors.white, fontSize: 20 ),
                                   ),
                                   Text(
                                     snapshot.data[index].address,
