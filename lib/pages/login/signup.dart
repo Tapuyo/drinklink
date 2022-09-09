@@ -35,7 +35,7 @@ class _SignPageState extends State<SignUp> {
       },
     };
     var body = json.encode(map['data']);
-    String url = ApiCon.baseurl + '/auth/users';
+    String url = ApiCon.baseurl() + '/auth/users';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());

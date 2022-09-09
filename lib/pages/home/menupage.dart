@@ -110,6 +110,7 @@ class _MenuPageState extends State<MenuPage> {
   Color contColor = Colors.green;
 
   bool isloading;
+  int totalqty = 0;
 
   counteraddord1(String addminus) {
     if (addminus == 'add') {
@@ -224,7 +225,7 @@ class _MenuPageState extends State<MenuPage> {
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
-          ApiCon.baseurl + '/users/currentUser/savedCards',
+          ApiCon.baseurl() + '/users/currentUser/savedCards',
           headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
@@ -257,7 +258,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -299,7 +300,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
@@ -324,7 +325,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['tables'];
@@ -348,7 +349,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     Discount tb = Discount("", "No Discount", 0);
@@ -377,7 +378,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['menu'];
@@ -409,7 +410,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
@@ -2345,7 +2346,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           width: 200,
                                                           height: 200,
                                                           child: Image.network(
-                                                              ApiCon.baseurl +
+                                                              ApiCon.baseurl() +
                                                                   snapshot
                                                                       .data[
                                                                           index]
@@ -2602,7 +2603,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
@@ -2984,7 +2985,7 @@ class _MenuPageState extends State<MenuPage> {
                         child: Row(
                           children: [
                             Text(
-                              "Order (" + myOrder.length.toString(),
+                              "Order (" + totalqty.toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -4608,7 +4609,7 @@ class _MenuPageState extends State<MenuPage> {
     };
     var body = json.encode(map['data']);
     print(body);
-    String url = ApiCon.baseurl + '/auth/users';
+    String url = ApiCon.baseurl() + '/auth/users';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
@@ -4631,7 +4632,7 @@ class _MenuPageState extends State<MenuPage> {
       },
     };
     var body = json.encode(map['data']);
-    String url = ApiCon.baseurl + '/auth/Token';
+    String url = ApiCon.baseurl() + '/auth/Token';
     final response = await http.post(url, headers: headers, body: body);
     print(response.body);
     print(response.statusCode);
@@ -4659,7 +4660,7 @@ class _MenuPageState extends State<MenuPage> {
       'Content-Type': 'application/json',
       'api-version': '1.1'
     };
-    String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
+    String url = ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
     final response = await http.patch(url, headers: headers, body: bod);
     print(response.body);
@@ -4820,7 +4821,7 @@ class _MenuPageState extends State<MenuPage> {
 
     var body = json.encode(map);
     print(body.toString());
-    String url = ApiCon.baseurl + '/orders';
+    String url = ApiCon.baseurl() + '/orders';
     String _cm = '';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
@@ -5249,10 +5250,13 @@ class _MenuPageState extends State<MenuPage> {
 
   callcompute() async {
     finaltot = 0;
+    totalqty = 0;
     for (var i = 0; i < myOrder.length; i++) {
       double tot = double.parse(myOrder[i].Price) * myOrder[i].Quant;
+      int qty = myOrder[i].Quant;
       setState(() {
         finaltot = finaltot + tot;
+        totalqty = totalqty + qty;
       });
     }
 

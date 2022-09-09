@@ -34,11 +34,11 @@ class _OrderDetailsState extends State<OrderDetails> {
   String hours = '';
 
   String barid = '';
-  String state= '';
-  String sttn= '';
-  String outlet= '';
-  String itemcount= '';
-  String price= '';
+  String state = '';
+  String sttn = '';
+  String outlet = '';
+  String itemcount = '';
+  String price = '';
   String code = '';
   String byw = '';
 
@@ -62,7 +62,6 @@ class _OrderDetailsState extends State<OrderDetails> {
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
       getOrders();
-
     });
 
     //
@@ -72,30 +71,33 @@ class _OrderDetailsState extends State<OrderDetails> {
     });
   }
 
-
-  Future<List<Order>> getOrders() async{
+  Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
-    Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
-    final response = await http.get(ApiCon.baseurl + '/users/currentUser/orders?pageSize=1&pageNumber=1',headers: headers);
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
+    final response = await http.get(
+        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        headers: headers);
     var jsondata = json.decode(response.body);
     print(response.body);
 
-
-    for (var i = 0; i < jsondata.length ; i++){
-      if(id == ''){
+    for (var i = 0; i < jsondata.length; i++) {
+      if (id == '') {
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
-        List <MyItems> newItem = [];
-        for (var x in jsondata1){
-          MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
+        List<MyItems> newItem = [];
+        for (var x in jsondata1) {
+          MyItems nt =
+              new MyItems(x['drink']['name'], x['quantity'].toString());
 
           newItem.add(nt);
-
         }
         String st = json.decode(response.body)[i]['timestamp'].toString();
         String mprice = json.decode(response.body)[i]['finalPrice'].toString();
@@ -104,37 +106,39 @@ class _OrderDetailsState extends State<OrderDetails> {
         String stt = '';
         final toDayDate = DateTime.now();
         var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-        if(different < 60){
-          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() + ' mins';
-        }else if(different > 60 && different < 1440){
-          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() + ' hours';
-        }else{
-          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() + ' days';
+        if (different < 60) {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' mins';
+        } else if (different > 60 && different < 1440) {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hours';
+        } else {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' days';
         }
         String bar = json.decode(response.body)[i]['tableId'].toString();
-        String cState = json.decode(response.body)[i]['currentState'].toString();
+        String cState =
+            json.decode(response.body)[i]['currentState'].toString();
         String mcode = json.decode(response.body)[i]['code'].toString();
         String byww = json.decode(response.body)[i]['bartender'].toString();
-
-
 
         getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
         getSched(json.decode(response.body)[i]['facilityId'].toString());
 
-
-        if(cState == '0'){
+        if (cState == '0') {
           stt = 'Order Created';
-        }else if(cState == '1'){
+        } else if (cState == '1') {
           stt = 'Pending';
-        }else if(cState == '2'){
+        } else if (cState == '2') {
           stt = 'Accepted';
-        }else if(cState == '3'){
+        } else if (cState == '3') {
           stt = 'Payment Processed';
-        }else if(cState == '4'){
+        } else if (cState == '4') {
           setState(() {
-            String mdate = json.decode(response.body)[i]['timeToCollect'].toString();
+            String mdate =
+                json.decode(response.body)[i]['timeToCollect'].toString();
             DateTime parseDate =
-            new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+                new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
             var inputDate = DateTime.parse(parseDate.toString());
             setState(() {
               int mmint = inputDate.minute * 60;
@@ -142,28 +146,27 @@ class _OrderDetailsState extends State<OrderDetails> {
 
               _start = mmint + msec;
             });
-            if(_start > 0){
+            if (_start > 0) {
               startTimer();
             }
-
           });
           stt = 'Ready';
-        }else if(cState == '5'){
+        } else if (cState == '5') {
           _timer.cancel();
           stt = 'Completed';
-        }else if(cState == '101'){
+        } else if (cState == '101') {
           _timer.cancel();
           stt = 'Failed';
-        }else if(cState == '102'){
+        } else if (cState == '102') {
           stt = 'Canceled';
           _timer.cancel();
-        }else if(cState == '103'){
+        } else if (cState == '103') {
           _timer.cancel();
           stt = 'Rejected';
-        }else if(cState == '104'){
+        } else if (cState == '104') {
           stt = 'Not Collected';
           _timer.cancel();
-        }else if(cState == '105'){
+        } else if (cState == '105') {
           stt = 'Payment Failed';
           _timer.cancel();
         }
@@ -179,55 +182,59 @@ class _OrderDetailsState extends State<OrderDetails> {
           byw = byww;
           //outletDesciption = json.decode(response.body)[i]['currentState'].toString();
         });
-      }else{
-        if(id == json.decode(response.body)[i]['id'].toString()){
+      } else {
+        if (id == json.decode(response.body)[i]['id'].toString()) {
           var jsondata1 = await json.decode(response.body)[i]['items'];
 
-          List <MyItems> newItem = [];
-          for (var x in jsondata1){
-            MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
+          List<MyItems> newItem = [];
+          for (var x in jsondata1) {
+            MyItems nt =
+                new MyItems(x['drink']['name'], x['quantity'].toString());
 
             newItem.add(nt);
-
           }
           String st = json.decode(response.body)[i]['timestamp'].toString();
-          String mprice = json.decode(response.body)[i]['finalPrice'].toString();
+          String mprice =
+              json.decode(response.body)[i]['finalPrice'].toString();
 
           String dt = '';
           String stt = '';
           final toDayDate = DateTime.now();
           var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-          if(different < 60){
-            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() + ' mins';
-          }else if(different > 60 && different < 1440){
-            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() + ' hours';
-          }else{
-            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() + ' days';
+          if (different < 60) {
+            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+                ' mins';
+          } else if (different > 60 && different < 1440) {
+            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+                ' hours';
+          } else {
+            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+                ' days';
           }
           String bar = json.decode(response.body)[i]['tableId'].toString();
-          String cState = json.decode(response.body)[i]['currentState'].toString();
+          String cState =
+              json.decode(response.body)[i]['currentState'].toString();
           String mcode = json.decode(response.body)[i]['code'].toString();
           String byww = json.decode(response.body)[i]['bartender'].toString();
 
-
-
-          getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
+          getFacilityInfo(
+              json.decode(response.body)[i]['facilityId'].toString());
           getSched(json.decode(response.body)[i]['facilityId'].toString());
 
-
-          if(cState == '0'){
+          if (cState == '0') {
             stt = 'Order Created';
-          }else if(cState == '1'){
+          } else if (cState == '1') {
             stt = 'Pending';
-          }else if(cState == '2'){
+          } else if (cState == '2') {
             stt = 'Accepted';
-          }else if(cState == '3'){
+          } else if (cState == '3') {
             stt = 'Payment Processed';
-          }else if(cState == '4'){
+          } else if (cState == '4') {
             setState(() {
-              String mdate = json.decode(response.body)[i]['timeToCollect'].toString();
+              String mdate =
+                  json.decode(response.body)[i]['timeToCollect'].toString();
               DateTime parseDate =
-              new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
               var inputDate = DateTime.parse(parseDate.toString());
               setState(() {
                 int mmint = inputDate.minute * 60;
@@ -235,28 +242,27 @@ class _OrderDetailsState extends State<OrderDetails> {
 
                 _start = mmint + msec;
               });
-              if(_start > 0){
+              if (_start > 0) {
                 startTimer();
               }
-
             });
             stt = 'Ready';
-          }else if(cState == '5'){
+          } else if (cState == '5') {
             _timer.cancel();
             stt = 'Completed';
-          }else if(cState == '101'){
+          } else if (cState == '101') {
             _timer.cancel();
             stt = 'Failed';
-          }else if(cState == '102'){
+          } else if (cState == '102') {
             stt = 'Canceled';
             _timer.cancel();
-          }else if(cState == '103'){
+          } else if (cState == '103') {
             _timer.cancel();
             stt = 'Rejected';
-          }else if(cState == '104'){
+          } else if (cState == '104') {
             stt = 'Not Collected';
             _timer.cancel();
-          }else if(cState == '105'){
+          } else if (cState == '105') {
             stt = 'Payment Failed';
             _timer.cancel();
           }
@@ -274,9 +280,6 @@ class _OrderDetailsState extends State<OrderDetails> {
           });
         }
       }
-
-
-
     }
     return orderList;
   }
@@ -285,7 +288,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start <= 0) {
           setState(() {
             timer.cancel();
@@ -293,21 +296,21 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else {
           setState(() {
             _start--;
-            if(_start > 60){
-              double val = _start / 60 - 1 ;
+            if (_start > 60) {
+              double val = _start / 60 - 1;
               mins = val.ceil().toStringAsFixed(0);
               int rem = _start % 60;
-              if(rem < 10){
-                secs = '0'+ rem.toString();
-              }else {
+              if (rem < 10) {
+                secs = '0' + rem.toString();
+              } else {
                 secs = rem.toString();
               }
-            }else{
+            } else {
               hours = '';
               mins = '00';
-              if(_start < 10) {
-                secs = '0'+ _start.toString();
-              }else{
+              if (_start < 10) {
+                secs = '0' + _start.toString();
+              } else {
                 secs = _start.toString();
               }
             }
@@ -317,70 +320,77 @@ class _OrderDetailsState extends State<OrderDetails> {
       },
     );
   }
+
   @override
   void dispose() {
     _timer.cancel();
     super.dispose();
   }
-  getFacilityInfo(String id)async{
+
+  getFacilityInfo(String id) async {
     String name = '';
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
-    String url = ApiCon.baseurl + '/places/';
-    final response = await http.get(url,headers: headers);
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
+    String url = ApiCon.baseurl() + '/places/';
+    final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
-    for (var u in jsondata){
-      if(u['id'].toString()==id){
+    for (var u in jsondata) {
+      if (u['id'].toString() == id) {
         print(u['name']);
         setState(() {
           outletid = u['id'].toString();
           outletName = u['name'];
           outletDesciption = u['address'];
-
         });
       }
     }
   }
 
-  getDayofweek(){
+  getDayofweek() {
     DateTime date = DateTime.now();
     String dateFormat = DateFormat('EEEE').format(date);
-    if(dateFormat == 'Monday'){
+    if (dateFormat == 'Monday') {
       dtofdy = 1;
-    }else if(dateFormat == 'Tuesday'){
+    } else if (dateFormat == 'Tuesday') {
       dtofdy = 2;
-    }else if(dateFormat == 'Wednesday'){
+    } else if (dateFormat == 'Wednesday') {
       dtofdy = 3;
-    }else if(dateFormat == 'Thursday'){
+    } else if (dateFormat == 'Thursday') {
       dtofdy = 4;
-    }else if(dateFormat == 'Friday'){
+    } else if (dateFormat == 'Friday') {
       dtofdy = 5;
-    }else if(dateFormat == 'Saturday'){
+    } else if (dateFormat == 'Saturday') {
       dtofdy = 6;
-    }else if(dateFormat == 'Sunday'){
+    } else if (dateFormat == 'Sunday') {
       dtofdy = 0;
-    }else{
+    } else {
       dtofdy = 0;
     }
   }
-  getSched(String id) async{
-    Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
-    String url = ApiCon.baseurl + '/places/' + id.toString();
-    final response = await http.get(url,headers: headers);
+
+  getSched(String id) async {
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
+    final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
-    for (var u in jsondata){
-      if(u['dayOfWeek'] == dtofdy){
+    for (var u in jsondata) {
+      if (u['dayOfWeek'] == dtofdy) {
         String st = '2020-07-20T' + u['startTime'];
         String et = '2020-07-20T' + u['endTime'];
-        String nst =  DateFormat.jm().format(DateTime.parse(st));
-        String net =  DateFormat.jm().format(DateTime.parse(et));
+        String nst = DateFormat.jm().format(DateTime.parse(st));
+        String net = DateFormat.jm().format(DateTime.parse(et));
         setState(() {
           wk = "Working hours " + nst + " - " + net;
           isWorkingDay = u['isWorkingDay'];
         });
-
       }
     }
     //for (var x in jsondata1){
@@ -395,19 +405,18 @@ class _OrderDetailsState extends State<OrderDetails> {
     //}
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("assets/images/bkgdefault.png"), fit: BoxFit.cover)),
+              image: AssetImage("assets/images/bkgdefault.png"),
+              fit: BoxFit.cover)),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
-            color: Colors.transparent,
+              color: Colors.transparent,
               height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: Stack(
@@ -417,7 +426,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 50,),
+                        SizedBox(
+                          height: 50,
+                        ),
                         // Container(
                         //   width: MediaQuery.of(context).size.width,
                         //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -436,13 +447,22 @@ class _OrderDetailsState extends State<OrderDetails> {
                         // ),
                         Container(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Text(outletDesciption, style: TextStyle(
-                              color: Colors.deepOrange, fontSize: 16,),)),
+                            child: Text(
+                              outletDesciption,
+                              style: TextStyle(
+                                color: Colors.deepOrange,
+                                fontSize: 16,
+                              ),
+                            )),
                         Container(
                             padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Text(outletName, style: TextStyle(color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold),)),
+                            child: Text(
+                              outletName,
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold),
+                            )),
                         Container(
                           height: 30,
                           padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -453,49 +473,84 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 visible: isWorkingDay,
                                 child: Container(
                                     child: Text(
-                                      wk, style: TextStyle(
-                                        color: Colors.white),)
-                                ),
+                                  wk,
+                                  style: TextStyle(color: Colors.white),
+                                )),
                               ),
                               Spacer(),
                               Container(
                                   padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                                  color: isWorkingDay == true ? Colors.green:Colors.red,
-                                  child: Text(isWorkingDay == true ?'online':'offline', style: TextStyle(
-                                      color: Colors.white),)
-                              )
+                                  color: isWorkingDay == true
+                                      ? Colors.green
+                                      : Colors.red,
+                                  child: Text(
+                                    isWorkingDay == true ? 'online' : 'offline',
+                                    style: TextStyle(color: Colors.white),
+                                  ))
                             ],
                           ),
                         ),
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Divider(
                           color: Colors.deepOrange,
                           thickness: 2,
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(sttn != '101' || sttn != '102'|| sttn != '103'|| sttn != '104'|| sttn != '105' ? Icons.check_circle:Icons.access_time_rounded, size: 40, color: sttn != '101' || sttn != '102'|| sttn != '103'|| sttn != '104'|| sttn != '105' ? Colors.green:Colors.deepOrange,),
-                              SizedBox(width: 20,),
-                              Text('Order on Hold',style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Icon(
+                                sttn != '101' ||
+                                        sttn != '102' ||
+                                        sttn != '103' ||
+                                        sttn != '104' ||
+                                        sttn != '105'
+                                    ? Icons.check_circle
+                                    : Icons.access_time_rounded,
+                                size: 40,
+                                color: sttn != '101' ||
+                                        sttn != '102' ||
+                                        sttn != '103' ||
+                                        sttn != '104' ||
+                                        sttn != '105'
+                                    ? Colors.green
+                                    : Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Order on Hold',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                               Spacer(),
                               Visibility(
                                 //visible: sttn == '1' ? true:false,
                                 child: GestureDetector(
-                                  onTap: ()async{
-
+                                  onTap: () async {
                                     Prefs.load();
                                     String token = Prefs.getString('token');
                                     String myt = "'{'newState': 'Canceled'}'";
-                                    Map<String, String> headers = {'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'};
-                                    Map<String, String> body = {'newState': 'Canceled'};
-                                    String url = ApiCon.baseurl + '/Orders/' + id;
+                                    Map<String, String> headers = {
+                                      'Authorization': 'Bearer ' + token,
+                                      'Content-Type': 'application/json'
+                                    };
+                                    Map<String, String> body = {
+                                      'newState': 'Canceled'
+                                    };
+                                    String url =
+                                        ApiCon.baseurl() + '/Orders/' + id;
 
-                                    final response = await http.patch(url,headers: headers, body: myt);
+                                    final response = await http.patch(url,
+                                        headers: headers, body: myt);
                                     print(response.body);
                                   },
                                   child: Container(
@@ -504,13 +559,19 @@ class _OrderDetailsState extends State<OrderDetails> {
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.transparent,
                                         border: Border.all(
-                                          color: Colors.white, //                   <--- border color
+                                          color: Colors
+                                              .white, //                   <--- border color
                                           width: 2.0,
                                         ),
                                       ),
-                                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                      child: Center(child: Text('Cancel', style: TextStyle(color: Colors.white, fontSize: 14),))
-                                  ),
+                                      padding:
+                                          EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                      child: Center(
+                                          child: Text(
+                                        'Cancel',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 14),
+                                      ))),
                                 ),
                               )
                             ],
@@ -523,91 +584,197 @@ class _OrderDetailsState extends State<OrderDetails> {
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5' ? Icons.check_circle:Icons.access_time_rounded, size: 40, color: sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5' ?  Colors.green:Colors.deepOrange,),
-                              SizedBox(width: 20,),
-                              Text('Order Accepted',style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Icon(
+                                sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Icons.check_circle
+                                    : Icons.access_time_rounded,
+                                size: 40,
+                                color: sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Colors.green
+                                    : Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Order Accepted',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5' ? Icons.check_circle:Icons.access_time_rounded, size: 40, color:  sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5' ?  Colors.green:Colors.deepOrange,),
-                              SizedBox(width: 20,),
-                              Text('Order Process',style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Icon(
+                                sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Icons.check_circle
+                                    : Icons.access_time_rounded,
+                                size: 40,
+                                color: sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Colors.green
+                                    : Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Order Process',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(sttn == '2' || sttn == '3'|| sttn == '4' || sttn == '5' ? Icons.check_circle:Icons.access_time_rounded, size: 40, color:sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5'  ?  Colors.green:Colors.deepOrange,),
-                              SizedBox(width: 20,),
-                              Text('Preparing Order',style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Icon(
+                                sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Icons.check_circle
+                                    : Icons.access_time_rounded,
+                                size: 40,
+                                color: sttn == '2' ||
+                                        sttn == '3' ||
+                                        sttn == '4' ||
+                                        sttn == '5'
+                                    ? Colors.green
+                                    : Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Preparing Order',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ],
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(sttn == '4' || sttn == '5'? Icons.check_circle:Icons.access_time_rounded, size: 40, color:sttn == '4'|| sttn == '5' ?  Colors.green:Colors.deepOrange,),
-                              SizedBox(width: 20,),
-                              Text('Collect Order',style: TextStyle(color: Colors.white, fontSize: 18),),
+                              Icon(
+                                sttn == '4' || sttn == '5'
+                                    ? Icons.check_circle
+                                    : Icons.access_time_rounded,
+                                size: 40,
+                                color: sttn == '4' || sttn == '5'
+                                    ? Colors.green
+                                    : Colors.deepOrange,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Collect Order',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
                             ],
                           ),
                         ),
                         //Spacer(),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Visibility(
-                          visible: sttn == '5' ? true:false,
+                          visible: sttn == '5' ? true : false,
                           child: Container(
                             padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                             width: MediaQuery.of(context).size.width,
                             height: 50,
                             child: Row(
                               children: [
-                                Icon(Icons.check_circle, size: 40, color:Colors.green),
-                                SizedBox(width: 20,),
-                                Text('Complete',style: TextStyle(color: Colors.white, fontSize: 18),),
+                                Icon(Icons.check_circle,
+                                    size: 40, color: Colors.green),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  'Complete',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                               ],
                             ),
                           ),
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
                         Visibility(
-                          visible: sttn == '101' || sttn == '102' || sttn == '103' || sttn == '104' || sttn == '105'? true:false,
+                          visible: sttn == '101' ||
+                                  sttn == '102' ||
+                                  sttn == '103' ||
+                                  sttn == '104' ||
+                                  sttn == '105'
+                              ? true
+                              : false,
                           child: Container(
                             padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                             width: MediaQuery.of(context).size.width,
                             height: 50,
                             child: Row(
                               children: [
-                                Icon(Icons.access_time_rounded, size: 40, color: Colors.deepOrange,),
-                                SizedBox(width: 20,),
-                                Text(state,style: TextStyle(color: Colors.white, fontSize: 18),),
+                                Icon(
+                                  Icons.access_time_rounded,
+                                  size: 40,
+                                  color: Colors.deepOrange,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Text(
+                                  state,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 18),
+                                ),
                               ],
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child:  Container(
+                    child: Container(
                       height: MediaQuery.of(context).size.height / 3,
                       width: MediaQuery.of(context).size.width,
                       color: Colors.black12,
@@ -619,8 +786,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Time will start when your order is ready', style: TextStyle(color: Colors.white,fontSize: 14),),
-                            SizedBox(height: 10,),
+                            Text(
+                              'Time will start when your order is ready',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -629,13 +802,31 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('TIME LEFT TO', style: TextStyle(color: Colors.white,fontSize: 20),),
-                                    Text('COLLECT', style: TextStyle(color: Colors.white,fontSize: 20),),
+                                    Text(
+                                      'TIME LEFT TO',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    Text(
+                                      'COLLECT',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
                                   ],
                                 ),
                                 Spacer(),
-                                Text(mins.toString() + ':' + secs.toString(), style: TextStyle(color: Colors.white,fontSize: 40,fontWeight: FontWeight.bold),),
-                                Text('min', style: TextStyle(color: Colors.white,fontSize: 30),),
+                                Text(
+                                  mins.toString() + ':' + secs.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  'min',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 30),
+                                ),
                               ],
                             )
                           ],
@@ -649,18 +840,23 @@ class _OrderDetailsState extends State<OrderDetails> {
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                       child: Row(
                         children: [
-
                           Expanded(
                             child: FlatButton(
                                 height: 50,
                                 minWidth: double.infinity,
                                 color: Colors.deepOrange,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
                                 onPressed: () {
-                                  if(sttn == '2' || sttn == '3'|| sttn == '4'|| sttn == '5'){
+                                  if (sttn == '2' ||
+                                      sttn == '3' ||
+                                      sttn == '4' ||
+                                      sttn == '5') {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (context) => MoreDetails(code,byw,outletName)),
+                                      MaterialPageRoute(
+                                          builder: (context) => MoreDetails(
+                                              code, byw, outletName)),
                                     );
                                   }
                                 },
@@ -675,12 +871,19 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       //   width: 30.0,
                                       // ),
                                       //SizedBox(width: 10,),
-                                      Text('View Order', style: TextStyle(color: Colors.white, fontSize: 18),),
-                                      Text('(click at collection point)', style: TextStyle(color: Colors.white, fontSize: 18),)
+                                      Text(
+                                        'View Order',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
+                                      Text(
+                                        '(click at collection point)',
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      )
                                     ],
                                   ),
-                                )
-                            ),
+                                )),
                           ),
                         ],
                       ),
@@ -692,13 +895,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
                       child: Row(
                         children: [
-
                           Expanded(
                             child: GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => MenuPage(outletid,outletName,outletDesciption)),
+                                  MaterialPageRoute(
+                                      builder: (context) => MenuPage(outletid,
+                                          outletName, outletDesciption)),
                                 );
                               },
                               child: Container(
@@ -708,13 +912,18 @@ class _OrderDetailsState extends State<OrderDetails> {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.transparent,
                                     border: Border.all(
-                                      color: Colors.white, //                   <--- border color
+                                      color: Colors
+                                          .white, //                   <--- border color
                                       width: 2.0,
                                     ),
                                   ),
                                   padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Center(child: Text('NEW ORDER', style: TextStyle(color: Colors.white, fontSize: 20),))
-                              ),
+                                  child: Center(
+                                      child: Text(
+                                    'NEW ORDER',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ))),
                             ),
                           ),
                         ],
@@ -722,16 +931,14 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                   )
                 ],
-              )
-          ),
+              )),
         ),
-
       ),
     );
   }
-
 }
-class Order{
+
+class Order {
   final String timestamp;
   final List<MyItems> itemslist;
   final String barid;
@@ -741,11 +948,13 @@ class Order{
   final String itemcount;
   final String price;
 
-  Order(this.timestamp,this.itemslist,this.barid,this.cState,this.sttn,this.outlet,this.itemcount,this.price);
+  Order(this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
+      this.outlet, this.itemcount, this.price);
 }
-class MyItems{
+
+class MyItems {
   final String itemsname;
   final String itemsquantity;
 
-  MyItems(this.itemsname,this.itemsquantity);
+  MyItems(this.itemsname, this.itemsquantity);
 }

@@ -464,7 +464,7 @@ class _setPageState extends State<setPage> {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + token
       };
-      String url = ApiCon.baseurl + '/users/currentUser/savedCards';
+      String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
       final response = await http.post(url, headers: headers);
       print(json.decode(response.body));
       if (response.statusCode == 200) {

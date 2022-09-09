@@ -46,7 +46,8 @@ class _HomePageState extends State<HomePage> {
         'Content-Type': 'application/json',
         'api-version': '1.1'
       };
-      String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
+      String url =
+          ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
       final response = await http.patch(url, headers: headers, body: bod);
       print(response.body);
@@ -187,7 +188,8 @@ class _HomePageState extends State<HomePage> {
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
-          ApiCon.baseurl + '/users/currentUser/orders?pageSize=5&pageNumber=1',
+          ApiCon.baseurl() +
+              '/users/currentUser/orders?pageSize=5&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
@@ -273,7 +275,7 @@ class _HomePageState extends State<HomePage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/';
+    String url = ApiCon.baseurl() + '/places/';
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
@@ -340,7 +342,7 @@ class _HomePageState extends State<HomePage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + ApiCon.storeUrl;
+    String url = ApiCon.baseurl() + ApiCon.storeUrl;
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
@@ -1130,7 +1132,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.transparent,
                                   width: 60,
                                   height: 60,
-                                  child: Image.network(ApiCon.baseurl +
+                                  child: Image.network(ApiCon.baseurl() +
                                       snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
@@ -1142,7 +1144,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     snapshot.data[index].name,
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 20 ),
+                                        color: Colors.white, fontSize: 20),
                                   ),
                                   Text(
                                     snapshot.data[index].address,

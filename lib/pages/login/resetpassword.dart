@@ -44,7 +44,7 @@ class _ResetPassPageState extends State<ResetPass> {
         },
       };
       var body = json.encode(map['data']);
-      String url = ApiCon.baseurl + '/auth/users/$encoded/resetpassword';
+      String url = ApiCon.baseurl() + '/auth/users/$encoded/resetpassword';
       print(url);
       final response = await http.post(url, headers: headers, body: body);
       print(response.body);
@@ -104,7 +104,7 @@ class _ResetPassPageState extends State<ResetPass> {
     String encoded = stringToBase64.encode(email);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
-    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode';
+    String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
     final response = await http.get(url, headers: headers);
     print(response.body.toString());
