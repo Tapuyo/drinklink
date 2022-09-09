@@ -1126,12 +1126,12 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Container(
-                              //     color: Colors.transparent,
-                              //     width: 60,
-                              //     height: 60,
-                              //     child: Image.network(ApiCon.baseurl +
-                              //         snapshot.data[index].image)),
+                              Container(
+                                  color: Colors.transparent,
+                                  width: 60,
+                                  height: 60,
+                                  child: Image.network(ApiCon.baseurl +
+                                      snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
                               ),
@@ -1142,7 +1142,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     snapshot.data[index].name,
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
+                                        color: Colors.white, fontSize: 20 ),
                                   ),
                                   Text(
                                     snapshot.data[index].address,
