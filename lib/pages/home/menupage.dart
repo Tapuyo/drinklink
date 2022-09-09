@@ -1354,6 +1354,7 @@ class _MenuPageState extends State<MenuPage> {
                             //visible: snapshot.data[index].mixer == null ? false:true,
                             child: snapshot.data[index].mxir != null
                                 ? Container(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                     height: 50,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView(
@@ -1848,6 +1849,7 @@ class _MenuPageState extends State<MenuPage> {
                                         onTap: () {
                                           if (myDrinks[ind].ChMixer.isNotEmpty)
                                             strings[i].name = mname;
+
                                           Navigator.pop(context);
                                         },
                                         child: SizedBox(
@@ -2554,6 +2556,8 @@ class _MenuPageState extends State<MenuPage> {
                                         children: [
                                           Container(
                                               // color: Colors.green,
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 0, 0, 0),
                                               child: getTextWidgets(
                                                   snapshot.data[index].mixer,
                                                   index)),
