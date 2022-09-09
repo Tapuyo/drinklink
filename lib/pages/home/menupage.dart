@@ -1354,7 +1354,7 @@ class _MenuPageState extends State<MenuPage> {
                             //visible: snapshot.data[index].mixer == null ? false:true,
                             child: snapshot.data[index].mxir != null
                                 ? Container(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     height: 50,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView(
@@ -2015,31 +2015,38 @@ class _MenuPageState extends State<MenuPage> {
                                               EdgeInsets.fromLTRB(0, 0, 0, 20),
                                           child: Row(
                                             children: [
-                                              if (strings[i].name.toString() ==
-                                                  strings[i].mx[index].name)
-                                                (Icon(
-                                                  Icons.circle,
-                                                  color: strings[i]
-                                                              .name
-                                                              .toString() ==
-                                                          strings[i]
-                                                              .mx[index]
-                                                              .name
-                                                      ? Colors.blue
-                                                          .withOpacity(.5)
-                                                      : Colors.deepOrange[700],
-                                                ))
-                                              else
-                                                (Icon(
-                                                  Icons.circle,
-                                                  color: myDrinks[ind].mid ==
-                                                          strings[i]
-                                                              .mx[index]
-                                                              .id
-                                                      ? Colors.deepOrange[700]
-                                                      : Colors.black
-                                                          .withOpacity(.5),
-                                                )),
+                                              // if (strings[i].name.toString() ==
+                                              //     strings[i].mx[index].name)
+                                              //   (Icon(
+                                              //     Icons.circle,
+                                              //     color: strings[i]
+                                              //                 .name
+                                              //                 .toString() ==
+                                              //             strings[i]
+                                              //                 .mx[index]
+                                              //                 .name
+                                              //         ? Colors.green
+                                              //         : Colors.deepOrange[700],
+                                              //   ))
+                                              // else
+                                              //   (Icon(
+                                              //     Icons.circle,
+                                              //     color: myDrinks[ind].mid ==
+                                              //             strings[i]
+                                              //                 .mx[index]
+                                              //                 .id
+                                              //         ? Colors.deepOrange[700]
+                                              //         : Colors.black
+                                              //             .withOpacity(.5),
+                                              //   )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: myDrinks[ind].mid ==
+                                                        strings[i].mx[index].id
+                                                    ? Colors.deepOrange[700]
+                                                    : Colors.black
+                                                        .withOpacity(.5),
+                                              ),
                                               SizedBox(
                                                 width: 10,
                                               ),
@@ -4711,22 +4718,15 @@ class _MenuPageState extends State<MenuPage> {
       myPydr.add(pydr);
     }
     Map<String, dynamic> myasd = {
-   "items":[
-      {
-         "drink":{
-            "id":"1",
-            "drinkCategoryId":"1",
-            "price":"1.0"
-         },
-         "selectedMixers":{
-            "id":"23",
-            "price":"5.0"
-         },
-         "quantity":"1",
-         "price":"6.0"
-      }
-   ],
-};
+      "items": [
+        {
+          "drink": {"id": "1", "drinkCategoryId": "1", "price": "1.0"},
+          "selectedMixers": {"id": "23", "price": "5.0"},
+          "quantity": "1",
+          "price": "6.0"
+        }
+      ],
+    };
 
     //print(drinksorderall);
     var tagsJson = jsonEncode(myPydr);
@@ -4739,7 +4739,7 @@ class _MenuPageState extends State<MenuPage> {
     //double percentagefee = (fee/100) * finaltot;
 
     //finaltotwithdiscount = finaltot + percentagefee;
-    
+
     double ftd = roundDouble(finaltotwithdiscount, 2);
     totalPrice = ftd.toString();
     //totalPrice = '1.08';
@@ -4783,7 +4783,6 @@ class _MenuPageState extends State<MenuPage> {
         "serviceCharge": finalcharge,
         "tip": tip,
         "vipCharge": vpc,
-
       };
     } else {
       map = {
@@ -4967,7 +4966,7 @@ class _MenuPageState extends State<MenuPage> {
     // print("This is the reponse: "+ jsondata.toString());
 
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
-    String linkpayment =  code;
+    String linkpayment = code;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
