@@ -27,8 +27,8 @@ class ApiCon {
     bool isPro = false;
 
     String url;
-    String prepro = 'https://paypage.sandbox.ngenius-payments.com/';
-    String pro = 'https://paypage.ngenius-payments.com/';
+    String prepro = 'https://paypage.sandbox.ngenius-payments.com';
+    String pro = 'https://paypage.ngenius-payments.com';
     if (isPro == true) {
       url = pro;
     } else {

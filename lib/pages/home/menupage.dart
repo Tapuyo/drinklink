@@ -4967,6 +4967,8 @@ class _MenuPageState extends State<MenuPage> {
     // print("This is the reponse: "+ jsondata.toString());
 
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
+    // String linkpayment = ApiCon.paymenturl() + '/?code=' + code;
+
     String linkpayment = code;
     //if(response.statusCode == 200){
     // Navigator.push(
@@ -4981,7 +4983,7 @@ class _MenuPageState extends State<MenuPage> {
     );
 
     if (result != 'failed') {
-      print(result);
+      print(result + 'result here');
       if (checkedValue == true) {
         Prefs.load();
         Prefs.setString('billName', billname.text);
