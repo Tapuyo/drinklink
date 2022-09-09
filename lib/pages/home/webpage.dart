@@ -36,9 +36,12 @@ class WebViewExampleState extends State<WebPage> {
   }
 
   checkUrlRes(String url) async {
+    //https://paypage.sandbox.ngenius-payments.com/?code=56000e9c278ad09d
+    // bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
     bool checkurl =
-        url.contains('https://paypage.ngenius-payments.com/?outletId=');
+        url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
 
+    print(checkurl);
     if (checkurl == true) {
       bool suc = url.contains('SUCCESS');
       if (suc == true) {
