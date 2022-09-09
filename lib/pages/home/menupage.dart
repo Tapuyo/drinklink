@@ -5324,7 +5324,7 @@ class PayDrinks {
     } else {
       return {
         'drink': author,
-        'selectedMixer': mi,
+        'selectedMixers': mi,
         'quantity': quantity,
         'price': price,
       };
