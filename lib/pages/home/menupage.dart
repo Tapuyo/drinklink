@@ -1847,10 +1847,14 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          if (myDrinks[ind].ChMixer.isNotEmpty)
-                                            strings[i].name = mname;
-
-                                          Navigator.pop(context);
+                                          setState(() {
+                                            // if (myDrinks[ind]
+                                            //     .ChMixer
+                                            //     .isNotEmpty) {
+                                            //   strings[i].name = mname;
+                                            // }
+                                            Navigator.pop(context);
+                                          });
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1990,7 +1994,14 @@ class _MenuPageState extends State<MenuPage> {
                                         });
 
                                         modsetState(() {
-                                          strings[i].name = '';
+                                          if (strings[i].name ==
+                                              strings[i].mx[index].name) {
+                                            strings[i].name =
+                                                strings[i].mx[index].name;
+                                          } else {
+                                            strings[i].name = strings[i].name;
+                                          }
+
                                           myDrinks[ind].mid =
                                               strings[i].mx[index].id;
                                           myDrinks[ind].mprice =
@@ -2014,9 +2025,9 @@ class _MenuPageState extends State<MenuPage> {
                                                           strings[i]
                                                               .mx[index]
                                                               .name
-                                                      ? Colors.deepOrange[700]
-                                                      : Colors.blue
-                                                          .withOpacity(.5),
+                                                      ? Colors.blue
+                                                          .withOpacity(.5)
+                                                      : Colors.deepOrange[700],
                                                 ))
                                               else
                                                 (Icon(
