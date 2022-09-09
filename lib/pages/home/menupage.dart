@@ -4673,8 +4673,6 @@ class _MenuPageState extends State<MenuPage> {
     List<PayDrinks> myPydr = [];
 
     for (var i = 0; i < myOrder.length; i++) {
-      //print(myOrder[i].drinkId.toString() + "," + myOrder[i].CatId + ","  + myOrder[i].CatId.toString() + "," + myOrder[i].Name.toString() + myOrder[i].Quant.toString() + "," + myOrder[i].Price.toString());
-      //PayOrder ord = PayOrder(myOrder[i].CatId.toString(), myOrder[i].drinkId.toString(), myOrder[i].Price.toString());
       PayOrder ord = PayOrder(myOrder[i].drinkId.toString(),
           myOrder[i].CatId.toString(), myOrder[i].origPrice.toString());
       PayMixer ord1;
@@ -4701,6 +4699,23 @@ class _MenuPageState extends State<MenuPage> {
       drinksorderall = drinksorderall + jsonUser.toString() + ',';
       myPydr.add(pydr);
     }
+    Map<String, dynamic> myasd = {
+   "items":[
+      {
+         "drink":{
+            "id":"1",
+            "drinkCategoryId":"1",
+            "price":"1.0"
+         },
+         "selectedMixers":{
+            "id":"23",
+            "price":"5.0"
+         },
+         "quantity":"1",
+         "price":"6.0"
+      }
+   ],
+};
 
     //print(drinksorderall);
     var tagsJson = jsonEncode(myPydr);
@@ -4713,7 +4728,7 @@ class _MenuPageState extends State<MenuPage> {
     //double percentagefee = (fee/100) * finaltot;
 
     //finaltotwithdiscount = finaltot + percentagefee;
-
+    
     double ftd = roundDouble(finaltotwithdiscount, 2);
     totalPrice = ftd.toString();
     //totalPrice = '1.08';
@@ -4758,15 +4773,6 @@ class _MenuPageState extends State<MenuPage> {
         "tip": tip,
         "vipCharge": vpc,
 
-        // "savedCard": {
-        //   "cardToken": cardToken,
-        //   "cardholderName" : cardholderName,
-        //   "expiry": expiry,
-        //   "maskedPan": maskedPan,
-        //   "scheme": scheme
-        // }
-
-        //'discount': discount
       };
     } else {
       map = {
@@ -4812,7 +4818,7 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
-      getPaymentLink(json.decode(response.body)['paymentOrderCode'].toString());
+      getPaymentLink(json.decode(response.body)['paymentLink'].toString());
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -4950,7 +4956,7 @@ class _MenuPageState extends State<MenuPage> {
     // print("This is the reponse: "+ jsondata.toString());
 
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
-    String linkpayment = ApiCon.paymenturl() + '?code=' + code;
+    String linkpayment =  code;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
