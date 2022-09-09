@@ -35,6 +35,7 @@ class WebViewExampleState extends State<WebPage> {
     });
   }
 
+<<<<<<< HEAD
   checkUrlRes(String url) async {
     //https://paypage.sandbox.ngenius-payments.com/?code=56000e9c278ad09d
     // bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
@@ -43,6 +44,15 @@ class WebViewExampleState extends State<WebPage> {
 
     print(checkurl);
     if (checkurl == true) {
+=======
+  checkUrlRes(String url)async {
+    //https://paypage.sandbox.ngenius-payments.com/?code=56000e9c278ad09d
+    // bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
+    bool checkurl = url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
+
+    print(checkurl);
+    if(checkurl == true){
+>>>>>>> 3b8bb83addeeca743e6ce11c6f17e4b8c675c7e9
       bool suc = url.contains('SUCCESS');
       if (suc == true) {
         var divurl = url.split('=');
