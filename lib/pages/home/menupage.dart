@@ -2757,7 +2757,7 @@ class _MenuPageState extends State<MenuPage> {
         child: Column(
           children: [
             Container(
-              height: 200.0,
+              height: 300.0,
               child: FutureBuilder(
                   future: getDiscount(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
