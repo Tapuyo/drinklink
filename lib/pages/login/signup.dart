@@ -23,7 +23,43 @@ class _SignPageState extends State<SignUp> {
     String em = emailController.text;
     String pss = passController.text;
     String pssc = passConfirmController.text;
+    bool v1 = false, v2 = false, v3 = false, v4 = false;
 
+    if (euser.isNotEmpty) {
+      v1 = true;
+    }
+    if (em.isNotEmpty) {
+      v2 = true;
+    }
+    if (pss.isNotEmpty) {
+      v3 = true;
+    }
+    if (pssc.isNotEmpty) {
+      v4 = true;
+    }
+
+    if (v1 == false && v2 == false && v3 == false && v4 == false) {
+      Alert(
+        context: context,
+        title: "Sign up",
+        content: Container(
+          child: Center(
+            child: Text("Please fill out the registration details"),
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            color: Color(0xFF2b2b61).withOpacity(.7),
+          ),
+        ],
+      ).show();
+      return;
+    }
     print('Singup');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {

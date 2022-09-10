@@ -107,6 +107,7 @@ class _MenuPageState extends State<MenuPage> {
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
+  bool addICe;
 
   String maskedPan = '';
   String expiry = '';
@@ -2288,6 +2289,7 @@ class _MenuPageState extends State<MenuPage> {
                                                                       .data[
                                                                           index]
                                                                       .addIce = true;
+                                                                  addICe = true;
                                                                 } else {
                                                                   snapshot
                                                                       .data[
