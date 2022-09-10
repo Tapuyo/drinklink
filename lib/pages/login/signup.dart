@@ -85,13 +85,55 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
-      } else {
+      } else if (response.body.toString().contains('Email:')) {
         Alert(
           context: context,
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text(response.body.toString()),
+              child: Text("Please Input Email."),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
+      }
+      else if (response.body.toString().contains('Username field')) {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Please Input Username."),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
+      }
+      else {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Please input required fields."),
             ),
           ),
           buttons: [
