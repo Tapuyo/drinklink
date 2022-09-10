@@ -48,6 +48,8 @@ class _MenuPageState extends State<MenuPage> {
   bool saveCard = false;
   var uuid = Uuid();
   String token = '';
+  String uName = '';
+
   String stoken;
   int orderlenght = 0;
   String choosetb = "Choose Table";
@@ -192,6 +194,7 @@ class _MenuPageState extends State<MenuPage> {
     try {
       Prefs.load();
       token = Prefs.getString('token');
+      uName = Prefs.getString('uname');
     } catch (e) {
       token = '';
     }
@@ -199,9 +202,17 @@ class _MenuPageState extends State<MenuPage> {
 
   loadBill() async {
     Prefs.load();
-    billname.text = Prefs.getString('billName');
-    billadd.text = Prefs.getString('billAdd');
-    billemail.text = Prefs.getString('billEmail');
+
+    // if (token.isEmpty && userName.isEmpty) {
+    //   billname.text = '';
+    //   billadd.text = '';
+    //   billemail.text = '';
+    // } else {
+    uName = Prefs.getString('uname');
+    billname.text = Prefs.getString('billName' + uName);
+    billadd.text = Prefs.getString('billAdd' + uName);
+    billemail.text = Prefs.getString('billEmail' + uName);
+    // }
   }
 
   @override
@@ -675,6 +686,20 @@ class _MenuPageState extends State<MenuPage> {
                           } else {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
+                          setState(() {
+                            setState(() {
+                              stoken = '';
+
+                              Prefs.setString('token', '');
+                              Prefs.setString('uname', 'none');
+                              // Prefs.setString('bfName' + uName + '', '');
+                              // Prefs.setString('blMame' + uName + '', '');
+                              // Prefs.setString('billName' + uName + '', '');
+                              // Prefs.setString('billAdd' + uName + '', '');
+                              // Prefs.setString('billEmail' + uName + '', '');
+                              context.read<AuthProvider>().setToken('');
+                            });
+                          });
                           //Navigator.of(context).popAndPushNamed('/home');
                           if (stoken == '' ||
                               stoken == null ||
@@ -689,17 +714,6 @@ class _MenuPageState extends State<MenuPage> {
                               MaterialPageRoute(
                                   builder: (context) => HomePage()),
                             );
-                            setState(() {
-                              setState(() {
-                                Prefs.load();
-                                Prefs.setString('token', '');
-                                Prefs.setString('bfName', '');
-                                Prefs.setString('blMame', '');
-                                Prefs.setString('billName', '');
-                                Prefs.setString('billAdd', '');
-                                Prefs.setString('billEmail', '');
-                              });
-                            });
                           }
                         },
                         child: Container(

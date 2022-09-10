@@ -17,7 +17,7 @@ class _setPageState extends State<setPage> {
   bool sound = true;
   bool ring = true;
   bool checkedValue = false;
-
+  String uName = '';
   TextEditingController billname = new TextEditingController();
   TextEditingController billlast = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
@@ -30,16 +30,36 @@ class _setPageState extends State<setPage> {
   }
 
   getDetails() {
-    Prefs.load();
-    billname.text = Prefs.getString('bfName');
-    billlast.text = Prefs.getString('blMame');
+    setState(() {
+      Prefs.load();
+      uName = Prefs.getString('uname');
+      // try {
+      //
+      // } catch (e) {
+      //   uName = '';
+      // }
+      // if (gettoken.isEmpty) {
+      //   billname.text = '';
+      //   billlast.text = '';
 
-    billadd.text = Prefs.getString('billAdd');
-    billemail.text = Prefs.getString('billEmail');
-    sound = Prefs.getBool('sound');
-    ring = Prefs.getBool('alert');
+      //   billadd.text = '';
+      //   billemail.text = '';
+      //   sound = false;
+      //   ring = false;
 
-    checkedValue = Prefs.getBool('bsendBill');
+      //   checkedValue = false;
+      // } else {
+      billname.text = Prefs.getString('bfName' + uName);
+      billlast.text = Prefs.getString('blMame' + uName);
+
+      billadd.text = Prefs.getString('billAdd' + uName);
+      billemail.text = Prefs.getString('billEmail' + uName);
+      sound = Prefs.getBool('sound' + uName);
+      ring = Prefs.getBool('alert' + uName);
+
+      checkedValue = Prefs.getBool('bsendBill' + uName);
+      // }
+    });
   }
 
   @override
@@ -396,21 +416,22 @@ class _setPageState extends State<setPage> {
 
   updateChanges() async {
     Prefs.load();
+    uName = Prefs.getString('uname');
     String bname = billname.text;
     String blast = billlast.text;
     String badd = billadd.text;
     String bemail = billemail.text;
     bool bsendBill = checkedValue;
-    Prefs.setString('bfName', bname);
-    Prefs.setString('blMame', blast);
-    Prefs.setString('billName', bname + " " + blast);
-    Prefs.setString('billAdd', badd);
-    Prefs.setString('billEmail', bemail);
-    Prefs.setBool('bsendBill', bsendBill);
+    Prefs.setString('bfName' + uName, bname);
+    Prefs.setString('blMame' + uName, blast);
+    Prefs.setString('billName' + uName, bname + " " + blast);
+    Prefs.setString('billAdd' + uName, badd);
+    Prefs.setString('billEmail' + uName, bemail);
+    Prefs.setBool('bsendBill' + uName + '', bsendBill);
 
     setState(() {
-      Prefs.setBool('sound', sound);
-      Prefs.setBool('alert', ring);
+      Prefs.setBool('sound' + uName, sound);
+      Prefs.setBool('alert' + uName, ring);
     });
 
     FirebaseMessaging.instance.requestPermission(

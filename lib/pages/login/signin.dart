@@ -42,6 +42,7 @@ class _SignPageState extends State<SignIn> {
       print(json.decode(response.body)['token']);
       setState(() {
         Prefs.setString('token', token);
+        Prefs.setString('uname', em);
       });
       String asd = Prefs.getString('token');
       print(asd);
@@ -50,11 +51,12 @@ class _SignPageState extends State<SignIn> {
 
       setState(() {
         Prefs.load();
-        Prefs.setString('bfName', '');
-        Prefs.setString('blMame', '');
-        Prefs.setString('billName', '');
-        Prefs.setString('billAdd', '');
-        Prefs.setString('billEmail', '');
+
+        // Prefs.setString('bfName', '');
+        // Prefs.setString('blMame', '');
+        // Prefs.setString('billName', '');
+        // Prefs.setString('billAdd', '');
+        // Prefs.setString('billEmail', '');
       });
       Navigator.pushReplacement(
         context,

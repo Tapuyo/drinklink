@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   List<Order> orderList = [];
   Future ord;
   bool _ontap;
+  String uName = '';
 
   @override
   setNotif(String ftoken) async {
@@ -487,6 +488,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -743,11 +745,12 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   Prefs.load();
                                   Prefs.setString('token', '');
-                                  Prefs.setString('bfName', '');
-                                  Prefs.setString('blMame', '');
-                                  Prefs.setString('billName', '');
-                                  Prefs.setString('billAdd', '');
-                                  Prefs.setString('billEmail', '');
+                                  Prefs.setString('uname', 'none');
+                                  // Prefs.setString('bfName' + uName + '', '');
+                                  // Prefs.setString('blMame' + uName + '', '');
+                                  // Prefs.setString('billName' + uName + '', '');
+                                  // Prefs.setString('billAdd' + uName + '', '');
+                                  // Prefs.setString('billEmail' + uName + '', '');
                                 });
                               });
                             }
