@@ -788,10 +788,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        Spacer(),
+                        // Spacer(),
                         Row(children: [
                           Container(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                            padding: EdgeInsets.fromLTRB(0, 50, 10, 50),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
