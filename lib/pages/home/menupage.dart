@@ -26,6 +26,9 @@ import 'package:collection/equality.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
+import 'package:driklink/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 class MenuPage extends StatefulWidget {
   String id, title, desc;
 
@@ -45,6 +48,7 @@ class _MenuPageState extends State<MenuPage> {
   bool saveCard = false;
   var uuid = Uuid();
   String token = '';
+  String stoken;
   int orderlenght = 0;
   String choosetb = "Choose Table";
   double fee = 0;
@@ -437,6 +441,14 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    String _token = context.read<AuthProvider>().token;
+    String token = Prefs.getString('token');
+    if (_token.isNotEmpty) {
+      stoken = _token;
+    } else {
+      stoken = token;
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
@@ -664,7 +676,9 @@ class _MenuPageState extends State<MenuPage> {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
                           //Navigator.of(context).popAndPushNamed('/home');
-                          if (token == '' || token == null) {
+                          if (stoken == '' ||
+                              stoken == null ||
+                              stoken.isEmpty) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
@@ -706,7 +720,7 @@ class _MenuPageState extends State<MenuPage> {
                                 width: 20,
                               ),
                               Text(
-                                token == '' || token == null || token.isEmpty
+                                stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
                                     : "Sign Out",
                                 style: TextStyle(
@@ -4364,7 +4378,7 @@ class _MenuPageState extends State<MenuPage> {
                                       context: context,
                                       title: "DrinkLink",
                                       content: Text(
-                                          'Please fill up the billing details.'),
+                                          'Please fill out the billing details.'),
                                       buttons: [
                                         DialogButton(
                                           child: Text(

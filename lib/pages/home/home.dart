@@ -724,7 +724,9 @@ class _HomePageState extends State<HomePage> {
                               _scaffoldKey.currentState.openEndDrawer();
                             }
                             //Navigator.of(context).popAndPushNamed('/home');
-                            if (_token == '' || _token == null) {
+                            if (stoken == '' ||
+                                stoken == null ||
+                                stoken.isEmpty) {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
