@@ -2855,7 +2855,7 @@ class _MenuPageState extends State<MenuPage> {
                                       context: context,
                                       title: "DISCOUNT CARD",
                                       content: Text(
-                                        'You WILL NOT receive your Order unless you PRESENT valid DISCOUNT CARD',
+                                        'You will not receive your order unless you present a valid discount card.',
                                         textAlign: TextAlign.center,
                                       ),
                                       buttons: [
