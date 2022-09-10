@@ -4339,7 +4339,7 @@ class _MenuPageState extends State<MenuPage> {
                                     _validate5 = Prefs.getBoolValtext(lastname);
                                     if (_validate4 == false ||
                                         _validate5 == false) {
-                                      _showDialog('DinkLink',
+                                      _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
                                     } else {
@@ -4347,7 +4347,7 @@ class _MenuPageState extends State<MenuPage> {
                                       _validate5 = _validate5;
                                     }
                                   } catch (e) {
-                                    // _showDialog('DinkLink', 'Please input full name.');
+                                    // _showDialog('DrinkLink', 'Please input full name.');
                                   }
 
                                   if (_validate1 == true &&
@@ -4680,7 +4680,7 @@ class _MenuPageState extends State<MenuPage> {
       firsname = fullname[0];
       lastname = fullname[1];
     } catch (e) {
-      // _showDialog('DinkLink', 'Please input full name.');
+      // _showDialog('DrinkLink', 'Please input full name.');
     }
 
     print(token);
@@ -4842,7 +4842,7 @@ class _MenuPageState extends State<MenuPage> {
       } else {
         _cm = response.body.toString();
       }
-      _showDialog('DinkLink', _cm);
+      _showDialog('DrinkLink', _cm);
 
       return false;
     }
@@ -4997,7 +4997,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DinkLink', 'Failed payment');
+      _showDialog('DrinkLink', 'Failed payment');
     }
     //}
   }
