@@ -6,6 +6,7 @@ import 'package:driklink/pages/home/menupage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:driklink/pages/home/termPage.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -287,7 +288,15 @@ class _SignPageState extends State<SignUp> {
                 controlAffinity:
                     ListTileControlAffinity.leading, //  <-- leading Checkbox
               )),
-              Container(
+        InkWell(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => termsSign()),
+            );
+          },
+          child: Container(
                   padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
                   child: Text(
                     'Terms of Service',
@@ -296,6 +305,7 @@ class _SignPageState extends State<SignUp> {
                         fontSize: 20,
                         decoration: TextDecoration.underline),
                   )),
+        ),
               SizedBox(
                 height: 30,
               ),
