@@ -772,18 +772,24 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   width: 20,
                                 ),
-                                Text(
+                            new Expanded(
+                              flex: 1,
+                              child: new SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,//.horizontal
+                              child: new Text(
                                   stoken == '' ||
                                           stoken == null ||
                                           stoken.isEmpty
                                       ? "Sign In / Register"
-                                      : "Sign Out",
+                                      : "Sign Out (" + uName +  ")",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
+                            ),
+                            ),
                               ],
                             ),
                           ),
