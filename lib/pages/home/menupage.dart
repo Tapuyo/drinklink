@@ -1245,7 +1245,7 @@ class _MenuPageState extends State<MenuPage> {
                                           Text(
 
                                             snapshot.data[index].aIce != false
-                                                ? 'Add Ice /'
+                                                ? 'With Ice /'
                                                 : '',
                                             style: GoogleFonts.lato(
                                               textStyle: TextStyle(
