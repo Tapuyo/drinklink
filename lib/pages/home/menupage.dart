@@ -4762,6 +4762,7 @@ class _MenuPageState extends State<MenuPage> {
     //print(drinksorderall);
     var tagsJson = jsonEncode(myPydr);
     //print(tagsJson.toString());
+    // var fjs = json.decode(tagsJson.toString());
     var fjs = json.decode(tagsJson.toString());
     print(fjs.toString());
     String totalPrice = '0';
@@ -4786,7 +4787,7 @@ class _MenuPageState extends State<MenuPage> {
     }
 
     print(cardToken);
-
+    print(fjs);
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
@@ -5486,7 +5487,7 @@ class PayDrinks {
     } else {
       return {
         'drink': author,
-        'selectedMixers': mi,
+        'selectedMixers': [mi],
         'quantity': quantity,
         'price': price,
       };
