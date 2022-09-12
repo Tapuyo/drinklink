@@ -41,7 +41,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
   }
 
   checkUrlRes(String url)async {
-    bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
+    bool checkurl = url.contains('https://paypage.ngenius-payments.com/');
 
     if(checkurl == true){
       bool suc = url.contains('SUCCESS');

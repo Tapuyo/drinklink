@@ -8,13 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-
-
-
 class WebPage extends StatefulWidget {
   String url;
-
-
 
   WebPage(this.url);
   @override
@@ -27,36 +22,36 @@ class WebViewExampleState extends State<WebPage> {
   WebViewExampleState(this.murl);
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
-
   @override
   void initState() {
     super.initState();
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
     flutterWebViewPlugin.onUrlChanged.listen((String url) {
-      print("This is url: "+ url);
-      if(url != murl){
+      print("This is url: " + url);
+      if (url != murl) {
         //Navigator.pop(context, url);
         checkUrlRes(url);
       }
     });
   }
 
-  checkUrlRes(String url)async {
+  checkUrlRes(String url) async {
     //https://paypage.sandbox.ngenius-payments.com/?code=56000e9c278ad09d
     // bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
-    bool checkurl = url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
+    bool checkurl =
+        url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
 
     print(checkurl);
-    if(checkurl == true){
+    if (checkurl == true) {
       bool suc = url.contains('SUCCESS');
-      if(suc == true) {
+      if (suc == true) {
         var divurl = url.split('=');
         print(divurl[2].trim());
         String codena = divurl[2].trim();
         String mycode = codena.replaceAll('&paymentRef', '');
         print(mycode);
         Navigator.pop(context, mycode);
-      }else{
+      } else {
         Navigator.pop(context, 'failed');
       }
     }
@@ -86,10 +81,9 @@ class WebViewExampleState extends State<WebPage> {
     //
     //   }
     // }
-
   }
 
-  Order() async{
+  Order() async {
     Prefs.load();
     String token = Prefs.getString('token');
     int facility = Prefs.getInt('Facility');
@@ -103,14 +97,16 @@ class WebViewExampleState extends State<WebPage> {
     print(price);
     print(drinkCatId);
     print(drinkId);
-    Map<String, String> headers = {"Content-Type": "application/json", 'Authorization': 'Bearer ' + token};
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
     Map map = {
       "facilityId": facility,
       "barId": 1,
       'items': [
         {
-          "drink":
-          {
+          "drink": {
             "id": drinkId,
             "drinkCategoryId": drinkCatId,
             "price": 35.0
@@ -124,13 +120,13 @@ class WebViewExampleState extends State<WebPage> {
       "finalPrice": 70.0
     };
     var body = json.encode(map);
-    String url = ApiCon.baseurl + '/orders';
-    final response = await http.post(url,headers: headers, body: body);
+    String url = ApiCon.baseurl() + '/orders';
+    final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print('200');
-    }else{
+    } else {
       print('error');
     }
   }
@@ -138,18 +134,22 @@ class WebViewExampleState extends State<WebPage> {
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
-
       url: murl,
       appBar: new AppBar(
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text("Payment",style: TextStyle(fontSize: 20, color: Colors.white),),
-        leading:  IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+        title: new Text(
+          "Payment",
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context, 'failed');
           },
         ),
-
       ),
       initialChild: Container(
         color: Colors.white,
@@ -160,4 +160,3 @@ class WebViewExampleState extends State<WebPage> {
     );
   }
 }
-

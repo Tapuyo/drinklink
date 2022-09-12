@@ -26,7 +26,7 @@ class _ResetPassPageState extends State<ResetPassEmail> {
     String encoded = stringToBase64.encode(emailController.text);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
-    String url = ApiCon.baseurl + '/auth/users/$encoded/resetcode';
+    String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
     final response = await http.get(url, headers: headers);
     print(response.body.toString());

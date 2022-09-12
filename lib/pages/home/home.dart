@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   List<Order> orderList = [];
   Future ord;
   bool _ontap;
+  String uName = '';
 
   @override
   setNotif(String ftoken) async {
@@ -46,7 +47,8 @@ class _HomePageState extends State<HomePage> {
         'Content-Type': 'application/json',
         'api-version': '1.1'
       };
-      String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
+      String url =
+          ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
       final response = await http.patch(url, headers: headers, body: bod);
       print(response.body);
@@ -187,7 +189,8 @@ class _HomePageState extends State<HomePage> {
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
-          ApiCon.baseurl + '/users/currentUser/orders?pageSize=5&pageNumber=1',
+          ApiCon.baseurl() +
+              '/users/currentUser/orders?pageSize=5&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
@@ -273,7 +276,7 @@ class _HomePageState extends State<HomePage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/';
+    String url = ApiCon.baseurl() + '/places/';
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
@@ -340,7 +343,7 @@ class _HomePageState extends State<HomePage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + ApiCon.storeUrl;
+    String url = ApiCon.baseurl() + ApiCon.storeUrl;
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
@@ -485,6 +488,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -722,7 +726,9 @@ class _HomePageState extends State<HomePage> {
                               _scaffoldKey.currentState.openEndDrawer();
                             }
                             //Navigator.of(context).popAndPushNamed('/home');
-                            if (_token == '' || _token == null) {
+                            if (stoken == '' ||
+                                stoken == null ||
+                                stoken.isEmpty) {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -739,11 +745,12 @@ class _HomePageState extends State<HomePage> {
                                 setState(() {
                                   Prefs.load();
                                   Prefs.setString('token', '');
-                                  Prefs.setString('bfName', '');
-                                  Prefs.setString('blMame', '');
-                                  Prefs.setString('billName', '');
-                                  Prefs.setString('billAdd', '');
-                                  Prefs.setString('billEmail', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
                                 });
                               });
                             }
@@ -765,26 +772,33 @@ class _HomePageState extends State<HomePage> {
                                 SizedBox(
                                   width: 20,
                                 ),
-                                Text(
-                                  stoken == '' ||
-                                          stoken == null ||
-                                          stoken.isEmpty
-                                      ? "Sign In / Register"
-                                      : "Sign Out",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
+                                new Expanded(
+                                  flex: 1,
+                                  child: new SingleChildScrollView(
+                                    scrollDirection:
+                                        Axis.horizontal, //.horizontal
+                                    child: new Text(
+                                      stoken == '' ||
+                                              stoken == null ||
+                                              stoken.isEmpty
+                                          ? "Sign In / Register"
+                                          : "Sign Out (" + uName + ")",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        Spacer(),
+                        // Spacer(),
                         Row(children: [
                           Container(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                            padding: EdgeInsets.fromLTRB(0, 50, 10, 50),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1130,7 +1144,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.transparent,
                                   width: 60,
                                   height: 60,
-                                  child: Image.network(ApiCon.baseurl +
+                                  child: Image.network(ApiCon.baseurl() +
                                       snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
@@ -1142,7 +1156,7 @@ class _HomePageState extends State<HomePage> {
                                   Text(
                                     snapshot.data[index].name,
                                     style: TextStyle(
-                                        color: Colors.white, fontSize: 20 ),
+                                        color: Colors.white, fontSize: 20),
                                   ),
                                   Text(
                                     snapshot.data[index].address,

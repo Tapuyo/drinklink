@@ -26,6 +26,9 @@ import 'package:collection/equality.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
 
+import 'package:driklink/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 class MenuPage extends StatefulWidget {
   String id, title, desc;
 
@@ -45,6 +48,9 @@ class _MenuPageState extends State<MenuPage> {
   bool saveCard = false;
   var uuid = Uuid();
   String token = '';
+  String uName = '';
+
+  String stoken;
   int orderlenght = 0;
   String choosetb = "Choose Table";
   double fee = 0;
@@ -101,6 +107,7 @@ class _MenuPageState extends State<MenuPage> {
   TextEditingController billname = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
+  bool addICe;
 
   String maskedPan = '';
   String expiry = '';
@@ -110,6 +117,7 @@ class _MenuPageState extends State<MenuPage> {
   Color contColor = Colors.green;
 
   bool isloading;
+  int totalqty = 0;
 
   counteraddord1(String addminus) {
     if (addminus == 'add') {
@@ -187,6 +195,7 @@ class _MenuPageState extends State<MenuPage> {
     try {
       Prefs.load();
       token = Prefs.getString('token');
+      uName = Prefs.getString('uname');
     } catch (e) {
       token = '';
     }
@@ -194,9 +203,17 @@ class _MenuPageState extends State<MenuPage> {
 
   loadBill() async {
     Prefs.load();
-    billname.text = Prefs.getString('billName');
-    billadd.text = Prefs.getString('billAdd');
-    billemail.text = Prefs.getString('billEmail');
+
+    // if (token.isEmpty && userName.isEmpty) {
+    //   billname.text = '';
+    //   billadd.text = '';
+    //   billemail.text = '';
+    // } else {
+    uName = Prefs.getString('uname');
+    billname.text = Prefs.getString('billName' + uName);
+    billadd.text = Prefs.getString('billAdd' + uName);
+    billemail.text = Prefs.getString('billEmail' + uName);
+    // }
   }
 
   @override
@@ -224,7 +241,7 @@ class _MenuPageState extends State<MenuPage> {
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
-          ApiCon.baseurl + '/users/currentUser/savedCards',
+          ApiCon.baseurl() + '/users/currentUser/savedCards',
           headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
@@ -257,7 +274,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -299,7 +316,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
@@ -324,7 +341,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['tables'];
@@ -348,7 +365,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     Discount tb = Discount("", "No Discount", 0);
@@ -377,7 +394,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['menu'];
@@ -409,7 +426,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
@@ -436,6 +453,14 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    String _token = context.read<AuthProvider>().token;
+    String token = Prefs.getString('token');
+    if (_token.isNotEmpty) {
+      stoken = _token;
+    } else {
+      stoken = token;
+    }
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
@@ -662,8 +687,24 @@ class _MenuPageState extends State<MenuPage> {
                           } else {
                             _scaffoldKey.currentState.openEndDrawer();
                           }
+                          setState(() {
+                            setState(() {
+                              stoken = '';
+
+                              Prefs.setString('token', '');
+                              Prefs.setString('uname', 'none');
+                              Prefs.setString('bfNamenone', '');
+                              Prefs.setString('blMamenone', '');
+                              Prefs.setString('billNamenone', '');
+                              Prefs.setString('billAddnone', '');
+                              Prefs.setString('billEmailnone', '');
+                              context.read<AuthProvider>().setToken('');
+                            });
+                          });
                           //Navigator.of(context).popAndPushNamed('/home');
-                          if (token == '' || token == null) {
+                          if (stoken == '' ||
+                              stoken == null ||
+                              stoken.isEmpty) {
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (context) => SignIn()),
@@ -674,17 +715,6 @@ class _MenuPageState extends State<MenuPage> {
                               MaterialPageRoute(
                                   builder: (context) => HomePage()),
                             );
-                            setState(() {
-                              setState(() {
-                                Prefs.load();
-                                Prefs.setString('token', '');
-                                Prefs.setString('bfName', '');
-                                Prefs.setString('blMame', '');
-                                Prefs.setString('billName', '');
-                                Prefs.setString('billAdd', '');
-                                Prefs.setString('billEmail', '');
-                              });
-                            });
                           }
                         },
                         child: Container(
@@ -705,7 +735,7 @@ class _MenuPageState extends State<MenuPage> {
                                 width: 20,
                               ),
                               Text(
-                                token == '' || token == null || token.isEmpty
+                                stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
                                     : "Sign Out",
                                 style: TextStyle(
@@ -1213,6 +1243,19 @@ class _MenuPageState extends State<MenuPage> {
                                       Row(
                                         children: [
                                           Text(
+
+                                            snapshot.data[index].aIce != false
+                                                ? 'With Ice /'
+                                                : '',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  letterSpacing: .5,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          Text(
                                             snapshot.data[index].Price != null
                                                 ? snapshot.data[index].Price
                                                 : '',
@@ -1354,7 +1397,7 @@ class _MenuPageState extends State<MenuPage> {
                             //visible: snapshot.data[index].mixer == null ? false:true,
                             child: snapshot.data[index].mxir != null
                                 ? Container(
-                                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                    // padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     height: 50,
                                     width: MediaQuery.of(context).size.width,
                                     child: ListView(
@@ -1847,10 +1890,14 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          if (myDrinks[ind].ChMixer.isNotEmpty)
-                                            strings[i].name = mname;
-
-                                          Navigator.pop(context);
+                                          setState(() {
+                                            // if (myDrinks[ind]
+                                            //     .ChMixer
+                                            //     .isNotEmpty) {
+                                            //   strings[i].name = mname;
+                                            // }
+                                            Navigator.pop(context);
+                                          });
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1990,7 +2037,14 @@ class _MenuPageState extends State<MenuPage> {
                                         });
 
                                         modsetState(() {
-                                          strings[i].name = '';
+                                          if (strings[i].name ==
+                                              strings[i].mx[index].name) {
+                                            strings[i].name =
+                                                strings[i].mx[index].name;
+                                          } else {
+                                            strings[i].name = strings[i].name;
+                                          }
+
                                           myDrinks[ind].mid =
                                               strings[i].mx[index].id;
                                           myDrinks[ind].mprice =
@@ -2004,31 +2058,38 @@ class _MenuPageState extends State<MenuPage> {
                                               EdgeInsets.fromLTRB(0, 0, 0, 20),
                                           child: Row(
                                             children: [
-                                              if (strings[i].name.toString() ==
-                                                  strings[i].mx[index].name)
-                                                (Icon(
-                                                  Icons.circle,
-                                                  color: strings[i]
-                                                              .name
-                                                              .toString() ==
-                                                          strings[i]
-                                                              .mx[index]
-                                                              .name
-                                                      ? Colors.deepOrange[700]
-                                                      : Colors.blue
-                                                          .withOpacity(.5),
-                                                ))
-                                              else
-                                                (Icon(
-                                                  Icons.circle,
-                                                  color: myDrinks[ind].mid ==
-                                                          strings[i]
-                                                              .mx[index]
-                                                              .id
-                                                      ? Colors.deepOrange[700]
-                                                      : Colors.black
-                                                          .withOpacity(.5),
-                                                )),
+                                              // if (strings[i].name.toString() ==
+                                              //     strings[i].mx[index].name)
+                                              //   (Icon(
+                                              //     Icons.circle,
+                                              //     color: strings[i]
+                                              //                 .name
+                                              //                 .toString() ==
+                                              //             strings[i]
+                                              //                 .mx[index]
+                                              //                 .name
+                                              //         ? Colors.green
+                                              //         : Colors.deepOrange[700],
+                                              //   ))
+                                              // else
+                                              //   (Icon(
+                                              //     Icons.circle,
+                                              //     color: myDrinks[ind].mid ==
+                                              //             strings[i]
+                                              //                 .mx[index]
+                                              //                 .id
+                                              //         ? Colors.deepOrange[700]
+                                              //         : Colors.black
+                                              //             .withOpacity(.5),
+                                              //   )),
+                                              Icon(
+                                                Icons.circle,
+                                                color: myDrinks[ind].mid ==
+                                                        strings[i].mx[index].id
+                                                    ? Colors.deepOrange[700]
+                                                    : Colors.black
+                                                        .withOpacity(.5),
+                                              ),
                                               SizedBox(
                                                 width: 10,
                                               ),
@@ -2241,6 +2302,7 @@ class _MenuPageState extends State<MenuPage> {
                                                                       .data[
                                                                           index]
                                                                       .addIce = true;
+                                                                  addICe = true;
                                                                 } else {
                                                                   snapshot
                                                                       .data[
@@ -2327,7 +2389,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           width: 200,
                                                           height: 200,
                                                           child: Image.network(
-                                                              ApiCon.baseurl +
+                                                              ApiCon.baseurl() +
                                                                   snapshot
                                                                       .data[
                                                                           index]
@@ -2584,7 +2646,7 @@ class _MenuPageState extends State<MenuPage> {
       "Content-type": "application/json",
       "Accept": "application/json"
     };
-    String url = ApiCon.baseurl + '/places/' + id.toString();
+    String url = ApiCon.baseurl() + '/places/' + id.toString();
     final response = await http.get(url, headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
@@ -2738,7 +2800,7 @@ class _MenuPageState extends State<MenuPage> {
         child: Column(
           children: [
             Container(
-              height: 200.0,
+              height: 300.0,
               child: FutureBuilder(
                   future: getDiscount(),
                   builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -2808,7 +2870,7 @@ class _MenuPageState extends State<MenuPage> {
                                       context: context,
                                       title: "DISCOUNT CARD",
                                       content: Text(
-                                        'You WILL NOT receive your Order unless you PRESENT valid DISCOUNT CARD',
+                                        'You will not receive your order unless you present a valid discount card.',
                                         textAlign: TextAlign.center,
                                       ),
                                       buttons: [
@@ -2966,7 +3028,7 @@ class _MenuPageState extends State<MenuPage> {
                         child: Row(
                           children: [
                             Text(
-                              "Order (" + myOrder.length.toString(),
+                              "Order (" + totalqty.toString(),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -4320,7 +4382,7 @@ class _MenuPageState extends State<MenuPage> {
                                     _validate5 = Prefs.getBoolValtext(lastname);
                                     if (_validate4 == false ||
                                         _validate5 == false) {
-                                      _showDialog('DinkLink',
+                                      _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
                                     } else {
@@ -4328,7 +4390,7 @@ class _MenuPageState extends State<MenuPage> {
                                       _validate5 = _validate5;
                                     }
                                   } catch (e) {
-                                    // _showDialog('DinkLink', 'Please input full name.');
+                                    // _showDialog('DrinkLink', 'Please input full name.');
                                   }
 
                                   if (_validate1 == true &&
@@ -4345,7 +4407,7 @@ class _MenuPageState extends State<MenuPage> {
                                       context: context,
                                       title: "DrinkLink",
                                       content: Text(
-                                          'Please fill up the billing details.'),
+                                          'Please fill out the billing details.'),
                                       buttons: [
                                         DialogButton(
                                           child: Text(
@@ -4590,7 +4652,7 @@ class _MenuPageState extends State<MenuPage> {
     };
     var body = json.encode(map['data']);
     print(body);
-    String url = ApiCon.baseurl + '/auth/users';
+    String url = ApiCon.baseurl() + '/auth/users';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
@@ -4613,7 +4675,7 @@ class _MenuPageState extends State<MenuPage> {
       },
     };
     var body = json.encode(map['data']);
-    String url = ApiCon.baseurl + '/auth/Token';
+    String url = ApiCon.baseurl() + '/auth/Token';
     final response = await http.post(url, headers: headers, body: body);
     print(response.body);
     print(response.statusCode);
@@ -4641,7 +4703,7 @@ class _MenuPageState extends State<MenuPage> {
       'Content-Type': 'application/json',
       'api-version': '1.1'
     };
-    String url = ApiCon.baseurl + '/auth/users/currentUser/notificationToken';
+    String url = ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
     final response = await http.patch(url, headers: headers, body: bod);
     print(response.body);
@@ -4661,7 +4723,7 @@ class _MenuPageState extends State<MenuPage> {
       firsname = fullname[0];
       lastname = fullname[1];
     } catch (e) {
-      // _showDialog('DinkLink', 'Please input full name.');
+      // _showDialog('DrinkLink', 'Please input full name.');
     }
 
     print(token);
@@ -4692,7 +4754,7 @@ class _MenuPageState extends State<MenuPage> {
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
       PayDrinks pydr =
-          PayDrinks(myOrder[i].Quant.toString(), price.toString(), ord, ord1);
+          PayDrinks(myOrder[i].Quant.toString(), price.toString(),myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -4700,26 +4762,21 @@ class _MenuPageState extends State<MenuPage> {
       myPydr.add(pydr);
     }
     Map<String, dynamic> myasd = {
-   "items":[
-      {
-         "drink":{
-            "id":"1",
-            "drinkCategoryId":"1",
-            "price":"1.0"
-         },
-         "selectedMixers":{
-            "id":"23",
-            "price":"5.0"
-         },
-         "quantity":"1",
-         "price":"6.0"
-      }
-   ],
-};
+      "items": [
+        {
+          "drink": {"id": "1", "drinkCategoryId": "1", "price": "1.0"},
+          "selectedMixers": {"id": "23", "price": "5.0"},
+          "quantity": "1",
+          "price": "6.0",
+          "withIce": true
+        }
+      ],
+    };
 
     //print(drinksorderall);
     var tagsJson = jsonEncode(myPydr);
     //print(tagsJson.toString());
+    // var fjs = json.decode(tagsJson.toString());
     var fjs = json.decode(tagsJson.toString());
     print(fjs.toString());
     String totalPrice = '0';
@@ -4728,7 +4785,7 @@ class _MenuPageState extends State<MenuPage> {
     //double percentagefee = (fee/100) * finaltot;
 
     //finaltotwithdiscount = finaltot + percentagefee;
-    
+
     double ftd = roundDouble(finaltotwithdiscount, 2);
     totalPrice = ftd.toString();
     //totalPrice = '1.08';
@@ -4744,7 +4801,7 @@ class _MenuPageState extends State<MenuPage> {
     }
 
     print(cardToken);
-
+    print(fjs);
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
@@ -4772,7 +4829,6 @@ class _MenuPageState extends State<MenuPage> {
         "serviceCharge": finalcharge,
         "tip": tip,
         "vipCharge": vpc,
-
       };
     } else {
       map = {
@@ -4810,7 +4866,7 @@ class _MenuPageState extends State<MenuPage> {
 
     var body = json.encode(map);
     print(body.toString());
-    String url = ApiCon.baseurl + '/orders';
+    String url = ApiCon.baseurl() + '/orders';
     String _cm = '';
     final response = await http.post(url, headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
@@ -4831,7 +4887,7 @@ class _MenuPageState extends State<MenuPage> {
       } else {
         _cm = response.body.toString();
       }
-      _showDialog('DinkLink', _cm);
+      _showDialog('DrinkLink', _cm);
 
       return false;
     }
@@ -4956,7 +5012,9 @@ class _MenuPageState extends State<MenuPage> {
     // print("This is the reponse: "+ jsondata.toString());
 
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
-    String linkpayment =  code;
+    // String linkpayment = ApiCon.paymenturl() + '/?code=' + code;
+
+    String linkpayment = code;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -4970,7 +5028,7 @@ class _MenuPageState extends State<MenuPage> {
     );
 
     if (result != 'failed') {
-      print(result);
+      print(result + 'result here');
       if (checkedValue == true) {
         Prefs.load();
         Prefs.setString('billName', billname.text);
@@ -4984,7 +5042,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DinkLink', 'Failed payment');
+      _showDialog('DrinkLink', 'Failed payment');
     }
     //}
   }
@@ -5111,7 +5169,8 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].Quant,
                     myDrinks[i].price,
                     mx,
-                    myDrinks[i].origPrice);
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
                 setState(() {
                   myOrder.add(ord);
                 });
@@ -5139,7 +5198,8 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].Quant,
                     myDrinks[i].price,
                     mx,
-                    myDrinks[i].origPrice);
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
                 setState(() {
                   myOrder.add(ord);
                 });
@@ -5156,23 +5216,28 @@ class _MenuPageState extends State<MenuPage> {
                 MixerOrd mixerOrd = MixerOrd(
                     myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
                 mx.add(mixerOrd);
-                for (var j = 0; j < myOrder.length; j++) {
-                  if (myOrder[j].drinkId == myDrinks[i].id) {
-                    //myOrder.removeAt(j);
-                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                  }
-                }
+                Order ord = Order(
+                    myDrinks[i].id,
+                    myDrinks[i].drinkCategoryId,
+                    myDrinks[i].name,
+                    myDrinks[i].Quant,
+                    myDrinks[i].price,
+                    mx,
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
+                setState(() {
+                  myOrder.add(ord);
+                });
               } else {
                 MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
                     myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
                 mx.add(mixerOrd);
-
-                for (var j = 0; j < myOrder.length; j++) {
+                var j = i;
                   if (myOrder[j].drinkId == myDrinks[i].id) {
                     //myOrder.removeAt(j);
                     myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                   }
-                }
+
               }
             }
           }
@@ -5203,7 +5268,8 @@ class _MenuPageState extends State<MenuPage> {
               myDrinks[i].Quant,
               myDrinks[i].price,
               mx,
-              myDrinks[i].origPrice);
+              myDrinks[i].origPrice,
+              myDrinks[i].addIce);
           setState(() {
             myOrder.add(ord);
           });
@@ -5239,10 +5305,13 @@ class _MenuPageState extends State<MenuPage> {
 
   callcompute() async {
     finaltot = 0;
+    totalqty = 0;
     for (var i = 0; i < myOrder.length; i++) {
       double tot = double.parse(myOrder[i].Price) * myOrder[i].Quant;
+      int qty = myOrder[i].Quant;
       setState(() {
         finaltot = finaltot + tot;
+        totalqty = totalqty + qty;
       });
     }
 
@@ -5354,9 +5423,9 @@ class Order {
   final String Price;
   List<MixerOrd> mxir;
   final String origPrice;
-
+   bool aIce;
   Order(this.drinkId, this.CatId, this.Name, this.Quant, this.Price, this.mxir,
-      this.origPrice);
+      this.origPrice, this.aIce);
 }
 
 class MixerOrd {
@@ -5424,8 +5493,9 @@ class PayDrinks {
   String price;
   PayOrder payOrd;
   PayMixer mixOrd;
+  bool ice;
 
-  PayDrinks(this.quantity, this.price, [this.payOrd, this.mixOrd]);
+  PayDrinks(this.quantity, this.price,this.ice, [this.payOrd, this.mixOrd] );
 
   Map toJson() {
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;
@@ -5436,13 +5506,15 @@ class PayDrinks {
         'drink': author,
         'quantity': quantity,
         'price': price,
+        'withIce': ice
       };
     } else {
       return {
         'drink': author,
-        'selectedMixers': mi,
+        'selectedMixers': [mi],
         'quantity': quantity,
         'price': price,
+        'withIce': ice
       };
     }
   }
