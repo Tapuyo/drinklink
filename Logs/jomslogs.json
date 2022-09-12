@@ -6,7 +6,10 @@
         "api": "set isPro to true ",
         "api_baseurl": "Implement baseurl",
         "menupage_payment":"fix wrong qty in payment page",
-        "menupage_selectionmixer":"fix cancel"
+        "menupage_selectionmixer":"fix cancel",
+        "menupage_settings_home":"Fix Billing details",
+        "menupage_paymentmixers":"Fix Order Mixers"
+       
     }
     
 }
