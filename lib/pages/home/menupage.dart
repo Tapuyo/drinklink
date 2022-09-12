@@ -693,11 +693,11 @@ class _MenuPageState extends State<MenuPage> {
 
                               Prefs.setString('token', '');
                               Prefs.setString('uname', 'none');
-                              // Prefs.setString('bfName' + uName + '', '');
-                              // Prefs.setString('blMame' + uName + '', '');
-                              // Prefs.setString('billName' + uName + '', '');
-                              // Prefs.setString('billAdd' + uName + '', '');
-                              // Prefs.setString('billEmail' + uName + '', '');
+                              Prefs.setString('bfNamenone', '');
+                              Prefs.setString('blMamenone', '');
+                              Prefs.setString('billNamenone', '');
+                              Prefs.setString('billAddnone', '');
+                              Prefs.setString('billEmailnone', '');
                               context.read<AuthProvider>().setToken('');
                             });
                           });
