@@ -123,7 +123,7 @@ class _setPageState extends State<setPage> {
                   //   ],
                   // ).show();
                   _showDialog('ADD CREDIT CARD',
-                      "1 AED will be authorized and then release in order to validate your credit card. Do you want to continue?");
+                      "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
                 },
                 child: Container(
                     height: 40,
