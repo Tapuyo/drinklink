@@ -494,7 +494,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       stoken = token;
     }
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
