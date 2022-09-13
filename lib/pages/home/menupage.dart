@@ -1087,10 +1087,14 @@ class _MenuPageState extends State<MenuPage> {
                                   finaltotwithdiscount = 0;
 
                                   if (discountID.isEmpty) {
+                                    tip = 0;
+                                  mtip = "";
                                     percentagefee = (fee / 100) * finaltot;
                                     finaltotwithdiscount =
                                         finaltot + percentagefee;
                                   } else {
+                                    tip = 0;
+                                  mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
@@ -1108,14 +1112,6 @@ class _MenuPageState extends State<MenuPage> {
                                   subbodybool = 2;
                                   _pcb = false;
                                   _pc.close();
-                                  tip = 0;
-                                  mtip = "";
-                                  double mj = finaltotwithdiscount * (discount / 100);
-                                  double mjs = finaltotwithdiscount - mj;
-                                  mdicount = mj.toString();
-                                   mdicount =
-                                      mj.toStringAsFixed(2) + ' AED';
-                                  finaltotwithdiscount = mjs;
                                 });
                               }
                             },
