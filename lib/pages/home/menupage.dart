@@ -1256,7 +1256,6 @@ class _MenuPageState extends State<MenuPage> {
                                       Row(
                                         children: [
                                           Text(
-
                                             snapshot.data[index].aIce != false
                                                 ? 'With Ice /'
                                                 : '',
@@ -4768,8 +4767,8 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr =
-          PayDrinks(myOrder[i].Quant.toString(), price.toString(),myOrder[i].aIce, ord, ord1);
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toString(),
+          myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -5248,11 +5247,10 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
                 mx.add(mixerOrd);
                 var j = i;
-                  if (myOrder[j].drinkId == myDrinks[i].id) {
-                    //myOrder.removeAt(j);
-                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                  }
-
+                if (myOrder[j].drinkId == myDrinks[i].id) {
+                  //myOrder.removeAt(j);
+                  myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                }
               }
             }
           }
@@ -5438,7 +5436,7 @@ class Order {
   final String Price;
   List<MixerOrd> mxir;
   final String origPrice;
-   bool aIce;
+  bool aIce;
   Order(this.drinkId, this.CatId, this.Name, this.Quant, this.Price, this.mxir,
       this.origPrice, this.aIce);
 }
@@ -5510,7 +5508,7 @@ class PayDrinks {
   PayMixer mixOrd;
   bool ice;
 
-  PayDrinks(this.quantity, this.price,this.ice, [this.payOrd, this.mixOrd] );
+  PayDrinks(this.quantity, this.price, this.ice, [this.payOrd, this.mixOrd]);
 
   Map toJson() {
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;
