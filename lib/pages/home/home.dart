@@ -488,13 +488,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
     }
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(

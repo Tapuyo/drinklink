@@ -1256,6 +1256,19 @@ class _MenuPageState extends State<MenuPage> {
                                       Row(
                                         children: [
                                           Text(
+
+                                            snapshot.data[index].aIce != false
+                                                ? 'With Ice /'
+                                                : '',
+                                            style: GoogleFonts.lato(
+                                              textStyle: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  letterSpacing: .5,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                          Text(
                                             snapshot.data[index].Price != null
                                                 ? snapshot.data[index].Price
                                                 : '',
@@ -4756,7 +4769,7 @@ class _MenuPageState extends State<MenuPage> {
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
       PayDrinks pydr =
-          PayDrinks(myOrder[i].Quant.toString(), price.toString(), ord, ord1);
+          PayDrinks(myOrder[i].Quant.toString(), price.toString(),myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -4769,7 +4782,8 @@ class _MenuPageState extends State<MenuPage> {
           "drink": {"id": "1", "drinkCategoryId": "1", "price": "1.0"},
           "selectedMixers": {"id": "23", "price": "5.0"},
           "quantity": "1",
-          "price": "6.0"
+          "price": "6.0",
+          "withIce": true
         }
       ],
     };
@@ -5170,7 +5184,8 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].Quant,
                     myDrinks[i].price,
                     mx,
-                    myDrinks[i].origPrice);
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
                 setState(() {
                   myOrder.add(ord);
                 });
@@ -5198,7 +5213,8 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].Quant,
                     myDrinks[i].price,
                     mx,
-                    myDrinks[i].origPrice);
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
                 setState(() {
                   myOrder.add(ord);
                 });
@@ -5215,23 +5231,28 @@ class _MenuPageState extends State<MenuPage> {
                 MixerOrd mixerOrd = MixerOrd(
                     myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
                 mx.add(mixerOrd);
-                for (var j = 0; j < myOrder.length; j++) {
-                  if (myOrder[j].drinkId == myDrinks[i].id) {
-                    //myOrder.removeAt(j);
-                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                  }
-                }
+                Order ord = Order(
+                    myDrinks[i].id,
+                    myDrinks[i].drinkCategoryId,
+                    myDrinks[i].name,
+                    myDrinks[i].Quant,
+                    myDrinks[i].price,
+                    mx,
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
+                setState(() {
+                  myOrder.add(ord);
+                });
               } else {
                 MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
                     myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
                 mx.add(mixerOrd);
-
-                for (var j = 0; j < myOrder.length; j++) {
+                var j = i;
                   if (myOrder[j].drinkId == myDrinks[i].id) {
                     //myOrder.removeAt(j);
                     myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                   }
-                }
+
               }
             }
           }
@@ -5262,7 +5283,8 @@ class _MenuPageState extends State<MenuPage> {
               myDrinks[i].Quant,
               myDrinks[i].price,
               mx,
-              myDrinks[i].origPrice);
+              myDrinks[i].origPrice,
+              myDrinks[i].addIce);
           setState(() {
             myOrder.add(ord);
           });
@@ -5416,9 +5438,9 @@ class Order {
   final String Price;
   List<MixerOrd> mxir;
   final String origPrice;
-
+   bool aIce;
   Order(this.drinkId, this.CatId, this.Name, this.Quant, this.Price, this.mxir,
-      this.origPrice);
+      this.origPrice, this.aIce);
 }
 
 class MixerOrd {
@@ -5486,8 +5508,9 @@ class PayDrinks {
   String price;
   PayOrder payOrd;
   PayMixer mixOrd;
+  bool ice;
 
-  PayDrinks(this.quantity, this.price, [this.payOrd, this.mixOrd]);
+  PayDrinks(this.quantity, this.price,this.ice, [this.payOrd, this.mixOrd] );
 
   Map toJson() {
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;
@@ -5498,6 +5521,7 @@ class PayDrinks {
         'drink': author,
         'quantity': quantity,
         'price': price,
+        'withIce': ice
       };
     } else {
       return {
@@ -5505,6 +5529,7 @@ class PayDrinks {
         'selectedMixers': [mi],
         'quantity': quantity,
         'price': price,
+        'withIce': ice
       };
     }
   }

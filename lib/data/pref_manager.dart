@@ -11,7 +11,6 @@ class Prefs {
     if (_prefs == null) {
       _prefs = await SharedPreferences.getInstance();
     }
-    return _prefs;
   }
 
   static void setString(String key, String value) {
