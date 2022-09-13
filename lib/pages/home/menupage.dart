@@ -100,6 +100,7 @@ class _MenuPageState extends State<MenuPage> {
   double timecol = 0;
   bool vipcharge = false;
   String mdicount = '';
+  double discountitempercentage = 0;
   String mtip = '0';
   double discount = 0;
   double tip = 0;
@@ -1082,10 +1083,22 @@ class _MenuPageState extends State<MenuPage> {
                                   Prefs.load();
                                   Prefs.setInt('Quant', myOrder.length);
                                   Prefs.setDouble('Price', finaltot);
-                                  double percentagefee = (fee / 100) * finaltot;
+                                  double percentagefee = 0;
+                                  finaltotwithdiscount = 0;
 
-                                  finaltotwithdiscount =
-                                      finaltot + percentagefee;
+                                  if (discountID.isEmpty) {
+                                    percentagefee = (fee / 100) * finaltot;
+                                    finaltotwithdiscount =
+                                        finaltot + percentagefee;
+                                  } else {
+                                    percentagefee =
+                                        (discountitempercentage / 100) *
+                                            finaltot;
+                                    mdicount = percentagefee.toString() + 'AED';
+                                    finaltotwithdiscount =
+                                        finaltot - percentagefee + tip;
+                                  }
+
                                   print('Percentage fee:' +
                                       fee.toString() +
                                       ' - ' +
@@ -2827,6 +2840,8 @@ class _MenuPageState extends State<MenuPage> {
                                   //
                                   //Prefs.setString('discountId', snapshot.data[index].discountid);
                                   discountID = snapshot.data[index].discountid;
+                                  discountitempercentage =
+                                      snapshot.data[index].discountpercentage;
 
                                   double totdiscount = ((finaltot *
                                           double.parse(snapshot
