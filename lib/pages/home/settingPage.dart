@@ -32,32 +32,21 @@ class _setPageState extends State<setPage> {
   getDetails() {
     setState(() {
       Prefs.load();
-      uName = Prefs.getString('uname');
-      // try {
-      //
-      // } catch (e) {
-      //   uName = '';
-      // }
-      // if (gettoken.isEmpty) {
-      //   billname.text = '';
-      //   billlast.text = '';
+      try {
+        uName = Prefs.getString('uname');
+        billname.text = Prefs.getString('bfName' + uName);
+        billlast.text = Prefs.getString('blMame' + uName);
 
-      //   billadd.text = '';
-      //   billemail.text = '';
-      //   sound = false;
-      //   ring = false;
+        billadd.text = Prefs.getString('billAdd' + uName);
+        billemail.text = Prefs.getString('billEmail' + uName);
+        sound = Prefs.getBool('sound' + uName);
+        ring = Prefs.getBool('alert' + uName);
 
-      //   checkedValue = false;
-      // } else {
-      billname.text = Prefs.getString('bfName' + uName);
-      billlast.text = Prefs.getString('blMame' + uName);
+        checkedValue = Prefs.getBool('bsendBill' + uName);
+      } catch (ex) {
+        print(ex);
+      }
 
-      billadd.text = Prefs.getString('billAdd' + uName);
-      billemail.text = Prefs.getString('billEmail' + uName);
-      sound = Prefs.getBool('sound' + uName);
-      ring = Prefs.getBool('alert' + uName);
-
-      checkedValue = Prefs.getBool('bsendBill' + uName);
       // }
     });
   }
