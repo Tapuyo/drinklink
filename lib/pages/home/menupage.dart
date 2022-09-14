@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:driklink/pages/home/home.dart';
@@ -43,6 +44,7 @@ class _MenuPageState extends State<MenuPage> {
   int tipid = 0;
   String idCard = '0';
   String discountID = '';
+  String discountPerc = '';
   int lengtofsub = 0;
   String iconid = '';
   bool saveCard = false;
@@ -1076,6 +1078,7 @@ class _MenuPageState extends State<MenuPage> {
                           child: GestureDetector(
                             onTap: () {
                               if (myOrder.length > 0) {
+                                
                                 setState(() {
                                   Prefs.load();
                                   Prefs.setInt('Quant', myOrder.length);
@@ -1084,10 +1087,14 @@ class _MenuPageState extends State<MenuPage> {
                                   finaltotwithdiscount = 0;
 
                                   if (discountID.isEmpty) {
+                                    tip = 0;
+                                  mtip = "";
                                     percentagefee = (fee / 100) * finaltot;
                                     finaltotwithdiscount =
                                         finaltot + percentagefee;
                                   } else {
+                                    tip = 0;
+                                  mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
@@ -2842,6 +2849,7 @@ class _MenuPageState extends State<MenuPage> {
                                   discount = double.parse(snapshot
                                       .data[index].discountpercentage
                                       .toString());
+                                      print(discount);
                                   if (discount > 0) {
                                     double totwithdiscount =
                                         finaltot - totdiscount;

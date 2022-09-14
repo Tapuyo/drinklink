@@ -1144,7 +1144,8 @@ class _HomePageState extends State<HomePage> {
                                   width: 60,
                                   height: 60,
                                   child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)),
+                                      snapshot.data[index].image)
+                                  ),
                               SizedBox(
                                 width: 10,
                               ),
