@@ -5203,6 +5203,7 @@ class _MenuPageState extends State<MenuPage> {
                 // });
               }
               } else {
+<<<<<<< HEAD
                 List<MixerOrd> mx = [];
                 for (var j = 0; j < m; j++)
                 if (myDrinks[i].id != myOrder[j].drinkId &&
@@ -5228,6 +5229,14 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
                     myDrinks[i].addIce == myOrder[j].aIce) {
                   print("lord please");
+=======
+                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
+                    myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
+                mx.add(mixerOrd);
+                var j = i;
+                if (myOrder[j].drinkId == myDrinks[i].id) {
+                  //myOrder.removeAt(j);
+>>>>>>> 9d65ade5932274cbcb499e8a1e757d41bdf4f591
                   myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                 }
               }
