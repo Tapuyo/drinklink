@@ -32,33 +32,18 @@ class _setPageState extends State<setPage> {
   getDetails() {
     setState(() {
       Prefs.load();
-      uName = Prefs.getString('uname');
-      // try {
-      //
-      // } catch (e) {
-      //   uName = '';
-      // }
-      // if (gettoken.isEmpty) {
-      //   billname.text = '';
-      //   billlast.text = '';
 
-      //   billadd.text = '';
-      //   billemail.text = '';
-      //   sound = false;
-      //   ring = false;
+      uName = Prefs.getString('uname') ?? '';
+      billname.text = Prefs.getString('bfName' + uName) ?? '';
+      billlast.text = Prefs.getString('blMame' + uName) ?? '';
 
-      //   checkedValue = false;
-      // } else {
-      billname.text = Prefs.getString('bfName' + uName);
-      billlast.text = Prefs.getString('blMame' + uName);
+      billadd.text = Prefs.getString('billAdd' + uName) ?? '';
+      billemail.text = Prefs.getString('billEmail' + uName) ?? '';
+      sound = Prefs.getBool('sound' + uName) ?? '';
 
-      billadd.text = Prefs.getString('billAdd' + uName);
-      billemail.text = Prefs.getString('billEmail' + uName);
-      sound = Prefs.getBool('sound' + uName);
-      ring = Prefs.getBool('alert' + uName);
+      ring = Prefs.getBool('alert' + uName) ?? '';
 
-      checkedValue = Prefs.getBool('bsendBill' + uName);
-      // }
+      checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
     });
   }
 
@@ -570,11 +555,11 @@ class _setPageState extends State<setPage> {
                       builder: (context) => SaveCardWeb(linkpayment)),
                 );
 
-                if (result != 'failed') {
-                  _showDialog1('DinkLink', 'New card save.');
+                if (result == 'Added') {
+                  _showDialog1('DrinkLink', 'New card save.');
                 } else {
                   print(result);
-                  _showDialog1('DinkLink', 'Failed to save card.');
+                  _showDialog1('DrinkLink', 'Failed to save card.');
                 }
               },
             ),

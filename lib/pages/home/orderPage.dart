@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/orderdetails.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
@@ -15,6 +16,9 @@ class orderPage extends StatefulWidget {
 }
 
 class _setPageState extends State<orderPage> {
+  String dropdownvalue = 'DATE';
+
+  var items =  ['DATE','PLACE','STATUS'];
   List<Order> orderList = [];
   Future ord;
   String selectS = "Date";
@@ -150,36 +154,61 @@ class _setPageState extends State<orderPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // DropDown<Person>(
-                //   items: persons,
-                //
-                //   //hint: Text("Select"),
-                //   initialValue: persons.first,
-                //   onChanged: (Person p) {
-                //     print(p?.gender);
-                //     setState(() {
-                //       selectedPerson = p;
-                //     });
-                //   },
-                //   isCleared: selectedPerson == null,
-                //   customWidgets: persons.map((p) => buildDropDownRow(p)).toList(),
-                //   isExpanded: true,
-                // ),
-                mybody(),
+                Text("Sort by Options:",
+                style: TextStyle(fontWeight: FontWeight.normal,fontSize: 18,
+        color: Colors.white),),
+                Container(
+                  height: 40,
+                  width: 230,
+                  padding: EdgeInsets.all(5.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60.0),
+                    border: Border.all(
+                        color: Colors.white, style: BorderStyle.solid, width: 1.80),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      dropdownColor: Colors.indigo[100],
+                      elevation: 2,
+                      value: dropdownvalue,
+                      icon: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                       items:items.map((String items) {
+                        return DropdownMenuItem(
+                            value: items,
+                            child: Text(items, style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20, color:Colors.white,),)
+                        );
+                      }
+                      ).toList(),
+                      onChanged: (String newValue){
+                        setState(() {
+                          dropdownvalue = newValue;
+                        });
+                      },
+
+                    ),
+                  ),
+                ),
               ],
-            )),
+            ),
+              mybody(),
+          ],
+        ),
       ),
     );
   }
 
   mybody() {
     return Container(
-      height: MediaQuery.of(context).size.height - 100,
+      padding: EdgeInsets.fromLTRB(10,15,10,10),
+      height: MediaQuery.of(context).size.height - 170,
       child: FutureBuilder(
           future: getOrders(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -192,7 +221,6 @@ class _setPageState extends State<orderPage> {
             } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {},
