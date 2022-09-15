@@ -5144,12 +5144,11 @@ class _MenuPageState extends State<MenuPage> {
                   if (result) {
                     print("lord please mamen");
                     myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                    setState(() {
                                           mjs= 1;
-                                        });
-                  } else if(j == mj && result ==false && mjs != 0) {
+                  } else if(j == mj && result == false && mjs == 0 ) {
+                    print(mjs);
                     // _showDialog("Drinklink", "Item already selected please select another combo!");
-                       print("lord god thank you 4");
+                       print("lord 1");
                       List<MixerOrd> mx = [];
                       for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
                         MixerOrd mixerOrd = MixerOrd(
@@ -5169,7 +5168,10 @@ class _MenuPageState extends State<MenuPage> {
                           myDrinks[i].addIce);
                       setState(() {
                         myOrder.add(ord);
+                        mjs = 1;
                       });
+                  }else{
+                    mjs= 1;
                   }
                 }
               }else {
@@ -5203,7 +5205,6 @@ class _MenuPageState extends State<MenuPage> {
                 // });
               }
               } else {
-<<<<<<< HEAD
                 List<MixerOrd> mx = [];
                 for (var j = 0; j < m; j++)
                 if (myDrinks[i].id != myOrder[j].drinkId &&
@@ -5229,14 +5230,6 @@ class _MenuPageState extends State<MenuPage> {
                     myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
                     myDrinks[i].addIce == myOrder[j].aIce) {
                   print("lord please");
-=======
-                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
-                    myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
-                mx.add(mixerOrd);
-                var j = i;
-                if (myOrder[j].drinkId == myDrinks[i].id) {
-                  //myOrder.removeAt(j);
->>>>>>> 9d65ade5932274cbcb499e8a1e757d41bdf4f591
                   myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                 }
               }
