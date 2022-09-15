@@ -4355,7 +4355,7 @@ class _MenuPageState extends State<MenuPage> {
                                 color: Colors.deepOrange,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
-                                onPressed: () {
+                                 onPressed: () {
                                   //samplecheck();
 
                                   // if (billadd.text != '' ||
@@ -4383,14 +4383,6 @@ class _MenuPageState extends State<MenuPage> {
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
-
-                                  _validate1 =
-                                      Prefs.getBoolValtext(billadd.text);
-                                  _validate2 =
-                                      Prefs.getBoolValtext(billname.text);
-                                  _validate3 =
-                                      Prefs.getBoolValtext(billemail.text);
-
                                   String ename = billname.text;
                                   var fullname = ename.split(' ');
                                   String firsname = '';
@@ -4401,7 +4393,18 @@ class _MenuPageState extends State<MenuPage> {
                                     lastname = fullname[1];
                                     _validate4 = Prefs.getBoolValtext(firsname);
                                     _validate5 = Prefs.getBoolValtext(lastname);
-                                    if (_validate4 == false ||
+                                    _validate1 =
+                                      Prefs.getBoolValtext(billadd.text);
+                                  _validate2 =
+                                      Prefs.getBoolValtext(billname.text);
+                                  _validate3 =
+                                      Prefs.getBoolValtext(billemail.text);
+                                   if (_validate4 == false ||
+                                        _validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    }else if (_validate4 == false &&
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
@@ -4418,12 +4421,7 @@ class _MenuPageState extends State<MenuPage> {
                                      else {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
-                                    }
-                                  } catch (e) {
-                                    // _showDialog('DrinkLink', 'Please input full name.');
-                                  }
-
-                                  if (_validate1 == true &&
+                                    } if (_validate1 == true &&
                                       _validate2 == true &&
                                       _validate3 == true &&
                                       _validate4 == true &&
@@ -4432,28 +4430,9 @@ class _MenuPageState extends State<MenuPage> {
                                       isloading = true;
                                       tokenChecker();
                                     });
-                                  } else {
-                                    Alert(
-                                      context: context,
-                                      title: "DrinkLink",
-                                      content: Text(
-                                          'Please fill out the billing details.'),
-                                      buttons: [
-                                        DialogButton(
-                                          child: Text(
-                                            "Close",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20),
-                                          ),
-                                          onPressed: () => Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop(),
-                                          color:
-                                              Color(0xFF2b2b61).withOpacity(.7),
-                                        ),
-                                      ],
-                                    ).show();
+                                  }
+                                  } catch (e) {
+                                   _showDialog('DrinkLink', 'Please input billing details.');
                                   }
                                 },
                                 child: Row(
