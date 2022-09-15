@@ -7,19 +7,22 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'dart:developer' as dev;
 
 class WebPage extends StatefulWidget {
   String url;
+  String reference;
 
-  WebPage(this.url);
+  WebPage(this.url, this.reference);
   @override
-  WebViewExampleState createState() => WebViewExampleState(this.url);
+  WebViewExampleState createState() => WebViewExampleState(this.url, this.reference);
 }
 
 class WebViewExampleState extends State<WebPage> {
   String murl;
+  String reference;
 
-  WebViewExampleState(this.murl);
+  WebViewExampleState(this.murl, this.reference);
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
@@ -30,7 +33,8 @@ class WebViewExampleState extends State<WebPage> {
       print("This is url: " + url);
       if (url != murl) {
         //Navigator.pop(context, url);
-        checkUrlRes(url);
+        Order();
+       
       }
     });
   }
@@ -42,19 +46,19 @@ class WebViewExampleState extends State<WebPage> {
         url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
 
     print(checkurl);
-    if (checkurl == true) {
+   // if (checkurl == true) {
       bool suc = url.contains('SUCCESS');
-      if (suc == true) {
+      //if (suc == true) {
         var divurl = url.split('=');
         print(divurl[2].trim());
         String codena = divurl[2].trim();
         String mycode = codena.replaceAll('&paymentRef', '');
         print(mycode);
-        Navigator.pop(context, mycode);
-      } else {
-        Navigator.pop(context, 'failed');
-      }
-    }
+        
+       // Navigator.pop(context, mycode);
+      
+   // }
+
 
     // Map<String, String> headers = {"Content-Type": "application/json; charset=utf-8"};
     // final response = await http.get(url,headers: headers);
@@ -86,48 +90,22 @@ class WebViewExampleState extends State<WebPage> {
   Order() async {
     Prefs.load();
     String token = Prefs.getString('token');
-    int facility = Prefs.getInt('Facility');
-    //drinkCatId
-    int drinkCatId = Prefs.getInt('drinkCatId');
-    int drinkId = Prefs.getInt('drinkId');
-    int quant = Prefs.getInt('Quant');
-    double price = Prefs.getDouble('Price');
-    print(token);
-    print(facility);
-    print(price);
-    print(drinkCatId);
-    print(drinkId);
+ 
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
     };
-    Map map = {
-      "facilityId": facility,
-      "barId": 1,
-      'items': [
-        {
-          "drink": {
-            "id": drinkId,
-            "drinkCategoryId": drinkCatId,
-            "price": 35.0
-          },
-          "quantity": 2,
-          "price": 70.0
-        }
-      ],
-      "tip": 0,
-      "originalPrice": 70.0,
-      "finalPrice": 70.0
-    };
-    var body = json.encode(map);
-    String url = ApiCon.baseurl() + '/orders';
-    final response = await http.post(url, headers: headers, body: body);
+   
+    String url = ApiCon.baseurl() + '/orders/paid/?ref=' + reference;
+    final response = await http.post(url, headers: headers);
     //var jsondata = json.decode(response.headers);
-    print(response.body.toString());
-    if (response.statusCode == 200) {
-      print('200');
+    dev.log(response.body.toString());
+    String mystate = json.decode(response.body)['_embedded']['payment'][0]['state'];
+    dev.log(mystate);
+    if (mystate == 'AUTHORISED') {
+       Navigator.pop(context, 'AUTHORISED');
     } else {
-      print('error');
+       Navigator.pop(context, 'failed');
     }
   }
 
@@ -141,6 +119,20 @@ class WebViewExampleState extends State<WebPage> {
           "Payment",
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
+    //     actions: [
+    //       Padding(
+    //   padding: EdgeInsets.only(right: 20.0),
+    //   child: GestureDetector(
+    //     onTap: () {
+    //       Order();
+    //     },
+    //     child: Icon(
+    //       Icons.search,
+    //       size: 26.0,
+    //     ),
+    //   )
+    // ),
+    //     ],
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -157,6 +149,7 @@ class WebViewExampleState extends State<WebPage> {
           child: Text('Waiting.....'),
         ),
       ),
+      
     );
   }
 }

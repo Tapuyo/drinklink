@@ -4883,7 +4883,7 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
-      getPaymentLink(json.decode(response.body)['paymentLink'].toString());
+      getPaymentLink(json.decode(response.body)['paymentLink'].toString(),json.decode(response.body)['orderReference'].toString(),json.decode(response.body)['paymentOrderCode'].toString());
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -4942,7 +4942,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String code) async {
+  getPaymentLink(String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -4952,7 +4952,7 @@ class _MenuPageState extends State<MenuPage> {
     String cardToken = Prefs.getString('cardToken');
     var idn = nanoid();
     //String tranid = idn.replaceAll(new RegExp(r'[^\w\s]_+'),'');
-    print(code);
+    print(url);
 
     // String totalPrice = '0';
     //
@@ -5023,7 +5023,7 @@ class _MenuPageState extends State<MenuPage> {
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
     // String linkpayment = ApiCon.paymenturl() + '/?code=' + code;
 
-    String linkpayment = code;
+    String linkpayment = url;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -5033,10 +5033,10 @@ class _MenuPageState extends State<MenuPage> {
 
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString())),
+      MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString(), reference)),
     );
 
-    if (result != 'failed') {
+    if (result == 'AUTHORISED') {
       print(result + 'result here');
       if (checkedValue == true) {
         Prefs.load();
@@ -5051,7 +5051,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment');
+      _showDialog('DrinkLink', 'Failed payment!');
     }
     //}
   }

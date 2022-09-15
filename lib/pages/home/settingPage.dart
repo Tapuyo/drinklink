@@ -555,11 +555,11 @@ class _setPageState extends State<setPage> {
                       builder: (context) => SaveCardWeb(linkpayment)),
                 );
 
-                if (result != 'failed') {
-                  _showDialog1('DinkLink', 'New card save.');
+                if (result != 'Failed') {
+                  _showDialog1('DrinkLink', 'New card save.');
                 } else {
                   print(result);
-                  _showDialog1('DinkLink', 'Failed to save card.');
+                  _showDialog1('DrinkLink', 'Failed to save card.');
                 }
               },
             ),
