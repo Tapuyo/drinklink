@@ -4884,8 +4884,10 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
-      getPaymentLink(json.decode(response.body)['paymentLink'].toString(),
-          json.decode(response.body)['orderReference'].toString());
+      getPaymentLink(
+          json.decode(response.body)['paymentLink'].toString(),
+          json.decode(response.body)['orderReference'].toString(),
+          json.decode(response.body)['paymentOrderCode'].toString());
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -4944,7 +4946,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String code, String ref) async {
+  getPaymentLink(String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -4954,7 +4956,7 @@ class _MenuPageState extends State<MenuPage> {
     String cardToken = Prefs.getString('cardToken');
     var idn = nanoid();
     //String tranid = idn.replaceAll(new RegExp(r'[^\w\s]_+'),'');
-    print(code);
+    print(url);
 
     // String totalPrice = '0';
     //
@@ -5025,7 +5027,7 @@ class _MenuPageState extends State<MenuPage> {
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
     // String linkpayment = ApiCon.paymenturl() + '/?code=' + code;
 
-    String linkpayment = code;
+    String linkpayment = url;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -5035,49 +5037,17 @@ class _MenuPageState extends State<MenuPage> {
 
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString())),
+      MaterialPageRoute(
+          builder: (context) => WebPage(linkpayment.toString(), reference)),
     );
 
-    // String url =
-    //     'https://drinklink-preprod-be.azurewebsites.net/api/orders/paid/?ref=' +
-    //         ref;
-    // Map<String, String> headers = {
-    //   "Content-Type": "application/json",
-    //   'Authorization': 'Bearer ' + token
-    // };
-    // final state = await http.post(url, headers: headers);
-    // print(state);
-    // if (state.statusCode == 200) {
-    //   print(state.body.toString() + 'Payamanet ststus here!!!!');
-    //   String _state =
-    //       json.decode(state.body)['_embedded']['payment']['state'].toString();
-    //   print(_state);
-    //   if (_state != "CANCELLED" || _state == "FAILED") {
-    //     if (checkedValue == true) {
-    //       Prefs.load();
-    //       Prefs.setString('billName', billname.text);
-    //       Prefs.setString('billAdd', billadd.text);
-    //       Prefs.setString('billEmail', billemail.text);
-    //       _showDialog('DrinkLink', _state);
-
-    //       // Navigator.pushReplacement(
-    //       //   context,
-    //       //   MaterialPageRoute(builder: (context) => OrderDetails('')),
-    //       // );
-    //     }
-    //   } else {
-    //     _showDialog('DrinkLink', _state);
-    //   }
-    // }
-
-    if (result != 'failed') {
+    if (result == 'AUTHORISED') {
       print(result + 'result here');
       if (checkedValue == true) {
         Prefs.load();
         Prefs.setString('billName', billname.text);
         Prefs.setString('billAdd', billadd.text);
         Prefs.setString('billEmail', billemail.text);
-        _showDialog('DrinkLink', 'Payment Processed');
       }
 
       Navigator.pushReplacement(
@@ -5086,7 +5056,9 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment');
+      _showDialog('DrinkLink', 'Failed payment!');
+    }
+    //}
   }
 
   checkUrlRes(String code) async {
