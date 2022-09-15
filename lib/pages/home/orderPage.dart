@@ -176,7 +176,7 @@ class _setPageState extends State<orderPage> {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      dropdownColor: Colors.deepPurple[900],
+                      dropdownColor: Colors.indigo[100],
                       elevation: 2,
                       value: dropdownvalue,
                       icon: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
