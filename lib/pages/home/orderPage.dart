@@ -176,13 +176,14 @@ class _setPageState extends State<orderPage> {
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
+                      dropdownColor: Colors.deepPurple[900],
                       elevation: 2,
                       value: dropdownvalue,
                       icon: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
                        items:items.map((String items) {
                         return DropdownMenuItem(
                             value: items,
-                            child: Text(items, style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20, color:Colors.white),)
+                            child: Text(items, style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20, color:Colors.white,),)
                         );
                       }
                       ).toList(),

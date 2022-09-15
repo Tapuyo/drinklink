@@ -555,7 +555,7 @@ class _setPageState extends State<setPage> {
                       builder: (context) => SaveCardWeb(linkpayment)),
                 );
 
-                if (result != 'Failed') {
+                if (result == 'Added') {
                   _showDialog1('DrinkLink', 'New card save.');
                 } else {
                   print(result);
