@@ -4406,7 +4406,16 @@ class _MenuPageState extends State<MenuPage> {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
-                                    } else {
+                                    }else if (_validate1 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input billing address.');
+                                      return;
+                                    }else if (_validate3 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input email address.');
+                                      return;
+                                    }
+                                     else {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
                                     }
@@ -5170,8 +5179,6 @@ class _MenuPageState extends State<MenuPage> {
                         myOrder.add(ord);
                         mjs = 1;
                       });
-                  }else{
-                    mjs= 1;
                   }
                 }
               }else {
