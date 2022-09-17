@@ -49,6 +49,7 @@ dependencies:
   responsive_framework: ^0.1.4
   shared_preferences: ^2.0.7
   provider: ^4.0.5
+  email_validator: ^2.1.17
 
 
 dev_dependencies:

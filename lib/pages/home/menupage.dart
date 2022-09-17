@@ -30,6 +30,9 @@ import 'dart:convert';
 import 'package:driklink/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:core';
+import 'package:email_validator/email_validator.dart';
+
 class MenuPage extends StatefulWidget {
   String id, title, desc;
 
@@ -4383,6 +4386,7 @@ class _MenuPageState extends State<MenuPage> {
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
+                                  bool _validate6;
                                   String ename = billname.text;
                                   var fullname = ename.split(' ');
                                   String firsname = '';
@@ -4417,6 +4421,16 @@ class _MenuPageState extends State<MenuPage> {
                                       _showDialog('DrinkLink',
                                           'Please input email address.');
                                       return;
+                                    } else if (_validate3 == true) {
+                                      String email = billemail.text;
+                                      final bool isValid =
+                                          EmailValidator.validate(email);
+                                      print(isValid);
+                                      if (isValid == false) {
+                                        _showDialog('DrinkLink',
+                                            'Please input valid email address.');
+                                        return;
+                                      }
                                     } else {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
