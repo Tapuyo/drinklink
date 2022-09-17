@@ -41,8 +41,8 @@ class WebViewExampleState extends State<SaveCardWeb> {
   }
 
   checkUrlRes(String url)async {
-    bool checkurl = url.contains('paid');
-    bool checkurl1 = url.contains('Unpaid');
+    bool checkurl = url.contains('paidCard');
+    bool checkurl1 = url.contains('UnpaidCard');
 
     if(checkurl == true && checkurl1 == false){
         // var divurl = url.split('=');
