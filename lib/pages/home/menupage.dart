@@ -2983,6 +2983,7 @@ class _MenuPageState extends State<MenuPage> {
                 return Container();
               } else {
                 return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -2997,13 +2998,13 @@ class _MenuPageState extends State<MenuPage> {
                           color: Colors.black45.withOpacity(.5),
                           child: Container(
                             //height: 40,
-                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
                             width: 300,
                             child: Center(
                                 child: Text(
                               snapshot.data[index].tablename,
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
+                                  TextStyle(fontSize: 16, color: Colors.white),
                             )),
                           ),
                         )),
@@ -4108,14 +4109,71 @@ class _MenuPageState extends State<MenuPage> {
                                   setState(() {
                                     pickdine = false;
                                   });
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('Table list'),
-                                          content: showTable(),
-                                        );
-                                      });
+                                  Alert(
+                                    closeIcon: Icon(
+                                      Icons.circle,
+                                      color: Colors.white,
+                                      size: 1,
+                                    ),
+                                    context: context,
+                                    title: "Table list",
+                                    content: showTable(),
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop(),
+                                        color:
+                                            Color(0xFF2b2b61).withOpacity(.7),
+                                      ),
+                                    ],
+                                  ).show();
+                                  // Alert(
+                                  //   context: context,
+                                  //   title: "Table list",
+                                  //   content: showTable(),
+                                  //   buttons: [
+                                  //     DialogButton(
+                                  //       child: Text(
+                                  //         "Cancel",
+                                  //         style: TextStyle(
+                                  //             color: Colors.white,
+                                  //             fontSize: 20),
+                                  //       ),
+                                  //       onPressed: () => Navigator.of(context,
+                                  //               rootNavigator: true)
+                                  //           .pop(),
+                                  //       color:
+                                  //           Color(0xFF2b2b61).withOpacity(.7),
+                                  //     ),
+                                  //     DialogButton(
+                                  //       child: Text(
+                                  //         "Save",
+                                  //         style: TextStyle(
+                                  //             color: Colors.white,
+                                  //             fontSize: 20),
+                                  //       ),
+                                  //       onPressed: () => Navigator.of(context,
+                                  //               rootNavigator: true)
+                                  //           .pop(),
+                                  //       color: Colors.deepOrange,
+                                  //     )
+                                  //   ],
+                                  // ).show();
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (BuildContext context) {
+                                  //       return AlertDialog(
+                                  //         title: Text('Table list'),
+                                  //         content: showTable(),
+                                  //       );
+                                  //     });
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -4160,8 +4218,93 @@ class _MenuPageState extends State<MenuPage> {
                                 Expanded(
                                   flex: 4,
                                   child: GestureDetector(
+                                    onTap: () {
+                                      Alert(
+                                        closeIcon: Icon(
+                                          Icons.circle,
+                                          color: Colors.white,
+                                          size: 1,
+                                        ),
+                                        context: context,
+                                        title: "Table list",
+                                        content: showTable(),
+                                        buttons: [
+                                          DialogButton(
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            onPressed: () => Navigator.of(
+                                                    context,
+                                                    rootNavigator: true)
+                                                .pop(),
+                                            color: Color(0xFF2b2b61)
+                                                .withOpacity(.7),
+                                          ),
+                                        ],
+                                      ).show();
+                                      // Alert(
+                                      //   context: context,
+                                      //   title: "Table list",
+                                      //   content: showTable(),
+                                      //   buttons: [
+                                      //     DialogButton(
+                                      //       child: Text(
+                                      //         "Cancel",
+                                      //         style: TextStyle(
+                                      //             color: Colors.white,
+                                      //             fontSize: 20),
+                                      //       ),
+                                      //       onPressed: () => Navigator.of(
+                                      //               context,
+                                      //               rootNavigator: true)
+                                      //           .pop(),
+                                      //       color: Color(0xFF2b2b61)
+                                      //           .withOpacity(.7),
+                                      //     ),
+                                      //     DialogButton(
+                                      //       child: Text(
+                                      //         "Save",
+                                      //         style: TextStyle(
+                                      //             color: Colors.white,
+                                      //             fontSize: 20),
+                                      //       ),
+                                      //       onPressed: () => Navigator.of(
+                                      //               context,
+                                      //               rootNavigator: true)
+                                      //           .pop(),
+                                      //       color: Colors.deepOrange,
+                                      //     )
+                                      //   ],
+                                      // ).show();
+                                      // showDialog(
+                                      //     context: context,
+                                      //     builder: (BuildContext context) {
+                                      //       return AlertDialog(
+                                      //         title: Text('Table list'),
+                                      //         content: showTable(),
+                                      //       );
+                                      //     });
+                                    },
+                                    child: Text(
+                                      choosetb,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: GestureDetector(
                                       onTap: () {
                                         Alert(
+                                          closeIcon: Icon(
+                                            Icons.circle,
+                                            color: Colors.white,
+                                            size: 1,
+                                          ),
                                           context: context,
                                           title: "Table list",
                                           content: showTable(),
@@ -4180,74 +4323,42 @@ class _MenuPageState extends State<MenuPage> {
                                               color: Color(0xFF2b2b61)
                                                   .withOpacity(.7),
                                             ),
-                                            DialogButton(
-                                              child: Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Colors.deepOrange,
-                                            )
                                           ],
                                         ).show();
-                                        // showDialog(
-                                        //     context: context,
-                                        //     builder: (BuildContext context) {
-                                        //       return AlertDialog(
-                                        //         title: Text('Table list'),
-                                        //         content: showTable(),
-                                        //       );
-                                        //     });
-                                      },
-                                      child: Text(
-                                        choosetb,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      )),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Alert(
-                                          context: context,
-                                          title: "Table List",
-                                          content: showTable(),
-                                          buttons: [
-                                            DialogButton(
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Color(0xFF2b2b61)
-                                                  .withOpacity(.7),
-                                            ),
-                                            DialogButton(
-                                              child: Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Colors.deepOrange,
-                                            )
-                                          ],
-                                        ).show();
+                                        // Alert(
+                                        //   context: context,
+                                        //   title: "Table List",
+                                        //   content: showTable(),
+                                        //   buttons: [
+                                        //     DialogButton(
+                                        //       child: Text(
+                                        //         "Cancel",
+                                        //         style: TextStyle(
+                                        //             color: Colors.white,
+                                        //             fontSize: 20),
+                                        //       ),
+                                        //       onPressed: () => Navigator.of(
+                                        //               context,
+                                        //               rootNavigator: true)
+                                        //           .pop(),
+                                        //       color: Color(0xFF2b2b61)
+                                        //           .withOpacity(.7),
+                                        //     ),
+                                        //     DialogButton(
+                                        //       child: Text(
+                                        //         "Save",
+                                        //         style: TextStyle(
+                                        //             color: Colors.white,
+                                        //             fontSize: 20),
+                                        //       ),
+                                        //       onPressed: () => Navigator.of(
+                                        //               context,
+                                        //               rootNavigator: true)
+                                        //           .pop(),
+                                        //       color: Colors.deepOrange,
+                                        //     )
+                                        //   ],
+                                        // ).show();
                                       },
                                       child: Icon(
                                         Icons.keyboard_arrow_down_sharp,
@@ -4428,7 +4539,7 @@ class _MenuPageState extends State<MenuPage> {
                                       print(isValid);
                                       if (isValid == false) {
                                         _showDialog('DrinkLink',
-                                            'Please input valid email address.');
+                                            'Enter valid email address');
                                         return;
                                       }
                                     } else {
