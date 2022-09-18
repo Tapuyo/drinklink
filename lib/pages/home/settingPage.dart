@@ -22,7 +22,7 @@ class _setPageState extends State<setPage> {
   TextEditingController billlast = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
-
+  bool isActive = true;
   @override
   void initState() {
     super.initState();
@@ -107,9 +107,15 @@ class _setPageState extends State<setPage> {
                   //     )
                   //   ],
                   // ).show();
-                  _showDialog('ADD CREDIT CARD',
-                      "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
-                },
+                  if (isActive) {
+                    _showDialog('ADD CREDIT CARD',
+                        "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
+                    setState(() {
+                      isActive = false;
+                    });
+                  }
+                  print(isActive);
+                   },
                 child: Container(
                     height: 40,
                     width: MediaQuery.of(context).size.width,
@@ -477,7 +483,15 @@ class _setPageState extends State<setPage> {
         linkpayment = json.decode(response.body)['paymentLink'];
         confirmDialog(title, message, linkpayment);
       }
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
     } catch (e) {
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
       _showDialog1('DrinkLink', 'Please login first.');
     }
   }
