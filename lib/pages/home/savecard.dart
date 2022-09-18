@@ -41,21 +41,23 @@ class WebViewExampleState extends State<SaveCardWeb> {
   }
 
   checkUrlRes(String url)async {
-    bool checkurl = url.contains('https://paypage.ngenius-payments.com/');
+    bool checkurl = url.contains('paidCard');
+    bool checkurl1 = url.contains('UnpaidCard');
 
-    if(checkurl == true){
-      bool suc = url.contains('SUCCESS');
-      if(suc == true) {
-        var divurl = url.split('=');
-        print(divurl[2].trim());
-        String codena = divurl[2].trim();
-        String mycode = codena.replaceAll('&paymentRef', '');
-        print(mycode);
-        Navigator.pop(context, mycode);
-      }else{
-        Navigator.pop(context, 'failed');
+    if(checkurl == true && checkurl1 == false){
+        // var divurl = url.split('=');
+        // print(divurl[2].trim());
+        // String codena = divurl[2].trim();
+        // String mycode = codena.replaceAll('&paymentRef', '');
+        // print(mycode);
+        Navigator.pop(context, 'Added');
+      }else if(checkurl == true && checkurl1 == true){
+         Navigator.pop(context, 'Failed');
       }
-    }
+        else{
+        Navigator.pop(context, 'Failed');
+      }
+    
 
     // Map<String, String> headers = {"Content-Type": "application/json; charset=utf-8"};
     // final response = await http.get(url,headers: headers);

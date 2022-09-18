@@ -1906,7 +1906,7 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
                                 child: Row(
                                   children: [
                                     GestureDetector(

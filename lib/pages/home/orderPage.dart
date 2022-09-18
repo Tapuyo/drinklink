@@ -16,9 +16,9 @@ class orderPage extends StatefulWidget {
 }
 
 class _setPageState extends State<orderPage> {
-  String dropdownvalue = 'DATE';
-
-  var items = ['DATE', 'PLACE', 'STATUS'];
+  String dropdownvalue = 'ALL';
+  String sortCode = '';
+  var items = ['ALL', 'DATE', 'PLACE', 'STATUS'];
   List<Order> orderList = [];
   Future ord;
   String selectS = "Date";
@@ -57,7 +57,9 @@ class _setPageState extends State<orderPage> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=20&pageNumber=1',
+        ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=20&pageNumber=1' +
+            sortCode,
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -182,6 +184,7 @@ class _setPageState extends State<orderPage> {
                   // ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
+                      dropdownColor: Colors.indigo[100],
                       elevation: 2,
                       value: dropdownvalue,
                       icon: Icon(
@@ -202,6 +205,22 @@ class _setPageState extends State<orderPage> {
                       onChanged: (String newValue) {
                         setState(() {
                           dropdownvalue = newValue;
+                          if (dropdownvalue == 'DATE') {
+                            sortCode = '&sorting=1';
+                          } else if (dropdownvalue == 'PLACE') {
+                            sortCode = '&sorting=2';
+                          } else if (dropdownvalue == 'STATUS') {
+                            sortCode = '&sorting=3';
+                          } else if (dropdownvalue == 'ALL') {
+                            sortCode = '';
+                          }
+                          @override
+                          void didChangeDependencies() {
+                            super.didChangeDependencies();
+                            setState(() {
+                              ord = getOrders();
+                            });
+                          }
                         });
                       },
                     ),

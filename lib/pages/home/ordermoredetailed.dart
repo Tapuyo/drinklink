@@ -104,7 +104,7 @@ class _MoreDetailsState extends State<MoreDetails> {
         stt = 'Ready';
       } else if (cState == '5') {
         _timer.cancel();
-        stt = 'Completed';
+        stt = 'Collected';
       } else if (cState == '101') {
         _timer.cancel();
         stt = 'Failed';
@@ -119,6 +119,9 @@ class _MoreDetailsState extends State<MoreDetails> {
         _timer.cancel();
       } else if (cState == '105') {
         stt = 'Payment Failed';
+        _timer.cancel();
+      } else if (cState == '106') {
+        stt = 'Payment Cancelled';
         _timer.cancel();
       }
     }
