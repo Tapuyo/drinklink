@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
       };
       final response = await http.get(
           ApiCon.baseurl() +
-              '/users/currentUser/orders?pageSize=5&pageNumber=1&sorting=3',
+              '/users/currentUser/orders?pageSize=5&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
