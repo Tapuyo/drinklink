@@ -5262,7 +5262,7 @@ class _MenuPageState extends State<MenuPage> {
                   if (result) {
                     print("lord please mamen");
                     myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                    mjs = 1;
+                    j = m;
                   } else if (j == mj && result == false && mjs == 0) {
                     print(mjs);
                     // _showDialog("Drinklink", "Item already selected please select another combo!");
@@ -5287,6 +5287,7 @@ class _MenuPageState extends State<MenuPage> {
                     setState(() {
                       myOrder.add(ord);
                       mjs = 1;
+                      j = m;
                     });
                   }
                 }
