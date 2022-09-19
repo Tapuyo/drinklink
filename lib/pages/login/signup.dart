@@ -260,7 +260,7 @@ class _SignPageState extends State<SignUp> {
                   controller: fnameController,
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   decoration: new InputDecoration(
-                      hintText: "First Name",
+                      hintText: "First name",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
                       labelStyle:
                           new TextStyle(color: const Color(0xFF424242))),
@@ -272,7 +272,7 @@ class _SignPageState extends State<SignUp> {
                   controller: lnameController,
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   decoration: new InputDecoration(
-                      hintText: "Last Name",
+                      hintText: "Surname",
                       hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
                       labelStyle:
                           new TextStyle(color: const Color(0xFF424242))),
