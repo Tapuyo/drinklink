@@ -6,19 +6,23 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'dart:developer' as dev;
+import '../Api.dart';
 
 class SaveCardWeb extends StatefulWidget {
   String url;
+   String reference;
 
-  SaveCardWeb(this.url);
+  SaveCardWeb(this.url,this.reference);
   @override
-  WebViewExampleState createState() => WebViewExampleState(this.url);
+  WebViewExampleState createState() => WebViewExampleState(this.url,this.reference);
 }
 
 class WebViewExampleState extends State<SaveCardWeb> {
   String murl;
+   String reference;
 
-  WebViewExampleState(this.murl);
+  WebViewExampleState(this.murl,this.reference);
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
@@ -29,7 +33,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
       print("This is url: " + url);
       if (url != murl) {
         //Navigator.pop(context, url);
-        checkUrlRes(url);
+        AddCard(url);
       }
     });
   }
@@ -77,7 +81,35 @@ class WebViewExampleState extends State<SaveCardWeb> {
     //   }
     // }
   }
+  AddCard(String url) async {
+    Prefs.load();
+    String token = Prefs.getString('token');
 
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
+
+    // String url = ApiCon.baseurl() + '/users/paidCard/?ref=' + reference;
+    final response = await http.post(url, headers: headers);
+    //var jsondata = json.decode(response.headers);
+    dev.log(response.body.toString());
+    String mystate =
+        json.decode(response.body)['_embedded']['payment'][0]['state'];
+    dev.log(mystate);
+    if (mystate == 'REVERSED') {
+      Navigator.pop(context, 'Added');
+    } else if (mystate == 'SUCCESS') {
+      Navigator.pop(context, 'failed');
+    }
+    else if (mystate == 'CANCELLED') {
+      Navigator.pop(context, 'failed');
+    } else if (mystate == 'FAILED') {
+      Navigator.pop(context, 'failed');
+    } else {
+      Navigator.pop(context, 'failed');
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(

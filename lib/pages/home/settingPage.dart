@@ -471,6 +471,7 @@ class _setPageState extends State<setPage> {
     String token = Prefs.getString('token');
     print(token);
     String linkpayment = '';
+    String reference = '';
     try {
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -481,7 +482,8 @@ class _setPageState extends State<setPage> {
       print(json.decode(response.body));
       if (response.statusCode == 200) {
         linkpayment = json.decode(response.body)['paymentLink'];
-        confirmDialog(title, message, linkpayment);
+        reference = json.decode(response.body)['orderReference'];
+        confirmDialog(title, message, linkpayment, reference);
       }
       setState(() {
         isActive = true;
@@ -496,7 +498,7 @@ class _setPageState extends State<setPage> {
     }
   }
 
-  confirmDialog(String title, String message, String linkpayment) {
+  confirmDialog(String title, String message, String linkpayment, String reference) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -566,7 +568,7 @@ class _setPageState extends State<setPage> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SaveCardWeb(linkpayment)),
+                      builder: (context) => SaveCardWeb(linkpayment.toString(), reference)),
                 );
 
                 if (result == 'Added') {
