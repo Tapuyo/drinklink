@@ -173,7 +173,7 @@ class _setPageState extends State<orderPage> {
                 ),
                 Container(
                   height: 40,
-                  width: 200,
+                  width: 120,
                   padding: EdgeInsets.all(5.0),
                   // decoration: BoxDecoration(
                   //   borderRadius: BorderRadius.circular(60.0),
@@ -184,7 +184,7 @@ class _setPageState extends State<orderPage> {
                   // ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      dropdownColor: Colors.indigo[100],
+                      dropdownColor: Color(0xFF2b2b61),
                       elevation: 2,
                       value: dropdownvalue,
                       icon: Icon(
