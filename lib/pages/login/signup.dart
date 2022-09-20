@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:driklink/pages/home/termPage.dart';
+import 'package:driklink/data/pref_manager.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -19,6 +20,9 @@ class _SignPageState extends State<SignUp> {
   final usernameController = TextEditingController();
   final passController = TextEditingController();
   final passConfirmController = TextEditingController();
+  final fnameController = TextEditingController();
+  final lnameController = TextEditingController();
+
   SignUp() async {
     String euser = usernameController.text;
     String em = emailController.text;
@@ -77,6 +81,9 @@ class _SignPageState extends State<SignUp> {
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     if (response.statusCode == 200) {
+      Prefs.setString('fname', fnameController.text);
+      Prefs.setString('lname', lnameController.text);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignIn()),
@@ -142,8 +149,7 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
-      }
-      else if (response.body.toString().contains('Username field')) {
+      } else if (response.body.toString().contains('Username field')) {
         Alert(
           context: context,
           title: "Sign up",
@@ -163,8 +169,7 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
-      }
-      else {
+      } else {
         Alert(
           context: context,
           title: "Sign up",
@@ -252,6 +257,33 @@ class _SignPageState extends State<SignUp> {
               Container(
                 padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                 child: TextField(
+                  controller: fnameController,
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  decoration: new InputDecoration(
+                      hintText: "First name",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle:
+                          new TextStyle(color: const Color(0xFF424242))),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
+                  controller: lnameController,
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                  decoration: new InputDecoration(
+                      hintText: "Surname",
+                      hintStyle: TextStyle(color: Colors.white54, fontSize: 25),
+                      labelStyle:
+                          new TextStyle(color: const Color(0xFF424242))),
+                ),
+              ),
+              // SizedBox(
+              //   height: 20,
+              // ),
+              Container(
+                padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                child: TextField(
                   controller: emailController,
                   style: TextStyle(color: Colors.white, fontSize: 25),
                   decoration: new InputDecoration(
@@ -324,24 +356,23 @@ class _SignPageState extends State<SignUp> {
                 controlAffinity:
                     ListTileControlAffinity.leading, //  <-- leading Checkbox
               )),
-        InkWell(
-          onTap: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => termsSign()),
-            );
-          },
-          child: Container(
-                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
-                  child: Text(
-                    'Terms of Service',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        decoration: TextDecoration.underline),
-                  )),
-        ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => termsSign()),
+                  );
+                },
+                child: Container(
+                    padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
+                    child: Text(
+                      'Terms of Service',
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          decoration: TextDecoration.underline),
+                    )),
+              ),
               SizedBox(
                 height: 30,
               ),

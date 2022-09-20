@@ -16,9 +16,9 @@ class orderPage extends StatefulWidget {
 }
 
 class _setPageState extends State<orderPage> {
-  String dropdownvalue = 'DATE';
-
-  var items =  ['DATE','PLACE','STATUS'];
+  String dropdownvalue = 'ALL';
+  String sortCode = '';
+  var items = ['ALL', 'DATE', 'PLACE', 'STATUS'];
   List<Order> orderList = [];
   Future ord;
   String selectS = "Date";
@@ -57,7 +57,9 @@ class _setPageState extends State<orderPage> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=20&pageNumber=1',
+        ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=20&pageNumber=1' +
+            sortCode,
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -162,43 +164,71 @@ class _setPageState extends State<orderPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Sort by Options:",
-                style: TextStyle(fontWeight: FontWeight.normal,fontSize: 18,
-        color: Colors.white),),
+                Text(
+                  "Sort by Options:",
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 18,
+                      color: Colors.white),
+                ),
                 Container(
                   height: 40,
-                  width: 230,
+                  width: 120,
                   padding: EdgeInsets.all(5.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60.0),
-                    border: Border.all(
-                        color: Colors.white, style: BorderStyle.solid, width: 1.80),
-                  ),
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(60.0),
+                  //   border: Border.all(
+                  //       color: Colors.white,
+                  //       style: BorderStyle.solid,
+                  //       width: 1.80),
+                  // ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
-                      dropdownColor: Colors.indigo[100],
+                      dropdownColor: Color(0xFF2b2b61),
                       elevation: 2,
                       value: dropdownvalue,
-                      icon: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
-                       items:items.map((String items) {
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                      ),
+                      items: items.map((String items) {
                         return DropdownMenuItem(
                             value: items,
-                            child: Text(items, style: TextStyle(fontWeight: FontWeight.normal,fontSize: 20, color:Colors.white,),)
-                        );
-                      }
-                      ).toList(),
-                      onChanged: (String newValue){
+                            child: Text(
+                              items,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 20,
+                                  color: Colors.white),
+                            ));
+                      }).toList(),
+                      onChanged: (String newValue) {
                         setState(() {
                           dropdownvalue = newValue;
+                          if (dropdownvalue == 'DATE') {
+                            sortCode = '&sorting=1';
+                          } else if (dropdownvalue == 'PLACE') {
+                            sortCode = '&sorting=2';
+                          } else if (dropdownvalue == 'STATUS') {
+                            sortCode = '&sorting=3';
+                          } else if (dropdownvalue == 'ALL') {
+                            sortCode = '';
+                          }
+                          @override
+                          void didChangeDependencies() {
+                            super.didChangeDependencies();
+                            setState(() {
+                              ord = getOrders();
+                            });
+                          }
                         });
                       },
-
                     ),
                   ),
                 ),
               ],
             ),
-              mybody(),
+            mybody(),
           ],
         ),
       ),
@@ -207,7 +237,7 @@ class _setPageState extends State<orderPage> {
 
   mybody() {
     return Container(
-      padding: EdgeInsets.fromLTRB(10,15,10,10),
+      padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
       height: MediaQuery.of(context).size.height - 170,
       child: FutureBuilder(
           future: getOrders(),

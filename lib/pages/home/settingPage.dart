@@ -22,7 +22,7 @@ class _setPageState extends State<setPage> {
   TextEditingController billlast = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
-
+  bool isActive = true;
   @override
   void initState() {
     super.initState();
@@ -107,8 +107,14 @@ class _setPageState extends State<setPage> {
                   //     )
                   //   ],
                   // ).show();
-                  _showDialog('ADD CREDIT CARD',
-                      "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
+                  if (isActive) {
+                    _showDialog('ADD CREDIT CARD',
+                        "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
+                    setState(() {
+                      isActive = false;
+                    });
+                  }
+                  print(isActive);
                 },
                 child: Container(
                     height: 40,
@@ -465,6 +471,7 @@ class _setPageState extends State<setPage> {
     String token = Prefs.getString('token');
     print(token);
     String linkpayment = '';
+    String reference = '';
     try {
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -475,14 +482,23 @@ class _setPageState extends State<setPage> {
       print(json.decode(response.body));
       if (response.statusCode == 200) {
         linkpayment = json.decode(response.body)['paymentLink'];
-        confirmDialog(title, message, linkpayment);
+        reference = json.decode(response.body)['orderReference'];
+        confirmDialog(title, message, linkpayment, reference);
       }
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
     } catch (e) {
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
       _showDialog1('DrinkLink', 'Please login first.');
     }
   }
 
-  confirmDialog(String title, String message, String linkpayment) {
+  confirmDialog(String title, String message, String linkpayment, String reference) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -552,7 +568,7 @@ class _setPageState extends State<setPage> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SaveCardWeb(linkpayment)),
+                      builder: (context) => SaveCardWeb(linkpayment.toString(), reference)),
                 );
 
                 if (result == 'Added') {

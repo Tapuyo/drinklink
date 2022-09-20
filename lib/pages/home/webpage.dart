@@ -15,7 +15,8 @@ class WebPage extends StatefulWidget {
 
   WebPage(this.url, this.reference);
   @override
-  WebViewExampleState createState() => WebViewExampleState(this.url, this.reference);
+  WebViewExampleState createState() =>
+      WebViewExampleState(this.url, this.reference);
 }
 
 class WebViewExampleState extends State<WebPage> {
@@ -34,7 +35,6 @@ class WebViewExampleState extends State<WebPage> {
       if (url != murl) {
         //Navigator.pop(context, url);
         Order();
-       
       }
     });
   }
@@ -46,19 +46,18 @@ class WebViewExampleState extends State<WebPage> {
         url.contains('https://paypage.sandbox.ngenius-payments.com/?outletId=');
 
     print(checkurl);
-   // if (checkurl == true) {
-      bool suc = url.contains('SUCCESS');
-      //if (suc == true) {
-        var divurl = url.split('=');
-        print(divurl[2].trim());
-        String codena = divurl[2].trim();
-        String mycode = codena.replaceAll('&paymentRef', '');
-        print(mycode);
-        
-       // Navigator.pop(context, mycode);
-      
-   // }
+    // if (checkurl == true) {
+    bool suc = url.contains('SUCCESS');
+    //if (suc == true) {
+    var divurl = url.split('=');
+    print(divurl[2].trim());
+    String codena = divurl[2].trim();
+    String mycode = codena.replaceAll('&paymentRef', '');
+    print(mycode);
 
+    // Navigator.pop(context, mycode);
+
+    // }
 
     // Map<String, String> headers = {"Content-Type": "application/json; charset=utf-8"};
     // final response = await http.get(url,headers: headers);
@@ -90,24 +89,25 @@ class WebViewExampleState extends State<WebPage> {
   Order() async {
     Prefs.load();
     String token = Prefs.getString('token');
- 
+
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
     };
-   
+
     String url = ApiCon.baseurl() + '/orders/paid/?ref=' + reference;
     final response = await http.post(url, headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
-    String mystate = json.decode(response.body)['_embedded']['payment'][0]['state'];
+    String mystate =
+        json.decode(response.body)['_embedded']['payment'][0]['state'];
     dev.log(mystate);
     if (mystate == 'AUTHORISED') {
-       Navigator.pop(context, 'AUTHORISED');
-    } else if (mystate == 'FAILED'){
-       Navigator.pop(context, 'failed');
-    } else if (mystate == '3DS'){
-       Navigator.pop(context, 'failed');
+      Navigator.pop(context, 'AUTHORISED');
+    } else if (mystate == 'STARTED') {
+      Navigator.pop(context, 'failed');
+    }else {
+      Navigator.pop(context, 'failed');
     }
   }
 
@@ -121,20 +121,20 @@ class WebViewExampleState extends State<WebPage> {
           "Payment",
           style: TextStyle(fontSize: 20, color: Colors.white),
         ),
-    //     actions: [
-    //       Padding(
-    //   padding: EdgeInsets.only(right: 20.0),
-    //   child: GestureDetector(
-    //     onTap: () {
-    //       Order();
-    //     },
-    //     child: Icon(
-    //       Icons.search,
-    //       size: 26.0,
-    //     ),
-    //   )
-    // ),
-    //     ],
+        //     actions: [
+        //       Padding(
+        //   padding: EdgeInsets.only(right: 20.0),
+        //   child: GestureDetector(
+        //     onTap: () {
+        //       Order();
+        //     },
+        //     child: Icon(
+        //       Icons.search,
+        //       size: 26.0,
+        //     ),
+        //   )
+        // ),
+        //     ],
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -151,7 +151,6 @@ class WebViewExampleState extends State<WebPage> {
           child: Text('Waiting.....'),
         ),
       ),
-      
     );
   }
 }

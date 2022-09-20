@@ -1143,6 +1143,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.transparent,
                                   width: 60,
                                   height: 60,
+                                  //this will load the image
                                   child: Image.network(ApiCon.baseurl() +
                                       snapshot.data[index].image)
                                   ),
