@@ -4593,7 +4593,7 @@ class _MenuPageState extends State<MenuPage> {
 
   showCardDetails() {
     return Container(
-      height: 420,
+      height: 60 * myCardList.length.toDouble(),
       child: FutureBuilder(
           future: myCardFuture,
           builder: (BuildContext context, AsyncSnapshot snapshot) {

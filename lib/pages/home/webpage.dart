@@ -106,8 +106,6 @@ class WebViewExampleState extends State<WebPage> {
       Navigator.pop(context, 'AUTHORISED');
     } else if (mystate == 'STARTED') {
       Navigator.pop(context, 'failed');
-    }else if (mystate == 'STARTED') {
-      Navigator.pop(context, 'failed');
     }else {
       Navigator.pop(context, 'failed');
     }
