@@ -5179,7 +5179,11 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
-    } else {
+    }else if(result == 'cancel') {
+      print(result + 'payment mode');
+      _showDialog('DrinkLink', 'Cancelled payment!');
+    }
+     else {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     }

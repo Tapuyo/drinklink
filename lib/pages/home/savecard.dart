@@ -96,19 +96,16 @@ class WebViewExampleState extends State<SaveCardWeb> {
     dev.log(response.body.toString());
     String mystate =
         json.decode(response.body)['_embedded']['payment'][0]['state'];
-    dev.log(mystate);
+    
     if (mystate == 'REVERSED') {
       Navigator.pop(context, 'Added');
     } else if (mystate == 'SUCCESS') {
       Navigator.pop(context,'Added');
-    }
-    else if (mystate == 'CANCELLED') {
+    } else if (mystate == 'CANCELLED') {
       Navigator.pop(context, 'failed');
     } else if (mystate == 'FAILED') {
       Navigator.pop(context, 'failed');
-    } else {
-      Navigator.pop(context, 'failed');
-    }
+    } 
   }
   @override
   Widget build(BuildContext context) {
