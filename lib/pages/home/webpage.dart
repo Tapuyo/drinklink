@@ -34,7 +34,7 @@ class WebViewExampleState extends State<WebPage> {
       print("This is url: " + url);
       if (url != murl) {
         //Navigator.pop(context, url);
-        Order();
+        Order(url);
       }
     });
   }
@@ -86,7 +86,7 @@ class WebViewExampleState extends State<WebPage> {
     // }
   }
 
-  Order() async {
+  Order(String url) async {
     Prefs.load();
     String token = Prefs.getString('token');
 
@@ -95,7 +95,7 @@ class WebViewExampleState extends State<WebPage> {
       'Authorization': 'Bearer ' + token
     };
 
-    String url = ApiCon.baseurl() + '/orders/paid/?ref=' + reference;
+    // String url = ApiCon.baseurl() + '/orders/paid/?ref=' + reference;
     final response = await http.post(url, headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
@@ -104,7 +104,7 @@ class WebViewExampleState extends State<WebPage> {
     dev.log(mystate);
     if (mystate == 'AUTHORISED') {
       Navigator.pop(context, 'AUTHORISED');
-    } else if (mystate == 'STARTED') {
+    } else if (mystate == 'CANCELLED') {
       Navigator.pop(context, 'failed');
     }else {
       Navigator.pop(context, 'failed');
