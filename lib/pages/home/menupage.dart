@@ -237,6 +237,9 @@ class _MenuPageState extends State<MenuPage> {
     getVipcharge();
     myCardList = [];
     myCardFuture = getCard();
+
+    getTable();
+    mytable = [];
   }
 
   Future<List<CardDetails>> getCard() async {
@@ -2983,7 +2986,8 @@ class _MenuPageState extends State<MenuPage> {
 
   Widget showTable() {
     return Container(
-      height: 300.0, // Change as per your requirement
+      height:
+          mytable.length <= 3 ? 150.0 : 300.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement
       child: Container(
         child: FutureBuilder(
