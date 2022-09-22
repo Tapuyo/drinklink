@@ -572,7 +572,7 @@ class _setPageState extends State<setPage> {
                 );
 
                 if (result == 'Added') {
-                  _showDialog1('DrinkLink', 'New card save.');
+                  _showDialog1('DrinkLink', 'New card saved.');
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');

@@ -4524,6 +4524,10 @@ class _MenuPageState extends State<MenuPage> {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
+                                    } else if (_validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input Lastname.');
+                                      return;
                                     } else if (_validate1 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input billing address.');
