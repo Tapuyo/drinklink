@@ -2986,8 +2986,7 @@ class _MenuPageState extends State<MenuPage> {
 
   Widget showTable() {
     return Container(
-      height:
-          mytable.length <= 3 ? 150.0 : 300.0, // Change as per your requirement
+      height: 300.0, // Change as per your requirement
       width: 300.0, // Change as per your requirement
       child: Container(
         child: FutureBuilder(
@@ -2997,7 +2996,7 @@ class _MenuPageState extends State<MenuPage> {
                 return Container();
               } else {
                 return ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -3012,7 +3011,7 @@ class _MenuPageState extends State<MenuPage> {
                           color: Colors.black45.withOpacity(.5),
                           child: Container(
                             //height: 40,
-                            padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
+                            padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             width: 300,
                             child: Center(
                                 child: Text(
