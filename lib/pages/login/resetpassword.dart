@@ -107,6 +107,48 @@ class _ResetPassPageState extends State<ResetPass> {
     String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
     final response = await http.get(url, headers: headers);
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      Alert(
+        context: context,
+        title: "Resend code",
+        content: Container(
+          child: Center(
+            child: Text('Code has been sent to your email.'),
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            color: Color(0xFF2b2b61).withOpacity(.7),
+          ),
+        ],
+      ).show();
+    } else {
+      Alert(
+        context: context,
+        title: "Reset Password",
+        content: Container(
+          child: Center(
+            child: Text('Something went wrong.'),
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            color: Color(0xFF2b2b61).withOpacity(.7),
+          ),
+        ],
+      ).show();
+    }
+
     print(response.body.toString());
   }
 
@@ -172,7 +214,7 @@ class _ResetPassPageState extends State<ResetPass> {
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
                   child: GestureDetector(
                       onTap: () {
-                        // forgotpassword("johnpaultapuyo@gmail.com");
+                        forgotpassword(this.email);
                       },
                       child: Text(
                         'Resend code.',

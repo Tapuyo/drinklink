@@ -237,6 +237,9 @@ class _MenuPageState extends State<MenuPage> {
     getVipcharge();
     myCardList = [];
     myCardFuture = getCard();
+
+    getTable();
+    mytable = [];
   }
 
   Future<List<CardDetails>> getCard() async {
@@ -1087,16 +1090,26 @@ class _MenuPageState extends State<MenuPage> {
                                   Prefs.setDouble('Price', finaltot);
                                   double percentagefee = 0;
                                   finaltotwithdiscount = 0;
+                                  double _tip = 0;
+
+                                  if (mtip.isNotEmpty) {
+                                    String a = mtip.replaceAll(' AED', '');
+                                    _tip = double.parse(a);
+                                    print(mtip + 'Tip here!');
+                                    // _tip = parse mtip;
+                                  } else {
+                                    _tip = _tip;
+                                  }
 
                                   if (discountID.isEmpty) {
-                                    tip = 0;
-                                    mtip = "";
+                                    tip = _tip;
+                                    // mtip = "";
                                     percentagefee = (fee / 100) * finaltot;
                                     finaltotwithdiscount =
                                         finaltot + percentagefee;
                                   } else {
-                                    tip = 0;
-                                    mtip = "";
+                                    tip = _tip;
+                                    // mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
@@ -2983,7 +2996,7 @@ class _MenuPageState extends State<MenuPage> {
                 return Container();
               } else {
                 return ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -2998,7 +3011,7 @@ class _MenuPageState extends State<MenuPage> {
                           color: Colors.black45.withOpacity(.5),
                           child: Container(
                             //height: 40,
-                            padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
+                            padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             width: 300,
                             child: Center(
                                 child: Text(
