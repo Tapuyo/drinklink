@@ -5040,7 +5040,7 @@ class _MenuPageState extends State<MenuPage> {
             '] ' +
             'Please contact Administrator!';
       } else {
-        _cm = response.body.toString();
+        _cm = 'Not accepting orders at the moment.';
       }
       _showDialog('DrinkLink', _cm);
 
