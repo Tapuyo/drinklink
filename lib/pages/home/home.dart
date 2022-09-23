@@ -890,7 +890,7 @@ class _HomePageState extends State<HomePage> {
                               hintStyle: new TextStyle(
                                   color: Colors.white70, fontSize: 20),
                               hintText: "Enter name, area or address",
-                              fillColor: Colors.transparent),
+                              fillColor: Colors.transparent.withOpacity(0.08)),
                         ),
                       ),
                     ),
