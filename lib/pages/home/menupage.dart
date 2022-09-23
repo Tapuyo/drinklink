@@ -1889,6 +1889,7 @@ class _MenuPageState extends State<MenuPage> {
     int myindex = 0;
     int chmid;
     String mname;
+  String mj;
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -1924,14 +1925,15 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            // if (myDrinks[ind]
-                                            //     .ChMixer
-                                            //     .isNotEmpty) {
-                                            //   strings[i].name = mname;
-                                            // }
+                                            if (myDrinks[ind]
+                                                .ChMixer
+                                                .isNotEmpty) {
+                                                  myDrinks[ind].mid= '';
+                                                  setState(() {                      
+                                                 myDrinks[ind].mid= strings[i].mx[ind].id;     
+                                                   });
                                             Navigator.pop(context);
-                                          });
+                                            } else{Navigator.pop(context);}
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1967,6 +1969,8 @@ class _MenuPageState extends State<MenuPage> {
 
                                           newChs.add(chs);
                                           print(chs.cmid.toString());
+                                         mj = chs.cmid.toString();
+                                         print(mj + "mjjjj");
                                           print(chs.cname.toString());
                                           print(chs.cprice.toString());
                                           myDrinks[ind].ChMixer = newChs;
