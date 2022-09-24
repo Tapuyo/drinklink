@@ -106,8 +106,6 @@ class WebViewExampleState extends State<SaveCardWeb> {
       Navigator.pop(context, 'failed');
     } else if (mystate == 'FAILED') {
       Navigator.pop(context, 'failed');
-    } else {
-      Navigator.pop(context, 'failed');
     }
   }
   @override
