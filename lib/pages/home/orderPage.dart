@@ -44,13 +44,72 @@ class _setPageState extends State<orderPage> {
     orderList = [];
     ord = getOrders();
   }
+ _showDialog1(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  _showDialog(String title, String message) async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + token
+      };
+      String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
+      final response = await http.post(url, headers: headers);
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+      }
+      
+    } catch (e) {
+      _showDialog1('DrinkLink', 'Please login first.');
+    }
+  }
   Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
     Prefs.load();
     String token = Prefs.getString('token');
+    if (token.isEmpty){
+      _showDialog("Drinklink", "Please login first.");
+    }
+    else{
     print(token);
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -131,7 +190,7 @@ class _setPageState extends State<orderPage> {
       });
     }
     return orderList;
-  }
+  }}
 
   @override
   Widget build(BuildContext context) {
@@ -607,3 +666,4 @@ class MyItems {
 
   MyItems(this.itemsname, this.itemsquantity);
 }
+

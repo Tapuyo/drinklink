@@ -11,6 +11,41 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
+import '../../auth_provider.dart';
+import 'dart:ffi';
+import 'dart:math';
+
+import 'package:driklink/pages/home/home.dart';
+import 'package:driklink/pages/home/orderPage.dart';
+import 'package:driklink/pages/home/orderdetails.dart';
+import 'package:driklink/pages/home/settingPage.dart';
+import 'package:driklink/pages/home/termPage.dart';
+import 'package:driklink/pages/home/webpage.dart';
+import 'package:driklink/pages/login/signin.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nanoid/nanoid.dart';
+
+//import 'package:nanoid/non_secure.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:driklink/pages/Api.dart';
+import 'package:driklink/data/pref_manager.dart';
+import 'package:uuid/uuid.dart';
+import 'package:driklink/provider/payment_provider.dart';
+import 'package:collection/equality.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
+
+import 'package:driklink/auth_provider.dart';
+import 'package:provider/provider.dart';
+
+import 'dart:core';
+import 'package:email_validator/email_validator.dart';
 class OrderDetails extends StatefulWidget {
   String id;
   OrderDetails(this.id);
@@ -47,7 +82,175 @@ class _OrderDetailsState extends State<OrderDetails> {
   bool isWorkingDay = false;
   Timer _timer;
   int _start = 10;
+int tipid = 0;
+  String idCard = '0';
+  String discountID = '';
+  String discountPerc = '';
+  int lengtofsub = 0;
+  String iconid = '';
+  bool saveCard = false;
+  var uuid = Uuid();
+  String token = '';
+  String uName = '';
 
+  String stoken;
+  int orderlenght = 0;
+  String choosetb = "Choose Table";
+  double fee = 0;
+  List jorder = [];
+  String selectedmenu = '';
+  String selectedmenu1 = '';
+  int subbodybool = 0;
+
+  final _scaffoldKey = new GlobalKey<ScaffoldState>();
+  Future subMenu;
+  Future myStore;
+  Future myTempCart;
+  Future myCartFuture;
+  Future myCardFuture;
+  List<CardDetails> myCardList = [];
+  List<TempOrder> temporder = [];
+  List<SubMenu> myMenu = [];
+  List<Drinks> myDrinks = [];
+  List<Order> myOrder = [];
+  List<Discount> mydicount = [];
+  PanelController _pc = new PanelController();
+  bool _pcb = false;
+  int order1 = 0;
+  int order2 = 0;
+  String ord1 = '00';
+  String ord2 = '00';
+  bool btnaddcolor = false;
+  String ord3 = '00';
+  bool pickdine = true;
+  bool checkedValue = false;
+  String sub = '';
+  String dri = '';
+  String drisub = '';
+  double finaltotwithdiscount = 0;
+  double finaltot = 0;
+  double vip = 0;
+  double timecol = 0;
+  bool vipcharge = false;
+  String mdicount = '';
+  double discountitempercentage = 0;
+  String mtip = '0';
+  double discount = 0;
+  double tip = 0;
+  double charge = 0;
+  int selectedIndex = 0;
+  String cname = '';
+  TextEditingController billname = new TextEditingController();
+  TextEditingController billadd = new TextEditingController();
+  TextEditingController billemail = new TextEditingController();
+  bool addICe;
+
+  String maskedPan = '';
+  String expiry = '';
+  String cardholderName = '';
+  String scheme = '';
+  String cardToken = '';
+  Color contColor = Colors.green;
+
+  bool isloading;
+  int totalqty = 0;
+
+  counteraddord1(String addminus) {
+    if (addminus == 'add') {
+      setState(() {
+        order1 = order1 + 1;
+        if (order1 < 10) {
+          ord1 = '0' + order1.toString();
+        } else {
+          ord1 = order1.toString();
+        }
+      });
+    } else {
+      setState(() {
+        order1 = order1 - 1;
+        if (order1 < 0) {
+          order1 = 0;
+          ord1 = '00';
+        } else {
+          if (order1 < 10) {
+            ord1 = '0' + order1.toString();
+          } else {
+            ord1 = order1.toString();
+          }
+        }
+      });
+    }
+    if (order1 > 0 || order2 > 0) {
+      setState(() {
+        btnaddcolor = true;
+      });
+    } else {
+      setState(() {
+        btnaddcolor = false;
+      });
+    }
+  }
+
+  counteraddord2(String addminus) {
+    if (addminus == 'add') {
+      //setState(() {
+      order2 = order2 + 1;
+      if (order2 < 10) {
+        ord2 = '0' + order2.toString();
+      } else {
+        ord2 = order2.toString();
+      }
+      //});
+    } else {
+      //setState(() {
+      order2 = order2 - 1;
+      if (order2 < 0) {
+        order2 = 0;
+        ord2 = '00';
+      } else {
+        if (order2 < 10 || order2 > 0) {
+          ord2 = '0' + order2.toString();
+        } else {
+          ord2 = order1.toString();
+        }
+      }
+      //});
+    }
+    if (order2 > 0) {
+      //setState(() {
+      btnaddcolor = true;
+      //});
+    } else {
+      //setState(() {
+      btnaddcolor = false;
+      //});
+    }
+  }
+
+  getToke() {
+    try {
+      Prefs.load();
+      token = Prefs.getString('token');
+      uName = Prefs.getString('uname');
+    } catch (e) {
+      token = '';
+    }
+  }
+
+  loadBill() async {
+    Prefs.load();
+
+    // if (token.isEmpty && userName.isEmpty) {
+    //   billname.text = '';
+    //   billadd.text = '';
+    //   billemail.text = '';
+    // } else {
+    uName = Prefs.getString('uname');
+    billname.text = Prefs.getString('billName' + uName);
+    billadd.text = Prefs.getString('billAdd' + uName);
+    billemail.text = Prefs.getString('billEmail' + uName);
+    // }
+  }
   @override
   void initState() {
     super.initState();
@@ -407,18 +610,321 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   @override
   Widget build(BuildContext context) {
+     String _token = context.read<AuthProvider>().token;
+    String token = Prefs.getString('token');
+    if (_token.isNotEmpty) {
+      stoken = _token;
+    } else {
+      stoken = token;
+    }
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage("assets/images/bkgdefault.png"),
               fit: BoxFit.cover)),
       child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              //automaticallyImplyLeading: false,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  size: 35,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (subbodybool == 1) {
+                    setState(() {
+                      subbodybool = 0;
+                    });
+                  } else if (subbodybool == 2) {
+                    setState(() {
+                      subbodybool = 1;
+                    });
+                  } else {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  }
+                },
+              ),
+              // actions: [
+              //   IconButton(
+              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+              //     onPressed: () {
+              //       _scaffoldKey.currentState.openEndDrawer();
+              //     },
+              //   )
+              // ],
+            ),
+            endDrawer: Drawer(
+              child: Container(
+                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                  color: Colors.black,
+                  child: Column(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.home,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              GestureDetector(
+                                onTap: () {},
+                                child: Text(
+                                  "Home",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => orderPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.wine_bar_sharp,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "My Orders",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => setPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.settings,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Settings v1.0.122",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => termPage()),
+                          );
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                FontAwesome.angle_double_up,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Terms of Service",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                            _scaffoldKey.currentState.openDrawer();
+                          } else {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          }
+                          setState(() {
+                            setState(() {
+                              stoken = '';
+
+                              Prefs.setString('token', '');
+                              Prefs.setString('uname', 'none');
+                              Prefs.setString('bfNamenone', '');
+                              Prefs.setString('blMamenone', '');
+                              Prefs.setString('billNamenone', '');
+                              Prefs.setString('billAddnone', '');
+                              Prefs.setString('billEmailnone', '');
+                              context.read<AuthProvider>().setToken('');
+                            });
+                          });
+                          //Navigator.of(context).popAndPushNamed('/home');
+                          if (stoken == '' ||
+                              stoken == null ||
+                              stoken.isEmpty) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => SignIn()),
+                            );
+                          } else {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                            );
+                          }
+                        },
+                        child: Container(
+                          height: 50,
+                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                MaterialCommunityIcons.human,
+                                size: 30,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                stoken == '' || stoken == null || stoken.isEmpty
+                                    ? "Sign In / Register"
+                                    : "Sign Out",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                      //   child: Column(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Visibility(
+                      //           visible: orderList.length > 0 ? true:false,
+                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                      //       mybodyRec(),
+                      //       SizedBox(height: 20,)
+                      //     ],
+                      //   ),
+                      // )
+                    ],
+                  )),
+            ),
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
               color: Colors.transparent,
-              height: MediaQuery.of(context).size.height,
-              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              height: MediaQuery.of(context).size.height -75,
+              padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
               child: Stack(
                 children: [
                   Align(
@@ -426,9 +932,6 @@ class _OrderDetailsState extends State<OrderDetails> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 50,
-                        ),
                         // Container(
                         //   width: MediaQuery.of(context).size.width,
                         //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -498,7 +1001,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                           thickness: 2,
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 10,
                         ),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
