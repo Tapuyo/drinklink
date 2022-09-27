@@ -22,7 +22,7 @@ class _setPageState extends State<setPage> {
   TextEditingController billlast = new TextEditingController();
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
-
+  bool isActive = true;
   @override
   void initState() {
     super.initState();
@@ -32,33 +32,18 @@ class _setPageState extends State<setPage> {
   getDetails() {
     setState(() {
       Prefs.load();
-      uName = Prefs.getString('uname');
-      // try {
-      //
-      // } catch (e) {
-      //   uName = '';
-      // }
-      // if (gettoken.isEmpty) {
-      //   billname.text = '';
-      //   billlast.text = '';
 
-      //   billadd.text = '';
-      //   billemail.text = '';
-      //   sound = false;
-      //   ring = false;
+      uName = Prefs.getString('uname') ?? '';
+      billname.text = Prefs.getString('bfName' + uName) ?? '';
+      billlast.text = Prefs.getString('blMame' + uName) ?? '';
 
-      //   checkedValue = false;
-      // } else {
-      billname.text = Prefs.getString('bfName' + uName);
-      billlast.text = Prefs.getString('blMame' + uName);
+      billadd.text = Prefs.getString('billAdd' + uName) ?? '';
+      billemail.text = Prefs.getString('billEmail' + uName) ?? '';
+      sound = Prefs.getBool('sound' + uName) ?? '';
 
-      billadd.text = Prefs.getString('billAdd' + uName);
-      billemail.text = Prefs.getString('billEmail' + uName);
-      sound = Prefs.getBool('sound' + uName);
-      ring = Prefs.getBool('alert' + uName);
+      ring = Prefs.getBool('alert' + uName) ?? '';
 
-      checkedValue = Prefs.getBool('bsendBill' + uName);
-      // }
+      checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
     });
   }
 
@@ -122,8 +107,14 @@ class _setPageState extends State<setPage> {
                   //     )
                   //   ],
                   // ).show();
-                  _showDialog('ADD CREDIT CARD',
-                      "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
+                  if (isActive) {
+                    _showDialog('ADD CREDIT CARD',
+                        "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
+                    setState(() {
+                      isActive = false;
+                    });
+                  }
+                  print(isActive);
                 },
                 child: Container(
                     height: 40,
@@ -480,6 +471,7 @@ class _setPageState extends State<setPage> {
     String token = Prefs.getString('token');
     print(token);
     String linkpayment = '';
+    String reference = '';
     try {
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -490,14 +482,23 @@ class _setPageState extends State<setPage> {
       print(json.decode(response.body));
       if (response.statusCode == 200) {
         linkpayment = json.decode(response.body)['paymentLink'];
-        confirmDialog(title, message, linkpayment);
+        reference = json.decode(response.body)['orderReference'];
+        confirmDialog(title, message, linkpayment, reference);
       }
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
     } catch (e) {
+      setState(() {
+        isActive = true;
+        print(isActive);
+      });
       _showDialog1('DrinkLink', 'Please login first.');
     }
   }
 
-  confirmDialog(String title, String message, String linkpayment) {
+  confirmDialog(String title, String message, String linkpayment, String reference) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -567,14 +568,14 @@ class _setPageState extends State<setPage> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SaveCardWeb(linkpayment)),
+                      builder: (context) => SaveCardWeb(linkpayment.toString(), reference)),
                 );
 
-                if (result != 'failed') {
-                  _showDialog1('DinkLink', 'New card save.');
+                if (result == 'Added') {
+                  _showDialog1('DrinkLink', 'New card saved.');
                 } else {
                   print(result);
-                  _showDialog1('DinkLink', 'Failed to save card.');
+                  _showDialog1('DrinkLink', 'Failed to save card.');
                 }
               },
             ),

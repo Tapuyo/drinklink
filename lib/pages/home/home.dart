@@ -494,7 +494,6 @@ class _HomePageState extends State<HomePage> {
     } else {
       stoken = token;
     }
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: WillPopScope(
@@ -891,7 +890,7 @@ class _HomePageState extends State<HomePage> {
                               hintStyle: new TextStyle(
                                   color: Colors.white70, fontSize: 20),
                               hintText: "Enter name, area or address",
-                              fillColor: Colors.transparent),
+                              fillColor: Colors.transparent.withOpacity(0.08)),
                         ),
                       ),
                     ),
@@ -1144,8 +1143,10 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.transparent,
                                   width: 60,
                                   height: 60,
-                                  child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)),
+                                  //this will load the image
+                                  // child: Image.network(ApiCon.baseurl() +
+                                  //     snapshot.data[index].image)
+                                  ),
                               SizedBox(
                                 width: 10,
                               ),

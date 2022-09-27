@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:math';
 
 import 'package:driklink/pages/home/home.dart';
@@ -29,6 +30,9 @@ import 'dart:convert';
 import 'package:driklink/auth_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'dart:core';
+import 'package:email_validator/email_validator.dart';
+
 class MenuPage extends StatefulWidget {
   String id, title, desc;
 
@@ -43,6 +47,7 @@ class _MenuPageState extends State<MenuPage> {
   int tipid = 0;
   String idCard = '0';
   String discountID = '';
+  String discountPerc = '';
   int lengtofsub = 0;
   String iconid = '';
   bool saveCard = false;
@@ -98,6 +103,7 @@ class _MenuPageState extends State<MenuPage> {
   double timecol = 0;
   bool vipcharge = false;
   String mdicount = '';
+  double discountitempercentage = 0;
   String mtip = '0';
   double discount = 0;
   double tip = 0;
@@ -231,6 +237,9 @@ class _MenuPageState extends State<MenuPage> {
     getVipcharge();
     myCardList = [];
     myCardFuture = getCard();
+
+    getTable();
+    mytable = [];
   }
 
   Future<List<CardDetails>> getCard() async {
@@ -1032,7 +1041,7 @@ class _MenuPageState extends State<MenuPage> {
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: GestureDetector(
                               onTap: () {
-                                setState(() {
+                                return setState(() {
                                   myDrinks.clear();
                                   myTempCart = getDrinks();
                                   orderlenght = 0;
@@ -1079,10 +1088,36 @@ class _MenuPageState extends State<MenuPage> {
                                   Prefs.load();
                                   Prefs.setInt('Quant', myOrder.length);
                                   Prefs.setDouble('Price', finaltot);
-                                  double percentagefee = (fee / 100) * finaltot;
+                                  double percentagefee = 0;
+                                  finaltotwithdiscount = 0;
+                                  double _tip = 0;
 
-                                  finaltotwithdiscount =
-                                      finaltot + percentagefee;
+                                  if (mtip.isNotEmpty) {
+                                    String a = mtip.replaceAll(' AED', '');
+                                    _tip = double.parse(a);
+                                    print(mtip + 'Tip here!');
+                                    // _tip = parse mtip;
+                                  } else {
+                                    _tip = _tip;
+                                  }
+
+                                  if (discountID.isEmpty) {
+                                    tip = _tip;
+                                    // mtip = "";
+                                    percentagefee = (fee / 100) * finaltot;
+                                    finaltotwithdiscount =
+                                        finaltot + percentagefee;
+                                  } else {
+                                    tip = _tip;
+                                    // mtip = "";
+                                    percentagefee =
+                                        (discountitempercentage / 100) *
+                                            finaltot;
+                                    mdicount = percentagefee.toString() + 'AED';
+                                    finaltotwithdiscount =
+                                        finaltot - percentagefee + tip;
+                                  }
+
                                   print('Percentage fee:' +
                                       fee.toString() +
                                       ' - ' +
@@ -1243,7 +1278,6 @@ class _MenuPageState extends State<MenuPage> {
                                       Row(
                                         children: [
                                           Text(
-
                                             snapshot.data[index].aIce != false
                                                 ? 'With Ice /'
                                                 : '',
@@ -1855,6 +1889,7 @@ class _MenuPageState extends State<MenuPage> {
     int myindex = 0;
     int chmid;
     String mname;
+  String mj;
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -1885,19 +1920,20 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
                                 child: Row(
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            // if (myDrinks[ind]
-                                            //     .ChMixer
-                                            //     .isNotEmpty) {
-                                            //   strings[i].name = mname;
-                                            // }
+                                            if (myDrinks[ind]
+                                                .ChMixer
+                                                .isNotEmpty) {
+                                                  myDrinks[ind].mid= '';
+                                                  setState(() {                      
+                                                 myDrinks[ind].mid= strings[i].mx[ind].id;     
+                                                   });
                                             Navigator.pop(context);
-                                          });
+                                            } else{Navigator.pop(context);}
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1933,6 +1969,8 @@ class _MenuPageState extends State<MenuPage> {
 
                                           newChs.add(chs);
                                           print(chs.cmid.toString());
+                                         mj = chs.cmid.toString();
+                                         print(mj + "mjjjj");
                                           print(chs.cname.toString());
                                           print(chs.cprice.toString());
                                           myDrinks[ind].ChMixer = newChs;
@@ -2816,6 +2854,8 @@ class _MenuPageState extends State<MenuPage> {
                                   //
                                   //Prefs.setString('discountId', snapshot.data[index].discountid);
                                   discountID = snapshot.data[index].discountid;
+                                  discountitempercentage =
+                                      snapshot.data[index].discountpercentage;
 
                                   double totdiscount = ((finaltot *
                                           double.parse(snapshot
@@ -2828,6 +2868,7 @@ class _MenuPageState extends State<MenuPage> {
                                   discount = double.parse(snapshot
                                       .data[index].discountpercentage
                                       .toString());
+                                  print(discount);
                                   if (discount > 0) {
                                     double totwithdiscount =
                                         finaltot - totdiscount;
@@ -2959,6 +3000,7 @@ class _MenuPageState extends State<MenuPage> {
                 return Container();
               } else {
                 return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -2973,13 +3015,13 @@ class _MenuPageState extends State<MenuPage> {
                           color: Colors.black45.withOpacity(.5),
                           child: Container(
                             //height: 40,
-                            padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                            padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             width: 300,
                             child: Center(
                                 child: Text(
                               snapshot.data[index].tablename,
                               style:
-                                  TextStyle(fontSize: 20, color: Colors.white),
+                                  TextStyle(fontSize: 16, color: Colors.white),
                             )),
                           ),
                         )),
@@ -4084,14 +4126,71 @@ class _MenuPageState extends State<MenuPage> {
                                   setState(() {
                                     pickdine = false;
                                   });
-                                  showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('Table list'),
-                                          content: showTable(),
-                                        );
-                                      });
+                                  Alert(
+                                    closeIcon: Icon(
+                                      Icons.circle,
+                                      color: Colors.white,
+                                      size: 1,
+                                    ),
+                                    context: context,
+                                    title: "Table list",
+                                    content: showTable(),
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20),
+                                        ),
+                                        onPressed: () => Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop(),
+                                        color:
+                                            Color(0xFF2b2b61).withOpacity(.7),
+                                      ),
+                                    ],
+                                  ).show();
+                                  // Alert(
+                                  //   context: context,
+                                  //   title: "Table list",
+                                  //   content: showTable(),
+                                  //   buttons: [
+                                  //     DialogButton(
+                                  //       child: Text(
+                                  //         "Cancel",
+                                  //         style: TextStyle(
+                                  //             color: Colors.white,
+                                  //             fontSize: 20),
+                                  //       ),
+                                  //       onPressed: () => Navigator.of(context,
+                                  //               rootNavigator: true)
+                                  //           .pop(),
+                                  //       color:
+                                  //           Color(0xFF2b2b61).withOpacity(.7),
+                                  //     ),
+                                  //     DialogButton(
+                                  //       child: Text(
+                                  //         "Save",
+                                  //         style: TextStyle(
+                                  //             color: Colors.white,
+                                  //             fontSize: 20),
+                                  //       ),
+                                  //       onPressed: () => Navigator.of(context,
+                                  //               rootNavigator: true)
+                                  //           .pop(),
+                                  //       color: Colors.deepOrange,
+                                  //     )
+                                  //   ],
+                                  // ).show();
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (BuildContext context) {
+                                  //       return AlertDialog(
+                                  //         title: Text('Table list'),
+                                  //         content: showTable(),
+                                  //       );
+                                  //     });
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -4136,8 +4235,93 @@ class _MenuPageState extends State<MenuPage> {
                                 Expanded(
                                   flex: 4,
                                   child: GestureDetector(
+                                    onTap: () {
+                                      Alert(
+                                        closeIcon: Icon(
+                                          Icons.circle,
+                                          color: Colors.white,
+                                          size: 1,
+                                        ),
+                                        context: context,
+                                        title: "Table list",
+                                        content: showTable(),
+                                        buttons: [
+                                          DialogButton(
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                            onPressed: () => Navigator.of(
+                                                    context,
+                                                    rootNavigator: true)
+                                                .pop(),
+                                            color: Color(0xFF2b2b61)
+                                                .withOpacity(.7),
+                                          ),
+                                        ],
+                                      ).show();
+                                      // Alert(
+                                      //   context: context,
+                                      //   title: "Table list",
+                                      //   content: showTable(),
+                                      //   buttons: [
+                                      //     DialogButton(
+                                      //       child: Text(
+                                      //         "Cancel",
+                                      //         style: TextStyle(
+                                      //             color: Colors.white,
+                                      //             fontSize: 20),
+                                      //       ),
+                                      //       onPressed: () => Navigator.of(
+                                      //               context,
+                                      //               rootNavigator: true)
+                                      //           .pop(),
+                                      //       color: Color(0xFF2b2b61)
+                                      //           .withOpacity(.7),
+                                      //     ),
+                                      //     DialogButton(
+                                      //       child: Text(
+                                      //         "Save",
+                                      //         style: TextStyle(
+                                      //             color: Colors.white,
+                                      //             fontSize: 20),
+                                      //       ),
+                                      //       onPressed: () => Navigator.of(
+                                      //               context,
+                                      //               rootNavigator: true)
+                                      //           .pop(),
+                                      //       color: Colors.deepOrange,
+                                      //     )
+                                      //   ],
+                                      // ).show();
+                                      // showDialog(
+                                      //     context: context,
+                                      //     builder: (BuildContext context) {
+                                      //       return AlertDialog(
+                                      //         title: Text('Table list'),
+                                      //         content: showTable(),
+                                      //       );
+                                      //     });
+                                    },
+                                    child: Text(
+                                      choosetb,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 16),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: GestureDetector(
                                       onTap: () {
                                         Alert(
+                                          closeIcon: Icon(
+                                            Icons.circle,
+                                            color: Colors.white,
+                                            size: 1,
+                                          ),
                                           context: context,
                                           title: "Table list",
                                           content: showTable(),
@@ -4156,74 +4340,42 @@ class _MenuPageState extends State<MenuPage> {
                                               color: Color(0xFF2b2b61)
                                                   .withOpacity(.7),
                                             ),
-                                            DialogButton(
-                                              child: Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Colors.deepOrange,
-                                            )
                                           ],
                                         ).show();
-                                        // showDialog(
-                                        //     context: context,
-                                        //     builder: (BuildContext context) {
-                                        //       return AlertDialog(
-                                        //         title: Text('Table list'),
-                                        //         content: showTable(),
-                                        //       );
-                                        //     });
-                                      },
-                                      child: Text(
-                                        choosetb,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 16),
-                                      )),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Alert(
-                                          context: context,
-                                          title: "Table List",
-                                          content: showTable(),
-                                          buttons: [
-                                            DialogButton(
-                                              child: Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Color(0xFF2b2b61)
-                                                  .withOpacity(.7),
-                                            ),
-                                            DialogButton(
-                                              child: Text(
-                                                "Save",
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20),
-                                              ),
-                                              onPressed: () => Navigator.of(
-                                                      context,
-                                                      rootNavigator: true)
-                                                  .pop(),
-                                              color: Colors.deepOrange,
-                                            )
-                                          ],
-                                        ).show();
+                                        // Alert(
+                                        //   context: context,
+                                        //   title: "Table List",
+                                        //   content: showTable(),
+                                        //   buttons: [
+                                        //     DialogButton(
+                                        //       child: Text(
+                                        //         "Cancel",
+                                        //         style: TextStyle(
+                                        //             color: Colors.white,
+                                        //             fontSize: 20),
+                                        //       ),
+                                        //       onPressed: () => Navigator.of(
+                                        //               context,
+                                        //               rootNavigator: true)
+                                        //           .pop(),
+                                        //       color: Color(0xFF2b2b61)
+                                        //           .withOpacity(.7),
+                                        //     ),
+                                        //     DialogButton(
+                                        //       child: Text(
+                                        //         "Save",
+                                        //         style: TextStyle(
+                                        //             color: Colors.white,
+                                        //             fontSize: 20),
+                                        //       ),
+                                        //       onPressed: () => Navigator.of(
+                                        //               context,
+                                        //               rootNavigator: true)
+                                        //           .pop(),
+                                        //       color: Colors.deepOrange,
+                                        //     )
+                                        //   ],
+                                        // ).show();
                                       },
                                       child: Icon(
                                         Icons.keyboard_arrow_down_sharp,
@@ -4362,14 +4514,7 @@ class _MenuPageState extends State<MenuPage> {
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
-
-                                  _validate1 =
-                                      Prefs.getBoolValtext(billadd.text);
-                                  _validate2 =
-                                      Prefs.getBoolValtext(billname.text);
-                                  _validate3 =
-                                      Prefs.getBoolValtext(billemail.text);
-
+                                  bool _validate6;
                                   String ename = billname.text;
                                   var fullname = ename.split(' ');
                                   String firsname = '';
@@ -4380,50 +4525,61 @@ class _MenuPageState extends State<MenuPage> {
                                     lastname = fullname[1];
                                     _validate4 = Prefs.getBoolValtext(firsname);
                                     _validate5 = Prefs.getBoolValtext(lastname);
+                                    _validate1 =
+                                        Prefs.getBoolValtext(billadd.text);
+                                    _validate2 =
+                                        Prefs.getBoolValtext(billname.text);
+                                    _validate3 =
+                                        Prefs.getBoolValtext(billemail.text);
                                     if (_validate4 == false ||
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
+                                    } else if (_validate4 == false &&
+                                        _validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else if (_validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input Lastname.');
+                                      return;
+                                    } else if (_validate1 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input billing address.');
+                                      return;
+                                    } else if (_validate3 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input email address.');
+                                      return;
+                                    } else if (_validate3 == true) {
+                                      String email = billemail.text;
+                                      final bool isValid =
+                                          EmailValidator.validate(email);
+                                      print(isValid);
+                                      if (isValid == false) {
+                                        _showDialog('DrinkLink',
+                                            'Enter valid email address');
+                                        return;
+                                      }
                                     } else {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
                                     }
+                                    if (_validate1 == true &&
+                                        _validate2 == true &&
+                                        _validate3 == true &&
+                                        _validate4 == true &&
+                                        _validate5 == true) {
+                                      setState(() {
+                                        isloading = true;
+                                        tokenChecker();
+                                      });
+                                    }
                                   } catch (e) {
-                                    // _showDialog('DrinkLink', 'Please input full name.');
-                                  }
-
-                                  if (_validate1 == true &&
-                                      _validate2 == true &&
-                                      _validate3 == true &&
-                                      _validate4 == true &&
-                                      _validate5 == true) {
-                                    setState(() {
-                                      isloading = true;
-                                      tokenChecker();
-                                    });
-                                  } else {
-                                    Alert(
-                                      context: context,
-                                      title: "DrinkLink",
-                                      content: Text(
-                                          'Please fill out the billing details.'),
-                                      buttons: [
-                                        DialogButton(
-                                          child: Text(
-                                            "Close",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20),
-                                          ),
-                                          onPressed: () => Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pop(),
-                                          color:
-                                              Color(0xFF2b2b61).withOpacity(.7),
-                                        ),
-                                      ],
-                                    ).show();
+                                    _showDialog('DrinkLink',
+                                        'Please input billing details.');
                                   }
                                 },
                                 child: Row(
@@ -4753,8 +4909,8 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr =
-          PayDrinks(myOrder[i].Quant.toString(), price.toString(),myOrder[i].aIce, ord, ord1);
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toString(),
+          myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -4874,7 +5030,10 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
-      getPaymentLink(json.decode(response.body)['paymentLink'].toString());
+      getPaymentLink(
+          json.decode(response.body)['paymentLink'].toString(),
+          json.decode(response.body)['orderReference'].toString(),
+          json.decode(response.body)['paymentOrderCode'].toString());
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -4885,7 +5044,7 @@ class _MenuPageState extends State<MenuPage> {
             '] ' +
             'Please contact Administrator!';
       } else {
-        _cm = response.body.toString();
+        _cm = 'Not accepting orders at the moment.';
       }
       _showDialog('DrinkLink', _cm);
 
@@ -4933,7 +5092,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String code) async {
+  getPaymentLink(String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -4943,7 +5102,7 @@ class _MenuPageState extends State<MenuPage> {
     String cardToken = Prefs.getString('cardToken');
     var idn = nanoid();
     //String tranid = idn.replaceAll(new RegExp(r'[^\w\s]_+'),'');
-    print(code);
+    print(url);
 
     // String totalPrice = '0';
     //
@@ -5014,7 +5173,7 @@ class _MenuPageState extends State<MenuPage> {
     // String linkpayment = 'https://paypage.ngenius-payments.com/?code=' + code;
     // String linkpayment = ApiCon.paymenturl() + '/?code=' + code;
 
-    String linkpayment = code;
+    String linkpayment = url;
     //if(response.statusCode == 200){
     // Navigator.push(
     //   context,
@@ -5024,10 +5183,11 @@ class _MenuPageState extends State<MenuPage> {
 
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => WebPage(linkpayment.toString())),
+      MaterialPageRoute(
+          builder: (context) => WebPage(linkpayment.toString(), reference)),
     );
 
-    if (result != 'failed') {
+    if (result == 'AUTHORISED') {
       print(result + 'result here');
       if (checkedValue == true) {
         Prefs.load();
@@ -5042,7 +5202,7 @@ class _MenuPageState extends State<MenuPage> {
       );
     } else {
       print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment');
+      _showDialog('DrinkLink', 'Failed payment!');
     }
     //}
   }
@@ -5100,6 +5260,7 @@ class _MenuPageState extends State<MenuPage> {
         if (contain.isNotEmpty) {
           _isILike = false;
           if (myDrinks[i].Quant > 0) {
+            int m = myOrder.length;
             if (myDrinks[i].ChMixer.length > 0) {
               List element1 = [];
               for (var name1 in contain) {
@@ -5113,73 +5274,44 @@ class _MenuPageState extends State<MenuPage> {
                 setState(() {});
               }
               if (element2.every((item) => element1.contains(item))) {
-                for (var j = 0; j < myOrder.length; j++) {
+                for (var j = 0; j < m; j++) {
                   bool result =
                       computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
                   print(result);
-
+                  int mj = m - 1;
+                  int mjs = 0;
                   if (result) {
                     print("lord please mamen");
                     myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                  } else {
+                    j = m;
+                  } else if (j == mj && result == false && mjs == 0) {
+                    print(mjs);
                     // _showDialog("Drinklink", "Item already selected please select another combo!");
-                    // if(myDrinks[i].ChMixer.length == myOrder[j].mxir.length) {
-                    //   print("lord god thank you 4");
-                    //   List<MixerOrd> mx = [];
-                    //   for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-                    //     MixerOrd mixerOrd = MixerOrd(
-                    //         myDrinks[i].ChMixer[z].cmid,
-                    //         myDrinks[i].ChMixer[z].cprice.toString(),
-                    //         myDrinks[i].ChMixer[z].cname);
-                    //     mx.add(mixerOrd);
-                    //   }
-                    //   Order ord = Order(
-                    //       myDrinks[i].id,
-                    //       myDrinks[i].drinkCategoryId,
-                    //       myDrinks[i].name,
-                    //       myDrinks[i].Quant ,
-                    //       myDrinks[i].price,
-                    //       mx,
-                    //       myDrinks[i].origPrice);
-                    //   setState(() {
-                    //     myOrder.add(ord);
-                    //   j = 0;
-                    //   });
-                    // }else{
-                    //   print("okay");
-                    // }
+                    print("lord 1");
+                    List<MixerOrd> mx = [];
+                    for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                      MixerOrd mixerOrd = MixerOrd(
+                          myDrinks[i].ChMixer[z].cmid,
+                          myDrinks[i].ChMixer[z].cprice.toString(),
+                          myDrinks[i].ChMixer[z].cname);
+                      mx.add(mixerOrd);
+                    }
+                    Order ord = Order(
+                        myDrinks[i].id,
+                        myDrinks[i].drinkCategoryId,
+                        myDrinks[i].name,
+                        myDrinks[i].Quant,
+                        myDrinks[i].price,
+                        mx,
+                        myDrinks[i].origPrice,
+                        myDrinks[i].addIce);
+                    setState(() {
+                      myOrder.add(ord);
+                      mjs = 1;
+                      j = m;
+                    });
                   }
                 }
-              } else if (element2.every((item) => element1.contains(item)) &&
-                  element2.length != myDrinks[i].ChMixer.length) {
-                _isILike = true;
-                print(2);
-                List<MixerOrd> mx = [];
-                for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-                  MixerOrd mixerOrd = MixerOrd(
-                      myDrinks[i].ChMixer[z].cmid,
-                      myDrinks[i].ChMixer[z].cprice.toString(),
-                      myDrinks[i].ChMixer[z].cname);
-                  mx.add(mixerOrd);
-                }
-                Order ord = Order(
-                    myDrinks[i].id,
-                    myDrinks[i].drinkCategoryId,
-                    myDrinks[i].name,
-                    myDrinks[i].Quant,
-                    myDrinks[i].price,
-                    mx,
-                    myDrinks[i].origPrice,
-                    myDrinks[i].addIce);
-                setState(() {
-                  myOrder.add(ord);
-                });
-                // Order ord = Order(
-                //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
-                //     myDrinks[i].Quant, myDrinks[i].price);
-                // setState(() {
-                //   myOrder.add(ord);
-                // });
               } else {
                 _isILike = true;
                 print(2);
@@ -5212,49 +5344,38 @@ class _MenuPageState extends State<MenuPage> {
               }
             } else {
               List<MixerOrd> mx = [];
-              if (myDrinks[i].mid == null || myDrinks[i].mid == '') {
-                MixerOrd mixerOrd = MixerOrd(
-                    myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                mx.add(mixerOrd);
-                Order ord = Order(
-                    myDrinks[i].id,
-                    myDrinks[i].drinkCategoryId,
-                    myDrinks[i].name,
-                    myDrinks[i].Quant,
-                    myDrinks[i].price,
-                    mx,
-                    myDrinks[i].origPrice,
-                    myDrinks[i].addIce);
-                setState(() {
-                  myOrder.add(ord);
-                });
-              } else {
-                MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid,
-                    myDrinks[i].mprice.toString(), myDrinks[i].mixer[0].name);
-                mx.add(mixerOrd);
-                var j = i;
-                  if (myOrder[j].drinkId == myDrinks[i].id) {
-                    //myOrder.removeAt(j);
-                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                  }
-
-              }
+              for (var j = 0; j < m; j++)
+                if (myDrinks[i].id != myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
+                    myDrinks[i].addIce != myOrder[j].aIce) {
+                  print("ani raka");
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
+                  mx.add(mixerOrd);
+                  Order ord = Order(
+                      myDrinks[i].id,
+                      myDrinks[i].drinkCategoryId,
+                      myDrinks[i].name,
+                      myDrinks[i].Quant,
+                      myDrinks[i].price,
+                      mx,
+                      myDrinks[i].origPrice,
+                      myDrinks[i].addIce);
+                  setState(() {
+                    myOrder.add(ord);
+                  });
+                } else if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
+                    myDrinks[i].addIce == myOrder[j].aIce) {
+                  print("lord please");
+                  myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                }
             }
           }
         } else {
           _isILike = true;
           List<MixerOrd> mx = [];
           for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-            print(myDrinks[i].ChMixer[z].cmid);
-            print(myDrinks[i].ChMixer[z].cname);
-            print(myDrinks[i].ChMixer[z].cprice);
-            // if(myDrinks[i].mid == null || myDrinks[i].mid == ''){
-            //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),'');
-            //   mx.add(mixerOrd);
-            // }else{
-            //   MixerOrd mixerOrd = MixerOrd(myDrinks[i].mid, myDrinks[i].mprice.toString(),myDrinks[i].mixer[0].name);
-            //   mx.add(mixerOrd);
-            // }
             MixerOrd mixerOrd = MixerOrd(
                 myDrinks[i].ChMixer[z].cmid,
                 myDrinks[i].ChMixer[z].cprice.toString(),
@@ -5273,12 +5394,6 @@ class _MenuPageState extends State<MenuPage> {
           setState(() {
             myOrder.add(ord);
           });
-          // Order ord = Order(
-          //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
-          //     myDrinks[i].Quant, myDrinks[i].price);
-          // setState(() {
-          //   myOrder.add(ord);
-          // });
         }
       }
     }
@@ -5423,7 +5538,7 @@ class Order {
   final String Price;
   List<MixerOrd> mxir;
   final String origPrice;
-   bool aIce;
+  bool aIce;
   Order(this.drinkId, this.CatId, this.Name, this.Quant, this.Price, this.mxir,
       this.origPrice, this.aIce);
 }
@@ -5495,7 +5610,7 @@ class PayDrinks {
   PayMixer mixOrd;
   bool ice;
 
-  PayDrinks(this.quantity, this.price,this.ice, [this.payOrd, this.mixOrd] );
+  PayDrinks(this.quantity, this.price, this.ice, [this.payOrd, this.mixOrd]);
 
   Map toJson() {
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;

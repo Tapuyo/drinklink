@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/orderdetails.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
@@ -15,6 +16,9 @@ class orderPage extends StatefulWidget {
 }
 
 class _setPageState extends State<orderPage> {
+  String dropdownvalue = 'ALL';
+  String sortCode = '';
+  var items = ['ALL', 'DATE', 'PLACE', 'STATUS'];
   List<Order> orderList = [];
   Future ord;
   String selectS = "Date";
@@ -40,20 +44,81 @@ class _setPageState extends State<orderPage> {
     orderList = [];
     ord = getOrders();
   }
+ _showDialog1(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  _showDialog(String title, String message) async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + token
+      };
+      String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
+      final response = await http.post(url, headers: headers);
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+      }
+      
+    } catch (e) {
+      _showDialog1('DrinkLink', 'Please login first.');
+    }
+  }
   Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
     Prefs.load();
     String token = Prefs.getString('token');
+    if (token.isEmpty){
+      _showDialog("Drinklink", "Please login first.");
+    }
+    else{
     print(token);
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=20&pageNumber=1',
+        ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=20&pageNumber=1' +
+            sortCode,
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -125,7 +190,7 @@ class _setPageState extends State<orderPage> {
       });
     }
     return orderList;
-  }
+  }}
 
   @override
   Widget build(BuildContext context) {
@@ -150,36 +215,89 @@ class _setPageState extends State<orderPage> {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-            child: Column(
+      body: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // DropDown<Person>(
-                //   items: persons,
-                //
-                //   //hint: Text("Select"),
-                //   initialValue: persons.first,
-                //   onChanged: (Person p) {
-                //     print(p?.gender);
-                //     setState(() {
-                //       selectedPerson = p;
-                //     });
-                //   },
-                //   isCleared: selectedPerson == null,
-                //   customWidgets: persons.map((p) => buildDropDownRow(p)).toList(),
-                //   isExpanded: true,
-                // ),
-                mybody(),
+                Text(
+                  "Sort by Options:",
+                  style: TextStyle(
+                      fontWeight: FontWeight.normal,
+                      fontSize: 18,
+                      color: Colors.white),
+                ),
+                Container(
+                  height: 40,
+                  width: 120,
+                  padding: EdgeInsets.all(5.0),
+                  // decoration: BoxDecoration(
+                  //   borderRadius: BorderRadius.circular(60.0),
+                  //   border: Border.all(
+                  //       color: Colors.white,
+                  //       style: BorderStyle.solid,
+                  //       width: 1.80),
+                  // ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton(
+                      dropdownColor: Color(0xFF2b2b61),
+                      elevation: 2,
+                      value: dropdownvalue,
+                      icon: Icon(
+                        Icons.keyboard_arrow_down,
+                        color: Colors.white,
+                      ),
+                      items: items.map((String items) {
+                        return DropdownMenuItem(
+                            value: items,
+                            child: Text(
+                              items,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 20,
+                                  color: Colors.white),
+                            ));
+                      }).toList(),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownvalue = newValue;
+                          if (dropdownvalue == 'DATE') {
+                            sortCode = '&sorting=1';
+                          } else if (dropdownvalue == 'PLACE') {
+                            sortCode = '&sorting=2';
+                          } else if (dropdownvalue == 'STATUS') {
+                            sortCode = '&sorting=3';
+                          } else if (dropdownvalue == 'ALL') {
+                            sortCode = '';
+                          }
+                          @override
+                          void didChangeDependencies() {
+                            super.didChangeDependencies();
+                            setState(() {
+                              ord = getOrders();
+                            });
+                          }
+                        });
+                      },
+                    ),
+                  ),
+                ),
               ],
-            )),
+            ),
+            mybody(),
+          ],
+        ),
       ),
     );
   }
 
   mybody() {
     return Container(
-      height: MediaQuery.of(context).size.height - 100,
+      padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+      height: MediaQuery.of(context).size.height - 170,
       child: FutureBuilder(
           future: getOrders(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -192,7 +310,6 @@ class _setPageState extends State<orderPage> {
             } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {},
@@ -549,3 +666,4 @@ class MyItems {
 
   MyItems(this.itemsname, this.itemsquantity);
 }
+

@@ -8,7 +8,8 @@
         "menupage_payment":"fix wrong qty in payment page",
         "menupage_selectionmixer":"fix cancel",
         "menupage_settings_home":"Fix Billing details",
-        "menupage_paymentmixers":"Fix Order Mixers"
+        "menupage_paymentmixers":"Fix Order Mixers",
+        "menu_discount": "Fix Discount and Tip"
        
     }
     
