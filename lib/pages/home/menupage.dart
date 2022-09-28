@@ -1090,17 +1090,41 @@ class _MenuPageState extends State<MenuPage> {
                                   Prefs.setDouble('Price', finaltot);
                                   double percentagefee = 0;
                                   finaltotwithdiscount = 0;
+                                  double sc = 0;
                                   double _tip = 0;
 
                                   if (mtip.isNotEmpty) {
                                     String a = mtip.replaceAll(' AED', '');
+
                                     _tip = double.parse(a);
                                     print(mtip + 'Tip here!');
+
+                                    if (tipid == 1) {
+                                      _tip = finaltot * 0.5;
+                                    } else if (tipid == 2) {
+                                      _tip = finaltot * 0.10;
+                                    } else if (tipid == 3) {
+                                      _tip = finaltot * 0.15;
+                                    } else if (tipid == 4) {
+                                      _tip = finaltot * 0.20;
+                                    } else if (tipid == 5) {
+                                      _tip = 5;
+                                    } else if (tipid == 6) {
+                                      _tip = 10;
+                                    } else if (tipid == 7) {
+                                      _tip = 15;
+                                    } else if (tipid == 8) {
+                                      _tip = 20;
+                                    } else {
+                                      _tip = _tip;
+                                    }
+
                                     // _tip = parse mtip;
                                   } else {
                                     _tip = _tip;
                                   }
 
+                                  sc = (fee / 100) * finaltot;
                                   if (discountID.isEmpty) {
                                     tip = _tip;
                                     // mtip = "";
@@ -1109,13 +1133,16 @@ class _MenuPageState extends State<MenuPage> {
                                         finaltot + percentagefee;
                                   } else {
                                     tip = _tip;
+                                    mtip = tip.toStringAsFixed(2) + ' AED';
                                     // mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
-                                    mdicount = percentagefee.toString() + 'AED';
+                                    mdicount =
+                                        percentagefee.toStringAsFixed(2) +
+                                            ' AED';
                                     finaltotwithdiscount =
-                                        finaltot - percentagefee + tip;
+                                        finaltot - percentagefee + tip + sc;
                                   }
 
                                   print('Percentage fee:' +
