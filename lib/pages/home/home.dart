@@ -1140,13 +1140,13 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  color: Colors.transparent,
-                                  width: 60,
-                                  height: 60,
-                                  //this will load the image
-                                  // child: Image.network(ApiCon.baseurl() +
-                                  //     snapshot.data[index].image)
-                                  ),
+                                color: Colors.transparent,
+                                width: 60,
+                                height: 60,
+                                //this will load the image
+                                // child: Image.network(ApiCon.baseurl() +
+                                //     snapshot.data[index].image)
+                              ),
                               SizedBox(
                                 width: 10,
                               ),

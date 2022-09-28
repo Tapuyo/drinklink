@@ -1889,7 +1889,7 @@ class _MenuPageState extends State<MenuPage> {
     int myindex = 0;
     int chmid;
     String mname;
-  String mj;
+    String mj;
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -1925,15 +1925,18 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                            if (myDrinks[ind]
-                                                .ChMixer
-                                                .isNotEmpty) {
-                                                  myDrinks[ind].mid= '';
-                                                  setState(() {                      
-                                                 myDrinks[ind].mid= strings[i].mx[ind].id;     
-                                                   });
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty) {
+                                            myDrinks[ind].mid = '';
+                                            setState(() {
+                                              myDrinks[ind].mid =
+                                                  strings[i].mx[ind].id;
+                                            });
                                             Navigator.pop(context);
-                                            } else{Navigator.pop(context);}
+                                          } else {
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1969,8 +1972,8 @@ class _MenuPageState extends State<MenuPage> {
 
                                           newChs.add(chs);
                                           print(chs.cmid.toString());
-                                         mj = chs.cmid.toString();
-                                         print(mj + "mjjjj");
+                                          mj = chs.cmid.toString();
+                                          print(mj + "mjjjj");
                                           print(chs.cname.toString());
                                           print(chs.cprice.toString());
                                           myDrinks[ind].ChMixer = newChs;
@@ -2999,6 +3002,12 @@ class _MenuPageState extends State<MenuPage> {
               if (!snapshot.hasData) {
                 return Container();
               } else {
+                if (snapshot.data.length <= 0) {
+                  return Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text('No tables available.'),
+                  );
+                }
                 return ListView.builder(
                     padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     itemCount: snapshot.data.length,
