@@ -855,7 +855,7 @@ class _HomePageState extends State<HomePage> {
                       child: SingleChildScrollView(
                         child: SizedBox(
                           height: _ontap == true
-                              ? MediaQuery.of(context).size.height - 300
+                              ? MediaQuery.of(context).size.height - 310
                               : MediaQuery.of(context).size.height - 600,
                           child: mybody(),
                         ),

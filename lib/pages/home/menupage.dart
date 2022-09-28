@@ -1952,33 +1952,20 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-<<<<<<< HEAD
                                           if (myDrinks[ind]
                                               .ChMixer
                                               .isNotEmpty) {
                                             myDrinks[ind].mid = '';
                                             setState(() {
-                                              myDrinks[ind].mid =
-                                                  strings[i].mx[ind].id;
+                                              myDrinks[ind].mid = myDrinks[ind]
+                                                  .ChMixer[ind]
+                                                  .cmid;
                                             });
                                             Navigator.pop(context);
                                           } else {
+                                            myDrinks[ind].mid = '';
                                             Navigator.pop(context);
                                           }
-=======
-                                            if (myDrinks[ind]
-                                                .ChMixer
-                                                .isNotEmpty) {
-                                                  myDrinks[ind].mid= '';
-                                                  setState(() {                      
-                                                 myDrinks[ind].mid= myDrinks[ind]
-                                                .ChMixer[ind].cmid;     
-                                                   });
-                                            Navigator.pop(context);
-                                            } else{
-                                              myDrinks[ind].mid= '';
-                                              Navigator.pop(context);}
->>>>>>> 04a5942b56506fb8105fbec6d1ec44a9462dcda7
                                         },
                                         child: SizedBox(
                                           width: 100,
