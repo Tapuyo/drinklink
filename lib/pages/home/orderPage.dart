@@ -175,6 +175,8 @@ class _setPageState extends State<orderPage> {
         stt = 'Not Collected';
       } else if (cState == '105') {
         stt = 'Payment Failed';
+      }else if (cState == '106') {
+        stt = 'Payment Cancelled';
       }
 
       setState(() {
@@ -273,13 +275,7 @@ class _setPageState extends State<orderPage> {
                           } else if (dropdownvalue == 'ALL') {
                             sortCode = '';
                           }
-                          @override
-                          void didChangeDependencies() {
-                            super.didChangeDependencies();
-                            setState(() {
-                              ord = getOrders();
-                            });
-                          }
+                          didChangeDependencies();
                         });
                       },
                     ),
@@ -293,7 +289,10 @@ class _setPageState extends State<orderPage> {
       ),
     );
   }
-
+  didChangeDependencies() {
+                              ord = getOrders();
+                           
+                          }
   mybody() {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
@@ -562,6 +561,19 @@ class _setPageState extends State<orderPage> {
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ))));
     } else if (stn == '105') {
+      return Container(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+              color: Colors.redAccent,
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              child: Center(
+                  child: Text(
+                stt.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ))));
+    } else if (stn == '106') {
       return Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,

@@ -105,14 +105,11 @@ class WebViewExampleState extends State<WebPage> {
     if (mystate == 'AUTHORISED') {
       Navigator.pop(context, 'AUTHORISED');
     } else if (mystate == 'REVERSED') {
-      Navigator.pop(context, 'Added');
-    } else if (mystate == 'SUCCESS') {
-      Navigator.pop(context,'Added');
-    }
-    else if (mystate == 'CANCELLED') {
-      Navigator.pop(context, 'failed');
+      Navigator.pop(context, 'REVERSED');
+    }else if (mystate == 'CANCELLED') {
+      Navigator.pop(context, 'CANCELLED');
     } else if (mystate == 'FAILED') {
-      Navigator.pop(context, 'failed');
+      Navigator.pop(context, 'FAILED');
     }
   }
 
