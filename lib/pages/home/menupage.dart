@@ -1930,10 +1930,13 @@ class _MenuPageState extends State<MenuPage> {
                                                 .isNotEmpty) {
                                                   myDrinks[ind].mid= '';
                                                   setState(() {                      
-                                                 myDrinks[ind].mid= strings[i].mx[ind].id;     
+                                                 myDrinks[ind].mid= myDrinks[ind]
+                                                .ChMixer[ind].cmid;     
                                                    });
                                             Navigator.pop(context);
-                                            } else{Navigator.pop(context);}
+                                            } else{
+                                              myDrinks[ind].mid= '';
+                                              Navigator.pop(context);}
                                         },
                                         child: SizedBox(
                                           width: 100,
