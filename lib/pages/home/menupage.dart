@@ -1952,6 +1952,7 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
+<<<<<<< HEAD
                                           if (myDrinks[ind]
                                               .ChMixer
                                               .isNotEmpty) {
@@ -1964,6 +1965,20 @@ class _MenuPageState extends State<MenuPage> {
                                           } else {
                                             Navigator.pop(context);
                                           }
+=======
+                                            if (myDrinks[ind]
+                                                .ChMixer
+                                                .isNotEmpty) {
+                                                  myDrinks[ind].mid= '';
+                                                  setState(() {                      
+                                                 myDrinks[ind].mid= myDrinks[ind]
+                                                .ChMixer[ind].cmid;     
+                                                   });
+                                            Navigator.pop(context);
+                                            } else{
+                                              myDrinks[ind].mid= '';
+                                              Navigator.pop(context);}
+>>>>>>> 04a5942b56506fb8105fbec6d1ec44a9462dcda7
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -5081,7 +5096,7 @@ class _MenuPageState extends State<MenuPage> {
             '] ' +
             'Please contact Administrator!';
       } else {
-        _cm = 'Not accepting orders at the moment.';
+        _cm = response.body.toString();
       }
       _showDialog('DrinkLink', _cm);
 

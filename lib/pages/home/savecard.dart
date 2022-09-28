@@ -103,7 +103,11 @@ class WebViewExampleState extends State<SaveCardWeb> {
       Navigator.pop(context, 'Added');
     } else if (mystate == 'SUCCESS') {
       Navigator.pop(context, 'Added');
+    } else if (mystate == 'AUTHORISED') {
+      Navigator.pop(context, 'Added');
     } else if (mystate == 'CANCELLED') {
+      Navigator.pop(context, 'failed');
+    } else if (mystate == '3DS') {
       Navigator.pop(context, 'failed');
     } else if (mystate == 'FAILED') {
       Navigator.pop(context, 'failed');
