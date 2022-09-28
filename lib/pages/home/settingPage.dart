@@ -50,7 +50,6 @@ class _setPageState extends State<setPage> {
   void initState() {
     super.initState();
     getDetails();
-    getCard();
     myCardList = [];
     myCardFuture = getCard();
   }
@@ -114,12 +113,28 @@ class _setPageState extends State<setPage> {
     return Scaffold(
       backgroundColor: Color(0xFF2b2b61),
       appBar: new AppBar(
+        toolbarHeight: 120,
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text(
-          "Settings",
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        title: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(75, 20, 0, 0),
+              child: Text(
+                "SETTINGS",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(80, 10, 0, 0),
+              child: Text(
+                "Customize DrinkLink",
+                style: TextStyle(fontSize: 12, color: Colors.deepOrange),
+              ),
+            ),
+          ],
         ),
         leading: IconButton(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           icon: Icon(
             Icons.arrow_back,
             color: Colors.white,
@@ -131,6 +146,8 @@ class _setPageState extends State<setPage> {
             );
           },
         ),
+        shape: Border(bottom: BorderSide(color: Colors.deepOrange, width: 2)),
+        elevation: 4,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -658,7 +675,7 @@ class _setPageState extends State<setPage> {
 
   showCardDetails() {
     return Container(
-      height: 60 * myCardList.length.toDouble(),
+      height: 70 * myCardList.length.toDouble(),
       child: FutureBuilder(
           future: myCardFuture,
           builder: (BuildContext context, AsyncSnapshot snapshot) {

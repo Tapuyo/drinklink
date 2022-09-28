@@ -2123,6 +2123,7 @@ class _MenuPageState extends State<MenuPage> {
                                               //         : Colors.black
                                               //             .withOpacity(.5),
                                               //   )),
+
                                               Icon(
                                                 Icons.circle,
                                                 color: myDrinks[ind].mid ==
@@ -3084,7 +3085,7 @@ class _MenuPageState extends State<MenuPage> {
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             Text(
-                              myOrder.length > 1 ? " items):" : " item):",
+                              totalqty > 1 ? " items):" : " item):",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),

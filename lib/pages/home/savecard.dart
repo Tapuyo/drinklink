@@ -11,18 +11,19 @@ import '../Api.dart';
 
 class SaveCardWeb extends StatefulWidget {
   String url;
-   String reference;
+  String reference;
 
-  SaveCardWeb(this.url,this.reference);
+  SaveCardWeb(this.url, this.reference);
   @override
-  WebViewExampleState createState() => WebViewExampleState(this.url,this.reference);
+  WebViewExampleState createState() =>
+      WebViewExampleState(this.url, this.reference);
 }
 
 class WebViewExampleState extends State<SaveCardWeb> {
   String murl;
-   String reference;
+  String reference;
 
-  WebViewExampleState(this.murl,this.reference);
+  WebViewExampleState(this.murl, this.reference);
   final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
@@ -81,6 +82,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
     //   }
     // }
   }
+
   AddCard(String url) async {
     Prefs.load();
     String token = Prefs.getString('token');
@@ -100,14 +102,14 @@ class WebViewExampleState extends State<SaveCardWeb> {
     if (mystate == 'REVERSED') {
       Navigator.pop(context, 'Added');
     } else if (mystate == 'SUCCESS') {
-      Navigator.pop(context,'Added');
-    }
-    else if (mystate == 'CANCELLED') {
+      Navigator.pop(context, 'Added');
+    } else if (mystate == 'CANCELLED') {
       Navigator.pop(context, 'failed');
     } else if (mystate == 'FAILED') {
       Navigator.pop(context, 'failed');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
