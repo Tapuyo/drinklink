@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:driklink/pages/home/menupage.dart';
+import 'package:uuid/uuid.dart';
 
 class setPage extends StatefulWidget {
   @override
@@ -23,10 +25,70 @@ class _setPageState extends State<setPage> {
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
   bool isActive = true;
+
+  List<CardDetails> myCardList = [];
+  Future myCardFuture;
+
+  int tipid = 0;
+  String idCard = '0';
+  String discountID = '';
+  String discountPerc = '';
+  int lengtofsub = 0;
+  String iconid = '';
+  bool saveCard = false;
+  var uuid = Uuid();
+  String token = '';
+
+  String maskedPan = '';
+  String expiry = '';
+  String cardholderName = '';
+  String scheme = '';
+  String cardToken = '';
+  Color contColor = Colors.green;
+
   @override
   void initState() {
     super.initState();
     getDetails();
+    getCard();
+    myCardList = [];
+    myCardFuture = getCard();
+  }
+
+  Future<List<CardDetails>> getCard() async {
+    try {
+      String mytoken = Prefs.getString('token');
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + mytoken
+      };
+      final response = await http.get(
+          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          headers: headers);
+      var jsondata = json.decode(response.body);
+      print(response.body);
+
+      for (var u in jsondata) {
+        var mask = u['maskedPan'];
+        var fullname = mask.split('******');
+        String latmask = "******" + fullname[1].trim().toString();
+
+        CardDetails tmc = new CardDetails(
+            u['id'].toString(),
+            u['maskedPan'],
+            u['expiry'],
+            u['cardholderName'],
+            u['scheme'],
+            u['cardToken'],
+            false,
+            latmask);
+
+        myCardList.add(tmc);
+      }
+      return myCardList;
+    } catch (e) {
+      return null;
+    }
   }
 
   getDetails() {
@@ -79,6 +141,13 @@ class _setPageState extends State<setPage> {
               Text(
                 'My Cards',
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
+              ),
+              Visibility(
+                visible: myCardList.length > 0 ? true : false,
+                child: Container(
+                  //padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
+                  child: showCardDetails(),
+                ),
               ),
               SizedBox(
                 height: 10,
@@ -498,7 +567,8 @@ class _setPageState extends State<setPage> {
     }
   }
 
-  confirmDialog(String title, String message, String linkpayment, String reference) {
+  confirmDialog(
+      String title, String message, String linkpayment, String reference) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -568,7 +638,8 @@ class _setPageState extends State<setPage> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SaveCardWeb(linkpayment.toString(), reference)),
+                      builder: (context) =>
+                          SaveCardWeb(linkpayment.toString(), reference)),
                 );
 
                 if (result == 'Added') {
@@ -582,6 +653,141 @@ class _setPageState extends State<setPage> {
           ],
         ),
       ),
+    );
+  }
+
+  showCardDetails() {
+    return Container(
+      height: 60 * myCardList.length.toDouble(),
+      child: FutureBuilder(
+          future: myCardFuture,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                          padding: EdgeInsets.fromLTRB(10, 15, 10, 30),
+                          color: Colors.transparent,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Container(
+                              //   width: 200,
+                              //   child: Column(
+                              //     mainAxisAlignment: MainAxisAlignment.start,
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       CheckboxListTile(
+                              //         title: Text(
+                              //           snapshot.data[index].scheme,
+                              //           style: TextStyle(color: Colors.white),
+                              //         ),
+                              //         value:
+                              //             idCard == snapshot.data[index].cardid
+                              //                 ? true
+                              //                 : false,
+                              //         onChanged: (newValue) {
+                              //           setState(() {
+                              //             if (idCard ==
+                              //                 snapshot.data[index].cardid) {
+                              //               idCard = '';
+                              //               maskedPan = '';
+                              //               expiry = '';
+                              //               cardholderName = '';
+                              //               scheme = '';
+                              //               cardToken = '';
+                              //             } else {
+                              //               idCard =
+                              //                   snapshot.data[index].cardid;
+                              //               maskedPan =
+                              //                   snapshot.data[index].maskedPan;
+                              //               expiry =
+                              //                   snapshot.data[index].expiry;
+                              //               cardholderName = snapshot
+                              //                   .data[index].cardholderName;
+                              //               scheme =
+                              //                   snapshot.data[index].scheme;
+                              //               cardToken =
+                              //                   snapshot.data[index].cardToken;
+                              //             }
+                              //           });
+                              //         },
+                              //         secondary: Icon(Icons.account_box,
+                              //             color: Colors.white),
+                              //         // controlAffinity: ListTileControlAffinity
+                              //         //     .leading, //  <-- leading Checkbox
+                              //       ),
+
+                              //     ],
+                              //   ),
+                              // ),
+                              Container(
+                                child: Text(
+                                  snapshot.data[index].scheme,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data[index].cardholderName,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].showmask +
+                                        "  " +
+                                        snapshot.data[index].expiry,
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(120, 0, 0, 0),
+                                  child: Icon(
+                                    Icons.close_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () {}, //Delete card
+                              ),
+
+                              // Container(
+                              //   padding: EdgeInsets.fromLTRB(63, 0, 0, 0),
+                              //   child: FlatButton(
+                              //     onPressed: () {},
+                              //     child: Icon(
+                              //       Icons.close,
+                              //       color: Colors.white,
+                              //     ),
+                              //     height: 48,
+                              //   ),
+                              // )
+                            ],
+                          )),
+                    );
+                  });
+            }
+          }),
     );
   }
 }
