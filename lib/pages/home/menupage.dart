@@ -5116,6 +5116,10 @@ class _MenuPageState extends State<MenuPage> {
             response.statusCode.toString() +
             '] ' +
             'Please contact Administrator!';
+      } else if (response.body
+          .toString()
+          .contains("Not accepting orders at the moment")) {
+        _cm = "Not accepting orders at the moment.";
       } else {
         _cm = response.body.toString();
       }
@@ -5273,6 +5277,25 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
+    } else if (result == 'REVERSED') {
+      print(result + 'result here');
+      if (checkedValue == true) {
+        Prefs.load();
+        Prefs.setString('billName', billname.text);
+        Prefs.setString('billAdd', billadd.text);
+        Prefs.setString('billEmail', billemail.text);
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OrderDetails('')),
+      );
+    } else if (result == 'CANCELLED') {
+      print(result + 'payment mode');
+      _showDialog('DrinkLink', 'Failed payment!');
+    } else if (result == 'FAILED') {
+      print(result + 'payment mode');
+      _showDialog('DrinkLink', 'Failed payment!');
     } else {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
