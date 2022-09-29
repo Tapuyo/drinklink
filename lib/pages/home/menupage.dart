@@ -746,7 +746,7 @@ class _MenuPageState extends State<MenuPage> {
                               Text(
                                 stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
-                                    : "Sign Out",
+                                    : "Sign Out (" + uName + ")",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
