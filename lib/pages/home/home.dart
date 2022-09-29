@@ -56,12 +56,17 @@ class _HomePageState extends State<HomePage> {
       print('set notif \n \n ');
     } catch (e) {}
   }
+  final _focusNode = FocusNode();
+  bool isSearching = false;
 
   void initState() {
     Prefs.load();
     super.initState();
     _ontap = true;
-
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+      isSearching = _focusNode.hasFocus;
+    });
     // myList = [];
     // myStore = getStore();
 
@@ -854,9 +859,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
                       child: SingleChildScrollView(
                         child: SizedBox(
-                          height: _ontap == true
-                              ? MediaQuery.of(context).size.height - 310
-                              : MediaQuery.of(context).size.height - 600,
+                          height: MediaQuery.of(context).size.height - 320,
                           child: mybody(),
                         ),
                       ),
@@ -864,8 +867,14 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
+                        decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(14.0), topRight: Radius.circular(14.0)),
+                              color: isSearching ? Colors.grey[900].withOpacity(.8):Colors.transparent
+                              
+                            ),
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                         child: TextField(
+                          focusNode: _focusNode,
                           style: TextStyle(
                             fontSize: 20.0,
                             color: Colors.white70,
@@ -890,7 +899,7 @@ class _HomePageState extends State<HomePage> {
                               hintStyle: new TextStyle(
                                   color: Colors.white70, fontSize: 20),
                               hintText: "Enter name, area or address",
-                              fillColor: Colors.transparent.withOpacity(0.08)),
+                              fillColor: Colors.transparent),
                         ),
                       ),
                     ),
