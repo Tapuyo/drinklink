@@ -1138,8 +1138,13 @@ class _MenuPageState extends State<MenuPage> {
                                   if (discountID.isEmpty) {
                                     // tip = _tip;
                                     // mtip = "";
-                                    // percentagefee = (fee / 100) * finaltot;
-                                    percentagefee = chrx;
+                                    double ch = charge / 100;
+
+                                    double a = _tip + finaltot;
+                                    double b = a * ch;
+                                    percentagefee = (fee / 100) * finaltot;
+                                    chrx = b;
+                                    // percentagefee = chrx;
                                     finaltotwithdiscount =
                                         finaltot + chrx + _tip;
                                   } else {
@@ -1149,11 +1154,28 @@ class _MenuPageState extends State<MenuPage> {
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
+
+                                    double ch = charge / 100;
+
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = _tip + finaltot + vip - percentagefee;
+                                      c = vip;
+                                    } else {
+                                      a = _tip + finaltot - percentagefee;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+
+                                    chrx = b;
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
-                                    finaltotwithdiscount =
-                                        finaltot - percentagefee + _tip + chrx;
+                                    finaltotwithdiscount = finaltot +
+                                        _tip +
+                                        chrx +
+                                        c -
+                                        percentagefee;
                                   }
 
                                   print('Percentage fee:' +
