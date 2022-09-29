@@ -124,7 +124,7 @@ class _MenuPageState extends State<MenuPage> {
 
   bool isloading;
   int totalqty = 0;
-
+  double chrx = 0;
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -1100,7 +1100,7 @@ class _MenuPageState extends State<MenuPage> {
                                     print(mtip + 'Tip here!');
 
                                     if (tipid == 1) {
-                                      _tip = finaltot * 0.5;
+                                      _tip = finaltot * 0.05;
                                     } else if (tipid == 2) {
                                       _tip = finaltot * 0.10;
                                     } else if (tipid == 3) {
@@ -1124,16 +1124,27 @@ class _MenuPageState extends State<MenuPage> {
                                     _tip = _tip;
                                   }
 
-                                  sc = (fee / 100) * finaltot;
-                                  if (discountID.isEmpty) {
-                                    tip = _tip;
-                                    // mtip = "";
-                                    percentagefee = (fee / 100) * finaltot;
-                                    finaltotwithdiscount =
-                                        finaltot + percentagefee;
+                                  // sc = (fee / 100) * finaltot;
+                                  //  if (vipcharge == true) {
+                                  //     chrx = chrx + vip;
+                                  //   }
+                                  if (_tip == 0 || _tip == 0.0) {
+                                    mtip = '';
                                   } else {
-                                    tip = _tip;
-                                    mtip = tip.toStringAsFixed(2) + ' AED';
+                                    mtip = _tip.toStringAsFixed(2) + ' AED';
+                                  }
+                                  print(mtip);
+
+                                  if (discountID.isEmpty) {
+                                    // tip = _tip;
+                                    // mtip = "";
+                                    // percentagefee = (fee / 100) * finaltot;
+                                    percentagefee = chrx;
+                                    finaltotwithdiscount =
+                                        finaltot + chrx + _tip;
+                                  } else {
+                                    // mtip = tip.toStringAsFixed(2) + ' AED';
+
                                     // mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
@@ -1142,7 +1153,7 @@ class _MenuPageState extends State<MenuPage> {
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
                                     finaltotwithdiscount =
-                                        finaltot - percentagefee + tip + sc;
+                                        finaltot - percentagefee + _tip + chrx;
                                   }
 
                                   print('Percentage fee:' +
@@ -2911,8 +2922,8 @@ class _MenuPageState extends State<MenuPage> {
                                     } else {
                                       tmptot = totwithdiscount + tip;
                                     }
-                                    double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
+                                    // double chr = tmptot * (charge / 100);
+                                    double temp = tmptot + chrx;
 
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
@@ -2974,7 +2985,7 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
+                                    double temp = tmptot + chrx;
 
                                     finaltotwithdiscount = temp;
                                     Navigator.pop(context);
@@ -3249,6 +3260,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3260,6 +3272,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3321,6 +3334,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3332,6 +3346,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3396,6 +3411,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3407,6 +3423,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3471,6 +3488,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3482,6 +3500,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3546,6 +3565,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3557,6 +3577,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3621,6 +3642,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3632,6 +3654,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3694,6 +3717,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3705,6 +3729,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3767,6 +3792,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3778,6 +3804,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3840,6 +3867,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   } else {
@@ -3851,6 +3879,7 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
                                                     finaltotwithdiscount =
                                                         chr + temp;
                                                   }
@@ -3995,10 +4024,12 @@ class _MenuPageState extends State<MenuPage> {
                                         double temp =
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
+                                        chrx = temp * ch;
                                         finaltotwithdiscount = chr + temp;
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
+                                        chrx = temp * ch;
                                         finaltotwithdiscount = chr + temp;
                                       }
                                       vipcharge = false;
@@ -4013,10 +4044,12 @@ class _MenuPageState extends State<MenuPage> {
                                                 tip +
                                                 vip;
                                         double chr = temp * ch;
+                                        chrx = temp * ch;
                                         finaltotwithdiscount = chr + temp;
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
+                                        chrx = temp * ch;
                                         finaltotwithdiscount = chr + temp;
                                       }
                                       vipcharge = true;
@@ -4081,7 +4114,8 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                             Spacer(),
                             Text(
-                              ((fee / 100) * finaltot).toStringAsFixed(2),
+                              // ((fee / 100) * finaltot).toStringAsFixed(2),
+                              (chrx).toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -5082,7 +5116,9 @@ class _MenuPageState extends State<MenuPage> {
             response.statusCode.toString() +
             '] ' +
             'Please contact Administrator!';
-      }else if(response.body.toString().contains("Not accepting orders at the moment")) {
+      } else if (response.body
+          .toString()
+          .contains("Not accepting orders at the moment")) {
         _cm = "Not accepting orders at the moment.";
       } else {
         _cm = response.body.toString();
@@ -5254,13 +5290,13 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
-    }else if(result == 'CANCELLED') {
+    } else if (result == 'CANCELLED') {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
-    }else if(result == 'FAILED') {
+    } else if (result == 'FAILED') {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
-    }else{
+    } else {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     }
@@ -5313,12 +5349,10 @@ class _MenuPageState extends State<MenuPage> {
       });
     }
     for (var i = 0; i < myDrinks.length; i++) {
-      bool _isILike;
       if (myDrinks[i].Quant > 0) {
         var contain =
             myOrder.where((element) => element.drinkId == myDrinks[i].id);
         if (contain.isNotEmpty) {
-          _isILike = false;
           if (myDrinks[i].Quant > 0) {
             int m = myOrder.length;
             if (myDrinks[i].ChMixer.length > 0) {
@@ -5373,7 +5407,6 @@ class _MenuPageState extends State<MenuPage> {
                   }
                 }
               } else {
-                _isILike = true;
                 print(2);
                 List<MixerOrd> mx = [];
                 for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
@@ -5433,7 +5466,6 @@ class _MenuPageState extends State<MenuPage> {
             }
           }
         } else {
-          _isILike = true;
           List<MixerOrd> mx = [];
           for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
             MixerOrd mixerOrd = MixerOrd(
