@@ -103,13 +103,11 @@ class WebViewExampleState extends State<WebPage> {
         json.decode(response.body)['_embedded']['payment'][0]['state'];
     dev.log(mystate);
     if (mystate == 'AUTHORISED') {
-      Navigator.pop(context, 'AUTHORISED');
-    } else if (mystate == 'REVERSED') {
-      Navigator.pop(context, 'REVERSED');
-    } else if (mystate == 'CANCELLED') {
-      Navigator.pop(context, 'CANCELLED');
-    } else if (mystate == 'FAILED') {
-      Navigator.pop(context, 'FAILED');
+       Navigator.pop(context, 'AUTHORISED');
+    } else if (mystate == 'FAILED'){
+       Navigator.pop(context, 'failed');
+    } else if (mystate == '3DS'){
+       Navigator.pop(context, 'failed');
     }
   }
 
