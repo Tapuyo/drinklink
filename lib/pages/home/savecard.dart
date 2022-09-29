@@ -98,7 +98,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
     dev.log(response.body.toString());
     String mystate =
         json.decode(response.body)['_embedded']['payment'][0]['state'];
-    dev.log(mystate);
+    
     if (mystate == 'REVERSED') {
       Navigator.pop(context, 'Added');
     } else if (mystate == 'AUTHORISED') {

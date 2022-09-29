@@ -94,22 +94,23 @@ class WebViewExampleState extends State<WebPage> {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
     };
+    if(url.contains('cancelUnpaid')){
+       Navigator.pop(context, 'cancel');
+    }
 
-    // String url = ApiCon.baseurl() + '/orders/paid/?ref=' + reference;
+  //  try{
     final response = await http.post(url, headers: headers);
-    //var jsondata = json.decode(response.headers);
-    dev.log(response.body.toString());
+    dev.log("STATUS J: " + response.body);
+   
     String mystate =
         json.decode(response.body)['_embedded']['payment'][0]['state'];
-    dev.log(mystate);
+   dev.log("STATUS J" + mystate);
     if (mystate == 'AUTHORISED') {
-      Navigator.pop(context, 'AUTHORISED');
-    } else if (mystate == 'REVERSED') {
-      Navigator.pop(context, 'REVERSED');
-    } else if (mystate == 'CANCELLED') {
-      Navigator.pop(context, 'CANCELLED');
-    } else if (mystate == 'FAILED') {
-      Navigator.pop(context, 'FAILED');
+       Navigator.pop(context, 'AUTHORISED');
+    } else if (mystate == 'FAILED'){
+       Navigator.pop(context, 'failed');
+    } else if (mystate == '3DS'){
+       Navigator.pop(context, 'failed');
     }
   }
 
@@ -143,7 +144,7 @@ class WebViewExampleState extends State<WebPage> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.pop(context, 'failed');
+            Navigator.pop(context, 'cancel');
           },
         ),
       ),

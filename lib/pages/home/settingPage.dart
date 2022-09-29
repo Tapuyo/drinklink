@@ -49,13 +49,15 @@ class _setPageState extends State<setPage> {
   @override
   void initState() {
     super.initState();
-    getDetails();
-    myCardList = [];
+      getDetails();
+    myCardList =[];
     myCardFuture = getCard();
   }
 
   Future<List<CardDetails>> getCard() async {
-    try {
+    setState(() {
+          myCardList = [];
+        });
       String mytoken = Prefs.getString('token');
       Map<String, String> headers = {
         "Content-Type": "application/json",
@@ -82,12 +84,12 @@ class _setPageState extends State<setPage> {
             false,
             latmask);
 
-        myCardList.add(tmc);
+        setState(() {
+                  myCardList.add(tmc);
+                });
       }
       return myCardList;
-    } catch (e) {
-      return null;
-    }
+   
   }
 
   getDetails() {
@@ -113,27 +115,14 @@ class _setPageState extends State<setPage> {
     return Scaffold(
       backgroundColor: Color(0xFF2b2b61),
       appBar: new AppBar(
-        toolbarHeight: 120,
+        toolbarHeight: 100,
         backgroundColor: Color(0xFF2b2b61),
         title: Column(
+         
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.fromLTRB(75, 20, 0, 0),
-              child: Text(
-                "SETTINGS",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(80, 10, 0, 0),
-              child: Text(
-                "Customize DrinkLink",
-                style: TextStyle(fontSize: 12, color: Colors.deepOrange),
-              ),
-            ),
-          ],
-        ),
-        leading: IconButton(
+            Container( 
+               alignment: Alignment.topLeft,
+              child: IconButton(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           icon: Icon(
             Icons.arrow_back,
@@ -145,6 +134,24 @@ class _setPageState extends State<setPage> {
               MaterialPageRoute(builder: (context) => HomePage()),
             );
           },
+        ),),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text(
+                "SETTINGS",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 20),
+              child: Text(
+                "Customize DrinkLink",
+                style: TextStyle(fontSize: 12, color: Colors.deepOrange),
+              ),
+            ),
+          ],
         ),
         shape: Border(bottom: BorderSide(color: Colors.deepOrange, width: 2)),
         elevation: 4,
@@ -159,13 +166,7 @@ class _setPageState extends State<setPage> {
                 'My Cards',
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
-              Visibility(
-                visible: myCardList.length > 0 ? true : false,
-                child: Container(
-                  //padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
-                  child: showCardDetails(),
-                ),
-              ),
+                 showCardDetails(),
               SizedBox(
                 height: 10,
               ),
@@ -543,6 +544,7 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
+                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -661,9 +663,11 @@ class _setPageState extends State<setPage> {
 
                 if (result == 'Added') {
                   _showDialog1('DrinkLink', 'New card saved.');
+                  myCardFuture = getCard();
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');
+                  myCardFuture = getCard();
                 }
               },
             ),
@@ -675,7 +679,7 @@ class _setPageState extends State<setPage> {
 
   showCardDetails() {
     return Container(
-      height: 70 * myCardList.length.toDouble(),
+      height: 60 * myCardList.length.toDouble(),
       child: FutureBuilder(
           future: myCardFuture,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -688,12 +692,12 @@ class _setPageState extends State<setPage> {
             } else {
               return ListView.builder(
                   itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
+                  // physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {},
                       child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 15, 10, 30),
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
                           color: Colors.transparent,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -760,6 +764,7 @@ class _setPageState extends State<setPage> {
                                 width: 10,
                               ),
                               Column(
+                                 mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -779,9 +784,9 @@ class _setPageState extends State<setPage> {
                               ),
                               GestureDetector(
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(120, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
                                   child: Icon(
-                                    Icons.close_outlined,
+                                    Icons.cancel_outlined,
                                     color: Colors.white,
                                   ),
                                 ),

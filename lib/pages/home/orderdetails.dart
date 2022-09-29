@@ -891,7 +891,7 @@ int tipid = 0;
                               Text(
                                 stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
-                                    : "Sign Out",
+                                    : "Sign Out (" + uName + ")",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
