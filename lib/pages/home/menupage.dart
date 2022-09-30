@@ -4624,17 +4624,23 @@ class _MenuPageState extends State<MenuPage> {
                                   // } else {
                                   //   _validate = false;
                                   // }
+
                                   bool _validate1;
                                   bool _validate2;
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
                                   bool _validate6;
+                                  bool _validate7;
                                   String ename = billname.text;
                                   var fullname = ename.split(' ');
                                   String firsname = '';
                                   String lastname = '';
-
+                                  if (choosetb == "Choose Table") {
+                                    _showDialog(
+                                        'DrinkLink', 'Please Choose Table.');
+                                    return;
+                                  }
                                   try {
                                     firsname = fullname[0];
                                     lastname = fullname[1];
@@ -4646,6 +4652,7 @@ class _MenuPageState extends State<MenuPage> {
                                         Prefs.getBoolValtext(billname.text);
                                     _validate3 =
                                         Prefs.getBoolValtext(billemail.text);
+
                                     if (_validate4 == false ||
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
@@ -4682,6 +4689,7 @@ class _MenuPageState extends State<MenuPage> {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
                                     }
+
                                     if (_validate1 == true &&
                                         _validate2 == true &&
                                         _validate3 == true &&
