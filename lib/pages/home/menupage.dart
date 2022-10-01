@@ -5277,6 +5277,7 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
+<<<<<<< HEAD
     } else if (result == 'REVERSED') {
       print(result + 'result here');
       if (checkedValue == true) {
@@ -5297,6 +5298,13 @@ class _MenuPageState extends State<MenuPage> {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     } else {
+=======
+    }else if(result == 'cancel') {
+      print(result + 'payment mode');
+      _showDialog('DrinkLink', 'Cancelled payment!');
+    }
+     else {
+>>>>>>> 8969fd1a9ce9f8db48a33d233c7065165caeb275
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     }

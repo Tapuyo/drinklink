@@ -86,7 +86,13 @@ class WebViewExampleState extends State<WebPage> {
     // }
   }
 
+<<<<<<< HEAD
   Order(String url) async {
+=======
+  // ignore: non_constant_identifier_names
+  Order(String url) async {
+    print('call');
+>>>>>>> 8969fd1a9ce9f8db48a33d233c7065165caeb275
     Prefs.load();
     String token = Prefs.getString('token');
 
@@ -106,12 +112,20 @@ class WebViewExampleState extends State<WebPage> {
         json.decode(response.body)['_embedded']['payment'][0]['state'];
    dev.log("STATUS J" + mystate);
     if (mystate == 'AUTHORISED') {
+<<<<<<< HEAD
        Navigator.pop(context, 'AUTHORISED');
     } else if (mystate == 'FAILED'){
        Navigator.pop(context, 'failed');
     } else if (mystate == '3DS'){
        Navigator.pop(context, 'failed');
     }
+=======
+      Navigator.pop(context, 'AUTHORISED');
+    } 
+  //  }catch(e){
+
+  //  }
+>>>>>>> 8969fd1a9ce9f8db48a33d233c7065165caeb275
   }
 
   @override
