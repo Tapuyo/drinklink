@@ -1049,6 +1049,7 @@ class _MenuPageState extends State<MenuPage> {
                                   temporder.clear();
                                   finaltot = 0;
                                   myCartFuture = getOrder();
+                                  chrx = 0;
                                 });
                               },
                               child: Container(
@@ -1143,15 +1144,17 @@ class _MenuPageState extends State<MenuPage> {
                                     // double a = _tip + finaltot;
                                     double a, c;
                                     if (vipcharge == true) {
-                                      a = _tip + finaltot + vip;
+                                      a = finaltot + _tip + vip;
                                       c = vip;
                                     } else {
-                                      a = _tip + finaltot - percentagefee;
+                                      a = finaltot + _tip;
                                       c = 0;
                                     }
                                     double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                    chrx = double.parse((b).toStringAsFixed(2));
+                                    chrx = double.parse((b).toStringAsFixed(3));
+
+                                    print(b.round().toStringAsFixed(2));
                                     // print('Service Charge!');
                                     // print(chrx.toStringAsFixed(2) +
                                     //     'Service Charge!');
@@ -1177,8 +1180,8 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
+                                    chrx = double.parse((b).toStringAsFixed(3));
 
-                                    chrx = double.parse((b).toStringAsFixed(2));
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
@@ -3309,7 +3312,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3323,7 +3326,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3387,7 +3390,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3401,7 +3404,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3468,7 +3471,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3482,7 +3485,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3549,7 +3552,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3563,7 +3566,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3630,7 +3633,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3644,7 +3647,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3711,7 +3714,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3725,7 +3728,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3790,7 +3793,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3804,7 +3807,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3869,7 +3872,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3883,7 +3886,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -3948,7 +3951,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   } else {
@@ -3962,7 +3965,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
                                                     chrx = double.parse((chrx)
-                                                        .toStringAsFixed(2));
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                   }
@@ -4109,14 +4112,14 @@ class _MenuPageState extends State<MenuPage> {
                                         double chr = temp * ch;
                                         chrx = temp * ch;
                                         chrx = double.parse(
-                                            (chrx).toStringAsFixed(2));
+                                            (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
                                         chrx = double.parse(
-                                            (chrx).toStringAsFixed(2));
+                                            (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
                                       }
                                       vipcharge = false;
@@ -4133,14 +4136,14 @@ class _MenuPageState extends State<MenuPage> {
                                         double chr = temp * ch;
                                         chrx = temp * ch;
                                         chrx = double.parse(
-                                            (chrx).toStringAsFixed(2));
+                                            (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
                                         chrx = double.parse(
-                                            (chrx).toStringAsFixed(2));
+                                            (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
                                       }
                                       vipcharge = true;
@@ -4685,11 +4688,14 @@ class _MenuPageState extends State<MenuPage> {
                                   var fullname = ename.split(' ');
                                   String firsname = '';
                                   String lastname = '';
-                                  if (choosetb == "Choose Table") {
-                                    _showDialog(
-                                        'DrinkLink', 'Please Choose Table.');
-                                    return;
+                                  if (pickdine == false) {
+                                    if (choosetb == "Choose Table") {
+                                      _showDialog(
+                                          'DrinkLink', 'Please Choose Table.');
+                                      return;
+                                    }
                                   }
+
                                   try {
                                     firsname = fullname[0];
                                     lastname = fullname[1];
