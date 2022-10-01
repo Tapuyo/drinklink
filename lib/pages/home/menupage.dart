@@ -1141,17 +1141,20 @@ class _MenuPageState extends State<MenuPage> {
                                     double ch = charge / 100;
 
                                     // double a = _tip + finaltot;
-                                    double a, c, d;
+                                    double a, c;
                                     if (vipcharge == true) {
                                       a = _tip + finaltot + vip;
                                       c = vip;
                                     } else {
-                                      a = finaltot - percentagefee;
+                                      a = _tip + finaltot - percentagefee;
                                       c = 0;
                                     }
                                     double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                    chrx = b;
+                                    chrx = double.parse((b).toStringAsFixed(2));
+                                    // print('Service Charge!');
+                                    // print(chrx.toStringAsFixed(2) +
+                                    //     'Service Charge!');
 
                                     // percentagefee = chrx;
                                     finaltotwithdiscount = a + chrx;
@@ -1175,7 +1178,7 @@ class _MenuPageState extends State<MenuPage> {
                                     }
                                     double b = a * ch;
 
-                                    chrx = b;
+                                    chrx = double.parse((b).toStringAsFixed(2));
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
