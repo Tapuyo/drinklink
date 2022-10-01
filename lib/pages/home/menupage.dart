@@ -1161,6 +1161,9 @@ class _MenuPageState extends State<MenuPage> {
 
                                     // percentagefee = chrx;
                                     finaltotwithdiscount = a + chrx;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(3));
                                   } else {
                                     // mtip = tip.toStringAsFixed(2) + ' AED';
 
@@ -1190,6 +1193,9 @@ class _MenuPageState extends State<MenuPage> {
                                         chrx +
                                         c -
                                         percentagefee;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(3));
                                   }
 
                                   print('Percentage fee:' +
@@ -2991,13 +2997,16 @@ class _MenuPageState extends State<MenuPage> {
 
                                         finaltotwithdiscount =
                                             double.parse(compl);
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         finaltotwithdiscount = double.parse(
-                                            (temp).toStringAsFixed(2));
+                                            (temp).toStringAsFixed(3));
                                       }
                                     } catch (e) {
                                       finaltotwithdiscount = double.parse(
-                                          (temp).toStringAsFixed(2));
+                                          (temp).toStringAsFixed(3));
                                     }
 
                                     Alert(
@@ -3037,7 +3046,8 @@ class _MenuPageState extends State<MenuPage> {
                                     double temp = tmptot + chr;
                                     chrx =
                                         double.parse((chr).toStringAsFixed(2));
-                                    finaltotwithdiscount = temp;
+                                    finaltotwithdiscount =
+                                        double.parse(temp.toStringAsFixed(3));
                                     Navigator.pop(context);
                                   }
                                 });
@@ -3315,6 +3325,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3329,6 +3344,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                 });
                                                 mState(() {
@@ -3393,6 +3413,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3407,6 +3432,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3474,6 +3504,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3488,6 +3523,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3555,6 +3595,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3569,6 +3614,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3636,6 +3686,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3650,6 +3705,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3717,6 +3777,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3731,6 +3796,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '5 AED';
                                                 });
@@ -3796,6 +3866,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3810,6 +3885,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '10 AED';
                                                 });
@@ -3875,6 +3955,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3889,6 +3974,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '15 AED';
                                                 });
@@ -3954,6 +4044,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3968,6 +4063,11 @@ class _MenuPageState extends State<MenuPage> {
                                                         .toStringAsFixed(3));
                                                     finaltotwithdiscount =
                                                         chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '20 AED';
                                                 });
@@ -4114,6 +4214,9 @@ class _MenuPageState extends State<MenuPage> {
                                         chrx = double.parse(
                                             (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
@@ -4121,6 +4224,9 @@ class _MenuPageState extends State<MenuPage> {
                                         chrx = double.parse(
                                             (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = false;
                                     } else {
@@ -4138,6 +4244,9 @@ class _MenuPageState extends State<MenuPage> {
                                         chrx = double.parse(
                                             (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
@@ -4145,6 +4254,9 @@ class _MenuPageState extends State<MenuPage> {
                                         chrx = double.parse(
                                             (chrx).toStringAsFixed(3));
                                         finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = true;
                                     }
