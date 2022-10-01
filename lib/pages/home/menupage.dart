@@ -5277,7 +5277,6 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
-<<<<<<< HEAD
     } else if (result == 'REVERSED') {
       print(result + 'result here');
       if (checkedValue == true) {
@@ -5298,13 +5297,6 @@ class _MenuPageState extends State<MenuPage> {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     } else {
-=======
-    }else if(result == 'cancel') {
-      print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Cancelled payment!');
-    }
-     else {
->>>>>>> 8969fd1a9ce9f8db48a33d233c7065165caeb275
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     }
@@ -5441,6 +5433,7 @@ class _MenuPageState extends State<MenuPage> {
                 });
               }
             } else {
+              bool allowAdd = true;
               for (var j = 0; j < m; j++){
                 List<MixerOrd> mx = [];
               var contain =
@@ -5453,10 +5446,11 @@ class _MenuPageState extends State<MenuPage> {
                   quantOrder = myOrder[j].Quant + myDrinks[i].Quant;
                   myOrder[j].Quant = quantOrder;
                   j=m;
+                  allowAdd =true;
                     myOrder.removeWhere(
                           (element) =>
                       element.Quant < quantOrder  && element.drinkId == myDrinks[i].id && element.aIce == myDrinks[i].addIce && element.mxir.length <= 0);
-                  }else if (contain.isNotEmpty && myDrinks[i].id == myOrder[j].drinkId && myDrinks[i].addIce == myOrder[j].aIce && myDrinks[i].ChMixer.length == 0 &&  myOrder[j].mxir[0].id != "") {
+                  }else if (allowAdd && contain.isNotEmpty && myDrinks[i].id == myOrder[j].drinkId && myDrinks[i].addIce == myOrder[j].aIce && myDrinks[i].ChMixer.length == 0 &&  myOrder[j].mxir[0].id != "") {
                     print("ani raka" + myOrder[j].mxir[0].id);
                     print(contain.length);
                     Order ord = Order(
@@ -5471,6 +5465,7 @@ class _MenuPageState extends State<MenuPage> {
                         print("mao ni siya" + mx.toString());
                     setState(() {
                       myOrder.add(ord);
+                      allowAdd =false;
                     }); 
                    
                   }else if ( myDrinks[i].id == myOrder[j].drinkId && myDrinks[i].addIce != myOrder[j].aIce ) {
