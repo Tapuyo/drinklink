@@ -1138,10 +1138,23 @@ class _MenuPageState extends State<MenuPage> {
                                   if (discountID.isEmpty) {
                                     // tip = _tip;
                                     // mtip = "";
-                                    // percentagefee = (fee / 100) * finaltot;
-                                    percentagefee = chrx;
-                                    finaltotwithdiscount =
-                                        finaltot + chrx + _tip;
+                                    double ch = charge / 100;
+
+                                    // double a = _tip + finaltot;
+                                    double a, c, d;
+                                    if (vipcharge == true) {
+                                      a = _tip + finaltot + vip;
+                                      c = vip;
+                                    } else {
+                                      a = finaltot - percentagefee;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+                                    percentagefee = (fee / 100) * finaltot;
+                                    chrx = b;
+
+                                    // percentagefee = chrx;
+                                    finaltotwithdiscount = a + chrx;
                                   } else {
                                     // mtip = tip.toStringAsFixed(2) + ' AED';
 
@@ -1149,11 +1162,28 @@ class _MenuPageState extends State<MenuPage> {
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
+
+                                    double ch = charge / 100;
+
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = _tip + finaltot + vip - percentagefee;
+                                      c = vip;
+                                    } else {
+                                      a = _tip + finaltot - percentagefee;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+
+                                    chrx = b;
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
-                                    finaltotwithdiscount =
-                                        finaltot - percentagefee + _tip + chrx;
+                                    finaltotwithdiscount = finaltot +
+                                        _tip +
+                                        chrx +
+                                        c -
+                                        percentagefee;
                                   }
 
                                   print('Percentage fee:' +
@@ -2922,8 +2952,9 @@ class _MenuPageState extends State<MenuPage> {
                                     } else {
                                       tmptot = totwithdiscount + tip;
                                     }
-                                    // double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chrx;
+                                    double chr = tmptot * (charge / 100);
+                                    double temp = tmptot + chr;
+                                    chrx = chr;
 
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
@@ -2985,7 +3016,8 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chrx;
+                                    double temp = tmptot + chr;
+                                    chrx = chr;
 
                                     finaltotwithdiscount = temp;
                                     Navigator.pop(context);
@@ -5342,7 +5374,7 @@ class _MenuPageState extends State<MenuPage> {
     //Navigator.of(context).pop();
   }
 
-    Future<List<Order>> getOrder() async {
+  Future<List<Order>> getOrder() async {
     if (myOrder.length <= 0) {
       setState(() {
         myOrder = [];
@@ -5354,73 +5386,101 @@ class _MenuPageState extends State<MenuPage> {
         var contain =
             myOrder.where((element) => element.drinkId == myDrinks[i].id);
         if (contain.isNotEmpty) {
-          
-            
-            _isILike = false;
-            if (myDrinks[i].Quant > 0) {
-              int m = myOrder.length;
-              if (myDrinks[i].ChMixer.length > 0) {
-                List element1 = [];
-                for (var name1 in contain) {
-                  for (var name in name1.mxir) {
-                    element1.add(name.id);
-                  }
+          _isILike = false;
+          if (myDrinks[i].Quant > 0) {
+            int m = myOrder.length;
+            if (myDrinks[i].ChMixer.length > 0) {
+              List element1 = [];
+              for (var name1 in contain) {
+                for (var name in name1.mxir) {
+                  element1.add(name.id);
                 }
-                List element2 = [];
-                for (var name in myDrinks[i].ChMixer) {
-                  element2.add(name.cmid);
-                  setState(() {});
-                }
-                if (element2.every((item) => element1.contains(item))) {
-                  for (var j = 0; j < m; j++) {
-                    bool result =
-                        computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
-                    print(result);
-                    int mj = m - 1;
-                    int mjs = 0;
-                    if (result) {
-                      print("lord please mamen");
-                      myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                      j = m;
-                    } else if (j == mj && result == false && mjs == 0) {
-                      print(mjs);
-                      //_showDialog("Drinklink", "Item already selected please select another combo!");
-                      print("lord 1");
-                      List<MixerOrd> mx = [];
-                      for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-                        MixerOrd mixerOrd = MixerOrd(
-                            myDrinks[i].ChMixer[z].cmid,
-                            myDrinks[i].ChMixer[z].cprice.toString(),
-                            myDrinks[i].ChMixer[z].cname);
-                        mx.add(mixerOrd);
-                      }
-                      Order ord = Order(
-                          myDrinks[i].id,
-                          myDrinks[i].drinkCategoryId,
-                          myDrinks[i].name,
-                          myDrinks[i].Quant,
-                          myDrinks[i].price,
-                          mx,
-                          myDrinks[i].origPrice,
-                          myDrinks[i].addIce);
-                      setState(() {
-                        myOrder.add(ord);
-                        mjs = 1;
-                        j = m;
-                      });
+              }
+              List element2 = [];
+              for (var name in myDrinks[i].ChMixer) {
+                element2.add(name.cmid);
+                setState(() {});
+              }
+              if (element2.every((item) => element1.contains(item))) {
+                for (var j = 0; j < m; j++) {
+                  bool result =
+                      computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
+                  print(result);
+                  int mj = m - 1;
+                  int mjs = 0;
+                  if (result) {
+                    print("lord please mamen");
+                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                    j = m;
+                  } else if (j == mj && result == false && mjs == 0) {
+                    print(mjs);
+                    //_showDialog("Drinklink", "Item already selected please select another combo!");
+                    print("lord 1");
+                    List<MixerOrd> mx = [];
+                    for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                      MixerOrd mixerOrd = MixerOrd(
+                          myDrinks[i].ChMixer[z].cmid,
+                          myDrinks[i].ChMixer[z].cprice.toString(),
+                          myDrinks[i].ChMixer[z].cname);
+                      mx.add(mixerOrd);
                     }
+                    Order ord = Order(
+                        myDrinks[i].id,
+                        myDrinks[i].drinkCategoryId,
+                        myDrinks[i].name,
+                        myDrinks[i].Quant,
+                        myDrinks[i].price,
+                        mx,
+                        myDrinks[i].origPrice,
+                        myDrinks[i].addIce);
+                    setState(() {
+                      myOrder.add(ord);
+                      mjs = 1;
+                      j = m;
+                    });
                   }
-                } else {
-                  _isILike = true;
-                  print('2');
-                  List<MixerOrd> mx = [];
-                  for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-                    MixerOrd mixerOrd = MixerOrd(
-                        myDrinks[i].ChMixer[z].cmid,
-                        myDrinks[i].ChMixer[z].cprice.toString(),
-                        myDrinks[i].ChMixer[z].cname);
-                    mx.add(mixerOrd);
-                  }
+                }
+              } else {
+                _isILike = true;
+                print('2');
+                List<MixerOrd> mx = [];
+                for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].ChMixer[z].cmid,
+                      myDrinks[i].ChMixer[z].cprice.toString(),
+                      myDrinks[i].ChMixer[z].cname);
+                  mx.add(mixerOrd);
+                }
+                Order ord = Order(
+                    myDrinks[i].id,
+                    myDrinks[i].drinkCategoryId,
+                    myDrinks[i].name,
+                    myDrinks[i].Quant,
+                    myDrinks[i].price,
+                    mx,
+                    myDrinks[i].origPrice,
+                    myDrinks[i].addIce);
+                setState(() {
+                  myOrder.add(ord);
+                });
+                // Order ord = Order(
+                //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
+                //     myDrinks[i].Quant, myDrinks[i].price);
+                // setState(() {
+                //   myOrder.add(ord);
+                // });
+              }
+            } else {
+              print('3');
+              List<MixerOrd> mx = [];
+              for (var j = 0; j < m; j++)
+                if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
+                    myDrinks[i].addIce != myOrder[j].aIce) {
+                  print("ani raka 1");
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
+                  mx.add(mixerOrd);
                   Order ord = Order(
                       myDrinks[i].id,
                       myDrinks[i].drinkCategoryId,
@@ -5433,86 +5493,123 @@ class _MenuPageState extends State<MenuPage> {
                   setState(() {
                     myOrder.add(ord);
                   });
-                  // Order ord = Order(
-                  //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
-                  //     myDrinks[i].Quant, myDrinks[i].price);
-                  // setState(() {
-                  //   myOrder.add(ord);
-                  // });
-                }
-              } else {
-                print('3');
-                List<MixerOrd> mx = [];
-                for (var j = 0; j < m; j++)
-                  if (myDrinks[i].id == myOrder[j].drinkId &&
-                      myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
-                      myDrinks[i].addIce != myOrder[j].aIce) {
-                    print("ani raka 1");
-                    MixerOrd mixerOrd = MixerOrd(
-                        myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                    mx.add(mixerOrd);
-                    Order ord = Order(
-                        myDrinks[i].id,
-                        myDrinks[i].drinkCategoryId,
-                        myDrinks[i].name,
-                        myDrinks[i].Quant,
-                        myDrinks[i].price,
-                        mx,
-                        myDrinks[i].origPrice,
-                        myDrinks[i].addIce);
-                    setState(() {
-                      myOrder.add(ord);
-                    });
-                  } else if (myDrinks[i].id == myOrder[j].drinkId &&
-                      myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
-                      myDrinks[i].addIce == myOrder[j].aIce) {
-                    print("ani raka 12");
-                    var contain22 = myOrder.where((element) =>
-                        element.drinkId == myDrinks[i].id &&
-                        element.mxir.length == myDrinks[i].mixer.length &&
-                        element.aIce == myDrinks[i].addIce);
-                    if (contain22.isNotEmpty) {
-                      print(contain.length);
-                      contain.forEach((element) {
-                        setState(() {
-                          element.Quant = element.Quant + 1;
-                        });
+                } else if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
+                    myDrinks[i].addIce == myOrder[j].aIce) {
+                  print("ani raka 12");
+                  var contain22 = myOrder.where((element) =>
+                      element.drinkId == myDrinks[i].id &&
+                      element.mxir.length == myDrinks[i].mixer.length &&
+                      element.aIce == myDrinks[i].addIce);
+                  if (contain22.isNotEmpty) {
+                    print(contain.length);
+                    contain.forEach((element) {
+                      setState(() {
+                        element.Quant = element.Quant + 1;
                       });
-                    } else {
-                      print("kjhaskdjhaskjhdkj 2");
-                      List element1 = [];
-                      for (var name1 in myOrder[j].mxir) {
-                        // for (var name in name1.mxir) {
-                        element1.add(name1.id);
-                        // }
-                      }
-                      List element2 = [];
-                      for (var name in myDrinks[i].ChMixer) {
-                        element2.add(name.cmid);
-                        setState(() {});
-                      }
-                      if (element2.every((item) => element1.contains(item))) {
-                        if (myOrder[j].mxir.isEmpty) {
-                          // print("kjhaskdjhaskjhdkj 2");
-                          // MixerOrd mixerOrd = MixerOrd(
-                          //     myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                          // mx.add(mixerOrd);
-                          // Order ord = Order(
-                          //     myDrinks[i].id,
-                          //     myDrinks[i].drinkCategoryId,
-                          //     myDrinks[i].name,
-                          //     myDrinks[i].Quant,
-                          //     myDrinks[i].price,
-                          //     mx,
-                          //     myDrinks[i].origPrice,
-                          //     myDrinks[i].addIce);
-                          // setState(() {
-                          //   myOrder.add(ord);
-                          // });
+                    });
+                  } else {
+                    print("kjhaskdjhaskjhdkj 2");
+                    List element1 = [];
+                    for (var name1 in myOrder[j].mxir) {
+                      // for (var name in name1.mxir) {
+                      element1.add(name1.id);
+                      // }
+                    }
+                    List element2 = [];
+                    for (var name in myDrinks[i].ChMixer) {
+                      element2.add(name.cmid);
+                      setState(() {});
+                    }
+                    if (element2.every((item) => element1.contains(item))) {
+                      if (myOrder[j].mxir.isEmpty) {
+                        // print("kjhaskdjhaskjhdkj 2");
+                        // MixerOrd mixerOrd = MixerOrd(
+                        //     myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
+                        // mx.add(mixerOrd);
+                        // Order ord = Order(
+                        //     myDrinks[i].id,
+                        //     myDrinks[i].drinkCategoryId,
+                        //     myDrinks[i].name,
+                        //     myDrinks[i].Quant,
+                        //     myDrinks[i].price,
+                        //     mx,
+                        //     myDrinks[i].origPrice,
+                        //     myDrinks[i].addIce);
+                        // setState(() {
+                        //   myOrder.add(ord);
+                        // });
+                      } else {
+                        print('asdasdasd');
+                        if (contain.isEmpty) {
+                          print('asdjpjpjpjp');
+                          Order ord = Order(
+                              myDrinks[i].id,
+                              myDrinks[i].drinkCategoryId,
+                              myDrinks[i].name,
+                              myDrinks[i].Quant,
+                              myDrinks[i].price,
+                              mx,
+                              myDrinks[i].origPrice,
+                              myDrinks[i].addIce);
+                          setState(() {
+                            myOrder.add(ord);
+                          });
                         } else {
-                          print('asdasdasd');
-                          if (contain.isEmpty) {
-                            print('asdjpjpjpjp');
+                          List element5 = [];
+                          for (var name in myOrder) {
+                            element5.add(name.drinkId);
+                          }
+                          if (element5.contains(myDrinks[i].id)) {
+                            print(myDrinks[i].id);
+                            var contain23 = myOrder.where((element) =>
+                                element.drinkId == myDrinks[i].id &&
+                                element.mxir.length ==
+                                    myDrinks[i].ChMixer.length);
+
+                            if (contain23.length <= 0) {
+                              print(contain23.length.toString());
+
+                              if (myDrinks[i].ChMixer.length !=
+                                  myOrder[j].mxir.length) {
+                                print('asdjpjpjpjpxxxx' +
+                                    myOrder[j].mxir.length.toString());
+                                print('asdjpjpjpjpxxxx' +
+                                    myDrinks[i].ChMixer.length.toString());
+                                Order ord = Order(
+                                    myDrinks[i].id,
+                                    myDrinks[i].drinkCategoryId,
+                                    myDrinks[i].name,
+                                    myDrinks[i].Quant,
+                                    myDrinks[i].price,
+                                    mx,
+                                    myDrinks[i].origPrice,
+                                    myDrinks[i].addIce);
+                                setState(() {
+                                  myOrder.add(ord);
+                                  print('yyyyyyyyyy');
+                                });
+                              } else {
+                                myOrder[j].Quant =
+                                    myOrder[j].Quant + myDrinks[i].Quant;
+                              }
+                            }
+                          }
+                        }
+                      }
+                    } else {
+                      print("ani raka 3");
+                      var contain5 = myOrder.where((element) =>
+                          element.drinkId == myDrinks[i].id &&
+                          element.aIce == myDrinks[i].addIce);
+                      if (contain.isNotEmpty) {
+                        print(contain.length);
+                        contain5.forEach((element) {
+                          if (element.mxir.isNotEmpty) {
+                            setState(() {
+                              element.Quant = element.Quant + 1;
+                            });
+                          } else {
                             Order ord = Order(
                                 myDrinks[i].id,
                                 myDrinks[i].drinkCategoryId,
@@ -5525,126 +5622,58 @@ class _MenuPageState extends State<MenuPage> {
                             setState(() {
                               myOrder.add(ord);
                             });
-                          } else {
-                            List element5 = [];
-                            for (var name in myOrder) {
-                              element5.add(name.drinkId);
-                            }
-                            if (element5.contains(myDrinks[i].id)) {
-                              print(myDrinks[i].id);
-                              var contain23 = myOrder.where((element) =>
-                                  element.drinkId == myDrinks[i].id &&
-                                  element.mxir.length ==
-                                      myDrinks[i].ChMixer.length);
-
-                              if (contain23.length <= 0) {
-                                print(contain23.length.toString());
-
-                                if (myDrinks[i].ChMixer.length !=
-                                    myOrder[j].mxir.length) {
-                                  print('asdjpjpjpjpxxxx' +
-                                      myOrder[j].mxir.length.toString());
-                                  print('asdjpjpjpjpxxxx' +
-                                      myDrinks[i].ChMixer.length.toString());
-                                  Order ord = Order(
-                                      myDrinks[i].id,
-                                      myDrinks[i].drinkCategoryId,
-                                      myDrinks[i].name,
-                                      myDrinks[i].Quant,
-                                      myDrinks[i].price,
-                                      mx,
-                                      myDrinks[i].origPrice,
-                                      myDrinks[i].addIce);
-                                  setState(() {
-                                    myOrder.add(ord);
-                                    print('yyyyyyyyyy');
-                                  });
-                                } else {
-                                  myOrder[j].Quant =
-                                      myOrder[j].Quant + myDrinks[i].Quant;
-                                }
-                              }
-                            }
                           }
-                        }
-                      } else {
-                        print("ani raka 3");
-                        var contain5 = myOrder.where((element) =>
-                            element.drinkId == myDrinks[i].id &&
-                            element.aIce == myDrinks[i].addIce);
-                        if (contain.isNotEmpty) {
-                          print(contain.length);
-                          contain5.forEach((element) {
-                            if (element.mxir.isNotEmpty) {
-                              setState(() {
-                                element.Quant = element.Quant + 1;
-                              });
-                            } else {
-                              Order ord = Order(
-                                  myDrinks[i].id,
-                                  myDrinks[i].drinkCategoryId,
-                                  myDrinks[i].name,
-                                  myDrinks[i].Quant,
-                                  myDrinks[i].price,
-                                  mx,
-                                  myDrinks[i].origPrice,
-                                  myDrinks[i].addIce);
-                              setState(() {
-                                myOrder.add(ord);
-                              });
-                            }
-                          });
-                        }
+                        });
                       }
                     }
-                  } else if (myDrinks[i].id == myOrder[j].drinkId &&
-                      myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
-                      myDrinks[i].addIce != myOrder[j].aIce) {
-                    print("ani raka 2");
-                    MixerOrd mixerOrd = MixerOrd(
-                        myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                    mx.add(mixerOrd);
-                    Order ord = Order(
-                        myDrinks[i].id,
-                        myDrinks[i].drinkCategoryId,
-                        myDrinks[i].name,
-                        myDrinks[i].Quant,
-                        myDrinks[i].price,
-                        mx,
-                        myDrinks[i].origPrice,
-                        myDrinks[i].addIce);
-                    setState(() {
-                      myOrder.add(ord);
-                    });
-                  } else if (myDrinks[i].id == myOrder[j].drinkId &&
-                      myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
-                      myDrinks[i].addIce == myOrder[j].aIce) {
-                    var contain24 = myOrder
-                        .where((element) => element.drinkId == myDrinks[i].id);
-                    if (contain24.isNotEmpty) {
-                      print("lord please");
-                      myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
-                    }
-                  } else {
-                    print("ani raka 5");
-                    MixerOrd mixerOrd = MixerOrd(
-                        myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                    mx.add(mixerOrd);
-                    Order ord = Order(
-                        myDrinks[i].id,
-                        myDrinks[i].drinkCategoryId,
-                        myDrinks[i].name,
-                        myDrinks[i].Quant,
-                        myDrinks[i].price,
-                        mx,
-                        myDrinks[i].origPrice,
-                        myDrinks[i].addIce);
-                    setState(() {
-                      myOrder.add(ord);
-                    });
                   }
-              }
-            
+                } else if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
+                    myDrinks[i].addIce != myOrder[j].aIce) {
+                  print("ani raka 2");
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
+                  mx.add(mixerOrd);
+                  Order ord = Order(
+                      myDrinks[i].id,
+                      myDrinks[i].drinkCategoryId,
+                      myDrinks[i].name,
+                      myDrinks[i].Quant,
+                      myDrinks[i].price,
+                      mx,
+                      myDrinks[i].origPrice,
+                      myDrinks[i].addIce);
+                  setState(() {
+                    myOrder.add(ord);
+                  });
+                } else if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
+                    myDrinks[i].addIce == myOrder[j].aIce) {
+                  var contain24 = myOrder
+                      .where((element) => element.drinkId == myDrinks[i].id);
+                  if (contain24.isNotEmpty) {
+                    print("lord please");
+                    myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
+                  }
+                } else {
+                  print("ani raka 5");
+                  MixerOrd mixerOrd = MixerOrd(
+                      myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
+                  mx.add(mixerOrd);
+                  Order ord = Order(
+                      myDrinks[i].id,
+                      myDrinks[i].drinkCategoryId,
+                      myDrinks[i].name,
+                      myDrinks[i].Quant,
+                      myDrinks[i].price,
+                      mx,
+                      myDrinks[i].origPrice,
+                      myDrinks[i].addIce);
+                  setState(() {
+                    myOrder.add(ord);
+                  });
+                }
+            }
           }
           //major if
         } else {
