@@ -98,8 +98,8 @@ class WebViewExampleState extends State<WebPage> {
        Navigator.pop(context, 'cancel');
     }
 
-  //  try{
-    final response = await http.post(url, headers: headers);
+   try{
+     final response = await http.post(url, headers: headers);
     dev.log("STATUS J: " + response.body);
    
     String mystate =
@@ -112,6 +112,11 @@ class WebViewExampleState extends State<WebPage> {
     } else if (mystate == '3DS'){
        Navigator.pop(context, 'failed');
     }
+   }
+   catch(e){
+
+   }
+   
   }
 
   @override
