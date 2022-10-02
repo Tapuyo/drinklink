@@ -49,47 +49,66 @@ class _setPageState extends State<setPage> {
   @override
   void initState() {
     super.initState();
-      getDetails();
-    myCardList =[];
+    getDetails();
+    myCardList = [];
     myCardFuture = getCard();
+  }
+
+  deleteuser() async {
+    String su = Prefs.getString('token');
+    String un = Prefs.getString('uname');
+    print('Dele Card');
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + su,
+      'Content-Type': 'application/json'
+    };
+
+    String url = ApiCon.baseurl() + '/api/users/currentUser/savedcards';
+
+    final response = await http.delete(url, headers: headers);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      getCard();
+    }
   }
 
   Future<List<CardDetails>> getCard() async {
     setState(() {
-          myCardList = [];
-        });
-      String mytoken = Prefs.getString('token');
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + mytoken
-      };
-      final response = await http.get(
-          ApiCon.baseurl() + '/users/currentUser/savedCards',
-          headers: headers);
-      var jsondata = json.decode(response.body);
-      print(response.body);
+      myCardList = [];
+    });
+    String mytoken = Prefs.getString('token');
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + mytoken
+    };
+    final response = await http.get(
+        ApiCon.baseurl() + '/users/currentUser/savedCards',
+        headers: headers);
+    var jsondata = json.decode(response.body);
+    print(response.body);
 
-      for (var u in jsondata) {
-        var mask = u['maskedPan'];
-        var fullname = mask.split('******');
-        String latmask = "******" + fullname[1].trim().toString();
+    for (var u in jsondata) {
+      var mask = u['maskedPan'];
+      var fullname = mask.split('******');
+      String latmask = "******" + fullname[1].trim().toString();
 
-        CardDetails tmc = new CardDetails(
-            u['id'].toString(),
-            u['maskedPan'],
-            u['expiry'],
-            u['cardholderName'],
-            u['scheme'],
-            u['cardToken'],
-            false,
-            latmask);
+      CardDetails tmc = new CardDetails(
+          u['id'].toString(),
+          u['maskedPan'],
+          u['expiry'],
+          u['cardholderName'],
+          u['scheme'],
+          u['cardToken'],
+          false,
+          latmask);
 
-        setState(() {
-                  myCardList.add(tmc);
-                });
-      }
-      return myCardList;
-   
+      setState(() {
+        myCardList.add(tmc);
+      });
+    }
+    return myCardList;
   }
 
   getDetails() {
@@ -118,23 +137,23 @@ class _setPageState extends State<setPage> {
         toolbarHeight: 100,
         backgroundColor: Color(0xFF2b2b61),
         title: Column(
-         
           children: <Widget>[
-            Container( 
-               alignment: Alignment.topLeft,
+            Container(
+              alignment: Alignment.topLeft,
               child: IconButton(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),),
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+              ),
+            ),
             Container(
               alignment: Alignment.topLeft,
               padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -166,7 +185,7 @@ class _setPageState extends State<setPage> {
                 'My Cards',
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
-                 showCardDetails(),
+              showCardDetails(),
               SizedBox(
                 height: 10,
               ),
@@ -518,6 +537,52 @@ class _setPageState extends State<setPage> {
     );
   }
 
+  _showDialog_Deletecard(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                deleteuser();
+                myCardFuture = getCard();
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   _showDialog1(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -764,7 +829,7 @@ class _setPageState extends State<setPage> {
                                 width: 10,
                               ),
                               Column(
-                                 mainAxisSize: MainAxisSize.min,
+                                mainAxisSize: MainAxisSize.min,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -790,7 +855,10 @@ class _setPageState extends State<setPage> {
                                     color: Colors.white,
                                   ),
                                 ),
-                                onTap: () {}, //Delete card
+                                onTap: () {
+                                  _showDialog_Deletecard('Delete card',
+                                      'Are you sure you want to delete this card?');
+                                }, //Delete card
                               ),
 
                               // Container(

@@ -1049,6 +1049,7 @@ class _MenuPageState extends State<MenuPage> {
                                   temporder.clear();
                                   finaltot = 0;
                                   myCartFuture = getOrder();
+                                  chrx = 0;
                                 });
                               },
                               child: Container(
@@ -1138,10 +1139,31 @@ class _MenuPageState extends State<MenuPage> {
                                   if (discountID.isEmpty) {
                                     // tip = _tip;
                                     // mtip = "";
-                                    // percentagefee = (fee / 100) * finaltot;
-                                    percentagefee = chrx;
-                                    finaltotwithdiscount =
-                                        finaltot + chrx + _tip;
+                                    double ch = charge / 100;
+
+                                    // double a = _tip + finaltot;
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = finaltot + _tip + vip;
+                                      c = vip;
+                                    } else {
+                                      a = finaltot + _tip;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+                                    percentagefee = (fee / 100) * finaltot;
+                                    chrx = double.parse((b).toStringAsFixed(3));
+
+                                    print(b.round().toStringAsFixed(2));
+                                    // print('Service Charge!');
+                                    // print(chrx.toStringAsFixed(2) +
+                                    //     'Service Charge!');
+
+                                    // percentagefee = chrx;
+                                    finaltotwithdiscount = a + chrx;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(3));
                                   } else {
                                     // mtip = tip.toStringAsFixed(2) + ' AED';
 
@@ -1149,11 +1171,31 @@ class _MenuPageState extends State<MenuPage> {
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
+
+                                    double ch = charge / 100;
+
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = _tip + finaltot + vip - percentagefee;
+                                      c = vip;
+                                    } else {
+                                      a = _tip + finaltot - percentagefee;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+                                    chrx = double.parse((b).toStringAsFixed(3));
+
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
                                             ' AED';
-                                    finaltotwithdiscount =
-                                        finaltot - percentagefee + _tip + chrx;
+                                    finaltotwithdiscount = finaltot +
+                                        _tip +
+                                        chrx +
+                                        c -
+                                        percentagefee;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(3));
                                   }
 
                                   print('Percentage fee:' +
@@ -2088,134 +2130,144 @@ class _MenuPageState extends State<MenuPage> {
                               //   ),
                               // ),
                               //body
-                              Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                height: 400,
-                                child: ListView.builder(
-                                  padding: EdgeInsets.all(10.0),
-                                  shrinkWrap: false,
-                                  itemCount: strings[i].mx.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          chid = strings[i].mx[index].id;
-                                          chname = strings[i].mx[index].name;
-                                          chprice = strings[i].mx[index].price;
+                              if (strings[i].mx.length <= 0)
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: Center(
+                                      child: Text('No mixers available')),
+                                )
+                              else
+                                (Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  height: 400,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.all(10.0),
+                                    shrinkWrap: false,
+                                    itemCount: strings[i].mx.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            chid = strings[i].mx[index].id;
+                                            chname = strings[i].mx[index].name;
+                                            chprice =
+                                                strings[i].mx[index].price;
 
-                                          myindex = index;
-                                          print(myindex);
-                                          print(index);
-                                          print(chid);
+                                            myindex = index;
+                                            print(myindex);
+                                            print(index);
+                                            print(chid);
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          mname = strings[i].name;
-                                        });
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            mname = strings[i].name;
+                                          });
 
-                                        modsetState(() {
-                                          if (strings[i].name ==
-                                              strings[i].mx[index].name) {
-                                            strings[i].name =
-                                                strings[i].mx[index].name;
-                                          } else {
-                                            strings[i].name = strings[i].name;
-                                          }
+                                          modsetState(() {
+                                            if (strings[i].name ==
+                                                strings[i].mx[index].name) {
+                                              strings[i].name =
+                                                  strings[i].mx[index].name;
+                                            } else {
+                                              strings[i].name = strings[i].name;
+                                            }
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          select = myindex;
-                                          int Row = index;
-                                        });
-                                      },
-                                      child: Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                          child: Row(
-                                            children: [
-                                              // if (strings[i].name.toString() ==
-                                              //     strings[i].mx[index].name)
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: strings[i]
-                                              //                 .name
-                                              //                 .toString() ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .name
-                                              //         ? Colors.green
-                                              //         : Colors.deepOrange[700],
-                                              //   ))
-                                              // else
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: myDrinks[ind].mid ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .id
-                                              //         ? Colors.deepOrange[700]
-                                              //         : Colors.black
-                                              //             .withOpacity(.5),
-                                              //   )),
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            select = myindex;
+                                            int Row = index;
+                                          });
+                                        },
+                                        child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 20),
+                                            child: Row(
+                                              children: [
+                                                // if (strings[i].name.toString() ==
+                                                //     strings[i].mx[index].name)
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: strings[i]
+                                                //                 .name
+                                                //                 .toString() ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .name
+                                                //         ? Colors.green
+                                                //         : Colors.deepOrange[700],
+                                                //   ))
+                                                // else
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: myDrinks[ind].mid ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .id
+                                                //         ? Colors.deepOrange[700]
+                                                //         : Colors.black
+                                                //             .withOpacity(.5),
+                                                //   )),
 
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid ==
-                                                        strings[i].mx[index].id
-                                                    ? Colors.deepOrange[700]
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Text(
-                                                    strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                                .toString() !=
-                                                            null
-                                                        ? strings[i]
-                                                            .mx[index]
-                                                            .name
-                                                            .toString()
-                                                        : '',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 12),
+                                                Icon(
+                                                  Icons.circle,
+                                                  color: myDrinks[ind].mid ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .id
+                                                      ? Colors.deepOrange[700]
+                                                      : Colors.black
+                                                          .withOpacity(.5),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Text(
+                                                      strings[i]
+                                                                  .mx[index]
+                                                                  .name
+                                                                  .toString() !=
+                                                              null
+                                                          ? strings[i]
+                                                              .mx[index]
+                                                              .name
+                                                              .toString()
+                                                          : '',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                strings[i]
-                                                        .mx[index]
-                                                        .price
-                                                        .toString() +
-                                                    " AED",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  },
-                                ),
-                              )
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  strings[i]
+                                                          .mx[index]
+                                                          .price
+                                                          .toString() +
+                                                      " AED",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            )),
+                                      );
+                                    },
+                                  ),
+                                ))
                             ],
                           ),
                         ),
@@ -2922,8 +2974,11 @@ class _MenuPageState extends State<MenuPage> {
                                     } else {
                                       tmptot = totwithdiscount + tip;
                                     }
-                                    // double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chrx;
+                                    double chr = tmptot * (charge / 100);
+                                    double temp = tmptot + chr;
+
+                                    chrx =
+                                        double.parse((chr).toStringAsFixed(2));
 
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
@@ -2942,13 +2997,16 @@ class _MenuPageState extends State<MenuPage> {
 
                                         finaltotwithdiscount =
                                             double.parse(compl);
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         finaltotwithdiscount = double.parse(
-                                            (temp).toStringAsFixed(2));
+                                            (temp).toStringAsFixed(3));
                                       }
                                     } catch (e) {
                                       finaltotwithdiscount = double.parse(
-                                          (temp).toStringAsFixed(2));
+                                          (temp).toStringAsFixed(3));
                                     }
 
                                     Alert(
@@ -2985,9 +3043,11 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chrx;
-
-                                    finaltotwithdiscount = temp;
+                                    double temp = tmptot + chr;
+                                    chrx =
+                                        double.parse((chr).toStringAsFixed(2));
+                                    finaltotwithdiscount =
+                                        double.parse(temp.toStringAsFixed(3));
                                     Navigator.pop(context);
                                   }
                                 });
@@ -3261,8 +3321,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3273,8 +3340,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                 });
                                                 mState(() {
@@ -3335,8 +3409,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3347,8 +3428,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3412,8 +3500,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3424,8 +3519,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3489,8 +3591,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3501,8 +3610,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3566,8 +3682,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3578,8 +3701,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3643,8 +3773,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3655,8 +3792,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '5 AED';
                                                 });
@@ -3718,8 +3862,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3730,8 +3881,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '10 AED';
                                                 });
@@ -3793,8 +3951,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3805,8 +3970,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '15 AED';
                                                 });
@@ -3868,8 +4040,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3880,8 +4059,15 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
+                                                    chrx = double.parse((chrx)
+                                                        .toStringAsFixed(3));
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    3));
                                                   }
                                                   mtip = '20 AED';
                                                 });
@@ -4025,12 +4211,22 @@ class _MenuPageState extends State<MenuPage> {
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        chrx = double.parse(
+                                            (chrx).toStringAsFixed(3));
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        chrx = double.parse(
+                                            (chrx).toStringAsFixed(3));
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = false;
                                     } else {
@@ -4045,12 +4241,22 @@ class _MenuPageState extends State<MenuPage> {
                                                 vip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        chrx = double.parse(
+                                            (chrx).toStringAsFixed(3));
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
                                         chrx = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        chrx = double.parse(
+                                            (chrx).toStringAsFixed(3));
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = true;
                                     }
@@ -4582,16 +4788,25 @@ class _MenuPageState extends State<MenuPage> {
                                   // } else {
                                   //   _validate = false;
                                   // }
+
                                   bool _validate1;
                                   bool _validate2;
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
                                   bool _validate6;
+                                  bool _validate7;
                                   String ename = billname.text;
                                   var fullname = ename.split(' ');
                                   String firsname = '';
                                   String lastname = '';
+                                  if (pickdine == false) {
+                                    if (choosetb == "Choose Table") {
+                                      _showDialog(
+                                          'DrinkLink', 'Please Choose Table.');
+                                      return;
+                                    }
+                                  }
 
                                   try {
                                     firsname = fullname[0];
@@ -4604,6 +4819,7 @@ class _MenuPageState extends State<MenuPage> {
                                         Prefs.getBoolValtext(billname.text);
                                     _validate3 =
                                         Prefs.getBoolValtext(billemail.text);
+
                                     if (_validate4 == false ||
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
@@ -4640,6 +4856,7 @@ class _MenuPageState extends State<MenuPage> {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
                                     }
+
                                     if (_validate1 == true &&
                                         _validate2 == true &&
                                         _validate3 == true &&
