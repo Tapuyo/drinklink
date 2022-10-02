@@ -2118,134 +2118,144 @@ class _MenuPageState extends State<MenuPage> {
                               //   ),
                               // ),
                               //body
-                              Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                height: 400,
-                                child: ListView.builder(
-                                  padding: EdgeInsets.all(10.0),
-                                  shrinkWrap: false,
-                                  itemCount: strings[i].mx.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          chid = strings[i].mx[index].id;
-                                          chname = strings[i].mx[index].name;
-                                          chprice = strings[i].mx[index].price;
+                              if (strings[i].mx.length <= 0)
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: Center(
+                                      child: Text('No mixers available')),
+                                )
+                              else
+                                (Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  height: 400,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.all(10.0),
+                                    shrinkWrap: false,
+                                    itemCount: strings[i].mx.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            chid = strings[i].mx[index].id;
+                                            chname = strings[i].mx[index].name;
+                                            chprice =
+                                                strings[i].mx[index].price;
 
-                                          myindex = index;
-                                          print(myindex);
-                                          print(index);
-                                          print(chid);
+                                            myindex = index;
+                                            print(myindex);
+                                            print(index);
+                                            print(chid);
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          mname = strings[i].name;
-                                        });
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            mname = strings[i].name;
+                                          });
 
-                                        modsetState(() {
-                                          if (strings[i].name ==
-                                              strings[i].mx[index].name) {
-                                            strings[i].name =
-                                                strings[i].mx[index].name;
-                                          } else {
-                                            strings[i].name = strings[i].name;
-                                          }
+                                          modsetState(() {
+                                            if (strings[i].name ==
+                                                strings[i].mx[index].name) {
+                                              strings[i].name =
+                                                  strings[i].mx[index].name;
+                                            } else {
+                                              strings[i].name = strings[i].name;
+                                            }
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          select = myindex;
-                                          int Row = index;
-                                        });
-                                      },
-                                      child: Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                          child: Row(
-                                            children: [
-                                              // if (strings[i].name.toString() ==
-                                              //     strings[i].mx[index].name)
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: strings[i]
-                                              //                 .name
-                                              //                 .toString() ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .name
-                                              //         ? Colors.green
-                                              //         : Colors.deepOrange[700],
-                                              //   ))
-                                              // else
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: myDrinks[ind].mid ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .id
-                                              //         ? Colors.deepOrange[700]
-                                              //         : Colors.black
-                                              //             .withOpacity(.5),
-                                              //   )),
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            select = myindex;
+                                            int Row = index;
+                                          });
+                                        },
+                                        child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 20),
+                                            child: Row(
+                                              children: [
+                                                // if (strings[i].name.toString() ==
+                                                //     strings[i].mx[index].name)
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: strings[i]
+                                                //                 .name
+                                                //                 .toString() ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .name
+                                                //         ? Colors.green
+                                                //         : Colors.deepOrange[700],
+                                                //   ))
+                                                // else
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: myDrinks[ind].mid ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .id
+                                                //         ? Colors.deepOrange[700]
+                                                //         : Colors.black
+                                                //             .withOpacity(.5),
+                                                //   )),
 
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid ==
-                                                        strings[i].mx[index].id
-                                                    ? Colors.deepOrange[700]
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Text(
-                                                    strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                                .toString() !=
-                                                            null
-                                                        ? strings[i]
-                                                            .mx[index]
-                                                            .name
-                                                            .toString()
-                                                        : '',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 12),
+                                                Icon(
+                                                  Icons.circle,
+                                                  color: myDrinks[ind].mid ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .id
+                                                      ? Colors.deepOrange[700]
+                                                      : Colors.black
+                                                          .withOpacity(.5),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Text(
+                                                      strings[i]
+                                                                  .mx[index]
+                                                                  .name
+                                                                  .toString() !=
+                                                              null
+                                                          ? strings[i]
+                                                              .mx[index]
+                                                              .name
+                                                              .toString()
+                                                          : '',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                strings[i]
-                                                        .mx[index]
-                                                        .price
-                                                        .toString() +
-                                                    " AED",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  },
-                                ),
-                              )
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  strings[i]
+                                                          .mx[index]
+                                                          .price
+                                                          .toString() +
+                                                      " AED",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            )),
+                                      );
+                                    },
+                                  ),
+                                ))
                             ],
                           ),
                         ),
