@@ -1153,7 +1153,7 @@ class _MenuPageState extends State<MenuPage> {
                                     }
                                     double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                    chrx = double.parse((b).toStringAsFixed(3));
+                                    chrx = double.parse((b).toStringAsFixed(2));
 
                                     print(b.round().toStringAsFixed(2));
                                     // print('Service Charge!');
@@ -1164,7 +1164,7 @@ class _MenuPageState extends State<MenuPage> {
                                     finaltotwithdiscount = a + chrx;
                                     finaltotwithdiscount = double.parse(
                                         finaltotwithdiscount
-                                            .toStringAsFixed(3));
+                                            .toStringAsFixed(2));
                                   } else {
                                     // mtip = tip.toStringAsFixed(2) + ' AED';
 
@@ -1184,7 +1184,7 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
-                                    chrx = double.parse((b).toStringAsFixed(3));
+                                    chrx = double.parse((b).toStringAsFixed(2));
 
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
