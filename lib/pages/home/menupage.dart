@@ -4797,7 +4797,8 @@ class _MenuPageState extends State<MenuPage> {
                                   bool _validate5;
                                   bool _validate6;
                                   bool _validate7;
-                                  String ename = billname.text;
+                                  String ename = billname.text.trimLeft();
+                                  print("This is the name:" + ename);
                                   var fullname = ename.split(' ');
                                   String firsname = '';
                                   String lastname = '';
@@ -4844,7 +4845,7 @@ class _MenuPageState extends State<MenuPage> {
                                           'Please input email address.');
                                       return;
                                     } else if (_validate3 == true) {
-                                      String email = billemail.text;
+                                      String email = billemail.text.trimLeft();
                                       final bool isValid =
                                           EmailValidator.validate(email);
                                       print(isValid);
@@ -5160,9 +5161,9 @@ class _MenuPageState extends State<MenuPage> {
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
-    String em = billemail.text;
-    String ename = billname.text;
-    String eaddress = billadd.text;
+    String em = billemail.text.trimLeft();
+    String ename = billname.text.trimLeft();
+    String eaddress = billadd.text.trimLeft();
     var fullname = ename.split(' ');
     String firsname = '';
     String lastname = '';
