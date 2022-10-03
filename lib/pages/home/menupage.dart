@@ -78,7 +78,7 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-  List<Order> myOrder = [];
+  
   List<Table> mytable = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
@@ -229,6 +229,7 @@ class _MenuPageState extends State<MenuPage> {
     getToke();
     myList = [];
     myCartFuture = getOrder();
+    callcompute();
 
     myStore = getStore();
     orderlenght = 0;
@@ -4807,7 +4808,8 @@ class _MenuPageState extends State<MenuPage> {
                                   bool _validate5;
                                   bool _validate6;
                                   bool _validate7;
-                                  String ename = billname.text;
+                                  String ename = billname.text.trimLeft();
+                                  print("This is the name:" + ename);
                                   var fullname = ename.split(' ');
                                   String firsname = '';
                                   String lastname = '';
@@ -4854,7 +4856,7 @@ class _MenuPageState extends State<MenuPage> {
                                           'Please input email address.');
                                       return;
                                     } else if (_validate3 == true) {
-                                      String email = billemail.text;
+                                      String email = billemail.text.trimLeft();
                                       final bool isValid =
                                           EmailValidator.validate(email);
                                       print(isValid);
@@ -5170,9 +5172,9 @@ class _MenuPageState extends State<MenuPage> {
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
-    String em = billemail.text;
-    String ename = billname.text;
-    String eaddress = billadd.text;
+    String em = billemail.text.trimLeft();
+    String ename = billname.text.trimLeft();
+    String eaddress = billadd.text.trimLeft();
     var fullname = ename.split(' ');
     String firsname = '';
     String lastname = '';
@@ -5210,7 +5212,7 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toString(),
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toStringAsFixed(2),
           myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);

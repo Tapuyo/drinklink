@@ -1133,7 +1133,10 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
+                        if(StoreID == ''){
+                          StoreID = snapshot.data[index].id;
+                          myOrder = [];
+                          Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MenuPage(
@@ -1141,6 +1144,28 @@ class _HomePageState extends State<HomePage> {
                                   snapshot.data[index].name,
                                   snapshot.data[index].address)),
                         );
+                        }else{
+                          if(StoreID == snapshot.data[index].id){
+                            Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                  snapshot.data[index].id,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].address)));
+                          }else{
+                            StoreID = snapshot.data[index].id;
+                          myOrder = [];
+                          Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                  snapshot.data[index].id,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].address)));
+                          }
+                        }
+                      
                       },
                       child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),

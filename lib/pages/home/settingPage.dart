@@ -83,6 +83,7 @@ class _setPageState extends State<setPage> {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
     };
+    try{
     final response = await http.get(
         ApiCon.baseurl() + '/users/currentUser/savedCards',
         headers: headers);
@@ -107,6 +108,8 @@ class _setPageState extends State<setPage> {
       setState(() {
         myCardList.add(tmc);
       });
+    }
+    } catch (e) {
     }
     return myCardList;
   }
@@ -191,28 +194,6 @@ class _setPageState extends State<setPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Alert(
-                  //   title: "ADD CREDIT CARD",
-                  //   content: Text("1 AED will be authorized and then release in order to validate your credit card. Do you want to continue?"),
-                  //   buttons: [
-                  //     DialogButton(
-                  //       child: Text(
-                  //         "NO",
-                  //         style: TextStyle(color: Colors.white, fontSize: 20),
-                  //       ),
-                  //       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                  //       color: Color(0xFF2b2b61),
-                  //     ),
-                  //     DialogButton(
-                  //       child: Text(
-                  //         "YES",
-                  //         style: TextStyle(color: Colors.white, fontSize: 20),
-                  //       ),
-                  //       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                  //       color: Colors.deepOrange,
-                  //     )
-                  //   ],
-                  // ).show();
                   if (isActive) {
                     _showDialog('ADD CREDIT CARD',
                         "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
@@ -849,7 +830,7 @@ class _setPageState extends State<setPage> {
                               ),
                               GestureDetector(
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
                                   child: Icon(
                                     Icons.cancel_outlined,
                                     color: Colors.white,
