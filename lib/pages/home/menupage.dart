@@ -5201,7 +5201,7 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toString(),
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toStringAsFixed(2),
           myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
