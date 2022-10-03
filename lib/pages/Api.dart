@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+
+import 'package:driklink/pages/home/menupage.dart';
+
+>>>>>>> f20c5257e53d72db5e9d8c80d3de97d20783f5c7
 class ApiCon {
   //pre production
   //static String baseurl = 'https://drinklink-preprod-be.azurewebsites.net/api';
@@ -34,3 +40,7 @@ class ApiCon {
     return url;
   }
 }
+
+
+List<Order> myOrder = [];
+String StoreID = '';

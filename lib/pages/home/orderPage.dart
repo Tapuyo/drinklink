@@ -97,7 +97,6 @@ class _setPageState extends State<orderPage> {
       }
       
     } catch (e) {
-      _showDialog1('DrinkLink', 'Please login first.');
     }
   }
   Future<List<Order>> getOrders() async {
