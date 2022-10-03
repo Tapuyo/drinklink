@@ -9,7 +9,7 @@ class ApiCon {
   static String recentUrl = '/users/currentUser/orders?pageSize=1&pageNumber=1';
 
   static String baseurl() {
-    bool isPro = true;
+    bool isPro = false;
 
     String url;
     String prepro = 'https://drinklink-preprod-be.azurewebsites.net/api';
@@ -23,7 +23,7 @@ class ApiCon {
   }
 
   static String paymenturl() {
-    bool isPro = true;
+    bool isPro = false;
 
     String url;
     String prepro = 'https://paypage.sandbox.ngenius-payments.com';
