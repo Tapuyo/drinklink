@@ -78,7 +78,6 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-
   List<Table> mytable = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
