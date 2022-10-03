@@ -23,8 +23,8 @@ class _SignPageState extends State<SignIn> {
   final emailController = TextEditingController();
   final passController = TextEditingController();
   login(BuildContext context) async {
-    String em = emailController.text;
-    String pss = passController.text;
+    String em = emailController.text.trim();
+    String pss = passController.text.trim();
     print('login');
     Map<String, String> headers = {"Content-Type": "application/json"};
     Map map = {
@@ -271,7 +271,9 @@ class _SignPageState extends State<SignIn> {
                           onTap: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (context) => SignUp()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      SignUp('', '', '', '', '', '')),
                             );
                           },
                           child: Text(

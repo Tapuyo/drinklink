@@ -10,6 +10,10 @@ import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/data/pref_manager.dart';
 
 class SignUp extends StatefulWidget {
+  String fname, lname, email, uname, pwd, cpwd;
+
+  SignUp(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd);
+
   @override
   _SignPageState createState() => _SignPageState();
 }
@@ -22,6 +26,16 @@ class _SignPageState extends State<SignUp> {
   final passConfirmController = TextEditingController();
   final fnameController = TextEditingController();
   final lnameController = TextEditingController();
+
+  @override
+  void initState() {
+    fnameController.text = widget.fname ?? '';
+    lnameController.text = widget.lname ?? '';
+    emailController.text = widget.email ?? '';
+    usernameController.text = widget.uname ?? '';
+    passController.text = widget.pwd ?? '';
+    passConfirmController.text = widget.cpwd ?? '';
+  }
 
   SignUp() async {
     String euser = usernameController.text;
@@ -360,7 +374,14 @@ class _SignPageState extends State<SignUp> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => termsSign()),
+                    MaterialPageRoute(
+                        builder: (context) => termsSign(
+                            fnameController.text,
+                            lnameController.text,
+                            emailController.text,
+                            usernameController.text,
+                            passController.text,
+                            passConfirmController.text)),
                   );
                 },
                 child: Container(

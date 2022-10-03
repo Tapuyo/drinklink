@@ -1,4 +1,3 @@
-
 import 'package:driklink/pages/home/menupage.dart';
 
 class ApiCon {
@@ -37,7 +36,6 @@ class ApiCon {
     return url;
   }
 }
-
 
 List<Order> myOrder = [];
 String StoreID = '';
