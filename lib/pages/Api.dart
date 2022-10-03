@@ -1,4 +1,3 @@
-
 class ApiCon {
   //pre production
   //static String baseurl = 'https://drinklink-preprod-be.azurewebsites.net/api';
