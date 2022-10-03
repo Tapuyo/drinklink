@@ -830,7 +830,7 @@ class _setPageState extends State<setPage> {
                               ),
                               GestureDetector(
                                 child: Container(
-                                  padding: EdgeInsets.fromLTRB(100, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
                                   child: Icon(
                                     Icons.cancel_outlined,
                                     color: Colors.white,
