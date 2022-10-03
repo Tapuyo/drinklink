@@ -78,7 +78,7 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-  List<Order> myOrder = [];
+  
   List<Table> mytable = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
@@ -229,6 +229,7 @@ class _MenuPageState extends State<MenuPage> {
     getToke();
     myList = [];
     myCartFuture = getOrder();
+    callcompute();
 
     myStore = getStore();
     orderlenght = 0;
