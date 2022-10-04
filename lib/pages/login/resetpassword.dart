@@ -25,6 +25,8 @@ class _ResetPassPageState extends State<ResetPass> {
   final codeController = TextEditingController();
   final passController = TextEditingController();
   final confirmpassController = TextEditingController();
+  bool resendActive = true;
+  bool reserPass = true;
 
   _showDialog(String title, String message) {
     showDialog(
@@ -101,6 +103,9 @@ class _ResetPassPageState extends State<ResetPass> {
           context,
           MaterialPageRoute(builder: (context) => SignIn()),
         );
+        setState(() {
+          reserPass = true;
+        });
         print('200');
       } else {
         if (response.body.contains('Invalid password reset code')) {
@@ -146,7 +151,10 @@ class _ResetPassPageState extends State<ResetPass> {
               "Close",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            onPressed: () =>
+                Navigator.of(context, rootNavigator: true).pop(setState(() {
+              reserPass = true;
+            })),
             color: Color(0xFF2b2b61).withOpacity(.7),
           ),
         ],
@@ -177,7 +185,10 @@ class _ResetPassPageState extends State<ResetPass> {
               "Close",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            onPressed: () =>
+                Navigator.of(context, rootNavigator: true).pop(setState(() {
+              resendActive = true;
+            })),
             color: Color(0xFF2b2b61).withOpacity(.7),
           ),
         ],
@@ -197,7 +208,10 @@ class _ResetPassPageState extends State<ResetPass> {
               "Close",
               style: TextStyle(color: Colors.white, fontSize: 20),
             ),
-            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            onPressed: () =>
+                Navigator.of(context, rootNavigator: true).pop(setState(() {
+              resendActive = true;
+            })),
             color: Color(0xFF2b2b61).withOpacity(.7),
           ),
         ],
@@ -269,7 +283,12 @@ class _ResetPassPageState extends State<ResetPass> {
                   padding: EdgeInsets.fromLTRB(15, 10, 0, 0),
                   child: GestureDetector(
                       onTap: () {
-                        forgotpassword(this.email);
+                        if (resendActive) {
+                          forgotpassword(this.email);
+                          setState(() {
+                            resendActive = false;
+                          });
+                        }
                       },
                       child: Text(
                         'Resend code.',
@@ -334,7 +353,12 @@ class _ResetPassPageState extends State<ResetPass> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            ResetPassword();
+                            if (reserPass) {
+                              ResetPassword();
+                              setState(() {
+                                reserPass = false;
+                              });
+                            }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
