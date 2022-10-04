@@ -11,8 +11,10 @@ import 'package:driklink/data/pref_manager.dart';
 
 class SignUp extends StatefulWidget {
   String fname, lname, email, uname, pwd, cpwd;
+  bool checkedValuex;
 
-  SignUp(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd);
+  SignUp(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd,
+      this.checkedValuex);
 
   @override
   _SignPageState createState() => _SignPageState();
@@ -35,6 +37,7 @@ class _SignPageState extends State<SignUp> {
     usernameController.text = widget.uname ?? '';
     passController.text = widget.pwd ?? '';
     passConfirmController.text = widget.cpwd ?? '';
+    checkedValue = widget.checkedValuex ?? false;
   }
 
   SignUp() async {
@@ -381,7 +384,8 @@ class _SignPageState extends State<SignUp> {
                             emailController.text,
                             usernameController.text,
                             passController.text,
-                            passConfirmController.text)),
+                            passConfirmController.text,
+                            checkedValue)),
                   );
                 },
                 child: Container(

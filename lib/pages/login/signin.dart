@@ -273,7 +273,7 @@ class _SignPageState extends State<SignIn> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      SignUp('', '', '', '', '', '')),
+                                      SignUp('', '', '', '', '', '', false)),
                             );
                           },
                           child: Text(

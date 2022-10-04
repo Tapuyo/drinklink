@@ -15,9 +15,10 @@ class termPage extends StatefulWidget {
 
 class termsSign extends StatefulWidget {
   String fname, lname, email, uname, pwd, cpwd;
+  bool checkedValuex;
 
-  termsSign(
-      this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd);
+  termsSign(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd,
+      this.checkedValuex);
 
   @override
   WebViewExampleState1 createState() => WebViewExampleState1();
@@ -99,8 +100,14 @@ class WebViewExampleState1 extends State<termsSign> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => SignUp(widget.fname, widget.lname,
-                      widget.email, widget.uname, widget.pwd, widget.cpwd)),
+                  builder: (context) => SignUp(
+                      widget.fname,
+                      widget.lname,
+                      widget.email,
+                      widget.uname,
+                      widget.pwd,
+                      widget.cpwd,
+                      widget.checkedValuex)),
             );
           },
         ),
