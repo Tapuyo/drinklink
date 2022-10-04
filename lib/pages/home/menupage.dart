@@ -4816,7 +4816,7 @@ class _MenuPageState extends State<MenuPage> {
                                   if (pickdine == false) {
                                     if (choosetb == "Choose Table") {
                                       _showDialog(
-                                          'DrinkLink', 'Please Choose Table.');
+                                          'DrinkLink', 'Please choose table.');
                                       return;
                                     }
                                   }
