@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:email_validator/email_validator.dart';
 
 class ResetPassEmail extends StatefulWidget {
   @override
@@ -25,6 +26,14 @@ class _ResetPassPageState extends State<ResetPassEmail> {
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(emailController.text);
 
+    String email = emailController.text.trimLeft();
+    final bool isValid = EmailValidator.validate(email);
+    print(isValid);
+    if (isValid == false) {
+      _showDialog('Reset Password', 'Enter valid email address.');
+      return;
+    }
+
     Map<String, String> headers = {"Content-Type": "application/json"};
     String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
@@ -37,6 +46,41 @@ class _ResetPassPageState extends State<ResetPassEmail> {
             builder: (context) => ResetPass(emailController.text)),
       );
     }
+  }
+
+  _showDialog(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
