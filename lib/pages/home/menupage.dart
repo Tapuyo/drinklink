@@ -78,7 +78,7 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-  
+
   List<Table> mytable = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
@@ -1971,6 +1971,7 @@ class _MenuPageState extends State<MenuPage> {
     int chmid;
     String mname;
     String mj;
+
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -2051,8 +2052,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                           chossenMixer chs = chossenMixer(
                                               chid, chname, chprice);
+                                          if (chs.cmid.isNotEmpty) {
+                                            newChs.add(chs);
+                                          }
 
-                                          newChs.add(chs);
                                           print(chs.cmid.toString());
                                           mj = chs.cmid.toString();
                                           print(mj + "mjjjj");
@@ -5212,8 +5215,8 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toStringAsFixed(2),
-          myOrder[i].aIce, ord, ord1);
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(),
+          price.toStringAsFixed(2), myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
