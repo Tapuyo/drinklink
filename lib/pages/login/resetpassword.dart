@@ -26,12 +26,60 @@ class _ResetPassPageState extends State<ResetPass> {
   final passController = TextEditingController();
   final confirmpassController = TextEditingController();
 
+  _showDialog(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   ResetPassword() async {
     String em = codeController.text;
     String pss = passController.text;
     String cpss = confirmpassController.text;
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
     String encoded = stringToBase64.encode(email);
+
+    if (em.isEmpty) {
+      _showDialog('Reset Password', 'Please input correct code.');
+      return;
+    }
+    if (pss.isEmpty) {
+      _showDialog('Reset Password', 'Please input password.');
+      return;
+    }
+    if (cpss.isEmpty) {
+      _showDialog('Reset Password', 'Please input confirm password.');
+      return;
+    }
 
     if (pss == cpss) {
       print('login');
@@ -55,25 +103,32 @@ class _ResetPassPageState extends State<ResetPass> {
         );
         print('200');
       } else {
-        Alert(
-          context: context,
-          title: "Reset Password",
-          content: Container(
-            child: Center(
-              child: Text('Something went wrong.'),
-            ),
-          ),
-          buttons: [
-            DialogButton(
-              child: Text(
-                "Close",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+        if (response.body.contains('Invalid password reset code')) {
+          _showDialog('Reset Password', 'Please input correct code.');
+          return;
+        } else {
+          Alert(
+            context: context,
+            title: "Reset Password",
+            content: Container(
+              child: Center(
+                child: Text('Please input correct code.'),
               ),
-              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-              color: Color(0xFF2b2b61).withOpacity(.7),
             ),
-          ],
-        ).show();
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Close",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(),
+                color: Color(0xFF2b2b61).withOpacity(.7),
+              ),
+            ],
+          ).show();
+        }
+
         print('error');
       }
     } else {
