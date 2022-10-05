@@ -1153,7 +1153,11 @@ class _MenuPageState extends State<MenuPage> {
                                     }
                                     double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                    chrx = double.parse((b).toStringAsFixed(2));
+                                     double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(b, 2);
 
                                     print(b.round().toStringAsFixed(2));
                                     // print('Service Charge!');
@@ -1184,7 +1188,11 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
-                                    chrx = double.parse((b).toStringAsFixed(2));
+                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(b, 2);
 
                                     mdicount =
                                         percentagefee.toStringAsFixed(2) +
@@ -2990,11 +2998,14 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
+                                    
 
-                                    chrx =
-                                        double.parse((chr).toStringAsFixed(2));
-
+                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+double temp = tmptot + chrx;
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
                                     var splitag1 = splitag[0];
@@ -3014,14 +3025,14 @@ class _MenuPageState extends State<MenuPage> {
                                             double.parse(compl);
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
-                                                .toStringAsFixed(3));
+                                                .toStringAsFixed(2));
                                       } else {
                                         finaltotwithdiscount = double.parse(
-                                            (temp).toStringAsFixed(3));
+                                            (temp).toStringAsFixed(2));
                                       }
                                     } catch (e) {
                                       finaltotwithdiscount = double.parse(
-                                          (temp).toStringAsFixed(3));
+                                          (temp).toStringAsFixed(2));
                                     }
 
                                     Alert(
@@ -3058,11 +3069,14 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
-                                    chrx =
-                                        double.parse((chr).toStringAsFixed(2));
+                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                    double temp = tmptot + chrx;
                                     finaltotwithdiscount =
-                                        double.parse(temp.toStringAsFixed(3));
+                                        double.parse(temp.toStringAsFixed(2));
                                     Navigator.pop(context);
                                   }
                                 });
@@ -3335,16 +3349,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3354,16 +3370,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                 });
                                                 mState(() {
@@ -3423,16 +3441,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3442,16 +3462,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3514,16 +3536,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3533,16 +3557,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3605,16 +3631,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3624,16 +3652,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3696,16 +3726,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3715,16 +3747,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3787,16 +3821,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3806,16 +3842,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip = '5 AED';
                                                 });
@@ -3876,16 +3914,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3896,15 +3936,18 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip = '10 AED';
                                                 });
@@ -3966,15 +4009,18 @@ class _MenuPageState extends State<MenuPage> {
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3984,16 +4030,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip = '15 AED';
                                                 });
@@ -4054,16 +4102,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -4073,16 +4123,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    chrx = double.parse((chrx)
-                                                        .toStringAsFixed(3));
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
                                                         double.parse(
                                                             finaltotwithdiscount
                                                                 .toStringAsFixed(
-                                                                    3));
+                                                                    2));
                                                   }
                                                   mtip = '20 AED';
                                                 });
@@ -4225,9 +4277,11 @@ class _MenuPageState extends State<MenuPage> {
                                         double temp =
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
-                                        chrx = temp * ch;
-                                        chrx = double.parse(
-                                            (chrx).toStringAsFixed(3));
+                                       double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4235,9 +4289,11 @@ class _MenuPageState extends State<MenuPage> {
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
-                                        chrx = temp * ch;
-                                        chrx = double.parse(
-                                            (chrx).toStringAsFixed(3));
+                                        double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4255,9 +4311,11 @@ class _MenuPageState extends State<MenuPage> {
                                                 tip +
                                                 vip;
                                         double chr = temp * ch;
-                                        chrx = temp * ch;
-                                        chrx = double.parse(
-                                            (chrx).toStringAsFixed(3));
+                                        double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4265,9 +4323,11 @@ class _MenuPageState extends State<MenuPage> {
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
-                                        chrx = temp * ch;
-                                        chrx = double.parse(
-                                            (chrx).toStringAsFixed(3));
+                                       double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
