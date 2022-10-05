@@ -1095,10 +1095,33 @@ int tipid = 0;
                                 'Order Accepted',
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 18),
-                              ),
+                              ), 
                             ],
                           ),
                         ),
+                           Visibility(
+                            
+                            visible: sttn == '103' ? true:false,
+                          child: Row(
+                                children: 
+                                [
+                                   SizedBox(
+                                width: 112,
+                              ),
+                                  Icon( Icons.cancel_schedule_send_outlined,
+                                size: 20,
+                                color: Colors.red,
+                              ),
+                                  SizedBox(
+                                width: 4,
+                              ),
+                                  Text(
+                                  'Order is rejected by the store.',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],)
+                          ),
                         SizedBox(
                           height: 10,
                         ),
