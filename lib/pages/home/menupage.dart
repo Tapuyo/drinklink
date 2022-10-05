@@ -4856,9 +4856,17 @@ double temp = tmptot + chrx;
                                   bool _validate7;
                                   String ename = billname.text.trimLeft();
                                   print("This is the name:" + ename);
+                                
+                                           int charLength = ename.length;
                                   var fullname = ename.split(' ');
+                                  if (fullname.length==1){
+                                    _showDialog(
+                                          'DrinkLink', 'Please input full name.');
+                                      return;
+                                  }
                                   String firsname = '';
                                   String lastname = '';
+                                  print(fullname);
                                   if (pickdine == false) {
                                     if (choosetb == "Choose Table") {
                                       _showDialog(
@@ -4884,7 +4892,11 @@ double temp = tmptot + chrx;
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
-                                    } else if (_validate4 == false &&
+                                    }else if (charLength == 1) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else if (_validate4 == true &&
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
