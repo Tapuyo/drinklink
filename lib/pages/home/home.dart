@@ -739,24 +739,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => SignIn()),
                               );
                             } else {
-                              context.read<AuthProvider>().setToken('');
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                              _showDialogout("Drinklink", "Proceed logout?");
                             }
                           },
                           child: Container(
@@ -1112,6 +1095,57 @@ class _HomePageState extends State<HomePage> {
                   });
             }
           }),
+    );
+  }
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+               context.read<AuthProvider>().setToken('');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 

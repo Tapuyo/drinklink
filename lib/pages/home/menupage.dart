@@ -693,39 +693,22 @@ class _MenuPageState extends State<MenuPage> {
                       InkWell(
                         onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          setState(() {
-                            setState(() {
-                              stoken = '';
-
-                              Prefs.setString('token', '');
-                              Prefs.setString('uname', 'none');
-                              Prefs.setString('bfNamenone', '');
-                              Prefs.setString('blMamenone', '');
-                              Prefs.setString('billNamenone', '');
-                              Prefs.setString('billAddnone', '');
-                              Prefs.setString('billEmailnone', '');
-                              context.read<AuthProvider>().setToken('');
-                            });
-                          });
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (stoken == '' ||
-                              stoken == null ||
-                              stoken.isEmpty) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          }
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            //Navigator.of(context).popAndPushNamed('/home');
+                            if (stoken == '' ||
+                                stoken == null ||
+                                stoken.isEmpty) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()),
+                              );
+                            } else {
+                              _showDialogout("Drinklink", "Proceed logout?");
+                            }
                         },
                         child: Container(
                           height: 50,
@@ -5454,6 +5437,59 @@ double temp = tmptot + chrx;
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+    
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  context.read<AuthProvider>().setToken('');
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
               },
             )
           ],
