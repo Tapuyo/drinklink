@@ -232,6 +232,7 @@ int tipid = 0;
       Prefs.load();
       token = Prefs.getString('token');
       uName = Prefs.getString('uname');
+      print("This is the username:" + uName);
     } catch (e) {
       token = '';
     }
@@ -612,6 +613,8 @@ int tipid = 0;
   Widget build(BuildContext context) {
      String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
