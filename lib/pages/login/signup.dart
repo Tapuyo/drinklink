@@ -112,7 +112,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Username is already taken."),
+              child: Text("Username is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -132,7 +132,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Email is already taken."),
+              child: Text("Email is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -152,7 +152,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Email."),
+              child: Text("Please Input Email.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -172,7 +172,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Username."),
+              child: Text("Please Input Username.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -192,7 +192,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Passwords don't match."),
+              child: Text("Passwords don't match.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -212,7 +212,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please input required fields."),
+              child: Text("Please input required fields.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
