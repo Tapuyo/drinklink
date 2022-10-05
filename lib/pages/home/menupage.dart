@@ -1153,10 +1153,13 @@ class _MenuPageState extends State<MenuPage> {
                                     }
                                     double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                     double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
+                                    double roundDouble(
+                                        double value, int places) {
+                                      double mod = pow(10.0, places);
+                                      return ((value * mod).round().toDouble() /
+                                          mod);
+                                    }
+
                                     chrx = roundDouble(b, 2);
 
                                     print(b.round().toStringAsFixed(2));
@@ -1188,10 +1191,13 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
-                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
+                                    double roundDouble(
+                                        double value, int places) {
+                                      double mod = pow(10.0, places);
+                                      return ((value * mod).round().toDouble() /
+                                          mod);
+                                    }
+
                                     chrx = roundDouble(b, 2);
 
                                     mdicount =
@@ -2998,14 +3004,16 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    
 
-                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
+                                    double roundDouble(
+                                        double value, int places) {
+                                      double mod = pow(10.0, places);
+                                      return ((value * mod).round().toDouble() /
+                                          mod);
+                                    }
+
                                     chrx = roundDouble(chr, 2);
-double temp = tmptot + chrx;
+                                    double temp = tmptot + chrx;
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
                                     var splitag1 = splitag[0];
@@ -3069,10 +3077,13 @@ double temp = tmptot + chrx;
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
+                                    double roundDouble(
+                                        double value, int places) {
+                                      double mod = pow(10.0, places);
+                                      return ((value * mod).round().toDouble() /
+                                          mod);
+                                    }
+
                                     chrx = roundDouble(chr, 2);
                                     double temp = tmptot + chrx;
                                     finaltotwithdiscount =
@@ -3349,11 +3360,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3370,11 +3388,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3441,11 +3466,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3462,11 +3494,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3536,11 +3575,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3557,11 +3603,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3631,11 +3684,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3652,11 +3712,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3726,11 +3793,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3747,11 +3821,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3821,11 +3902,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3842,11 +3930,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3914,11 +4009,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -3936,11 +4038,18 @@ double temp = tmptot + chrx;
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -4009,11 +4118,18 @@ double temp = tmptot + chrx;
                                                     }
                                                     double chr = temp * ch;
                                                     chrx = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -4030,11 +4146,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -4102,11 +4225,18 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -4123,11 +4253,18 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    double roundDouble(
+                                                        double value,
+                                                        int places) {
+                                                      double mod =
+                                                          pow(10.0, places);
+                                                      return ((value * mod)
+                                                              .round()
+                                                              .toDouble() /
+                                                          mod);
+                                                    }
+
+                                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
                                                         chrx + temp;
                                                     finaltotwithdiscount =
@@ -4277,11 +4414,16 @@ double temp = tmptot + chrx;
                                         double temp =
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
-                                       double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        double roundDouble(
+                                            double value, int places) {
+                                          double mod = pow(10.0, places);
+                                          return ((value * mod)
+                                                  .round()
+                                                  .toDouble() /
+                                              mod);
+                                        }
+
+                                        chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4289,11 +4431,16 @@ double temp = tmptot + chrx;
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
-                                        double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        double roundDouble(
+                                            double value, int places) {
+                                          double mod = pow(10.0, places);
+                                          return ((value * mod)
+                                                  .round()
+                                                  .toDouble() /
+                                              mod);
+                                        }
+
+                                        chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4311,11 +4458,16 @@ double temp = tmptot + chrx;
                                                 tip +
                                                 vip;
                                         double chr = temp * ch;
-                                        double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        double roundDouble(
+                                            double value, int places) {
+                                          double mod = pow(10.0, places);
+                                          return ((value * mod)
+                                                  .round()
+                                                  .toDouble() /
+                                              mod);
+                                        }
+
+                                        chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
@@ -4323,11 +4475,16 @@ double temp = tmptot + chrx;
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
-                                       double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        double roundDouble(
+                                            double value, int places) {
+                                          double mod = pow(10.0, places);
+                                          return ((value * mod)
+                                                  .round()
+                                                  .toDouble() /
+                                              mod);
+                                        }
+
+                                        chrx = roundDouble(chr, 2);
                                         finaltotwithdiscount = chrx + temp;
                                         finaltotwithdiscount = double.parse(
                                             finaltotwithdiscount
