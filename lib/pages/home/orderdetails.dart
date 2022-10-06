@@ -751,37 +751,25 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                        _scaffoldKey.currentState.openDrawer();
-                      } else {
-                        _scaffoldKey.currentState.openEndDrawer();
-                      }
-                        setState(() {
-                          stoken = '';
-
-                          Prefs.setString('token', '');
-                          Prefs.setString('uname', 'none');
-                          Prefs.setString('bfNamenone', '');
-                          Prefs.setString('blMamenone', '');
-                          Prefs.setString('billNamenone', '');
-                          Prefs.setString('billAddnone', '');
-                          Prefs.setString('billEmailnone', '');
-                          context.read<AuthProvider>().setToken('');
-                        });
-                      //Navigator.of(context).popAndPushNamed('/home');
-                      if (stoken == '' || stoken == null || stoken.isEmpty) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignIn()),
-                        );
-                      } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      }
-                    },
+                      onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            //Navigator.of(context).popAndPushNamed('/home');
+                            if (stoken == '' ||
+                                stoken == null ||
+                                stoken.isEmpty) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()),
+                              );
+                            } else {
+                              _showDialogout("Drinklink", "Proceed logout?");
+                            }
+                          },
                     child: Container(
                       height: 50,
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -1058,7 +1046,29 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                             ],
                           ),
-                        ),
+                        ), Visibility(
+
+                            visible: sttn == '103' ? true:false,
+                          child: Row(
+                                children: 
+                                [
+                                   SizedBox(
+                                width: 112,
+                              ),
+                                  Icon( Icons.cancel_schedule_send_outlined,
+                                size: 20,
+                                color: Colors.red,
+                              ),
+                                  SizedBox(
+                                width: 4,
+                              ),
+                                  Text(
+                                  'Order is rejected by the store.',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],)
+                          ),
                         SizedBox(
                           height: 10,
                         ),
@@ -1346,6 +1356,58 @@ class _OrderDetailsState extends State<OrderDetails> {
                   )
                 ],
               )),
+        ),
+      ),
+    );
+  }
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  context.read<AuthProvider>().setToken('');
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
+              },
+            )
+          ],
         ),
       ),
     );
