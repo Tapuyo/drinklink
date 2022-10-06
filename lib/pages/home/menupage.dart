@@ -219,9 +219,10 @@ class _MenuPageState extends State<MenuPage> {
     uName = Prefs.getString('uname');
     String fname = Prefs.getString('bfName' + uName) ?? '';
     String lname = Prefs.getString('blMame' + uName) ?? '';
-    billname.text = fname + '' + lname;
+    billname.text = fname + ' ' + lname;
     billadd.text = Prefs.getString('billAdd' + uName) ?? '';
-    billemail.text = Prefs.getString('billEmail' + uName) ?? '';
+    String email = Prefs.getString('billEmail' + uName) ?? '';
+    billemail.text = email.trim().replaceAll(' ', '');
 
     // }
   }
@@ -3028,9 +3029,9 @@ class _MenuPageState extends State<MenuPage> {
                                         finaltot - totdiscount;
                                     double tmptot;
                                     if (vipcharge == true) {
-                                      tmptot = totwithdiscount + tip + vip;
+                                      tmptot = totwithdiscount + mtip + vip;
                                     } else {
-                                      tmptot = totwithdiscount + tip;
+                                      tmptot = totwithdiscount + mtip;
                                     }
                                     double chr = tmptot * (charge / 100);
 
@@ -3104,9 +3105,9 @@ class _MenuPageState extends State<MenuPage> {
                                     double totwithdiscount = finaltot;
                                     double tmptot;
                                     if (vipcharge == true) {
-                                      tmptot = totwithdiscount + tip + vip;
+                                      tmptot = totwithdiscount + mtip + vip;
                                     } else {
-                                      tmptot = totwithdiscount + tip;
+                                      tmptot = totwithdiscount + mtip;
                                     }
                                     double chr = tmptot * (charge / 100);
                                     // double roundDouble(
@@ -5541,8 +5542,8 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    // double ftd = roundDouble(finaltotwithdiscount, 2);
-    totalPrice = finaltotwithdiscount.toStringAsFixed(2);
+    totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
     print('Total price:' + totalPrice);
@@ -5582,7 +5583,7 @@ class _MenuPageState extends State<MenuPage> {
         "originalPrice": price,
         "saveCardInfo": checkedValue,
         "serviceCharge": finalcharge,
-        "tip": tip,
+        "tip": mtip,
         "vipCharge": vpc,
       };
     } else {
@@ -5604,7 +5605,7 @@ class _MenuPageState extends State<MenuPage> {
         "originalPrice": price,
         "saveCardInfo": checkedValue,
         "serviceCharge": finalcharge,
-        "tip": tip,
+        "tip": mtip,
         "vipCharge": vpc,
 
         "savedCard": {
@@ -5650,7 +5651,7 @@ class _MenuPageState extends State<MenuPage> {
         _cm = response.body.toString();
       }
       _showDialog('DrinkLink', _cm);
-
+      Navigator.pop(context);
       return false;
     }
   }
