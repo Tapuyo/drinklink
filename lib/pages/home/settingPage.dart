@@ -83,34 +83,33 @@ class _setPageState extends State<setPage> {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
     };
-    try{
-    final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/savedCards',
-        headers: headers);
-    var jsondata = json.decode(response.body);
-    print(response.body);
+    try {
+      final response = await http.get(
+          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          headers: headers);
+      var jsondata = json.decode(response.body);
+      print(response.body);
 
-    for (var u in jsondata) {
-      var mask = u['maskedPan'];
-      var fullname = mask.split('******');
-      String latmask = "******" + fullname[1].trim().toString();
+      for (var u in jsondata) {
+        var mask = u['maskedPan'];
+        var fullname = mask.split('******');
+        String latmask = "******" + fullname[1].trim().toString();
 
-      CardDetails tmc = new CardDetails(
-          u['id'].toString(),
-          u['maskedPan'],
-          u['expiry'],
-          u['cardholderName'],
-          u['scheme'],
-          u['cardToken'],
-          false,
-          latmask);
+        CardDetails tmc = new CardDetails(
+            u['id'].toString(),
+            u['maskedPan'],
+            u['expiry'],
+            u['cardholderName'],
+            u['scheme'],
+            u['cardToken'],
+            false,
+            latmask);
 
-      setState(() {
-        myCardList.add(tmc);
-      });
-    }
-    } catch (e) {
-    }
+        setState(() {
+          myCardList.add(tmc);
+        });
+      }
+    } catch (e) {}
     return myCardList;
   }
 

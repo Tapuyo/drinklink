@@ -216,9 +216,12 @@ class _MenuPageState extends State<MenuPage> {
     //   billemail.text = '';
     // } else {
     uName = Prefs.getString('uname');
-    billname.text = Prefs.getString('billName' + uName);
-    billadd.text = Prefs.getString('billAdd' + uName);
-    billemail.text = Prefs.getString('billEmail' + uName);
+    String fname = Prefs.getString('bfName' + uName) ?? '';
+    String lname = Prefs.getString('blMame' + uName) ?? '';
+    billname.text = fname + '' + lname;
+    billadd.text = Prefs.getString('billAdd' + uName) ?? '';
+    billemail.text = Prefs.getString('billEmail' + uName) ?? '';
+
     // }
   }
 
@@ -3333,7 +3336,8 @@ class _MenuPageState extends State<MenuPage> {
                               Visibility(
                                   visible: discount <= 0 ? false : true,
                                   child: Text(
-                                    roundDouble(mdicount, 2).toString(),
+                                    // roundDouble(mdicount, 2).toString(),
+                                    mdicount.toStringAsFixed(3),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -4438,6 +4442,7 @@ class _MenuPageState extends State<MenuPage> {
                                   visible: mtip == 0 ? false : true,
                                   child: Text(
                                     roundDouble(mtip, 2).toString(),
+                                    // mtip.toStringAsFixed(3),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -4645,6 +4650,7 @@ class _MenuPageState extends State<MenuPage> {
                             Spacer(),
                             Text(
                               roundDouble(finaltotwithdiscount, 2).toString(),
+                              // finaltotwithdiscount.toStringAsFixed(3),
                               style: TextStyle(
                                   color: Colors.deepOrange,
                                   fontSize: 20,
@@ -5776,42 +5782,68 @@ class _MenuPageState extends State<MenuPage> {
           builder: (context) => WebPage(linkpayment.toString(), reference)),
     );
 
-    if (result == 'AUTHORISED') {
-      print(result + 'result here');
-      if (checkedValue == true) {
-        Prefs.load();
-        Prefs.setString('billName', billname.text);
-        Prefs.setString('billAdd', billadd.text);
-        Prefs.setString('billEmail', billemail.text);
-      }
+    try {
+      if (result.toString().toLowerCase() == ('AUTHORISED').toLowerCase() ||
+          result.toString().toLowerCase() == ('REVERSED').toLowerCase()) {
+        if (checkedValue == true) {
+          Prefs.load();
+          Prefs.setString('billName', billname.text);
+          Prefs.setString('billAdd', billadd.text);
+          Prefs.setString('billEmail', billemail.text);
+          Prefs.setBool('billcheck', checkedValue);
+        }
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OrderDetails('')),
-      );
-    } else if (result == 'REVERSED') {
-      print(result + 'result here');
-      if (checkedValue == true) {
-        Prefs.load();
-        Prefs.setString('billName', billname.text);
-        Prefs.setString('billAdd', billadd.text);
-        Prefs.setString('billEmail', billemail.text);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => OrderDetails('')),
+        );
+      } else {
+        _showDialog('DrinkLink', 'Failed payment!');
       }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OrderDetails('')),
-      );
-    } else if (result == 'CANCELLED') {
-      print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment!');
-    } else if (result == 'FAILED') {
-      print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment!');
-    } else {
-      print(result + 'payment mode');
+    } catch (x) {
       _showDialog('DrinkLink', 'Failed payment!');
     }
+
+    // if (result.toString().toLowerCase() == ('AUTHORISED').toLowerCase()) {
+    //   print(result + 'result here');
+    //   if (checkedValue == true) {
+    //     Prefs.load();
+    //     Prefs.setString('billName', billname.text);
+    //     Prefs.setString('billAdd', billadd.text);
+    //     Prefs.setString('billEmail', billemail.text);
+    //     Prefs.setBool('billcheck', checkedValue);
+    //   }
+
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => OrderDetails('')),
+    //   );
+    // } else if ((result).toString().toLowerCase() ==
+    //     ('REVERSED').toLowerCase()) {
+    //   print(result + 'result here');
+    //   if (checkedValue == true) {
+    //     Prefs.load();
+    //     Prefs.setString('billName', billname.text);
+    //     Prefs.setString('billAdd', billadd.text);
+    //     Prefs.setString('billEmail', billemail.text);
+    //     Prefs.setBool('billcheck', checkedValue);
+    //   }
+
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => OrderDetails('')),
+    //   );
+    // } else if ((result).toString().toLowerCase() ==
+    //     ('CANCELLED').toLowerCase()) {
+    //   print(result + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // } else if ((result).toString().toLowerCase() == ('FAILED').toLowerCase()) {
+    //   print(result + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // } else {
+    //   print((result).toString().toLowerCase() + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // }
     //}
   }
 
