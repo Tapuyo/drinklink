@@ -186,6 +186,26 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
+      }  else if (response.body.toString().contains("Passwords do not match")) {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Passwords don't match."),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
       } else {
         Alert(
           context: context,
