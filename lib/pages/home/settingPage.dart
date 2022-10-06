@@ -102,12 +102,13 @@ class _setPageState extends State<setPage> {
 
     final response = await http.delete(url, headers: headers);
 
-    if (response.statusCode == '200' || response.statusCode == '201') {
+    if (response.statusCode == 200) {
       print(response.statusCode);
       _showDialog_deletecard_single('My Card', 'Successfully deleted.');
     } else {
       _showDialog_deletecard_single('My Card', 'Failed to delete card.');
     }
+    myCardFuture = getCard();
     Navigator.pop(context);
     // print(response.body);
     // print(response.statusCode);
