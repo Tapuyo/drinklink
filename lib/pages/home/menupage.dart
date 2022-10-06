@@ -5110,6 +5110,7 @@ class _MenuPageState extends State<MenuPage> {
                                   try {
                                     firsname = fullname[0];
                                     lastname = fullname[1];
+
                                     _validate4 = Prefs.getBoolValtext(firsname);
                                     _validate5 = Prefs.getBoolValtext(lastname);
                                     _validate1 =
@@ -5167,6 +5168,16 @@ class _MenuPageState extends State<MenuPage> {
                                       });
                                     }
                                   } catch (e) {
+                                    if (firsname.isEmpty) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    }
+                                    if (lastname.isEmpty) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    }
                                     _showDialog('DrinkLink',
                                         'Please input billing details.');
                                   }
