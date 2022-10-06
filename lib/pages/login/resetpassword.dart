@@ -353,12 +353,13 @@ class _ResetPassPageState extends State<ResetPass> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           onPressed: () {
-                            if (reserPass) {
-                              ResetPassword();
-                              setState(() {
-                                reserPass = false;
-                              });
-                            }
+                            ResetPassword();
+                            // if (reserPass) {
+                            //   ResetPassword();
+                            //   setState(() {
+                            //     reserPass = false;
+                            //   });
+                            // }
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

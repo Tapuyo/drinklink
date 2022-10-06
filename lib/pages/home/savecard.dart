@@ -32,9 +32,13 @@ class WebViewExampleState extends State<SaveCardWeb> {
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
     flutterWebViewPlugin.onUrlChanged.listen((String url) {
       print("This is url: " + url);
-      if (url != murl) {
-        //Navigator.pop(context, url);
-        AddCard(url);
+      try {
+        if (url != murl) {
+          //Navigator.pop(context, url);
+          AddCard(url);
+        }
+      } catch (e) {
+        Navigator.pop(context, 'failed');
       }
     });
   }
@@ -98,16 +102,26 @@ class WebViewExampleState extends State<SaveCardWeb> {
     dev.log(response.body.toString());
     String mystate =
         json.decode(response.body)['_embedded']['payment'][0]['state'];
-    
-    if (mystate == 'REVERSED') {
-      Navigator.pop(context, 'Added');
-    } else if (mystate == 'AUTHORISED') {
-      Navigator.pop(context, 'Added');
-    } else if (mystate == 'CANCELLED') {
-      Navigator.pop(context, 'failed');
-    } else if (mystate == 'FAILED') {
+    try {
+      if (mystate.toLowerCase() == ('REVERSED').toLowerCase() ||
+          mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
+        Navigator.pop(context, 'Added');
+      } else {
+        Navigator.pop(context, 'failed');
+      }
+    } catch (x) {
       Navigator.pop(context, 'failed');
     }
+
+    // if (mystate == 'REVERSED') {
+    //   Navigator.pop(context, 'Added');
+    // } else if (mystate == 'AUTHORISED') {
+    //   Navigator.pop(context, 'Added');
+    // } else if (mystate == 'CANCELLED') {
+    //   Navigator.pop(context, 'failed');
+    // } else if (mystate == 'FAILED') {
+    //   Navigator.pop(context, 'failed');
+    // }
   }
 
   @override

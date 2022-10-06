@@ -102,9 +102,9 @@ class _MenuPageState extends State<MenuPage> {
   double vip = 0;
   double timecol = 0;
   bool vipcharge = false;
-  String mdicount = '';
+  double mdicount = 0;
   double discountitempercentage = 0;
-  String mtip = '0';
+  double mtip = 0;
   double discount = 0;
   double tip = 0;
   double charge = 0;
@@ -125,6 +125,7 @@ class _MenuPageState extends State<MenuPage> {
   bool isloading;
   int totalqty = 0;
   double chrx = 0;
+
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -216,9 +217,13 @@ class _MenuPageState extends State<MenuPage> {
     //   billemail.text = '';
     // } else {
     uName = Prefs.getString('uname');
-    billname.text = Prefs.getString('billName' + uName);
-    billadd.text = Prefs.getString('billAdd' + uName);
-    billemail.text = Prefs.getString('billEmail' + uName);
+    String fname = Prefs.getString('bfName' + uName) ?? '';
+    String lname = Prefs.getString('blMame' + uName) ?? '';
+    billname.text = fname + ' ' + lname;
+    billadd.text = Prefs.getString('billAdd' + uName) ?? '';
+    String email = Prefs.getString('billEmail' + uName) ?? '';
+    billemail.text = email.trim().replaceAll(' ', '');
+
     // }
   }
 
@@ -342,6 +347,34 @@ class _MenuPageState extends State<MenuPage> {
         });
       }
     }
+  }
+
+  _rounddata(double num) {
+    double temp = num;
+    String spliter = temp.toString();
+
+    var splitag = spliter.split(".");
+    var splitag1 = splitag[0];
+    var splitag2 = splitag[1];
+
+    try {
+      var secs1 = splitag2.substring(0, 1);
+      var secs2 = splitag2.substring(1, 2);
+      var secs3 = splitag2.substring(2, 3);
+      print(secs3);
+
+      if (double.parse(secs3) <= 5) {
+        String compl = splitag1 + "." + secs1 + secs2;
+
+        num = double.parse(compl);
+        num = double.parse(num.toStringAsFixed(2));
+      } else {
+        num = double.parse((temp).toStringAsFixed(2));
+      }
+    } catch (e) {
+      num = double.parse((temp).toStringAsFixed(2));
+    }
+    return num;
   }
 
   Future<List<Table>> getTable() async {
@@ -474,225 +507,224 @@ class _MenuPageState extends State<MenuPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/bkgdefault.png"),
-                  fit: BoxFit.cover)),
-          child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              //automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 35,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (subbodybool == 1) {
-                    setState(() {
-                      subbodybool = 0;
-                    });
-                  } else if (subbodybool == 2) {
-                    setState(() {
-                      subbodybool = 1;
-                    });
-                  } else {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }
-                },
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/bkgdefault.png"),
+                fit: BoxFit.cover)),
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            //automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                size: 35,
+                color: Colors.white,
               ),
-              // actions: [
-              //   IconButton(
-              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-              //     onPressed: () {
-              //       _scaffoldKey.currentState.openEndDrawer();
-              //     },
-              //   )
-              // ],
+              onPressed: () {
+                if (subbodybool == 1) {
+                  setState(() {
+                    subbodybool = 0;
+                  });
+                } else if (subbodybool == 2) {
+                  setState(() {
+                    subbodybool = 1;
+                  });
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                }
+              },
             ),
-            endDrawer: Drawer(
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Home",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => orderPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.wine_bar_sharp,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "My Orders",
+            // actions: [
+            //   IconButton(
+            //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+            //     onPressed: () {
+            //       _scaffoldKey.currentState.openEndDrawer();
+            //     },
+            //   )
+            // ],
+          ),
+          endDrawer: Drawer(
+            child: Container(
+                padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.home,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Text(
+                                "Home",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => setPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.settings,
-                                size: 30,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => orderPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.wine_bar_sharp,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "My Orders",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Settings v1.0.122",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => termPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesome.angle_double_up,
-                                size: 30,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => setPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.settings,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Settings v1.0.122",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Terms of Service",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => termPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              FontAwesome.angle_double_up,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Terms of Service",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
                               _scaffoldKey.currentState.openDrawer();
                             } else {
                               _scaffoldKey.currentState.openEndDrawer();
@@ -709,58 +741,59 @@ class _MenuPageState extends State<MenuPage> {
                             } else {
                               _showDialogout("Drinklink", "Proceed logout?");
                             }
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                MaterialCommunityIcons.human,
-                                size: 30,
+                          },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              MaterialCommunityIcons.human,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              stoken == '' || stoken == null || stoken.isEmpty
+                                  ? "Sign In / Register"
+                                  : "Sign Out (" + uName + ")",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                stoken == '' || stoken == null || stoken.isEmpty
-                                    ? "Sign In / Register"
-                                    : "Sign Out (" + uName + ")",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      Spacer(),
-                      // Container(
-                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Visibility(
-                      //           visible: orderList.length > 0 ? true:false,
-                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
-                      //       mybodyRec(),
-                      //       SizedBox(height: 20,)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  )),
-            ),
-            backgroundColor: Colors.transparent,
-            body: myorig(),
-          )),
+                    ),
+                    Spacer(),
+                    // Container(
+                    //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Visibility(
+                    //           visible: orderList.length > 0 ? true:false,
+                    //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                    //       mybodyRec(),
+                    //       SizedBox(height: 20,)
+                    //     ],
+                    //   ),
+                    // )
+                  ],
+                )),
+          ),
+          backgroundColor: Colors.transparent,
+          body: myorig(),
+        ),
+      ),
     );
   }
 
@@ -1078,11 +1111,11 @@ class _MenuPageState extends State<MenuPage> {
                                   double sc = 0;
                                   double _tip = 0;
 
-                                  if (mtip.isNotEmpty) {
-                                    String a = mtip.replaceAll(' AED', '');
+                                  if (mtip != 0) {
+                                    // String a = mtip.replaceAll(' AED', '');
 
-                                    _tip = double.parse(a);
-                                    print(mtip + 'Tip here!');
+                                    _tip = mtip;
+                                    // print(mtip + 'Tip here!');
 
                                     if (tipid == 1) {
                                       _tip = finaltot * 0.05;
@@ -1108,17 +1141,17 @@ class _MenuPageState extends State<MenuPage> {
                                   } else {
                                     _tip = _tip;
                                   }
-
+                                  mtip = _tip;
                                   // sc = (fee / 100) * finaltot;
                                   //  if (vipcharge == true) {
                                   //     chrx = chrx + vip;
                                   //   }
-                                  if (_tip == 0 || _tip == 0.0) {
-                                    mtip = '';
-                                  } else {
-                                    mtip = _tip.toStringAsFixed(2) + ' AED';
-                                  }
-                                  print(mtip);
+                                  // if (_tip == 0 || _tip == 0.0) {
+                                  //   mtip = '';
+                                  // } else {
+                                  //   mtip = _tip.toStringAsFixed(3) + ' AED';
+                                  // }
+                                  // print(mtip);
 
                                   if (discountID.isEmpty) {
                                     // tip = _tip;
@@ -1135,12 +1168,16 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
-                                    percentagefee = (fee / 100) * finaltot;
-                                     double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(b, 2);
+                                    // percentagefee = (fee / 100) * finaltot;
+                                    // double roundDouble(
+                                    //     double value, int places) {
+                                    //   double mod = pow(10.0, places);
+                                    //   return ((value * mod).round().toDouble() /
+                                    //       mod);
+                                    // }
+
+                                    // chrx = roundDouble(b, 2);
+                                    chrx = b;
 
                                     print(b.round().toStringAsFixed(2));
                                     // print('Service Charge!');
@@ -1149,9 +1186,9 @@ class _MenuPageState extends State<MenuPage> {
 
                                     // percentagefee = chrx;
                                     finaltotwithdiscount = a + chrx;
-                                    finaltotwithdiscount = double.parse(
-                                        finaltotwithdiscount
-                                            .toStringAsFixed(2));
+                                    // finaltotwithdiscount = double.parse(
+                                    //     finaltotwithdiscount
+                                    //         .toStringAsFixed(5));
                                   } else {
                                     // mtip = tip.toStringAsFixed(2) + ' AED';
 
@@ -1171,23 +1208,25 @@ class _MenuPageState extends State<MenuPage> {
                                       c = 0;
                                     }
                                     double b = a * ch;
-                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(b, 2);
+                                    // double roundDouble(
+                                    //     double value, int places) {
+                                    //   double mod = pow(10.0, places);
+                                    //   return ((value * mod).round().toDouble() /
+                                    //       mod);
+                                    // }
 
-                                    mdicount =
-                                        percentagefee.toStringAsFixed(2) +
-                                            ' AED';
+                                    // chrx = roundDouble(b, 2);
+                                    chrx = b;
+
+                                    mdicount = percentagefee;
                                     finaltotwithdiscount = finaltot +
                                         _tip +
                                         chrx +
                                         c -
                                         percentagefee;
-                                    finaltotwithdiscount = double.parse(
-                                        finaltotwithdiscount
-                                            .toStringAsFixed(3));
+                                    // finaltotwithdiscount = double.parse(
+                                    //     finaltotwithdiscount
+                                    //         .toStringAsFixed(3));
                                   }
 
                                   print('Percentage fee:' +
@@ -2965,58 +3004,63 @@ class _MenuPageState extends State<MenuPage> {
                                               .toString())) /
                                       100);
 
-                                  mdicount =
-                                      totdiscount.toStringAsFixed(2) + ' AED';
+                                  mdicount = totdiscount;
                                   discount = double.parse(snapshot
                                       .data[index].discountpercentage
                                       .toString());
                                   print(discount);
+
                                   if (discount > 0) {
                                     double totwithdiscount =
                                         finaltot - totdiscount;
                                     double tmptot;
                                     if (vipcharge == true) {
-                                      tmptot = totwithdiscount + tip + vip;
+                                      tmptot = totwithdiscount + mtip + vip;
                                     } else {
-                                      tmptot = totwithdiscount + tip;
+                                      tmptot = totwithdiscount + mtip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    
 
-                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
-double temp = tmptot + chrx;
-                                    String spliter = temp.toString();
-                                    var splitag = spliter.split(".");
-                                    var splitag1 = splitag[0];
-                                    var splitag2 = splitag[1];
+                                    // double roundDouble(
+                                    //     double value, int places) {
+                                    //   double mod = pow(10.0, places);
+                                    //   return ((value * mod).round().toDouble() /
+                                    //       mod);
+                                    // }
 
-                                    try {
-                                      var secs1 = splitag2.substring(0, 1);
-                                      var secs2 = splitag2.substring(1, 2);
-                                      var secs3 = splitag2.substring(2, 3);
-                                      print(secs3);
+                                    // chrx = roundDouble(chr, 2);
+                                    chrx = chr;
+                                    double temp = tmptot + chrx;
+                                    // String spliter = temp.toString();
+                                    // var splitag = spliter.split(".");
+                                    // var splitag1 = splitag[0];
+                                    // var splitag2 = splitag[1];
 
-                                      if (double.parse(secs3) <= 5) {
-                                        String compl =
-                                            splitag1 + "." + secs1 + secs2;
+                                    finaltotwithdiscount = temp;
 
-                                        finaltotwithdiscount =
-                                            double.parse(compl);
-                                        finaltotwithdiscount = double.parse(
-                                            finaltotwithdiscount
-                                                .toStringAsFixed(2));
-                                      } else {
-                                        finaltotwithdiscount = double.parse(
-                                            (temp).toStringAsFixed(2));
-                                      }
-                                    } catch (e) {
-                                      finaltotwithdiscount = double.parse(
-                                          (temp).toStringAsFixed(2));
-                                    }
+                                    // try {
+                                    //   var secs1 = splitag2.substring(0, 1);
+                                    //   var secs2 = splitag2.substring(1, 2);
+                                    //   var secs3 = splitag2.substring(2, 3);
+                                    //   print(secs3);
+
+                                    //   if (double.parse(secs3) <= 5) {
+                                    //     String compl =
+                                    //         splitag1 + "." + secs1 + secs2;
+
+                                    //     finaltotwithdiscount =
+                                    //         double.parse(compl);
+                                    //     finaltotwithdiscount = double.parse(
+                                    //         finaltotwithdiscount
+                                    //             .toStringAsFixed(2));
+                                    //   } else {
+                                    //     finaltotwithdiscount = double.parse(
+                                    //         (temp).toStringAsFixed(2));
+                                    //   }
+                                    // } catch (e) {
+                                    //   finaltotwithdiscount = double.parse(
+                                    //       (temp).toStringAsFixed(2));
+                                    // }
 
                                     Alert(
                                       context: context,
@@ -3047,19 +3091,23 @@ double temp = tmptot + chrx;
                                     double totwithdiscount = finaltot;
                                     double tmptot;
                                     if (vipcharge == true) {
-                                      tmptot = totwithdiscount + tip + vip;
+                                      tmptot = totwithdiscount + mtip + vip;
                                     } else {
-                                      tmptot = totwithdiscount + tip;
+                                      tmptot = totwithdiscount + mtip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                    // double roundDouble(
+                                    //     double value, int places) {
+                                    //   double mod = pow(10.0, places);
+                                    //   return ((value * mod).round().toDouble() /
+                                    //       mod);
+                                    // }
+
+                                    // chrx = roundDouble(chr, 2);
+                                    chrx = chr;
                                     double temp = tmptot + chrx;
-                                    finaltotwithdiscount =
-                                        double.parse(temp.toStringAsFixed(2));
+                                    finaltotwithdiscount = temp;
+                                    // double.parse(temp.toStringAsFixed(2));
                                     Navigator.pop(context);
                                   }
                                 });
@@ -3273,7 +3321,15 @@ double temp = tmptot + chrx;
                               Visibility(
                                   visible: discount <= 0 ? false : true,
                                   child: Text(
-                                    mdicount,
+                                    roundtoEven(mdicount, 2).toString(),
+                                    // mdicount.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  )),
+                              Visibility(
+                                  visible: discount <= 0 ? false : true,
+                                  child: Text(
+                                    ' AED',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -3312,7 +3368,7 @@ double temp = tmptot + chrx;
                                           child: GestureDetector(
                                               onTap: () {
                                                 setState(() {
-                                                  mtip = '0';
+                                                  mtip = 0;
                                                   tip = 0;
                                                   double ch = charge / 100;
                                                   //finaltotwithdiscount = finaltotwithdiscount;
@@ -3332,18 +3388,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3353,18 +3417,26 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
                                                 });
                                                 mState(() {
@@ -3424,18 +3496,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3445,22 +3525,29 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip =
-                                                      tip.toStringAsFixed(2) +
-                                                          ' AED';
+                                                  mtip = tip;
                                                 });
                                                 mState(() {
                                                   tipid = 1;
@@ -3519,18 +3606,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3540,22 +3635,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip =
-                                                      tip.toStringAsFixed(2) +
-                                                          ' AED';
+                                                  mtip = tip;
                                                 });
                                                 mState(() {
                                                   tipid = 2;
@@ -3614,18 +3715,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3635,22 +3744,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip =
-                                                      tip.toStringAsFixed(2) +
-                                                          ' AED';
+                                                  mtip = tip;
                                                 });
                                                 mState(() {
                                                   tipid = 3;
@@ -3709,18 +3824,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3730,22 +3853,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip =
-                                                      tip.toStringAsFixed(2) +
-                                                          ' AED';
+                                                  mtip = tip;
                                                 });
                                                 mState(() {
                                                   tipid = 4;
@@ -3804,18 +3933,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3825,20 +3962,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip = '5 AED';
+                                                  mtip = 5;
                                                 });
                                                 mState(() {
                                                   tipid = 5;
@@ -3897,18 +4042,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3918,21 +4071,29 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip = '10 AED';
+                                                  mtip = 10;
                                                 });
                                                 mState(() {
                                                   tipid = 6;
@@ -3991,19 +4152,27 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    chrx = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // chrx = temp * ch;
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -4013,20 +4182,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                   double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip = '15 AED';
+                                                  mtip = 15;
                                                 });
                                                 mState(() {
                                                   tipid = 7;
@@ -4085,18 +4262,26 @@ double temp = tmptot + chrx;
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -4106,20 +4291,28 @@ double temp = tmptot + chrx;
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
-                                                    double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                                    // double roundDouble(
+                                                    //     double value,
+                                                    //     int places) {
+                                                    //   double mod =
+                                                    //       pow(10.0, places);
+                                                    //   return ((value * mod)
+                                                    //           .round()
+                                                    //           .toDouble() /
+                                                    //       mod);
+                                                    // }
+
+                                                    // chrx = roundDouble(chr, 2);
+                                                    chrx = chr;
                                                     finaltotwithdiscount =
                                                         chrx + temp;
-                                                    finaltotwithdiscount =
-                                                        double.parse(
-                                                            finaltotwithdiscount
-                                                                .toStringAsFixed(
-                                                                    2));
+                                                    // finaltotwithdiscount =
+                                                    //     double.parse(
+                                                    //         finaltotwithdiscount
+                                                    //             .toStringAsFixed(
+                                                    //                 2));
                                                   }
-                                                  mtip = '20 AED';
+                                                  mtip = 20;
                                                 });
                                                 mState(() {
                                                   tipid = 8;
@@ -4231,9 +4424,17 @@ double temp = tmptot + chrx;
                               ),
                               Spacer(),
                               Visibility(
-                                  visible: mtip == '0' ? false : true,
+                                  visible: mtip == 0 ? false : true,
                                   child: Text(
-                                    mtip,
+                                    roundtoEven(mtip, 2).toString(),
+                                    // mtip.toStringAsFixed(2),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  )),
+                              Visibility(
+                                  visible: mtip == 0 ? false : true,
+                                  child: Text(
+                                    ' AED',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -4260,27 +4461,39 @@ double temp = tmptot + chrx;
                                         double temp =
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
-                                       double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        // double roundDouble(
+                                        //     double value, int places) {
+                                        //   double mod = pow(10.0, places);
+                                        //   return ((value * mod)
+                                        //           .round()
+                                        //           .toDouble() /
+                                        //       mod);
+                                        // }
+
+                                        // chrx = roundDouble(chr, 2);
+                                        chrx = chr;
                                         finaltotwithdiscount = chrx + temp;
-                                        finaltotwithdiscount = double.parse(
-                                            finaltotwithdiscount
-                                                .toStringAsFixed(3));
+                                        // finaltotwithdiscount = double.parse(
+                                        //     finaltotwithdiscount
+                                        //         .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
-                                        double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        // double roundDouble(
+                                        //     double value, int places) {
+                                        //   double mod = pow(10.0, places);
+                                        //   return ((value * mod)
+                                        //           .round()
+                                        //           .toDouble() /
+                                        //       mod);
+                                        // }
+
+                                        // chrx = roundDouble(chr, 2);
+                                        chrx = chr;
                                         finaltotwithdiscount = chrx + temp;
-                                        finaltotwithdiscount = double.parse(
-                                            finaltotwithdiscount
-                                                .toStringAsFixed(3));
+                                        // finaltotwithdiscount = double.parse(
+                                        //     finaltotwithdiscount
+                                        //         .toStringAsFixed(3));
                                       }
                                       vipcharge = false;
                                     } else {
@@ -4294,27 +4507,39 @@ double temp = tmptot + chrx;
                                                 tip +
                                                 vip;
                                         double chr = temp * ch;
-                                        double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        // double roundDouble(
+                                        //     double value, int places) {
+                                        //   double mod = pow(10.0, places);
+                                        //   return ((value * mod)
+                                        //           .round()
+                                        //           .toDouble() /
+                                        //       mod);
+                                        // }
+
+                                        // chrx = roundDouble(chr, 2);
+                                        chrx = chr;
                                         finaltotwithdiscount = chrx + temp;
-                                        finaltotwithdiscount = double.parse(
-                                            finaltotwithdiscount
-                                                .toStringAsFixed(3));
+                                        // finaltotwithdiscount = double.parse(
+                                        //     finaltotwithdiscount
+                                        //         .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
-                                       double roundDouble(double value, int places){ 
-                                       double mod = pow(10.0, places); 
-                                        return ((value * mod).round().toDouble() / mod); 
-                                      }
-                                    chrx = roundDouble(chr, 2);
+                                        // double roundDouble(
+                                        //     double value, int places) {
+                                        //   double mod = pow(10.0, places);
+                                        //   return ((value * mod)
+                                        //           .round()
+                                        //           .toDouble() /
+                                        //       mod);
+                                        // }
+
+                                        // chrx = roundDouble(chr, 2);
+                                        chrx = chr;
                                         finaltotwithdiscount = chrx + temp;
-                                        finaltotwithdiscount = double.parse(
-                                            finaltotwithdiscount
-                                                .toStringAsFixed(3));
+                                        // finaltotwithdiscount = double.parse(
+                                        //     finaltotwithdiscount
+                                        //         .toStringAsFixed(3));
                                       }
                                       vipcharge = true;
                                     }
@@ -4379,7 +4604,8 @@ double temp = tmptot + chrx;
                             Spacer(),
                             Text(
                               // ((fee / 100) * finaltot).toStringAsFixed(2),
-                              (chrx).toStringAsFixed(2),
+                              roundDouble(chrx, 2).toString(),
+                              // (chrx).toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -4408,7 +4634,8 @@ double temp = tmptot + chrx;
                             ),
                             Spacer(),
                             Text(
-                              finaltotwithdiscount.toStringAsFixed(2),
+                              roundDouble(finaltotwithdiscount, 2).toString(),
+                              // finaltotwithdiscount.toStringAsFixed(3),
                               style: TextStyle(
                                   color: Colors.deepOrange,
                                   fontSize: 20,
@@ -4856,7 +5083,13 @@ double temp = tmptot + chrx;
                                   bool _validate7;
                                   String ename = billname.text.trimLeft();
                                   print("This is the name:" + ename);
+                                  int charLength = ename.length;
                                   var fullname = ename.split(' ');
+                                   if (fullname.length==1){
+                                    _showDialog(
+                                          'DrinkLink', 'Please input full name.');
+                                      return;
+                                  }
                                   String firsname = '';
                                   String lastname = '';
                                   if (pickdine == false) {
@@ -4870,6 +5103,7 @@ double temp = tmptot + chrx;
                                   try {
                                     firsname = fullname[0];
                                     lastname = fullname[1];
+
                                     _validate4 = Prefs.getBoolValtext(firsname);
                                     _validate5 = Prefs.getBoolValtext(lastname);
                                     _validate1 =
@@ -4886,6 +5120,10 @@ double temp = tmptot + chrx;
                                       return;
                                     } else if (_validate4 == false &&
                                         _validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else if (charLength == 1) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
@@ -4922,11 +5160,21 @@ double temp = tmptot + chrx;
                                         _validate4 == true &&
                                         _validate5 == true) {
                                       setState(() {
-                                        isloading = true;
+                                        // isloading = true;
                                         tokenChecker();
                                       });
                                     }
                                   } catch (e) {
+                                    if (firsname.isEmpty) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    }
+                                    if (lastname.isEmpty) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    }
                                     _showDialog('DrinkLink',
                                         'Please input billing details.');
                                   }
@@ -4940,6 +5188,7 @@ double temp = tmptot + chrx;
                                     //   width: 30.0,
                                     // ),
                                     //SizedBox(width: 10,),
+
                                     Text(
                                       'PAY NOW',
                                       style: TextStyle(
@@ -5096,7 +5345,7 @@ double temp = tmptot + chrx;
     Navigator.of(context).push(
       new PageRouteBuilder(
         opaque: false,
-        barrierDismissible: true,
+        barrierDismissible: false,
         pageBuilder: (BuildContext context, _, __) {
           return Center(
             child: Container(
@@ -5104,18 +5353,16 @@ double temp = tmptot + chrx;
               width: 150,
               height: 150,
               color: Colors.transparent,
-              child: isloading == true
-                  ? Center(
-                      child: new SizedBox(
-                        height: 50.0,
-                        width: 50.0,
-                        child: new CircularProgressIndicator(
-                          value: null,
-                          strokeWidth: 7.0,
-                        ),
-                      ),
-                    )
-                  : Center(),
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -5130,7 +5377,7 @@ double temp = tmptot + chrx;
       SignUpPay();
     } else {
       OrderNow();
-      isloading = false;
+      // isloading = false;
       //getPaymentLink();
 
     }
@@ -5291,8 +5538,8 @@ double temp = tmptot + chrx;
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    double ftd = roundDouble(finaltotwithdiscount, 2);
-    totalPrice = ftd.toString();
+    totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
     print('Total price:' + totalPrice);
@@ -5332,7 +5579,7 @@ double temp = tmptot + chrx;
         "originalPrice": price,
         "saveCardInfo": checkedValue,
         "serviceCharge": finalcharge,
-        "tip": tip,
+        "tip": mtip,
         "vipCharge": vpc,
       };
     } else {
@@ -5354,7 +5601,7 @@ double temp = tmptot + chrx;
         "originalPrice": price,
         "saveCardInfo": checkedValue,
         "serviceCharge": finalcharge,
-        "tip": tip,
+        "tip": mtip,
         "vipCharge": vpc,
 
         "savedCard": {
@@ -5400,13 +5647,18 @@ double temp = tmptot + chrx;
         _cm = response.body.toString();
       }
       _showDialog('DrinkLink', _cm);
-
+      Navigator.pop(context);
       return false;
     }
   }
 
   double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
+    double mod = pow(10.00, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
+
+  double roundtoEven(double value, int places) {
+    double mod = pow(10.00, places) / places;
     return ((value * mod).round().toDouble() / mod);
   }
 
@@ -5593,42 +5845,70 @@ double temp = tmptot + chrx;
           builder: (context) => WebPage(linkpayment.toString(), reference)),
     );
 
-    if (result == 'AUTHORISED') {
-      print(result + 'result here');
-      if (checkedValue == true) {
-        Prefs.load();
-        Prefs.setString('billName', billname.text);
-        Prefs.setString('billAdd', billadd.text);
-        Prefs.setString('billEmail', billemail.text);
-      }
+    try {
+      if (result.toString().toLowerCase() == ('AUTHORISED').toLowerCase() ||
+          result.toString().toLowerCase() == ('REVERSED').toLowerCase()) {
+        if (checkedValue == true) {
+          Prefs.load();
+          Prefs.setString('billName', billname.text);
+          Prefs.setString('billAdd', billadd.text);
+          Prefs.setString('billEmail', billemail.text);
+          Prefs.setBool('billcheck', checkedValue);
+        }
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OrderDetails('')),
-      );
-    } else if (result == 'REVERSED') {
-      print(result + 'result here');
-      if (checkedValue == true) {
-        Prefs.load();
-        Prefs.setString('billName', billname.text);
-        Prefs.setString('billAdd', billadd.text);
-        Prefs.setString('billEmail', billemail.text);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => OrderDetails('')),
+        );
+      } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
+        _showDialog('DrinkLink', 'Cancelled payment!');
+      } else {
+        _showDialog('DrinkLink', 'Failed payment!');
       }
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => OrderDetails('')),
-      );
-    } else if (result == 'CANCELLED') {
-      print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment!');
-    } else if (result == 'FAILED') {
-      print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Failed payment!');
-    } else {
-      print(result + 'payment mode');
+    } catch (x) {
       _showDialog('DrinkLink', 'Failed payment!');
     }
+
+    // if (result.toString().toLowerCase() == ('AUTHORISED').toLowerCase()) {
+    //   print(result + 'result here');
+    //   if (checkedValue == true) {
+    //     Prefs.load();
+    //     Prefs.setString('billName', billname.text);
+    //     Prefs.setString('billAdd', billadd.text);
+    //     Prefs.setString('billEmail', billemail.text);
+    //     Prefs.setBool('billcheck', checkedValue);
+    //   }
+
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => OrderDetails('')),
+    //   );
+    // } else if ((result).toString().toLowerCase() ==
+    //     ('REVERSED').toLowerCase()) {
+    //   print(result + 'result here');
+    //   if (checkedValue == true) {
+    //     Prefs.load();
+    //     Prefs.setString('billName', billname.text);
+    //     Prefs.setString('billAdd', billadd.text);
+    //     Prefs.setString('billEmail', billemail.text);
+    //     Prefs.setBool('billcheck', checkedValue);
+    //   }
+
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => OrderDetails('')),
+    //   );
+    // } else if ((result).toString().toLowerCase() ==
+    //     ('CANCELLED').toLowerCase()) {
+    //   print(result + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // } else if ((result).toString().toLowerCase() == ('FAILED').toLowerCase()) {
+    //   print(result + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // } else {
+    //   print((result).toString().toLowerCase() + 'payment mode');
+    //   _showDialog('DrinkLink', 'Failed payment!');
+    // }
     //}
   }
 

@@ -1123,6 +1123,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
                context.read<AuthProvider>().setToken('');
                               Navigator.pushReplacement(
                                 context,

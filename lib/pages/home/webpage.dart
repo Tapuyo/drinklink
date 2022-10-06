@@ -32,11 +32,32 @@ class WebViewExampleState extends State<WebPage> {
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
     flutterWebViewPlugin.onUrlChanged.listen((String url) {
       print("This is url: " + url);
-      if (url != murl) {
-        //Navigator.pop(context, url);
-        Order(url);
+      try {
+        if (url != murl) {
+          //Navigator.pop(context, url);
+          Order(url);
+        }
+      } catch (e) {
+        Navigator.pop(context, 'failed');
       }
     });
+  }
+
+  cancel_order() async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+
+    String url =
+        ApiCon.baseurl() + '/orders/cancelunpaid?ref=' + widget.reference;
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
+
+    final response = await http.post(url, headers: headers);
+    if (response.statusCode == '201' || response.statusCode == '200') {
+      print(response.statusCode);
+    }
   }
 
   checkUrlRes(String url) async {
@@ -96,24 +117,44 @@ class WebViewExampleState extends State<WebPage> {
     };
 
     try {
+      final response = await http.post(url, headers: headers);
+      String mystate =
+          json.decode(response.body)['_embedded']['payment'][0]['state'];
+
       if (url.contains('cancelUnpaid')) {
         Navigator.pop(context, 'cancel');
       } else {
-        final response = await http.post(url, headers: headers);
-        dev.log("STATUS J: " + response.body);
-
-        String mystate =
-            json.decode(response.body)['_embedded']['payment'][0]['state'];
-        dev.log("STATUS J" + mystate);
-        if (mystate == 'AUTHORISED') {
+        if (mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
           Navigator.pop(context, 'AUTHORISED');
-        } else if (mystate == 'FAILED') {
-          Navigator.pop(context, 'failed');
-        } else if (mystate == 'REVERSE') {
+        } else {
           Navigator.pop(context, 'failed');
         }
       }
-    } catch (e) {}
+    } catch (x) {
+      Navigator.pop(context, 'failed');
+    }
+
+    // try {
+    //   if (url.contains('cancelUnpaid')) {
+    //     Navigator.pop(context, 'cancel');
+    //   } else {
+    //     final response = await http.post(url, headers: headers);
+    //     dev.log("STATUS J: " + response.body);
+
+    //     String mystate =
+    //         json.decode(response.body)['_embedded']['payment'][0]['state'];
+    //     dev.log("STATUS J" + mystate);
+    //     if (mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
+    //       Navigator.pop(context, 'AUTHORISED');
+    //     } else if (mystate.toLowerCase() == ('FAILED').toLowerCase()) {
+    //       Navigator.pop(context, 'failed');
+    //     } else if (mystate.toLowerCase() == ('REVERSE').toLowerCase()) {
+    //       Navigator.pop(context, 'failed');
+    //     } else {
+    //       Navigator.pop(context, 'failed');
+    //     }
+    //   }
+    // } catch (e) {}
   }
 
   @override
@@ -146,6 +187,7 @@ class WebViewExampleState extends State<WebPage> {
             color: Colors.white,
           ),
           onPressed: () {
+            cancel_order();
             Navigator.pop(context, 'cancel');
           },
         ),

@@ -86,21 +86,24 @@ class _MoreDetailsState extends State<MoreDetails> {
         stt = 'Payment Processed';
       } else if (cState == '4') {
         setState(() {
-          String mdate =
-              json.decode(response.body)[i]['timeToCollect'].toString();
-          DateTime parseDate =
-              new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-          var inputDate = DateTime.parse(parseDate.toString());
-          setState(() {
-            int mmint = inputDate.minute * 60;
-            int msec = inputDate.second;
+              DateTime mdate = DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
+              // DateTime parseDate =
+              //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+              print(mdate);
+              //print(parseDate);
+              var diff;
+              //if(DateTime.now().timeZoneName == 'PST'){
+                var dtnow = DateTime.now();
+                diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
+             // }
+              print(diff);
+              setState(() {
 
-            _start = mmint + msec;
-          });
-          if (_start > 0) {
-            startTimer();
-          }
-        });
+                _start = diff;
+                print(_start);
+              });
+              
+            });
         stt = 'Ready';
       } else if (cState == '5') {
         _timer.cancel();
@@ -125,10 +128,13 @@ class _MoreDetailsState extends State<MoreDetails> {
         _timer.cancel();
       }
     }
+    if (_start > 0) {
+      startTimer();
+    }
   }
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
+    const oneSec = const Duration(seconds: 2);
     _timer = new Timer.periodic(
       oneSec,
       (Timer timer) {
