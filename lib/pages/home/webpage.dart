@@ -86,9 +86,7 @@ class WebViewExampleState extends State<WebPage> {
     // }
   }
 
-  // ignore: non_constant_identifier_names
   Order(String url) async {
-    print('call');
     Prefs.load();
     String token = Prefs.getString('token');
 
@@ -96,23 +94,26 @@ class WebViewExampleState extends State<WebPage> {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + token
     };
-    if(url.contains('cancelUnpaid')){
-       Navigator.pop(context, 'cancel');
-    }
 
-  //  try{
-    final response = await http.post(url, headers: headers);
-    dev.log("STATUS J: " + response.body);
-   
-    String mystate =
-        json.decode(response.body)['_embedded']['payment'][0]['state'];
-   dev.log("STATUS J" + mystate);
-    if (mystate == 'AUTHORISED') {
-      Navigator.pop(context, 'AUTHORISED');
-    } 
-  //  }catch(e){
+    try {
+      if (url.contains('cancelUnpaid')) {
+        Navigator.pop(context, 'cancel');
+      } else {
+        final response = await http.post(url, headers: headers);
+        dev.log("STATUS J: " + response.body);
 
-  //  }
+        String mystate =
+            json.decode(response.body)['_embedded']['payment'][0]['state'];
+        dev.log("STATUS J" + mystate);
+        if (mystate == 'AUTHORISED') {
+          Navigator.pop(context, 'AUTHORISED');
+        } else if (mystate == 'FAILED') {
+          Navigator.pop(context, 'failed');
+        } else if (mystate == 'REVERSE') {
+          Navigator.pop(context, 'failed');
+        }
+      }
+    } catch (e) {}
   }
 
   @override

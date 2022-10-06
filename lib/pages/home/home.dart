@@ -56,12 +56,17 @@ class _HomePageState extends State<HomePage> {
       print('set notif \n \n ');
     } catch (e) {}
   }
+  final _focusNode = FocusNode();
+  bool isSearching = false;
 
   void initState() {
     Prefs.load();
     super.initState();
     _ontap = true;
-
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+      isSearching = _focusNode.hasFocus;
+    });
     // myList = [];
     // myStore = getStore();
 
@@ -734,24 +739,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => SignIn()),
                               );
                             } else {
-                              context.read<AuthProvider>().setToken('');
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                              _showDialogout("Drinklink", "Proceed logout?");
                             }
                           },
                           child: Container(
@@ -854,9 +842,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
                       child: SingleChildScrollView(
                         child: SizedBox(
-                          height: _ontap == true
-                              ? MediaQuery.of(context).size.height - 300
-                              : MediaQuery.of(context).size.height - 600,
+                          height: MediaQuery.of(context).size.height - 320,
                           child: mybody(),
                         ),
                       ),
@@ -864,8 +850,14 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
+                        decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(topLeft: Radius.circular(14.0), topRight: Radius.circular(14.0)),
+                              color: isSearching ? Colors.grey[900].withOpacity(.8):Colors.transparent
+                              
+                            ),
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                         child: TextField(
+                          focusNode: _focusNode,
                           style: TextStyle(
                             fontSize: 20.0,
                             color: Colors.white70,
@@ -1105,6 +1097,57 @@ class _HomePageState extends State<HomePage> {
           }),
     );
   }
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+               context.read<AuthProvider>().setToken('');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   mybody() {
     return Container(
@@ -1124,7 +1167,10 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
+                        if(StoreID == ''){
+                          StoreID = snapshot.data[index].id;
+                          myOrder = [];
+                          Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => MenuPage(
@@ -1132,6 +1178,28 @@ class _HomePageState extends State<HomePage> {
                                   snapshot.data[index].name,
                                   snapshot.data[index].address)),
                         );
+                        }else{
+                          if(StoreID == snapshot.data[index].id){
+                            Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                  snapshot.data[index].id,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].address)));
+                          }else{
+                            StoreID = snapshot.data[index].id;
+                          myOrder = [];
+                          Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                  snapshot.data[index].id,
+                                  snapshot.data[index].name,
+                                  snapshot.data[index].address)));
+                          }
+                        }
+                      
                       },
                       child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -1140,13 +1208,13 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                  color: Colors.transparent,
-                                  width: 60,
-                                  height: 60,
-                                  //this will load the image
-                                  child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)
-                                  ),
+                                color: Colors.transparent,
+                                width: 60,
+                                height: 60,
+                                //this will load the image
+                                // child: Image.network(ApiCon.baseurl() +
+                                //     snapshot.data[index].image)
+                              ),
                               SizedBox(
                                 width: 10,
                               ),

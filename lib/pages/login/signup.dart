@@ -10,6 +10,12 @@ import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/data/pref_manager.dart';
 
 class SignUp extends StatefulWidget {
+  String fname, lname, email, uname, pwd, cpwd;
+  bool checkedValuex;
+
+  SignUp(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd,
+      this.checkedValuex);
+
   @override
   _SignPageState createState() => _SignPageState();
 }
@@ -22,6 +28,17 @@ class _SignPageState extends State<SignUp> {
   final passConfirmController = TextEditingController();
   final fnameController = TextEditingController();
   final lnameController = TextEditingController();
+
+  @override
+  void initState() {
+    fnameController.text = widget.fname ?? '';
+    lnameController.text = widget.lname ?? '';
+    emailController.text = widget.email ?? '';
+    usernameController.text = widget.uname ?? '';
+    passController.text = widget.pwd ?? '';
+    passConfirmController.text = widget.cpwd ?? '';
+    checkedValue = widget.checkedValuex ?? false;
+  }
 
   SignUp() async {
     String euser = usernameController.text;
@@ -95,7 +112,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Username is already taken."),
+              child: Text("Username is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -115,7 +132,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Email is already taken."),
+              child: Text("Email is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -135,7 +152,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Email."),
+              child: Text("Please Input Email.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -155,7 +172,27 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Username."),
+              child: Text("Please Input Username.", textAlign: TextAlign.center),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
+      }  else if (response.body.toString().contains("Passwords do not match")) {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child: Text("Passwords don't match.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -175,7 +212,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please input required fields."),
+              child: Text("Please input required fields.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -360,7 +397,15 @@ class _SignPageState extends State<SignUp> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => termsSign()),
+                    MaterialPageRoute(
+                        builder: (context) => termsSign(
+                            fnameController.text,
+                            lnameController.text,
+                            emailController.text,
+                            usernameController.text,
+                            passController.text,
+                            passConfirmController.text,
+                            checkedValue)),
                   );
                 },
                 child: Container(

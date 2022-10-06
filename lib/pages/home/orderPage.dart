@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:driklink/data/pref_manager.dart';
+import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/home/orderdetails.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_dropdown/flutter_dropdown.dart';
@@ -44,13 +45,71 @@ class _setPageState extends State<orderPage> {
     orderList = [];
     ord = getOrders();
   }
+ _showDialog1(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  _showDialog(String title, String message) async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + token
+      };
+      String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
+      final response = await http.post(url, headers: headers);
+      print(json.decode(response.body));
+      if (response.statusCode == 200) {
+      }
+      
+    } catch (e) {
+    }
+  }
   Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
     Prefs.load();
     String token = Prefs.getString('token');
+    if (token.isEmpty){
+      _showDialog("Drinklink", "Please login first.");
+    }
+    else{
     print(token);
     Map<String, String> headers = {
       "Content-Type": "application/json",
@@ -63,14 +122,24 @@ class _setPageState extends State<orderPage> {
         headers: headers);
     var jsondata = json.decode(response.body);
 
-    print(json.decode(response.body));
+    //print(json.decode(response.body));
     for (var i = 0; i < jsondata.length; i++) {
       var jsondata1 = await json.decode(response.body)[i]['items'];
-
+      print(jsondata1.toString());
+      List<OrdMixers> mixerI = [];
       List<MyItems> newItem = [];
       for (var x in jsondata1) {
         MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
-
+        var mixerItems = x['selectedMixers'];
+        if(mixerItems != null || mixerItems != [] || mixerItems.length <= 0){
+          
+          for (var x in mixerItems) {
+            print(x['name']);
+            OrdMixers mix = new OrdMixers( x['name'], x['price'].toString());
+            mixerI.add(mix);
+          }
+        }
+        
         newItem.add(nt);
       }
       String st = json.decode(response.body)[i]['timestamp'].toString();
@@ -116,6 +185,8 @@ class _setPageState extends State<orderPage> {
         stt = 'Not Collected';
       } else if (cState == '105') {
         stt = 'Payment Failed';
+      }else if (cState == '106') {
+        stt = 'Payment Cancelled';
       }
 
       setState(() {
@@ -125,13 +196,14 @@ class _setPageState extends State<orderPage> {
             newItem,
             bar,
             stt,
-            cState);
+            cState,
+            mixerI);
 
         orderList.add(myorder);
       });
     }
     return orderList;
-  }
+  }}
 
   @override
   Widget build(BuildContext context) {
@@ -214,13 +286,7 @@ class _setPageState extends State<orderPage> {
                           } else if (dropdownvalue == 'ALL') {
                             sortCode = '';
                           }
-                          @override
-                          void didChangeDependencies() {
-                            super.didChangeDependencies();
-                            setState(() {
-                              ord = getOrders();
-                            });
-                          }
+                          didChangeDependencies();
                         });
                       },
                     ),
@@ -234,13 +300,16 @@ class _setPageState extends State<orderPage> {
       ),
     );
   }
-
+  didChangeDependencies() {
+                              ord = getOrders();
+                           
+                          }
   mybody() {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
       height: MediaQuery.of(context).size.height - 170,
       child: FutureBuilder(
-          future: getOrders(),
+          future: ord,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (!snapshot.hasData) {
               return Container(
@@ -265,9 +334,9 @@ class _setPageState extends State<orderPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                   width: MediaQuery.of(context).size.width,
-                                  height: 40,
+                                  height: 50,
                                   color: Color(0xFF303052),
                                   child: Row(
                                     children: [
@@ -291,7 +360,7 @@ class _setPageState extends State<orderPage> {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                                  padding: EdgeInsets.fromLTRB(2, 10, 2, 2),
                                   //visible: snapshot.data[index].mixer == null ? false:true,
                                   child: snapshot.data[index].itemslist != null
                                       ? Container(
@@ -299,7 +368,7 @@ class _setPageState extends State<orderPage> {
                                               snapshot.data[index].itemslist ==
                                                       null
                                                   ? 0
-                                                  : 50,
+                                                  : 40,
                                           width:
                                               MediaQuery.of(context).size.width,
                                           child: ListView(
@@ -311,16 +380,33 @@ class _setPageState extends State<orderPage> {
                                                     snapshot
                                                         .data[index].itemslist,
                                                     index),
-                                                SizedBox(
-                                                  width: 10,
-                                                )
+                                                
                                               ]))
                                       : null,
                                 ),
+                                Container(
+                            //visible: snapshot.data[index].mixer == null ? false:true,
+                            child: snapshot.data[index].mixrs != null
+                                ? Container(
+                                     padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                                    height: 28,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: ListView(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        scrollDirection: Axis.horizontal,
+                                        children: [
+                                          getCartMixWidgets(
+                                              snapshot.data[index].mixrs, index),
+                                        
+                                        ]))
+                                : null,
+                          ),
                                 showSated(
                                     snapshot.data[index].id,
                                     snapshot.data[index].cState,
                                     snapshot.data[index].sttn)
+                                
                               ],
                             )),
                       ),
@@ -329,6 +415,41 @@ class _setPageState extends State<orderPage> {
             }
           }),
     );
+  }
+
+  Widget getCartMixWidgets(List<OrdMixers> strings, int ind) {
+    int select; 
+    List<Widget> list = new List<Widget>();
+
+    for (var i = 0; i < strings.length; i++) {
+      list.add(Container(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: GestureDetector(
+          onTap: () {},
+          child: strings[i].mixName.toString() != ''
+              ? new Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    border: Border.all(color: Colors.white54.withOpacity(.5),),
+                  ), //
+                  padding: EdgeInsets.all(1),   
+                  child: Row(
+                    children: [
+                      Text(
+                        strings[i].mixName.toString() != null
+                            ? strings[i].mixName.toString()
+                            : '',
+                            textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white54),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+        ),
+      ));
+    }
+    return new Row(children: list);
   }
 
   showSated(String id, stt, stn) {
@@ -515,6 +636,19 @@ class _setPageState extends State<orderPage> {
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
               ))));
+    } else if (stn == '106') {
+      return Container(
+          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+          width: MediaQuery.of(context).size.width,
+          child: Container(
+              color: Colors.redAccent,
+              width: MediaQuery.of(context).size.width,
+              height: 50,
+              child: Center(
+                  child: Text(
+                stt.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ))));
     }
   }
 
@@ -596,9 +730,10 @@ class Order {
   final String barid;
   final String cState;
   final String sttn;
+  final List<OrdMixers> mixrs;
 
   Order(this.id, this.timestamp, this.itemslist, this.barid, this.cState,
-      this.sttn);
+      this.sttn, this.mixrs);
 }
 
 class MyItems {
@@ -606,4 +741,12 @@ class MyItems {
   final String itemsquantity;
 
   MyItems(this.itemsname, this.itemsquantity);
+}
+
+
+class OrdMixers {
+  final String mixName;
+  final String mixPrice;
+
+  OrdMixers(this.mixName, this.mixPrice);
 }

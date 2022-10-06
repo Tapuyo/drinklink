@@ -78,7 +78,7 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-  List<Order> myOrder = [];
+
   List<Table> mytable = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
@@ -124,7 +124,7 @@ class _MenuPageState extends State<MenuPage> {
 
   bool isloading;
   int totalqty = 0;
-
+  double chrx = 0;
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -229,6 +229,7 @@ class _MenuPageState extends State<MenuPage> {
     getToke();
     myList = [];
     myCartFuture = getOrder();
+    callcompute();
 
     myStore = getStore();
     orderlenght = 0;
@@ -237,6 +238,9 @@ class _MenuPageState extends State<MenuPage> {
     getVipcharge();
     myCardList = [];
     myCardFuture = getCard();
+
+    getTable();
+    mytable = [];
   }
 
   Future<List<CardDetails>> getCard() async {
@@ -689,39 +693,22 @@ class _MenuPageState extends State<MenuPage> {
                       InkWell(
                         onTap: () {
                           if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          setState(() {
-                            setState(() {
-                              stoken = '';
-
-                              Prefs.setString('token', '');
-                              Prefs.setString('uname', 'none');
-                              Prefs.setString('bfNamenone', '');
-                              Prefs.setString('blMamenone', '');
-                              Prefs.setString('billNamenone', '');
-                              Prefs.setString('billAddnone', '');
-                              Prefs.setString('billEmailnone', '');
-                              context.read<AuthProvider>().setToken('');
-                            });
-                          });
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (stoken == '' ||
-                              stoken == null ||
-                              stoken.isEmpty) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          }
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+                            //Navigator.of(context).popAndPushNamed('/home');
+                            if (stoken == '' ||
+                                stoken == null ||
+                                stoken.isEmpty) {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignIn()),
+                              );
+                            } else {
+                              _showDialogout("Drinklink", "Proceed logout?");
+                            }
                         },
                         child: Container(
                           height: 50,
@@ -743,7 +730,7 @@ class _MenuPageState extends State<MenuPage> {
                               Text(
                                 stoken == '' || stoken == null || stoken.isEmpty
                                     ? "Sign In / Register"
-                                    : "Sign Out",
+                                    : "Sign Out (" + uName + ")",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -1046,6 +1033,7 @@ class _MenuPageState extends State<MenuPage> {
                                   temporder.clear();
                                   finaltot = 0;
                                   myCartFuture = getOrder();
+                                  chrx = 0;
                                 });
                               },
                               child: Container(
@@ -1087,22 +1075,119 @@ class _MenuPageState extends State<MenuPage> {
                                   Prefs.setDouble('Price', finaltot);
                                   double percentagefee = 0;
                                   finaltotwithdiscount = 0;
+                                  double sc = 0;
+                                  double _tip = 0;
+
+                                  if (mtip.isNotEmpty) {
+                                    String a = mtip.replaceAll(' AED', '');
+
+                                    _tip = double.parse(a);
+                                    print(mtip + 'Tip here!');
+
+                                    if (tipid == 1) {
+                                      _tip = finaltot * 0.05;
+                                    } else if (tipid == 2) {
+                                      _tip = finaltot * 0.10;
+                                    } else if (tipid == 3) {
+                                      _tip = finaltot * 0.15;
+                                    } else if (tipid == 4) {
+                                      _tip = finaltot * 0.20;
+                                    } else if (tipid == 5) {
+                                      _tip = 5;
+                                    } else if (tipid == 6) {
+                                      _tip = 10;
+                                    } else if (tipid == 7) {
+                                      _tip = 15;
+                                    } else if (tipid == 8) {
+                                      _tip = 20;
+                                    } else {
+                                      _tip = _tip;
+                                    }
+
+                                    // _tip = parse mtip;
+                                  } else {
+                                    _tip = _tip;
+                                  }
+
+                                  // sc = (fee / 100) * finaltot;
+                                  //  if (vipcharge == true) {
+                                  //     chrx = chrx + vip;
+                                  //   }
+                                  if (_tip == 0 || _tip == 0.0) {
+                                    mtip = '';
+                                  } else {
+                                    mtip = _tip.toStringAsFixed(2) + ' AED';
+                                  }
+                                  print(mtip);
 
                                   if (discountID.isEmpty) {
-                                    tip = 0;
-                                    mtip = "";
+                                    // tip = _tip;
+                                    // mtip = "";
+                                    double ch = charge / 100;
+
+                                    // double a = _tip + finaltot;
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = finaltot + _tip + vip;
+                                      c = vip;
+                                    } else {
+                                      a = finaltot + _tip;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
                                     percentagefee = (fee / 100) * finaltot;
-                                    finaltotwithdiscount =
-                                        finaltot + percentagefee;
+                                     double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(b, 2);
+
+                                    print(b.round().toStringAsFixed(2));
+                                    // print('Service Charge!');
+                                    // print(chrx.toStringAsFixed(2) +
+                                    //     'Service Charge!');
+
+                                    // percentagefee = chrx;
+                                    finaltotwithdiscount = a + chrx;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(2));
                                   } else {
-                                    tip = 0;
-                                    mtip = "";
+                                    // mtip = tip.toStringAsFixed(2) + ' AED';
+
+                                    // mtip = "";
                                     percentagefee =
                                         (discountitempercentage / 100) *
                                             finaltot;
-                                    mdicount = percentagefee.toString() + 'AED';
-                                    finaltotwithdiscount =
-                                        finaltot - percentagefee + tip;
+
+                                    double ch = charge / 100;
+
+                                    double a, c;
+                                    if (vipcharge == true) {
+                                      a = _tip + finaltot + vip - percentagefee;
+                                      c = vip;
+                                    } else {
+                                      a = _tip + finaltot - percentagefee;
+                                      c = 0;
+                                    }
+                                    double b = a * ch;
+                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(b, 2);
+
+                                    mdicount =
+                                        percentagefee.toStringAsFixed(2) +
+                                            ' AED';
+                                    finaltotwithdiscount = finaltot +
+                                        _tip +
+                                        chrx +
+                                        c -
+                                        percentagefee;
+                                    finaltotwithdiscount = double.parse(
+                                        finaltotwithdiscount
+                                            .toStringAsFixed(3));
                                   }
 
                                   print('Percentage fee:' +
@@ -1876,6 +1961,8 @@ class _MenuPageState extends State<MenuPage> {
     int myindex = 0;
     int chmid;
     String mname;
+    String mj;
+
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -1911,14 +1998,20 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                         onTap: () {
-                                          setState(() {
-                                            // if (myDrinks[ind]
-                                            //     .ChMixer
-                                            //     .isNotEmpty) {
-                                            //   strings[i].name = mname;
-                                            // }
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty) {
+                                            myDrinks[ind].mid = '';
+                                            setState(() {
+                                              myDrinks[ind].mid = myDrinks[ind]
+                                                  .ChMixer[ind]
+                                                  .cmid;
+                                            });
                                             Navigator.pop(context);
-                                          });
+                                          } else {
+                                            myDrinks[ind].mid = '';
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: SizedBox(
                                           width: 100,
@@ -1950,19 +2043,34 @@ class _MenuPageState extends State<MenuPage> {
 
                                           chossenMixer chs = chossenMixer(
                                               chid, chname, chprice);
-                                          print(chs);
+                                          if (chs.cmid.isNotEmpty) {
+                                            newChs.add(chs);
+                                          }
 
-                                          newChs.add(chs);
                                           print(chs.cmid.toString());
+                                          mj = chs.cmid.toString();
+                                          print(mj + "mjjjj");
                                           print(chs.cname.toString());
                                           print(chs.cprice.toString());
                                           myDrinks[ind].ChMixer = newChs;
 
                                           print(strings[i].mx.length);
 
+                                          print(chs.cname + 'Drinks Here!!');
+                                          double mixertotal = 0;
+                                          for (var i = 0;
+                                              i < newChs.length;
+                                              i++) {
+                                            double cprice =
+                                                double.parse(newChs[i].cprice);
+                                            setState(() {
+                                              mixertotal += cprice;
+                                            });
+                                          }
+
                                           double tot = double.parse(
                                                   myDrinks[ind].origPrice) +
-                                              double.parse(chprice);
+                                              mixertotal;
                                           myDrinks[ind].price =
                                               tot.toStringAsFixed(2);
                                           strings[i].name =
@@ -2028,133 +2136,144 @@ class _MenuPageState extends State<MenuPage> {
                               //   ),
                               // ),
                               //body
-                              Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                height: 400,
-                                child: ListView.builder(
-                                  padding: EdgeInsets.all(10.0),
-                                  shrinkWrap: false,
-                                  itemCount: strings[i].mx.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          chid = strings[i].mx[index].id;
-                                          chname = strings[i].mx[index].name;
-                                          chprice = strings[i].mx[index].price;
+                              if (strings[i].mx.length <= 0)
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  child: Center(
+                                      child: Text('No mixers available')),
+                                )
+                              else
+                                (Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  height: 400,
+                                  child: ListView.builder(
+                                    padding: EdgeInsets.all(10.0),
+                                    shrinkWrap: false,
+                                    itemCount: strings[i].mx.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            chid = strings[i].mx[index].id;
+                                            chname = strings[i].mx[index].name;
+                                            chprice =
+                                                strings[i].mx[index].price;
 
-                                          myindex = index;
-                                          print(myindex);
-                                          print(index);
-                                          print(chid);
+                                            myindex = index;
+                                            print(myindex);
+                                            print(index);
+                                            print(chid);
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          mname = strings[i].name;
-                                        });
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            mname = strings[i].name;
+                                          });
 
-                                        modsetState(() {
-                                          if (strings[i].name ==
-                                              strings[i].mx[index].name) {
-                                            strings[i].name =
-                                                strings[i].mx[index].name;
-                                          } else {
-                                            strings[i].name = strings[i].name;
-                                          }
+                                          modsetState(() {
+                                            if (strings[i].name ==
+                                                strings[i].mx[index].name) {
+                                              strings[i].name =
+                                                  strings[i].mx[index].name;
+                                            } else {
+                                              strings[i].name = strings[i].name;
+                                            }
 
-                                          myDrinks[ind].mid =
-                                              strings[i].mx[index].id;
-                                          myDrinks[ind].mprice =
-                                              strings[i].mx[index].price;
-                                          select = myindex;
-                                          int Row = index;
-                                        });
-                                      },
-                                      child: Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                          child: Row(
-                                            children: [
-                                              // if (strings[i].name.toString() ==
-                                              //     strings[i].mx[index].name)
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: strings[i]
-                                              //                 .name
-                                              //                 .toString() ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .name
-                                              //         ? Colors.green
-                                              //         : Colors.deepOrange[700],
-                                              //   ))
-                                              // else
-                                              //   (Icon(
-                                              //     Icons.circle,
-                                              //     color: myDrinks[ind].mid ==
-                                              //             strings[i]
-                                              //                 .mx[index]
-                                              //                 .id
-                                              //         ? Colors.deepOrange[700]
-                                              //         : Colors.black
-                                              //             .withOpacity(.5),
-                                              //   )),
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid ==
-                                                        strings[i].mx[index].id
-                                                    ? Colors.deepOrange[700]
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Text(
-                                                    strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                                .toString() !=
-                                                            null
-                                                        ? strings[i]
-                                                            .mx[index]
-                                                            .name
-                                                            .toString()
-                                                        : '',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 12),
+                                            myDrinks[ind].mid =
+                                                strings[i].mx[index].id;
+                                            myDrinks[ind].mprice =
+                                                strings[i].mx[index].price;
+                                            select = myindex;
+                                            int Row = index;
+                                          });
+                                        },
+                                        child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 20),
+                                            child: Row(
+                                              children: [
+                                                // if (strings[i].name.toString() ==
+                                                //     strings[i].mx[index].name)
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: strings[i]
+                                                //                 .name
+                                                //                 .toString() ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .name
+                                                //         ? Colors.green
+                                                //         : Colors.deepOrange[700],
+                                                //   ))
+                                                // else
+                                                //   (Icon(
+                                                //     Icons.circle,
+                                                //     color: myDrinks[ind].mid ==
+                                                //             strings[i]
+                                                //                 .mx[index]
+                                                //                 .id
+                                                //         ? Colors.deepOrange[700]
+                                                //         : Colors.black
+                                                //             .withOpacity(.5),
+                                                //   )),
+
+                                                Icon(
+                                                  Icons.circle,
+                                                  color: myDrinks[ind].mid ==
+                                                          strings[i]
+                                                              .mx[index]
+                                                              .id
+                                                      ? Colors.deepOrange[700]
+                                                      : Colors.black
+                                                          .withOpacity(.5),
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Text(
+                                                      strings[i]
+                                                                  .mx[index]
+                                                                  .name
+                                                                  .toString() !=
+                                                              null
+                                                          ? strings[i]
+                                                              .mx[index]
+                                                              .name
+                                                              .toString()
+                                                          : '',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 12),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                strings[i]
-                                                        .mx[index]
-                                                        .price
-                                                        .toString() +
-                                                    " AED",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          )),
-                                    );
-                                  },
-                                ),
-                              )
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  strings[i]
+                                                          .mx[index]
+                                                          .price
+                                                          .toString() +
+                                                      " AED",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            )),
+                                      );
+                                    },
+                                  ),
+                                ))
                             ],
                           ),
                         ),
@@ -2862,8 +2981,14 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
+                                    
 
+                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+double temp = tmptot + chrx;
                                     String spliter = temp.toString();
                                     var splitag = spliter.split(".");
                                     var splitag1 = splitag[0];
@@ -2881,6 +3006,9 @@ class _MenuPageState extends State<MenuPage> {
 
                                         finaltotwithdiscount =
                                             double.parse(compl);
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(2));
                                       } else {
                                         finaltotwithdiscount = double.parse(
                                             (temp).toStringAsFixed(2));
@@ -2924,9 +3052,14 @@ class _MenuPageState extends State<MenuPage> {
                                       tmptot = totwithdiscount + tip;
                                     }
                                     double chr = tmptot * (charge / 100);
-                                    double temp = tmptot + chr;
-
-                                    finaltotwithdiscount = temp;
+                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                    double temp = tmptot + chrx;
+                                    finaltotwithdiscount =
+                                        double.parse(temp.toStringAsFixed(2));
                                     Navigator.pop(context);
                                   }
                                 });
@@ -2982,8 +3115,14 @@ class _MenuPageState extends State<MenuPage> {
               if (!snapshot.hasData) {
                 return Container();
               } else {
+                if (snapshot.data.length <= 0) {
+                  return Container(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Text('No tables available.'),
+                  );
+                }
                 return ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 15),
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
@@ -2998,7 +3137,7 @@ class _MenuPageState extends State<MenuPage> {
                           color: Colors.black45.withOpacity(.5),
                           child: Container(
                             //height: 40,
-                            padding: EdgeInsets.fromLTRB(5, 15, 5, 5),
+                            padding: EdgeInsets.fromLTRB(5, 15, 5, 15),
                             width: 300,
                             child: Center(
                                 child: Text(
@@ -3058,7 +3197,7 @@ class _MenuPageState extends State<MenuPage> {
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             Text(
-                              myOrder.length > 1 ? " items):" : " item):",
+                              totalqty > 1 ? " items):" : " item):",
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
@@ -3193,8 +3332,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3204,8 +3353,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                 });
                                                 mState(() {
@@ -3265,8 +3424,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3276,8 +3445,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3340,8 +3519,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3351,8 +3540,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3415,8 +3614,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3426,8 +3635,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3490,8 +3709,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3501,8 +3730,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip =
                                                       tip.toStringAsFixed(2) +
@@ -3565,8 +3804,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3576,8 +3825,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip = '5 AED';
                                                 });
@@ -3638,8 +3897,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3649,8 +3918,19 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip = '10 AED';
                                                 });
@@ -3711,8 +3991,19 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    chrx = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3722,8 +4013,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                   double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip = '15 AED';
                                                 });
@@ -3784,8 +4085,18 @@ class _MenuPageState extends State<MenuPage> {
                                                           tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   } else {
                                                     double temp;
                                                     if (vipcharge == true) {
@@ -3795,8 +4106,18 @@ class _MenuPageState extends State<MenuPage> {
                                                       temp = finaltot + tip;
                                                     }
                                                     double chr = temp * ch;
+                                                    double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
                                                     finaltotwithdiscount =
-                                                        chr + temp;
+                                                        chrx + temp;
+                                                    finaltotwithdiscount =
+                                                        double.parse(
+                                                            finaltotwithdiscount
+                                                                .toStringAsFixed(
+                                                                    2));
                                                   }
                                                   mtip = '20 AED';
                                                 });
@@ -3939,11 +4260,27 @@ class _MenuPageState extends State<MenuPage> {
                                         double temp =
                                             (finaltot - discountwithtot) + tip;
                                         double chr = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                       double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip;
                                         double chr = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = false;
                                     } else {
@@ -3957,11 +4294,27 @@ class _MenuPageState extends State<MenuPage> {
                                                 tip +
                                                 vip;
                                         double chr = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                        double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       } else {
                                         double temp = finaltot + tip + vip;
                                         double chr = temp * ch;
-                                        finaltotwithdiscount = chr + temp;
+                                       double roundDouble(double value, int places){ 
+                                       double mod = pow(10.0, places); 
+                                        return ((value * mod).round().toDouble() / mod); 
+                                      }
+                                    chrx = roundDouble(chr, 2);
+                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = double.parse(
+                                            finaltotwithdiscount
+                                                .toStringAsFixed(3));
                                       }
                                       vipcharge = true;
                                     }
@@ -4025,7 +4378,8 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                             Spacer(),
                             Text(
-                              ((fee / 100) * finaltot).toStringAsFixed(2),
+                              // ((fee / 100) * finaltot).toStringAsFixed(2),
+                              (chrx).toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -4492,16 +4846,34 @@ class _MenuPageState extends State<MenuPage> {
                                   // } else {
                                   //   _validate = false;
                                   // }
+
                                   bool _validate1;
                                   bool _validate2;
                                   bool _validate3;
                                   bool _validate4;
                                   bool _validate5;
                                   bool _validate6;
-                                  String ename = billname.text;
+                                  bool _validate7;
+                                  String ename = billname.text.trimLeft();
+                                  print("This is the name:" + ename);
+                                
+                                           int charLength = ename.length;
                                   var fullname = ename.split(' ');
+                                  if (fullname.length==1){
+                                    _showDialog(
+                                          'DrinkLink', 'Please input full name.');
+                                      return;
+                                  }
                                   String firsname = '';
                                   String lastname = '';
+                                  print(fullname);
+                                  if (pickdine == false) {
+                                    if (choosetb == "Choose Table") {
+                                      _showDialog(
+                                          'DrinkLink', 'Please choose table.');
+                                      return;
+                                    }
+                                  }
 
                                   try {
                                     firsname = fullname[0];
@@ -4514,15 +4886,24 @@ class _MenuPageState extends State<MenuPage> {
                                         Prefs.getBoolValtext(billname.text);
                                     _validate3 =
                                         Prefs.getBoolValtext(billemail.text);
+
                                     if (_validate4 == false ||
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
                                       return;
-                                    } else if (_validate4 == false &&
+                                    }else if (charLength == 1) {
+                                      _showDialog('DrinkLink',
+                                          'Please input full name.');
+                                      return;
+                                    } else if (_validate4 == true &&
                                         _validate5 == false) {
                                       _showDialog('DrinkLink',
                                           'Please input full name.');
+                                      return;
+                                    } else if (_validate5 == false) {
+                                      _showDialog('DrinkLink',
+                                          'Please input Lastname.');
                                       return;
                                     } else if (_validate1 == false) {
                                       _showDialog('DrinkLink',
@@ -4533,7 +4914,7 @@ class _MenuPageState extends State<MenuPage> {
                                           'Please input email address.');
                                       return;
                                     } else if (_validate3 == true) {
-                                      String email = billemail.text;
+                                      String email = billemail.text.trimLeft();
                                       final bool isValid =
                                           EmailValidator.validate(email);
                                       print(isValid);
@@ -4546,6 +4927,7 @@ class _MenuPageState extends State<MenuPage> {
                                       _validate4 = _validate4;
                                       _validate5 = _validate5;
                                     }
+
                                     if (_validate1 == true &&
                                         _validate2 == true &&
                                         _validate3 == true &&
@@ -4848,9 +5230,9 @@ class _MenuPageState extends State<MenuPage> {
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
-    String em = billemail.text;
-    String ename = billname.text;
-    String eaddress = billadd.text;
+    String em = billemail.text.trimLeft();
+    String ename = billname.text.trimLeft();
+    String eaddress = billadd.text.trimLeft();
     var fullname = ename.split(' ');
     String firsname = '';
     String lastname = '';
@@ -4888,8 +5270,8 @@ class _MenuPageState extends State<MenuPage> {
 
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
-      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(), price.toString(),
-          myOrder[i].aIce, ord, ord1);
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(),
+          price.toStringAsFixed(2), myOrder[i].aIce, ord, ord1);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -5022,6 +5404,10 @@ class _MenuPageState extends State<MenuPage> {
             response.statusCode.toString() +
             '] ' +
             'Please contact Administrator!';
+      } else if (response.body
+          .toString()
+          .contains("Not accepting orders at the moment")) {
+        _cm = "Not accepting orders at the moment.";
       } else {
         _cm = response.body.toString();
       }
@@ -5063,6 +5449,59 @@ class _MenuPageState extends State<MenuPage> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+    
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  context.read<AuthProvider>().setToken('');
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
               },
             )
           ],
@@ -5179,11 +5618,26 @@ class _MenuPageState extends State<MenuPage> {
         context,
         MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
-    }else if(result == 'cancel') {
+    } else if (result == 'REVERSED') {
+      print(result + 'result here');
+      if (checkedValue == true) {
+        Prefs.load();
+        Prefs.setString('billName', billname.text);
+        Prefs.setString('billAdd', billadd.text);
+        Prefs.setString('billEmail', billemail.text);
+      }
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => OrderDetails('')),
+      );
+    } else if (result == 'CANCELLED') {
       print(result + 'payment mode');
-      _showDialog('DrinkLink', 'Cancelled payment!');
-    }
-     else {
+      _showDialog('DrinkLink', 'Failed payment!');
+    } else if (result == 'FAILED') {
+      print(result + 'payment mode');
+      _showDialog('DrinkLink', 'Failed payment!');
+    } else {
       print(result + 'payment mode');
       _showDialog('DrinkLink', 'Failed payment!');
     }
@@ -5318,23 +5772,38 @@ class _MenuPageState extends State<MenuPage> {
                 setState(() {
                   myOrder.add(ord);
                 });
-                // Order ord = Order(
-                //     myDrinks[i].id, myDrinks[i].drinkCategoryId, myDrinks[i].name,
-                //     myDrinks[i].Quant, myDrinks[i].price);
-                // setState(() {
-                //   myOrder.add(ord);
-                // });
               }
             } else {
-              List<MixerOrd> mx = [];
-              for (var j = 0; j < m; j++)
-                if (myDrinks[i].id != myOrder[j].drinkId &&
-                    myDrinks[i].ChMixer.length != myOrder[j].mxir.length &&
-                    myDrinks[i].addIce != myOrder[j].aIce) {
-                  print("ani raka");
-                  MixerOrd mixerOrd = MixerOrd(
-                      myDrinks[i].mid, myDrinks[i].mprice.toString(), '');
-                  mx.add(mixerOrd);
+              bool allowAdd = true;
+              for (var j = 0; j < m; j++) {
+                List<MixerOrd> mx = [];
+                var contain = myOrder.where((element) =>
+                    element.drinkId == myDrinks[i].id &&
+                    element.aIce == myDrinks[i].addIce);
+                bool result1 =
+                    computeList(myDrinks[i].ChMixer, myOrder[j].mxir);
+                if (result1 &&
+                    myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].addIce == myOrder[j].aIce) {
+                  print("lord please");
+                  int quantOrder = 0;
+                  quantOrder = myOrder[j].Quant + myDrinks[i].Quant;
+                  myOrder[j].Quant = quantOrder;
+                  j = m;
+                  allowAdd = true;
+                  myOrder.removeWhere((element) =>
+                      element.Quant < quantOrder &&
+                      element.drinkId == myDrinks[i].id &&
+                      element.aIce == myDrinks[i].addIce &&
+                      element.mxir.length <= 0);
+                } else if (allowAdd &&
+                    contain.isNotEmpty &&
+                    myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].addIce == myOrder[j].aIce &&
+                    myDrinks[i].ChMixer.length == 0 &&
+                    myOrder[j].mxir[0].id != "") {
+                  print("ani raka" + myOrder[j].mxir[0].id);
+                  print(contain.length);
                   Order ord = Order(
                       myDrinks[i].id,
                       myDrinks[i].drinkCategoryId,
@@ -5344,39 +5813,68 @@ class _MenuPageState extends State<MenuPage> {
                       mx,
                       myDrinks[i].origPrice,
                       myDrinks[i].addIce);
+                  print("mao ni siya" + mx.toString());
+                  setState(() {
+                    myOrder.add(ord);
+                    allowAdd = false;
+                  });
+                } else if (myDrinks[i].id == myOrder[j].drinkId &&
+                    myDrinks[i].addIce != myOrder[j].aIce) {
+                  Order ord = Order(
+                      myDrinks[i].id,
+                      myDrinks[i].drinkCategoryId,
+                      myDrinks[i].name,
+                      myDrinks[i].Quant,
+                      myDrinks[i].price,
+                      mx,
+                      myDrinks[i].origPrice,
+                      myDrinks[i].addIce);
+                  print("mao ni siya" + mx.toString());
                   setState(() {
                     myOrder.add(ord);
                   });
-                } else if (myDrinks[i].id == myOrder[j].drinkId &&
-                    myDrinks[i].ChMixer.length == myOrder[j].mxir.length &&
-                    myDrinks[i].addIce == myOrder[j].aIce) {
-                  print("lord please");
-                  myOrder[j].Quant = myOrder[j].Quant + myDrinks[i].Quant;
                 }
+              }
             }
           }
         } else {
-          _isILike = true;
-          List<MixerOrd> mx = [];
-          for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
-            MixerOrd mixerOrd = MixerOrd(
-                myDrinks[i].ChMixer[z].cmid,
-                myDrinks[i].ChMixer[z].cprice.toString(),
-                myDrinks[i].ChMixer[z].cname);
-            mx.add(mixerOrd);
+          if (myDrinks[i].ChMixer.length != 0) {
+            _isILike = true;
+            List<MixerOrd> mx = [];
+            for (var z = 0; z < myDrinks[i].ChMixer.length; z++) {
+              MixerOrd mixerOrd = MixerOrd(
+                  myDrinks[i].ChMixer[z].cmid,
+                  myDrinks[i].ChMixer[z].cprice.toString(),
+                  myDrinks[i].ChMixer[z].cname);
+              mx.add(mixerOrd);
+            }
+            Order ord = Order(
+                myDrinks[i].id,
+                myDrinks[i].drinkCategoryId,
+                myDrinks[i].name,
+                myDrinks[i].Quant,
+                myDrinks[i].price,
+                mx,
+                myDrinks[i].origPrice,
+                myDrinks[i].addIce);
+            setState(() {
+              myOrder.add(ord);
+            });
+          } else {
+            List<MixerOrd> mx = [];
+            Order ord = Order(
+                myDrinks[i].id,
+                myDrinks[i].drinkCategoryId,
+                myDrinks[i].name,
+                myDrinks[i].Quant,
+                myDrinks[i].price,
+                mx,
+                myDrinks[i].origPrice,
+                myDrinks[i].addIce);
+            setState(() {
+              myOrder.add(ord);
+            });
           }
-          Order ord = Order(
-              myDrinks[i].id,
-              myDrinks[i].drinkCategoryId,
-              myDrinks[i].name,
-              myDrinks[i].Quant,
-              myDrinks[i].price,
-              mx,
-              myDrinks[i].origPrice,
-              myDrinks[i].addIce);
-          setState(() {
-            myOrder.add(ord);
-          });
         }
       }
     }
@@ -5392,6 +5890,40 @@ class _MenuPageState extends State<MenuPage> {
     List element4 = [];
     for (var name in temp2) {
       element4.add(name.id);
+      setState(() {});
+    }
+    if (const IterableEquality().equals(element3, element4)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool computeIce(List<Drinks> temp1, List<Order> temp2) {
+    List element3 = [];
+    for (var name in temp1) {
+      element3.add(name.addIce);
+    }
+    List element4 = [];
+    for (var name in temp2) {
+      element4.add(name.aIce);
+      setState(() {});
+    }
+    if (const IterableEquality().equals(element3, element4)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool computeList1(List<Drinks> temp1, List<Order> temp2) {
+    List element3 = [];
+    for (var name in temp1) {
+      element3.add(name.id);
+    }
+    List element4 = [];
+    for (var name in temp2) {
+      element4.add(name.drinkId);
       setState(() {});
     }
     if (const IterableEquality().equals(element3, element4)) {

@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:driklink/pages/home/menupage.dart';
+import 'package:uuid/uuid.dart';
 
 class setPage extends StatefulWidget {
   @override
@@ -23,10 +25,93 @@ class _setPageState extends State<setPage> {
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
   bool isActive = true;
+
+  List<CardDetails> myCardList = [];
+  Future myCardFuture;
+
+  int tipid = 0;
+  String idCard = '0';
+  String discountID = '';
+  String discountPerc = '';
+  int lengtofsub = 0;
+  String iconid = '';
+  bool saveCard = false;
+  var uuid = Uuid();
+  String token = '';
+
+  String maskedPan = '';
+  String expiry = '';
+  String cardholderName = '';
+  String scheme = '';
+  String cardToken = '';
+  Color contColor = Colors.green;
+
   @override
   void initState() {
     super.initState();
     getDetails();
+    myCardList = [];
+    myCardFuture = getCard();
+  }
+
+  deleteuser() async {
+    String su = Prefs.getString('token');
+    String un = Prefs.getString('uname');
+    print('Dele Card');
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + su,
+      'Content-Type': 'application/json'
+    };
+
+    String url = ApiCon.baseurl() + '/api/users/currentUser/savedcards';
+
+    final response = await http.delete(url, headers: headers);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      getCard();
+    }
+  }
+
+  Future<List<CardDetails>> getCard() async {
+    setState(() {
+      myCardList = [];
+    });
+    String mytoken = Prefs.getString('token');
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + mytoken
+    };
+    try{
+    final response = await http.get(
+        ApiCon.baseurl() + '/users/currentUser/savedCards',
+        headers: headers);
+    var jsondata = json.decode(response.body);
+    print(response.body);
+
+    for (var u in jsondata) {
+      var mask = u['maskedPan'];
+      var fullname = mask.split('******');
+      String latmask = "******" + fullname[1].trim().toString();
+
+      CardDetails tmc = new CardDetails(
+          u['id'].toString(),
+          u['maskedPan'],
+          u['expiry'],
+          u['cardholderName'],
+          u['scheme'],
+          u['cardToken'],
+          false,
+          latmask);
+
+      setState(() {
+        myCardList.add(tmc);
+      });
+    }
+    } catch (e) {
+    }
+    return myCardList;
   }
 
   getDetails() {
@@ -52,23 +137,46 @@ class _setPageState extends State<setPage> {
     return Scaffold(
       backgroundColor: Color(0xFF2b2b61),
       appBar: new AppBar(
+        toolbarHeight: 100,
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text(
-          "Settings",
-          style: TextStyle(fontSize: 20, color: Colors.white),
+        title: Column(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                },
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+              child: Text(
+                "SETTINGS",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+            ),
+            Container(
+              alignment: Alignment.topLeft,
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 20),
+              child: Text(
+                "Customize DrinkLink",
+                style: TextStyle(fontSize: 12, color: Colors.deepOrange),
+              ),
+            ),
+          ],
         ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
+        shape: Border(bottom: BorderSide(color: Colors.deepOrange, width: 2)),
+        elevation: 4,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -80,33 +188,12 @@ class _setPageState extends State<setPage> {
                 'My Cards',
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
+              showCardDetails(),
               SizedBox(
                 height: 10,
               ),
               GestureDetector(
                 onTap: () {
-                  // Alert(
-                  //   title: "ADD CREDIT CARD",
-                  //   content: Text("1 AED will be authorized and then release in order to validate your credit card. Do you want to continue?"),
-                  //   buttons: [
-                  //     DialogButton(
-                  //       child: Text(
-                  //         "NO",
-                  //         style: TextStyle(color: Colors.white, fontSize: 20),
-                  //       ),
-                  //       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                  //       color: Color(0xFF2b2b61),
-                  //     ),
-                  //     DialogButton(
-                  //       child: Text(
-                  //         "YES",
-                  //         style: TextStyle(color: Colors.white, fontSize: 20),
-                  //       ),
-                  //       onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-                  //       color: Colors.deepOrange,
-                  //     )
-                  //   ],
-                  // ).show();
                   if (isActive) {
                     _showDialog('ADD CREDIT CARD',
                         "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
@@ -140,7 +227,7 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
               Text(
-                'Default Message Sound for each Order Status Change',
+                'Default Message Sound for each order status change',
                 style: TextStyle(
                     fontSize: 14, color: Colors.white.withOpacity(.8)),
               ),
@@ -431,6 +518,52 @@ class _setPageState extends State<setPage> {
     );
   }
 
+  _showDialog_Deletecard(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                deleteuser();
+                myCardFuture = getCard();
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   _showDialog1(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -457,6 +590,7 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
+                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -498,7 +632,8 @@ class _setPageState extends State<setPage> {
     }
   }
 
-  confirmDialog(String title, String message, String linkpayment, String reference) {
+  confirmDialog(
+      String title, String message, String linkpayment, String reference) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -568,20 +703,162 @@ class _setPageState extends State<setPage> {
                 final result = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => SaveCardWeb(linkpayment.toString(), reference)),
+                      builder: (context) =>
+                          SaveCardWeb(linkpayment.toString(), reference)),
                 );
 
                 if (result == 'Added') {
-                  _showDialog1('DrinkLink', 'New card save.');
+                  _showDialog1('DrinkLink', 'New card saved.');
+                  myCardFuture = getCard();
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');
+                  myCardFuture = getCard();
                 }
               },
             ),
           ],
         ),
       ),
+    );
+  }
+
+  showCardDetails() {
+    return Container(
+      height: 60 * myCardList.length.toDouble(),
+      child: FutureBuilder(
+          future: myCardFuture,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (!snapshot.hasData) {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  // physics: NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                          padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                          color: Colors.transparent,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Container(
+                              //   width: 200,
+                              //   child: Column(
+                              //     mainAxisAlignment: MainAxisAlignment.start,
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       CheckboxListTile(
+                              //         title: Text(
+                              //           snapshot.data[index].scheme,
+                              //           style: TextStyle(color: Colors.white),
+                              //         ),
+                              //         value:
+                              //             idCard == snapshot.data[index].cardid
+                              //                 ? true
+                              //                 : false,
+                              //         onChanged: (newValue) {
+                              //           setState(() {
+                              //             if (idCard ==
+                              //                 snapshot.data[index].cardid) {
+                              //               idCard = '';
+                              //               maskedPan = '';
+                              //               expiry = '';
+                              //               cardholderName = '';
+                              //               scheme = '';
+                              //               cardToken = '';
+                              //             } else {
+                              //               idCard =
+                              //                   snapshot.data[index].cardid;
+                              //               maskedPan =
+                              //                   snapshot.data[index].maskedPan;
+                              //               expiry =
+                              //                   snapshot.data[index].expiry;
+                              //               cardholderName = snapshot
+                              //                   .data[index].cardholderName;
+                              //               scheme =
+                              //                   snapshot.data[index].scheme;
+                              //               cardToken =
+                              //                   snapshot.data[index].cardToken;
+                              //             }
+                              //           });
+                              //         },
+                              //         secondary: Icon(Icons.account_box,
+                              //             color: Colors.white),
+                              //         // controlAffinity: ListTileControlAffinity
+                              //         //     .leading, //  <-- leading Checkbox
+                              //       ),
+
+                              //     ],
+                              //   ),
+                              // ),
+                              Container(
+                                child: Text(
+                                  snapshot.data[index].scheme,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    snapshot.data[index].cardholderName,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  Text(
+                                    snapshot.data[index].showmask +
+                                        "  " +
+                                        snapshot.data[index].expiry,
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 14),
+                                  ),
+                                ],
+                              ),
+                              GestureDetector(
+                                child: Container(
+                                  padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                  child: Icon(
+                                    Icons.cancel_outlined,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () {
+                                  _showDialog_Deletecard('Delete card',
+                                      'Are you sure you want to delete this card?');
+                                }, //Delete card
+                              ),
+
+                              // Container(
+                              //   padding: EdgeInsets.fromLTRB(63, 0, 0, 0),
+                              //   child: FlatButton(
+                              //     onPressed: () {},
+                              //     child: Icon(
+                              //       Icons.close,
+                              //       color: Colors.white,
+                              //     ),
+                              //     height: 48,
+                              //   ),
+                              // )
+                            ],
+                          )),
+                    );
+                  });
+            }
+          }),
     );
   }
 }
