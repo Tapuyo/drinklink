@@ -236,6 +236,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       Prefs.load();
       token = Prefs.getString('token');
       uName = Prefs.getString('uname');
+      print("This is the username:" + uName);
     } catch (e) {
       token = '';
     }
@@ -530,6 +531,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
