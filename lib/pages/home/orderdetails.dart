@@ -46,6 +46,7 @@ import 'package:provider/provider.dart';
 
 import 'dart:core';
 import 'package:email_validator/email_validator.dart';
+
 class OrderDetails extends StatefulWidget {
   String id;
   OrderDetails(this.id);
@@ -82,7 +83,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   bool isWorkingDay = false;
   Timer _timer;
   int _start = 10;
-int tipid = 0;
+  int tipid = 0;
   String idCard = '0';
   String discountID = '';
   String discountPerc = '';
@@ -227,6 +228,25 @@ int tipid = 0;
     }
   }
 
+  _cancelorder() async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    // String myt = "'{'newState': 'Canceled'}'";
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    };
+    Map<String, String> body = {'newState': '102', 'reason': 'Cancel Order'};
+    // Map<String, String> body = {'newState': 'Canceled'};
+    String url = ApiCon.baseurl() + '/Orders/' + id;
+
+    final response = await http.patch(url, headers: headers, body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+    }
+  }
+
   getToke() {
     try {
       Prefs.load();
@@ -251,6 +271,7 @@ int tipid = 0;
     billemail.text = Prefs.getString('billEmail' + uName);
     // }
   }
+
   @override
   void initState() {
     super.initState();
@@ -610,7 +631,7 @@ int tipid = 0;
 
   @override
   Widget build(BuildContext context) {
-     String _token = context.read<AuthProvider>().token;
+    String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -623,307 +644,303 @@ int tipid = 0;
               image: AssetImage("assets/images/bkgdefault.png"),
               fit: BoxFit.cover)),
       child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              //automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 35,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (subbodybool == 1) {
-                    setState(() {
-                      subbodybool = 0;
-                    });
-                  } else if (subbodybool == 2) {
-                    setState(() {
-                      subbodybool = 1;
-                    });
-                  } else {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }
-                },
-              ),
-              // actions: [
-              //   IconButton(
-              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-              //     onPressed: () {
-              //       _scaffoldKey.currentState.openEndDrawer();
-              //     },
-              //   )
-              // ],
+        key: _scaffoldKey,
+        appBar: AppBar(
+          //automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 35,
+              color: Colors.white,
             ),
-            endDrawer: Drawer(
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Home",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
+            onPressed: () {
+              if (subbodybool == 1) {
+                setState(() {
+                  subbodybool = 0;
+                });
+              } else if (subbodybool == 2) {
+                setState(() {
+                  subbodybool = 1;
+                });
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              }
+            },
+          ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+          //     onPressed: () {
+          //       _scaffoldKey.currentState.openEndDrawer();
+          //     },
+          //   )
+          // ],
+        ),
+        endDrawer: Drawer(
+          child: Container(
+              padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+              color: Colors.black,
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => orderPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.wine_bar_sharp,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "My Orders",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Icon(
+                            Icons.home,
+                            size: 30,
+                            color: Colors.white,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => setPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.settings,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Settings v1.0.122",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 20,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => termPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesome.angle_double_up,
-                                size: 30,
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              "Home",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Terms of Service",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          setState(() {
-                            setState(() {
-                              stoken = '';
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => orderPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.wine_bar_sharp,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "My Orders",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => setPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.settings,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Settings v1.0.122",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => termPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            FontAwesome.angle_double_up,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Terms of Service",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      setState(() {
+                        setState(() {
+                          stoken = '';
 
-                              Prefs.setString('token', '');
-                              Prefs.setString('uname', 'none');
-                              Prefs.setString('bfNamenone', '');
-                              Prefs.setString('blMamenone', '');
-                              Prefs.setString('billNamenone', '');
-                              Prefs.setString('billAddnone', '');
-                              Prefs.setString('billEmailnone', '');
-                              context.read<AuthProvider>().setToken('');
-                            });
-                          });
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (stoken == '' ||
-                              stoken == null ||
-                              stoken.isEmpty) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                MaterialCommunityIcons.human,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                stoken == '' || stoken == null || stoken.isEmpty
-                                    ? "Sign In / Register"
-                                    : "Sign Out (" + uName + ")",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Prefs.setString('token', '');
+                          Prefs.setString('uname', 'none');
+                          Prefs.setString('bfNamenone', '');
+                          Prefs.setString('blMamenone', '');
+                          Prefs.setString('billNamenone', '');
+                          Prefs.setString('billAddnone', '');
+                          Prefs.setString('billEmailnone', '');
+                          context.read<AuthProvider>().setToken('');
+                        });
+                      });
+                      //Navigator.of(context).popAndPushNamed('/home');
+                      if (stoken == '' || stoken == null || stoken.isEmpty) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignIn()),
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
+                          Icon(
+                            MaterialCommunityIcons.human,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            stoken == '' || stoken == null || stoken.isEmpty
+                                ? "Sign In / Register"
+                                : "Sign Out (" + uName + ")",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      Spacer(),
-                      // Container(
-                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Visibility(
-                      //           visible: orderList.length > 0 ? true:false,
-                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
-                      //       mybodyRec(),
-                      //       SizedBox(height: 20,)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  )),
-            ),
+                    ),
+                  ),
+                  Spacer(),
+                  // Container(
+                  //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Visibility(
+                  //           visible: orderList.length > 0 ? true:false,
+                  //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                  //       mybodyRec(),
+                  //       SizedBox(height: 20,)
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              )),
+        ),
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
               color: Colors.transparent,
-              height: MediaQuery.of(context).size.height -75,
+              height: MediaQuery.of(context).size.height - 75,
               padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
               child: Stack(
                 children: [
@@ -1039,22 +1056,9 @@ int tipid = 0;
                                 //visible: sttn == '1' ? true:false,
                                 child: GestureDetector(
                                   onTap: () async {
-                                    Prefs.load();
-                                    String token = Prefs.getString('token');
-                                    String myt = "'{'newState': 'Canceled'}'";
-                                    Map<String, String> headers = {
-                                      'Authorization': 'Bearer ' + token,
-                                      'Content-Type': 'application/json'
-                                    };
-                                    Map<String, String> body = {
-                                      'newState': 'Canceled'
-                                    };
-                                    String url =
-                                        ApiCon.baseurl() + '/Orders/' + id;
-
-                                    final response = await http.patch(url,
-                                        headers: headers, body: myt);
-                                    print(response.body);
+                                    setState(() {
+                                      _cancelorder();
+                                    });
                                   },
                                   child: Container(
                                       width: 90,

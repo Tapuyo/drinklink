@@ -5140,11 +5140,20 @@ class _MenuPageState extends State<MenuPage> {
                                           'Please input billing address.');
                                       return;
                                     } else if (_validate3 == false) {
-                                      _showDialog('DrinkLink',
-                                          'Please input email address.');
+                                      String email =
+                                          billemail.text.replaceAll(' ', '');
+                                      final bool isValid =
+                                          EmailValidator.validate(email);
+                                      print(isValid);
+                                      if (isValid == false) {
+                                        _showDialog('DrinkLink',
+                                            'Enter valid email address');
+                                        return;
+                                      }
                                       return;
                                     } else if (_validate3 == true) {
-                                      String email = billemail.text.trimLeft();
+                                      String email =
+                                          billemail.text.replaceAll(' ', '');
                                       final bool isValid =
                                           EmailValidator.validate(email);
                                       print(isValid);
