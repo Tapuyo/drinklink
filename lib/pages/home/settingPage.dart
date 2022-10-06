@@ -54,6 +54,70 @@ class _setPageState extends State<setPage> {
     myCardFuture = getCard();
   }
 
+  deleteusercardsingle(String cardtoken) async {
+    Navigator.of(context).push(
+      new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    String su = Prefs.getString('token');
+    String un = Prefs.getString('uname');
+    print('Dele Card');
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + su,
+      'Content-Type': 'application/json'
+    };
+
+    String url = ApiCon.baseurl() +
+        '/users/currentUser/deletecard?cardtoken=' +
+        cardtoken;
+
+    // final request = http.Request('DELETE', Uri.parse(url));
+    // request.headers.addAll(headers);
+    // request.body = cardtoken;
+
+    // final response = await request.send();
+
+    final response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      _showDialog_deletecard_single('My Card', 'Successfully deleted.');
+    } else {
+      _showDialog_deletecard_single('My Card', 'Failed to delete card.');
+    }
+    myCardFuture = getCard();
+    Navigator.pop(context);
+    // print(response.body);
+    // print(response.statusCode);
+    // if (response.statusCode == 200) {
+    //   print(response.statusCode);
+    //   getCard();
+    // }
+  }
+
   deleteuser() async {
     String su = Prefs.getString('token');
     String un = Prefs.getString('uname');
@@ -63,7 +127,7 @@ class _setPageState extends State<setPage> {
       'Content-Type': 'application/json'
     };
 
-    String url = ApiCon.baseurl() + '/api/users/currentUser/savedcards';
+    String url = ApiCon.baseurl() + '/users/currentUser/savedcards';
 
     final response = await http.delete(url, headers: headers);
     print(response.body);
@@ -517,7 +581,51 @@ class _setPageState extends State<setPage> {
     );
   }
 
-  _showDialog_Deletecard(String title, String message) {
+  _showDialog_deletecard_single(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            // FlatButton(
+            //   child: Text(
+            //     'Cancel',
+            //     style: TextStyle(color: Colors.white, fontSize: 18),
+            //   ),
+            //   onPressed: () {
+            //     Navigator.of(context, rootNavigator: true).pop();
+            //   },
+            // ),
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _showDialog_Deletecard(String title, String message, String Token) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -552,8 +660,8 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                deleteuser();
-                myCardFuture = getCard();
+                deleteusercardsingle(Token);
+                // myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -865,8 +973,10 @@ class _setPageState extends State<setPage> {
                                   ),
                                 ),
                                 onTap: () {
-                                  _showDialog_Deletecard('Delete card',
-                                      'Are you sure you want to delete this card?');
+                                  _showDialog_Deletecard(
+                                      'Delete card',
+                                      'Are you sure you want to delete this card?',
+                                      snapshot.data[index].cardToken);
                                 }, //Delete card
                               ),
 
