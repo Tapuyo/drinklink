@@ -8,9 +8,12 @@ import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
+import 'package:timezone/standalone.dart';
+import 'package:timezone/timezone.dart';
+import 'package:timezone/standalone.dart' as tz;
 import '../../auth_provider.dart';
 import 'dart:ffi';
 import 'dart:math';
@@ -46,6 +49,7 @@ import 'package:provider/provider.dart';
 
 import 'dart:core';
 import 'package:email_validator/email_validator.dart';
+
 class OrderDetails extends StatefulWidget {
   String id;
   OrderDetails(this.id);
@@ -82,7 +86,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   bool isWorkingDay = false;
   Timer _timer;
   int _start = 10;
-int tipid = 0;
+  int tipid = 0;
   String idCard = '0';
   String discountID = '';
   String discountPerc = '';
@@ -251,6 +255,7 @@ int tipid = 0;
     billemail.text = Prefs.getString('billEmail' + uName);
     // }
   }
+
   @override
   void initState() {
     super.initState();
@@ -286,13 +291,14 @@ int tipid = 0;
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1000&pageNumber=1',
         headers: headers);
     var jsondata = json.decode(response.body);
-    print(response.body);
+    print(id);
 
     for (var i = 0; i < jsondata.length; i++) {
-      if (id == '') {
+      if (id == json.decode(response.body)[i]['orderReference'].toString()) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
         List<MyItems> newItem = [];
@@ -337,22 +343,21 @@ int tipid = 0;
         } else if (cState == '3') {
           stt = 'Payment Processed';
         } else if (cState == '4') {
-          setState(() {
-            String mdate =
-                json.decode(response.body)[i]['timeToCollect'].toString();
-            DateTime parseDate =
-                new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-            var inputDate = DateTime.parse(parseDate.toString());
-            setState(() {
-              int mmint = inputDate.minute * 60;
-              int msec = inputDate.second;
-
-              _start = mmint + msec;
-            });
-            if (_start > 0) {
-              startTimer();
+            DateTime mdate =
+                DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
+            // DateTime parseDate =
+            //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+            print(mdate);
+            //print(parseDate);
+            var diff;
+            //if(DateTime.now().timeZoneName == 'PST'){
+            var dtnow = DateTime.now();
+            diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
+            // }
+            print(diff);
+            if(mounted){
+              _start = diff + 60;
             }
-          });
           stt = 'Ready';
         } else if (cState == '5') {
           _timer.cancel();
@@ -385,149 +390,59 @@ int tipid = 0;
           byw = byww;
           //outletDesciption = json.decode(response.body)[i]['currentState'].toString();
         });
-      } else {
-        if (id == json.decode(response.body)[i]['id'].toString()) {
-          var jsondata1 = await json.decode(response.body)[i]['items'];
-
-          List<MyItems> newItem = [];
-          for (var x in jsondata1) {
-            MyItems nt =
-                new MyItems(x['drink']['name'], x['quantity'].toString());
-
-            newItem.add(nt);
-          }
-          String st = json.decode(response.body)[i]['timestamp'].toString();
-          String mprice =
-              json.decode(response.body)[i]['finalPrice'].toString();
-
-          String dt = '';
-          String stt = '';
-          final toDayDate = DateTime.now();
-          var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-          if (different < 60) {
-            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-                ' mins';
-          } else if (different > 60 && different < 1440) {
-            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-                ' hours';
-          } else {
-            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-                ' days';
-          }
-          String bar = json.decode(response.body)[i]['tableId'].toString();
-          String cState =
-              json.decode(response.body)[i]['currentState'].toString();
-          String mcode = json.decode(response.body)[i]['code'].toString();
-          String byww = json.decode(response.body)[i]['bartender'].toString();
-
-          getFacilityInfo(
-              json.decode(response.body)[i]['facilityId'].toString());
-          getSched(json.decode(response.body)[i]['facilityId'].toString());
-
-          if (cState == '0') {
-            stt = 'Order Created';
-          } else if (cState == '1') {
-            stt = 'Pending';
-          } else if (cState == '2') {
-            stt = 'Accepted';
-          } else if (cState == '3') {
-            stt = 'Payment Processed';
-          } else if (cState == '4') {
-            setState(() {
-              String mdate =
-                  json.decode(response.body)[i]['timeToCollect'].toString();
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-              var inputDate = DateTime.parse(parseDate.toString());
-              setState(() {
-                int mmint = inputDate.minute * 60;
-                int msec = inputDate.second;
-
-                _start = mmint + msec;
-              });
-              if (_start > 0) {
-                startTimer();
-              }
-            });
-            stt = 'Ready';
-          } else if (cState == '5') {
-            _timer.cancel();
-            stt = 'Completed';
-          } else if (cState == '101') {
-            _timer.cancel();
-            stt = 'Failed';
-          } else if (cState == '102') {
-            stt = 'Canceled';
-            _timer.cancel();
-          } else if (cState == '103') {
-            _timer.cancel();
-            stt = 'Rejected';
-          } else if (cState == '104') {
-            stt = 'Not Collected';
-            _timer.cancel();
-          } else if (cState == '105') {
-            stt = 'Payment Failed';
-            _timer.cancel();
-          }
-
-          setState(() {
-            barid = bar.toString();
-            state = stt.toString();
-            //state =  json.decode(response.body)[i]['currentState'].toString();
-            sttn = cState;
-            itemcount = newItem.length.toString();
-            price = mprice;
-            code = mcode;
-            byw = byww;
-            //outletDesciption = json.decode(response.body)[i]['currentState'].toString();
-          });
-        }
       }
+    }
+    if (_start > 0) {
+      startTimer();
     }
     return orderList;
   }
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start <= 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-            if (_start > 60) {
-              double val = _start / 60 - 1;
-              mins = val.ceil().toStringAsFixed(0);
-              int rem = _start % 60;
-              if (rem < 10) {
-                secs = '0' + rem.toString();
+    if (mounted) {
+      const oneSec = const Duration(seconds: 2);
+      _timer = new Timer.periodic(
+        oneSec,
+        (Timer timer) {
+          if (_start <= 0) {
+            setState(() {
+              _start = 0;
+              timer.cancel();
+            });
+          } else {
+            setState(() {
+              _start--;
+              if (_start > 60) {
+                int val = (_start ~/ 60) - 1;
+                mins = val.ceil().toStringAsFixed(0);
+                int rem = _start % 60;
+                if (rem < 10) {
+                  secs = '0' + rem.toString();
+                } else {
+                  secs = rem.toString();
+                }
               } else {
-                secs = rem.toString();
+                hours = '';
+                mins = '00';
+                if (_start < 10) {
+                  secs = '0' + _start.toString();
+                } else {
+                  secs = _start.toString();
+                }
               }
-            } else {
-              hours = '';
-              mins = '00';
-              if (_start < 10) {
-                secs = '0' + _start.toString();
-              } else {
-                secs = _start.toString();
-              }
-            }
-          });
-          //checkORder();
-        }
-      },
-    );
+            });
+            //checkORder();
+          }
+        },
+      );
+    }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
+    _start = 0;
+    _timer.cancel();
   }
 
   getFacilityInfo(String id) async {
@@ -544,11 +459,13 @@ int tipid = 0;
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
         print(u['name']);
+        if(mounted){
         setState(() {
           outletid = u['id'].toString();
           outletName = u['name'];
           outletDesciption = u['address'];
         });
+      }
       }
     }
   }
@@ -590,6 +507,7 @@ int tipid = 0;
         String et = '2020-07-20T' + u['endTime'];
         String nst = DateFormat.jm().format(DateTime.parse(st));
         String net = DateFormat.jm().format(DateTime.parse(et));
+        if(mounted)
         setState(() {
           wk = "Working hours " + nst + " - " + net;
           isWorkingDay = u['isWorkingDay'];
@@ -610,7 +528,7 @@ int tipid = 0;
 
   @override
   Widget build(BuildContext context) {
-     String _token = context.read<AuthProvider>().token;
+    String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -623,307 +541,297 @@ int tipid = 0;
               image: AssetImage("assets/images/bkgdefault.png"),
               fit: BoxFit.cover)),
       child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              //automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 35,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (subbodybool == 1) {
-                    setState(() {
-                      subbodybool = 0;
-                    });
-                  } else if (subbodybool == 2) {
-                    setState(() {
-                      subbodybool = 1;
-                    });
-                  } else {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }
-                },
-              ),
-              // actions: [
-              //   IconButton(
-              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-              //     onPressed: () {
-              //       _scaffoldKey.currentState.openEndDrawer();
-              //     },
-              //   )
-              // ],
+        key: _scaffoldKey,
+        appBar: AppBar(
+          //automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              size: 35,
+              color: Colors.white,
             ),
-            endDrawer: Drawer(
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.home,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Home",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
+            onPressed: () {
+              if (subbodybool == 1) {
+                  subbodybool = 0;
+              } else if (subbodybool == 2) {
+                  subbodybool = 1;
+              } else {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+              }
+            },
+          ),
+          // actions: [
+          //   IconButton(
+          //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+          //     onPressed: () {
+          //       _scaffoldKey.currentState.openEndDrawer();
+          //     },
+          //   )
+          // ],
+        ),
+        endDrawer: Drawer(
+          child: Container(
+              padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+              color: Colors.black,
+              child: Column(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => orderPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.wine_bar_sharp,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "My Orders",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Icon(
+                            Icons.home,
+                            size: 30,
+                            color: Colors.white,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => setPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.settings,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Settings v1.0.122",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 20,
                           ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => termPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesome.angle_double_up,
-                                size: 30,
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              "Home",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Terms of Service",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          setState(() {
-                            setState(() {
-                              stoken = '';
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => orderPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.wine_bar_sharp,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "My Orders",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => setPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.settings,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Settings v1.0.122",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => termPage()),
+                      );
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            FontAwesome.angle_double_up,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            "Terms of Service",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                        setState(() {
+                          stoken = '';
 
-                              Prefs.setString('token', '');
-                              Prefs.setString('uname', 'none');
-                              Prefs.setString('bfNamenone', '');
-                              Prefs.setString('blMamenone', '');
-                              Prefs.setString('billNamenone', '');
-                              Prefs.setString('billAddnone', '');
-                              Prefs.setString('billEmailnone', '');
-                              context.read<AuthProvider>().setToken('');
-                            });
-                          });
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (stoken == '' ||
-                              stoken == null ||
-                              stoken.isEmpty) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                MaterialCommunityIcons.human,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                stoken == '' || stoken == null || stoken.isEmpty
-                                    ? "Sign In / Register"
-                                    : "Sign Out (" + uName + ")",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                          Prefs.setString('token', '');
+                          Prefs.setString('uname', 'none');
+                          Prefs.setString('bfNamenone', '');
+                          Prefs.setString('blMamenone', '');
+                          Prefs.setString('billNamenone', '');
+                          Prefs.setString('billAddnone', '');
+                          Prefs.setString('billEmailnone', '');
+                          context.read<AuthProvider>().setToken('');
+                        });
+                      //Navigator.of(context).popAndPushNamed('/home');
+                      if (stoken == '' || stoken == null || stoken.isEmpty) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignIn()),
+                        );
+                      } else {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 50,
+                      padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(
+                            width: 10,
                           ),
-                        ),
+                          Icon(
+                            MaterialCommunityIcons.human,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(
+                            stoken == '' || stoken == null || stoken.isEmpty
+                                ? "Sign In / Register"
+                                : "Sign Out (" + uName + ")",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
-                      Spacer(),
-                      // Container(
-                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Visibility(
-                      //           visible: orderList.length > 0 ? true:false,
-                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
-                      //       mybodyRec(),
-                      //       SizedBox(height: 20,)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  )),
-            ),
+                    ),
+                  ),
+                  Spacer(),
+                  // Container(
+                  //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                  //   child: Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Visibility(
+                  //           visible: orderList.length > 0 ? true:false,
+                  //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                  //       mybodyRec(),
+                  //       SizedBox(height: 20,)
+                  //     ],
+                  //   ),
+                  // )
+                ],
+              )),
+        ),
         backgroundColor: Colors.transparent,
         body: SingleChildScrollView(
           child: Container(
               color: Colors.transparent,
-              height: MediaQuery.of(context).size.height -75,
+              height: MediaQuery.of(context).size.height - 75,
               padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
               child: Stack(
                 children: [
