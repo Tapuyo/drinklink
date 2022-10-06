@@ -5541,8 +5541,8 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    double ftd = roundDouble(finaltotwithdiscount, 2);
-    totalPrice = ftd.toString();
+    // double ftd = roundDouble(finaltotwithdiscount, 2);
+    totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
     print('Total price:' + totalPrice);
@@ -5811,7 +5811,7 @@ class _MenuPageState extends State<MenuPage> {
           MaterialPageRoute(builder: (context) => OrderDetails('')),
         );
       } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
-        _showDialog('DrinkLink', 'Canceled payment!');
+        _showDialog('DrinkLink', 'Cancelled payment!');
       } else {
         _showDialog('DrinkLink', 'Failed payment!');
       }
