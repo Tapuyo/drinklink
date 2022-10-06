@@ -103,11 +103,11 @@ class WebViewExampleState extends State<SaveCardWeb> {
     String mystate =
         json.decode(response.body)['_embedded']['payment'][0]['state'];
     try {
-      if (mystate.toLowerCase() == ('REVERSED').toLowerCase()) {
+      if (mystate.toLowerCase() == ('REVERSED').toLowerCase() ||
+          mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
         Navigator.pop(context, 'Added');
-      }
-      if (mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
-        Navigator.pop(context, 'Added');
+      } else {
+        Navigator.pop(context, 'failed');
       }
     } catch (x) {
       Navigator.pop(context, 'failed');

@@ -3334,8 +3334,8 @@ class _MenuPageState extends State<MenuPage> {
                               Visibility(
                                   visible: discount <= 0 ? false : true,
                                   child: Text(
-                                    roundDouble(mdicount, 2).toString(),
-                                    // mdicount.toStringAsFixed(3),
+                                    roundtoEven(mdicount, 2).toString(),
+                                    // mdicount.toStringAsFixed(2),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -4439,8 +4439,8 @@ class _MenuPageState extends State<MenuPage> {
                               Visibility(
                                   visible: mtip == 0 ? false : true,
                                   child: Text(
-                                    roundDouble(mtip, 2).toString(),
-                                    // mtip.toStringAsFixed(3),
+                                    roundtoEven(mtip, 2).toString(),
+                                    // mtip.toStringAsFixed(2),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -4618,7 +4618,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text(
                               // ((fee / 100) * finaltot).toStringAsFixed(2),
                               roundDouble(chrx, 2).toString(),
-                              // (chrx).toStringAsFixed(3),
+                              // (chrx).toStringAsFixed(2),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -5656,7 +5656,12 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   double roundDouble(double value, int places) {
-    double mod = pow(10.0, places);
+    double mod = pow(10.00, places);
+    return ((value * mod).round().toDouble() / mod);
+  }
+
+  double roundtoEven(double value, int places) {
+    double mod = pow(10.00, places) / places;
     return ((value * mod).round().toDouble() / mod);
   }
 
@@ -5805,6 +5810,8 @@ class _MenuPageState extends State<MenuPage> {
           context,
           MaterialPageRoute(builder: (context) => OrderDetails('')),
         );
+      } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
+        _showDialog('DrinkLink', 'Canceled payment!');
       } else {
         _showDialog('DrinkLink', 'Failed payment!');
       }

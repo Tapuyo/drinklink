@@ -43,6 +43,23 @@ class WebViewExampleState extends State<WebPage> {
     });
   }
 
+  cancel_order() async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+
+    String url =
+        ApiCon.baseurl() + '/orders/cancelunpaid?ref=' + widget.reference;
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + token
+    };
+
+    final response = await http.post(url, headers: headers);
+    if (response.statusCode == '201' || response.statusCode == '200') {
+      print(response.statusCode);
+    }
+  }
+
   checkUrlRes(String url) async {
     //https://paypage.sandbox.ngenius-payments.com/?code=56000e9c278ad09d
     // bool checkurl = url.contains('https://paypage.ngenius-payments.com/?outletId=');
@@ -106,11 +123,12 @@ class WebViewExampleState extends State<WebPage> {
 
       if (url.contains('cancelUnpaid')) {
         Navigator.pop(context, 'cancel');
-      }
-      if (mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
-        Navigator.pop(context, 'AUTHORISED');
       } else {
-        Navigator.pop(context, 'failed');
+        if (mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
+          Navigator.pop(context, 'AUTHORISED');
+        } else {
+          Navigator.pop(context, 'failed');
+        }
       }
     } catch (x) {
       Navigator.pop(context, 'failed');
@@ -169,6 +187,7 @@ class WebViewExampleState extends State<WebPage> {
             color: Colors.white,
           ),
           onPressed: () {
+            cancel_order();
             Navigator.pop(context, 'cancel');
           },
         ),
