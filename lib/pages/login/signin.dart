@@ -69,7 +69,7 @@ class _SignPageState extends State<SignIn> {
         title: "Sign in",
         content: Container(
           child: Center(
-            child: Text('You have entered an invalid username or password'),
+            child: Text('You have entered an invalid username or password.',  textAlign: TextAlign.center),
           ),
         ),
         buttons: [
