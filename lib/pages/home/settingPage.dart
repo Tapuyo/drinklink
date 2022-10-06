@@ -83,34 +83,33 @@ class _setPageState extends State<setPage> {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
     };
-    try{
-    final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/savedCards',
-        headers: headers);
-    var jsondata = json.decode(response.body);
-    print(response.body);
+    try {
+      final response = await http.get(
+          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          headers: headers);
+      var jsondata = json.decode(response.body);
+      print(response.body);
 
-    for (var u in jsondata) {
-      var mask = u['maskedPan'];
-      var fullname = mask.split('******');
-      String latmask = "******" + fullname[1].trim().toString();
+      for (var u in jsondata) {
+        var mask = u['maskedPan'];
+        var fullname = mask.split('******');
+        String latmask = "******" + fullname[1].trim().toString();
 
-      CardDetails tmc = new CardDetails(
-          u['id'].toString(),
-          u['maskedPan'],
-          u['expiry'],
-          u['cardholderName'],
-          u['scheme'],
-          u['cardToken'],
-          false,
-          latmask);
+        CardDetails tmc = new CardDetails(
+            u['id'].toString(),
+            u['maskedPan'],
+            u['expiry'],
+            u['cardholderName'],
+            u['scheme'],
+            u['cardToken'],
+            false,
+            latmask);
 
-      setState(() {
-        myCardList.add(tmc);
-      });
-    }
-    } catch (e) {
-    }
+        setState(() {
+          myCardList.add(tmc);
+        });
+      }
+    } catch (e) {}
     return myCardList;
   }
 
@@ -601,6 +600,33 @@ class _setPageState extends State<setPage> {
   }
 
   _showDialog(String title, String message) async {
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }));
+    // await Future.delayed(const Duration(seconds: 1), () {
+    //   Navigator.of(context).pop();
+    // });
+
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
@@ -628,8 +654,10 @@ class _setPageState extends State<setPage> {
         isActive = true;
         print(isActive);
       });
+
       _showDialog1('DrinkLink', 'Please login first.');
     }
+    Navigator.of(context).pop();
   }
 
   confirmDialog(
