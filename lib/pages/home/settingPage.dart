@@ -600,6 +600,33 @@ class _setPageState extends State<setPage> {
   }
 
   _showDialog(String title, String message) async {
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }));
+    // await Future.delayed(const Duration(seconds: 1), () {
+    //   Navigator.of(context).pop();
+    // });
+
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
@@ -627,8 +654,10 @@ class _setPageState extends State<setPage> {
         isActive = true;
         print(isActive);
       });
+
       _showDialog1('DrinkLink', 'Please login first.');
     }
+    Navigator.of(context).pop();
   }
 
   confirmDialog(
