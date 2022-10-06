@@ -8,9 +8,12 @@ import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-
+import 'package:timezone/standalone.dart';
+import 'package:timezone/timezone.dart';
+import 'package:timezone/standalone.dart' as tz;
 import '../../auth_provider.dart';
 import 'dart:ffi';
 import 'dart:math';
@@ -252,6 +255,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       Prefs.load();
       token = Prefs.getString('token');
       uName = Prefs.getString('uname');
+      print("This is the username:" + uName);
     } catch (e) {
       token = '';
     }
@@ -307,13 +311,14 @@ class _OrderDetailsState extends State<OrderDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1000&pageNumber=1',
         headers: headers);
     var jsondata = json.decode(response.body);
-    print(response.body);
+    print(id);
 
     for (var i = 0; i < jsondata.length; i++) {
-      if (id == '') {
+      if (id == json.decode(response.body)[i]['orderReference'].toString()) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
         List<MyItems> newItem = [];
@@ -358,22 +363,21 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '3') {
           stt = 'Payment Processed';
         } else if (cState == '4') {
-          setState(() {
-            String mdate =
-                json.decode(response.body)[i]['timeToCollect'].toString();
-            DateTime parseDate =
-                new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-            var inputDate = DateTime.parse(parseDate.toString());
-            setState(() {
-              int mmint = inputDate.minute * 60;
-              int msec = inputDate.second;
-
-              _start = mmint + msec;
-            });
-            if (_start > 0) {
-              startTimer();
+            DateTime mdate =
+                DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
+            // DateTime parseDate =
+            //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+            print(mdate);
+            //print(parseDate);
+            var diff;
+            //if(DateTime.now().timeZoneName == 'PST'){
+            var dtnow = DateTime.now();
+            diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
+            // }
+            print(diff);
+            if(mounted){
+              _start = diff + 60;
             }
-          });
           stt = 'Ready';
         } else if (cState == '5') {
           _timer.cancel();
@@ -406,149 +410,59 @@ class _OrderDetailsState extends State<OrderDetails> {
           byw = byww;
           //outletDesciption = json.decode(response.body)[i]['currentState'].toString();
         });
-      } else {
-        if (id == json.decode(response.body)[i]['id'].toString()) {
-          var jsondata1 = await json.decode(response.body)[i]['items'];
-
-          List<MyItems> newItem = [];
-          for (var x in jsondata1) {
-            MyItems nt =
-                new MyItems(x['drink']['name'], x['quantity'].toString());
-
-            newItem.add(nt);
-          }
-          String st = json.decode(response.body)[i]['timestamp'].toString();
-          String mprice =
-              json.decode(response.body)[i]['finalPrice'].toString();
-
-          String dt = '';
-          String stt = '';
-          final toDayDate = DateTime.now();
-          var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-          if (different < 60) {
-            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-                ' mins';
-          } else if (different > 60 && different < 1440) {
-            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-                ' hours';
-          } else {
-            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-                ' days';
-          }
-          String bar = json.decode(response.body)[i]['tableId'].toString();
-          String cState =
-              json.decode(response.body)[i]['currentState'].toString();
-          String mcode = json.decode(response.body)[i]['code'].toString();
-          String byww = json.decode(response.body)[i]['bartender'].toString();
-
-          getFacilityInfo(
-              json.decode(response.body)[i]['facilityId'].toString());
-          getSched(json.decode(response.body)[i]['facilityId'].toString());
-
-          if (cState == '0') {
-            stt = 'Order Created';
-          } else if (cState == '1') {
-            stt = 'Pending';
-          } else if (cState == '2') {
-            stt = 'Accepted';
-          } else if (cState == '3') {
-            stt = 'Payment Processed';
-          } else if (cState == '4') {
-            setState(() {
-              String mdate =
-                  json.decode(response.body)[i]['timeToCollect'].toString();
-              DateTime parseDate =
-                  new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-              var inputDate = DateTime.parse(parseDate.toString());
-              setState(() {
-                int mmint = inputDate.minute * 60;
-                int msec = inputDate.second;
-
-                _start = mmint + msec;
-              });
-              if (_start > 0) {
-                startTimer();
-              }
-            });
-            stt = 'Ready';
-          } else if (cState == '5') {
-            _timer.cancel();
-            stt = 'Completed';
-          } else if (cState == '101') {
-            _timer.cancel();
-            stt = 'Failed';
-          } else if (cState == '102') {
-            stt = 'Canceled';
-            _timer.cancel();
-          } else if (cState == '103') {
-            _timer.cancel();
-            stt = 'Rejected';
-          } else if (cState == '104') {
-            stt = 'Not Collected';
-            _timer.cancel();
-          } else if (cState == '105') {
-            stt = 'Payment Failed';
-            _timer.cancel();
-          }
-
-          setState(() {
-            barid = bar.toString();
-            state = stt.toString();
-            //state =  json.decode(response.body)[i]['currentState'].toString();
-            sttn = cState;
-            itemcount = newItem.length.toString();
-            price = mprice;
-            code = mcode;
-            byw = byww;
-            //outletDesciption = json.decode(response.body)[i]['currentState'].toString();
-          });
-        }
       }
+    }
+    if (_start > 0) {
+      startTimer();
     }
     return orderList;
   }
 
   void startTimer() {
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start <= 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-            if (_start > 60) {
-              double val = _start / 60 - 1;
-              mins = val.ceil().toStringAsFixed(0);
-              int rem = _start % 60;
-              if (rem < 10) {
-                secs = '0' + rem.toString();
+    if (mounted) {
+      const oneSec = const Duration(seconds: 2);
+      _timer = new Timer.periodic(
+        oneSec,
+        (Timer timer) {
+          if (_start <= 0) {
+            setState(() {
+              _start = 0;
+              timer.cancel();
+            });
+          } else {
+            setState(() {
+              _start--;
+              if (_start > 60) {
+                int val = (_start ~/ 60) - 1;
+                mins = val.ceil().toStringAsFixed(0);
+                int rem = _start % 60;
+                if (rem < 10) {
+                  secs = '0' + rem.toString();
+                } else {
+                  secs = rem.toString();
+                }
               } else {
-                secs = rem.toString();
+                hours = '';
+                mins = '00';
+                if (_start < 10) {
+                  secs = '0' + _start.toString();
+                } else {
+                  secs = _start.toString();
+                }
               }
-            } else {
-              hours = '';
-              mins = '00';
-              if (_start < 10) {
-                secs = '0' + _start.toString();
-              } else {
-                secs = _start.toString();
-              }
-            }
-          });
-          //checkORder();
-        }
-      },
-    );
+            });
+            //checkORder();
+          }
+        },
+      );
+    }
   }
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
+    _start = 0;
+    _timer.cancel();
   }
 
   getFacilityInfo(String id) async {
@@ -565,11 +479,13 @@ class _OrderDetailsState extends State<OrderDetails> {
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
         print(u['name']);
+        if(mounted){
         setState(() {
           outletid = u['id'].toString();
           outletName = u['name'];
           outletDesciption = u['address'];
         });
+      }
       }
     }
   }
@@ -611,6 +527,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         String et = '2020-07-20T' + u['endTime'];
         String nst = DateFormat.jm().format(DateTime.parse(st));
         String net = DateFormat.jm().format(DateTime.parse(et));
+        if(mounted)
         setState(() {
           wk = "Working hours " + nst + " - " + net;
           isWorkingDay = u['isWorkingDay'];
@@ -633,6 +550,8 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -657,13 +576,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             onPressed: () {
               if (subbodybool == 1) {
-                setState(() {
                   subbodybool = 0;
-                });
               } else if (subbodybool == 2) {
-                setState(() {
                   subbodybool = 1;
-                });
               } else {
                 Navigator.pushReplacement(
                   context,
@@ -861,7 +776,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                       } else {
                         _scaffoldKey.currentState.openEndDrawer();
                       }
+<<<<<<< HEAD
                       setState(() {
+=======
+>>>>>>> 9fa4b557e817ffbc7bbc5b65c8bd55f7c445362d
                         setState(() {
                           stoken = '';
 
@@ -874,7 +792,10 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Prefs.setString('billEmailnone', '');
                           context.read<AuthProvider>().setToken('');
                         });
+<<<<<<< HEAD
                       });
+=======
+>>>>>>> 9fa4b557e817ffbc7bbc5b65c8bd55f7c445362d
                       //Navigator.of(context).popAndPushNamed('/home');
                       if (stoken == '' || stoken == null || stoken.isEmpty) {
                         Navigator.pushReplacement(

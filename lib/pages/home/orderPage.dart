@@ -122,10 +122,10 @@ class _setPageState extends State<orderPage> {
         headers: headers);
     var jsondata = json.decode(response.body);
 
-    //print(json.decode(response.body));
+    print(json.decode(response.body));
     for (var i = 0; i < jsondata.length; i++) {
       var jsondata1 = await json.decode(response.body)[i]['items'];
-      print(jsondata1.toString());
+      print(json.decode(response.body)[i]['orderReference'].toString());
       List<OrdMixers> mixerI = [];
       List<MyItems> newItem = [];
       for (var x in jsondata1) {
@@ -191,7 +191,7 @@ class _setPageState extends State<orderPage> {
 
       setState(() {
         Order myorder = new Order(
-            json.decode(response.body)[i]['id'].toString(),
+            json.decode(response.body)[i]['orderReference'].toString(),
             dt.toString(),
             newItem,
             bar,

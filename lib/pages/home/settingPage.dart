@@ -290,7 +290,7 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(fontSize: 20, color: Colors.deepOrange),
               ),
               Text(
-                'Default Message Sound for each Order Status Change',
+                'Default Message Sound for each order status change',
                 style: TextStyle(
                     fontSize: 14, color: Colors.white.withOpacity(.8)),
               ),
