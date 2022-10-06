@@ -125,6 +125,7 @@ class _MenuPageState extends State<MenuPage> {
   bool isloading;
   int totalqty = 0;
   double chrx = 0;
+
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -505,310 +506,307 @@ class _MenuPageState extends State<MenuPage> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Container(
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/bkgdefault.png"),
-                  fit: BoxFit.cover)),
-          child: Scaffold(
-            key: _scaffoldKey,
-            appBar: AppBar(
-              //automaticallyImplyLeading: false,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back,
-                  size: 35,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (subbodybool == 1) {
-                    setState(() {
-                      subbodybool = 0;
-                    });
-                  } else if (subbodybool == 2) {
-                    setState(() {
-                      subbodybool = 1;
-                    });
-                  } else {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
-                  }
-                },
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/bkgdefault.png"),
+                fit: BoxFit.cover)),
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            //automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                size: 35,
+                color: Colors.white,
               ),
-              // actions: [
-              //   IconButton(
-              //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
-              //     onPressed: () {
-              //       _scaffoldKey.currentState.openEndDrawer();
-              //     },
-              //   )
-              // ],
+              onPressed: () {
+                if (subbodybool == 1) {
+                  setState(() {
+                    subbodybool = 0;
+                  });
+                } else if (subbodybool == 2) {
+                  setState(() {
+                    subbodybool = 1;
+                  });
+                } else {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );
+                }
+              },
             ),
-            endDrawer: Drawer(
-              child: Container(
-                  padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                  color: Colors.black,
-                  child: Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
+            // actions: [
+            //   IconButton(
+            //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
+            //     onPressed: () {
+            //       _scaffoldKey.currentState.openEndDrawer();
+            //     },
+            //   )
+            // ],
+          ),
+          endDrawer: Drawer(
+            child: Container(
+                padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                color: Colors.black,
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.home,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              child: Text(
+                                "Home",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => orderPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.wine_bar_sharp,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "My Orders",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => setPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.settings,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Settings v1.0.122",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => termPage()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              FontAwesome.angle_double_up,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              "Terms of Service",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        setState(() {
+                          setState(() {
+                            stoken = '';
+
+                            Prefs.setString('token', '');
+                            Prefs.setString('uname', 'none');
+                            Prefs.setString('bfNamenone', '');
+                            Prefs.setString('blMamenone', '');
+                            Prefs.setString('billNamenone', '');
+                            Prefs.setString('billAddnone', '');
+                            Prefs.setString('billEmailnone', '');
+                            context.read<AuthProvider>().setToken('');
+                          });
+                        });
+                        //Navigator.of(context).popAndPushNamed('/home');
+                        if (stoken == '' || stoken == null || stoken.isEmpty) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => SignIn()),
+                          );
+                        } else {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => HomePage()),
                           );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.home,
-                                size: 30,
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              MaterialCommunityIcons.human,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(
+                              stoken == '' || stoken == null || stoken.isEmpty
+                                  ? "Sign In / Register"
+                                  : "Sign Out (" + uName + ")",
+                              style: TextStyle(
                                 color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
                               ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              GestureDetector(
-                                onTap: () {},
-                                child: Text(
-                                  "Home",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => orderPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.wine_bar_sharp,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "My Orders",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => setPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.settings,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Settings v1.0.122",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => termPage()),
-                          );
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                FontAwesome.angle_double_up,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                "Terms of Service",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                            _scaffoldKey.currentState.openDrawer();
-                          } else {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          }
-                          setState(() {
-                            setState(() {
-                              stoken = '';
-
-                              Prefs.setString('token', '');
-                              Prefs.setString('uname', 'none');
-                              Prefs.setString('bfNamenone', '');
-                              Prefs.setString('blMamenone', '');
-                              Prefs.setString('billNamenone', '');
-                              Prefs.setString('billAddnone', '');
-                              Prefs.setString('billEmailnone', '');
-                              context.read<AuthProvider>().setToken('');
-                            });
-                          });
-                          //Navigator.of(context).popAndPushNamed('/home');
-                          if (stoken == '' ||
-                              stoken == null ||
-                              stoken.isEmpty) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => SignIn()),
-                            );
-                          } else {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                            );
-                          }
-                        },
-                        child: Container(
-                          height: 50,
-                          padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                MaterialCommunityIcons.human,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                stoken == '' || stoken == null || stoken.isEmpty
-                                    ? "Sign In / Register"
-                                    : "Sign Out (" + uName + ")",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Spacer(),
-                      // Container(
-                      //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
-                      //   child: Column(
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       Visibility(
-                      //           visible: orderList.length > 0 ? true:false,
-                      //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
-                      //       mybodyRec(),
-                      //       SizedBox(height: 20,)
-                      //     ],
-                      //   ),
-                      // )
-                    ],
-                  )),
-            ),
-            backgroundColor: Colors.transparent,
-            body: myorig(),
-          )),
+                    ),
+                    Spacer(),
+                    // Container(
+                    //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Visibility(
+                    //           visible: orderList.length > 0 ? true:false,
+                    //           child: Text('Most recent orders', style: TextStyle(color: Colors.white),)),
+                    //       mybodyRec(),
+                    //       SizedBox(height: 20,)
+                    //     ],
+                    //   ),
+                    // )
+                  ],
+                )),
+          ),
+          backgroundColor: Colors.transparent,
+          body: myorig(),
+        ),
+      ),
     );
   }
 
@@ -3336,8 +3334,8 @@ class _MenuPageState extends State<MenuPage> {
                               Visibility(
                                   visible: discount <= 0 ? false : true,
                                   child: Text(
-                                    // roundDouble(mdicount, 2).toString(),
-                                    mdicount.toStringAsFixed(3),
+                                    roundDouble(mdicount, 2).toString(),
+                                    // mdicount.toStringAsFixed(3),
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   )),
@@ -5164,7 +5162,7 @@ class _MenuPageState extends State<MenuPage> {
                                         _validate4 == true &&
                                         _validate5 == true) {
                                       setState(() {
-                                        isloading = true;
+                                        // isloading = true;
                                         tokenChecker();
                                       });
                                     }
@@ -5182,6 +5180,7 @@ class _MenuPageState extends State<MenuPage> {
                                     //   width: 30.0,
                                     // ),
                                     //SizedBox(width: 10,),
+
                                     Text(
                                       'PAY NOW',
                                       style: TextStyle(
@@ -5338,7 +5337,7 @@ class _MenuPageState extends State<MenuPage> {
     Navigator.of(context).push(
       new PageRouteBuilder(
         opaque: false,
-        barrierDismissible: true,
+        barrierDismissible: false,
         pageBuilder: (BuildContext context, _, __) {
           return Center(
             child: Container(
@@ -5346,18 +5345,16 @@ class _MenuPageState extends State<MenuPage> {
               width: 150,
               height: 150,
               color: Colors.transparent,
-              child: isloading == true
-                  ? Center(
-                      child: new SizedBox(
-                        height: 50.0,
-                        width: 50.0,
-                        child: new CircularProgressIndicator(
-                          value: null,
-                          strokeWidth: 7.0,
-                        ),
-                      ),
-                    )
-                  : Center(),
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
             ),
           );
         },
@@ -5372,7 +5369,7 @@ class _MenuPageState extends State<MenuPage> {
       SignUpPay();
     } else {
       OrderNow();
-      isloading = false;
+      // isloading = false;
       //getPaymentLink();
 
     }
