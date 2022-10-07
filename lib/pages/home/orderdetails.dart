@@ -51,15 +51,18 @@ import 'dart:core';
 import 'package:email_validator/email_validator.dart';
 
 class OrderDetails extends StatefulWidget {
+  String orderIdx;
   String id;
-  OrderDetails(this.id);
+  OrderDetails(this.orderIdx, this.id);
   @override
-  _OrderDetailsState createState() => _OrderDetailsState(this.id);
+  _OrderDetailsState createState() =>
+      _OrderDetailsState(this.orderIdx, this.id);
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
   String id;
-  _OrderDetailsState(this.id);
+  String orderIdx;
+  _OrderDetailsState(this.orderIdx, this.id);
   List<Order> orderList = [];
   Future ord;
   String outletid = '';
@@ -242,15 +245,15 @@ class _OrderDetailsState extends State<OrderDetails> {
     Map map;
     map = {'newState': '102', 'reason': 'Cancelled'};
     var body = json.encode(map);
-    String url = ApiCon.baseurl() + '/Orders/' + id;
+    String url = ApiCon.baseurl() + '/Orders/' + orderIdx;
 
     final response = await http.patch(url, headers: headers, body: body);
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
-      _showDialog_message('My order', 'Successfully cancelled order.');
+      _showDialog_message('My order', 'Successfully cancelled order.', true);
     } else {
-      _showDialog_message('My order', 'Failed to cancel order.');
+      _showDialog_message('My order', 'Failed to cancel order.', false);
     }
   }
 
@@ -390,7 +393,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           _timer.cancel();
           stt = 'Failed';
         } else if (cState == '102') {
-          stt = 'Canceled';
+          stt = 'cancelled';
           _timer.cancel();
         } else if (cState == '103') {
           _timer.cancel();
@@ -404,6 +407,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         }
 
         setState(() {
+          orderIdx = json.decode(response.body)['id'].toString();
           barid = bar.toString();
           state = stt.toString();
           //state =  json.decode(response.body)[i]['currentState'].toString();
@@ -1368,7 +1372,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 
-  _showDialog_message(String title, String message) {
+  _showDialog_message(String title, String message, bool state) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -1394,7 +1398,16 @@ class _OrderDetailsState extends State<OrderDetails> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
+                if (state == true) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => orderPage(),
+                      ));
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                }
               },
             ),
           ],

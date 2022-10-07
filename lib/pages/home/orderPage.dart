@@ -45,7 +45,8 @@ class _setPageState extends State<orderPage> {
     orderList = [];
     ord = getOrders();
   }
- _showDialog1(String title, String message) {
+
+  _showDialog1(String title, String message) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -72,9 +73,9 @@ class _setPageState extends State<orderPage> {
               ),
               onPressed: () {
                 Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                          );
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
             ),
           ],
@@ -94,116 +95,119 @@ class _setPageState extends State<orderPage> {
       String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
       final response = await http.post(url, headers: headers);
       print(json.decode(response.body));
-      if (response.statusCode == 200) {
-      }
-      
-    } catch (e) {
-    }
+      if (response.statusCode == 200) {}
+    } catch (e) {}
   }
+
   Future<List<Order>> getOrders() async {
     setState(() {
       orderList = [];
     });
     Prefs.load();
     String token = Prefs.getString('token');
-    if (token.isEmpty){
+    if (token.isEmpty) {
       _showDialog("Drinklink", "Please login first.");
-    }
-    else{
-    print(token);
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ' + token
-    };
-    final response = await http.get(
-        ApiCon.baseurl() +
-            '/users/currentUser/orders?pageSize=20&pageNumber=1' +
-            sortCode,
-        headers: headers);
-    var jsondata = json.decode(response.body);
+    } else {
+      print(token);
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + token
+      };
+      final response = await http.get(
+          ApiCon.baseurl() +
+              '/users/currentUser/orders?pageSize=20&pageNumber=1' +
+              sortCode,
+          headers: headers);
+      var jsondata = json.decode(response.body);
 
-    print(json.decode(response.body));
-    for (var i = 0; i < jsondata.length; i++) {
-      var jsondata1 = await json.decode(response.body)[i]['items'];
-      print(json.decode(response.body)[i]['orderReference'].toString());
-      List<OrdMixers> mixerI = [];
-      List<MyItems> newItem = [];
-      for (var x in jsondata1) {
-        MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
-        var mixerItems = x['selectedMixers'];
-        if(mixerItems != null || mixerItems != [] || mixerItems.length <= 0){
-          
-          for (var x in mixerItems) {
-            print(x['name']);
-            OrdMixers mix = new OrdMixers( x['name'], x['price'].toString());
-            mixerI.add(mix);
+      print(json.decode(response.body));
+      for (var i = 0; i < jsondata.length; i++) {
+        var jsondata1 = await json.decode(response.body)[i]['items'];
+        print(json.decode(response.body)[i]['orderReference'].toString());
+        print(json.decode(response.body)[i]['id'].toString());
+        List<OrdMixers> mixerI = [];
+        List<MyItems> newItem = [];
+        for (var x in jsondata1) {
+          MyItems nt =
+              new MyItems(x['drink']['name'], x['quantity'].toString());
+          var mixerItems = x['selectedMixers'];
+          if (mixerItems != null ||
+              mixerItems != [] ||
+              mixerItems.length <= 0) {
+            for (var x in mixerItems) {
+              print(x['name']);
+              OrdMixers mix = new OrdMixers(x['name'], x['price'].toString());
+              mixerI.add(mix);
+            }
           }
+
+          newItem.add(nt);
         }
-        
-        newItem.add(nt);
-      }
-      String st = json.decode(response.body)[i]['timestamp'].toString();
+        String st = json.decode(response.body)[i]['timestamp'].toString();
 
-      String dt = '';
-      String stt = '';
-      final toDayDate = DateTime.now();
-      var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-      if (different < 60) {
-        dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-            ' mins';
-      } else if (different > 60 && different < 1440) {
-        dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-            ' hours';
-      } else {
-        dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-            ' days';
-      }
-      String bar = json.decode(response.body)[i]['tableId'].toString();
-      if (bar == null || bar == 'null') {
-        bar = '';
-      }
-      String cState = json.decode(response.body)[i]['currentState'].toString();
-      if (cState == '0') {
-        stt = 'Order Created';
-      } else if (cState == '1') {
-        stt = 'Pending';
-      } else if (cState == '2') {
-        stt = 'Accepted';
-      } else if (cState == '3') {
-        stt = 'Payment Processed';
-      } else if (cState == '4') {
-        stt = 'Ready';
-      } else if (cState == '5') {
-        stt = 'Completed';
-      } else if (cState == '101') {
-        stt = 'Failed';
-      } else if (cState == '102') {
-        stt = 'Canceled';
-      } else if (cState == '103') {
-        stt = 'Rejected';
-      } else if (cState == '104') {
-        stt = 'Not Collected';
-      } else if (cState == '105') {
-        stt = 'Payment Failed';
-      }else if (cState == '106') {
-        stt = 'Payment Cancelled';
-      }
+        String dt = '';
+        String stt = '';
+        final toDayDate = DateTime.now();
+        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
+        if (different < 60) {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' mins';
+        } else if (different > 60 && different < 1440) {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hours';
+        } else {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' days';
+        }
+        String bar = json.decode(response.body)[i]['tableId'].toString();
+        if (bar == null || bar == 'null') {
+          bar = '';
+        }
+        String cState =
+            json.decode(response.body)[i]['currentState'].toString();
+        if (cState == '0') {
+          stt = 'Order Created';
+        } else if (cState == '1') {
+          stt = 'Pending';
+        } else if (cState == '2') {
+          stt = 'Accepted';
+        } else if (cState == '3') {
+          stt = 'Payment Processed';
+        } else if (cState == '4') {
+          stt = 'Ready';
+        } else if (cState == '5') {
+          stt = 'Completed';
+        } else if (cState == '101') {
+          stt = 'Failed';
+        } else if (cState == '102') {
+          stt = 'Canceled';
+        } else if (cState == '103') {
+          stt = 'Rejected';
+        } else if (cState == '104') {
+          stt = 'Not Collected';
+        } else if (cState == '105') {
+          stt = 'Payment Failed';
+        } else if (cState == '106') {
+          stt = 'Payment Cancelled';
+        }
 
-      setState(() {
-        Order myorder = new Order(
-            json.decode(response.body)[i]['orderReference'].toString(),
-            dt.toString(),
-            newItem,
-            bar,
-            stt,
-            cState,
-            mixerI);
+        setState(() {
+          Order myorder = new Order(
+              json.decode(response.body)[i]['orderReference'].toString(),
+              dt.toString(),
+              newItem,
+              bar,
+              stt,
+              cState,
+              mixerI,
+              json.decode(response.body)[i]['id'].toString());
 
-        orderList.add(myorder);
-      });
+          orderList.add(myorder);
+        });
+      }
+      return orderList;
     }
-    return orderList;
-  }}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -300,10 +304,11 @@ class _setPageState extends State<orderPage> {
       ),
     );
   }
+
   didChangeDependencies() {
-                              ord = getOrders();
-                           
-                          }
+    ord = getOrders();
+  }
+
   mybody() {
     return Container(
       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
@@ -380,33 +385,34 @@ class _setPageState extends State<orderPage> {
                                                     snapshot
                                                         .data[index].itemslist,
                                                     index),
-                                                
                                               ]))
                                       : null,
                                 ),
                                 Container(
-                            //visible: snapshot.data[index].mixer == null ? false:true,
-                            child: snapshot.data[index].mixrs != null
-                                ? Container(
-                                     padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
-                                    height: 28,
-                                    width: MediaQuery.of(context).size.width,
-                                    child: ListView(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 15),
-                                        scrollDirection: Axis.horizontal,
-                                        children: [
-                                          getCartMixWidgets(
-                                              snapshot.data[index].mixrs, index),
-                                        
-                                        ]))
-                                : null,
-                          ),
+                                  //visible: snapshot.data[index].mixer == null ? false:true,
+                                  child: snapshot.data[index].mixrs != null
+                                      ? Container(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 0, 0, 10),
+                                          height: 28,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: ListView(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 15),
+                                              scrollDirection: Axis.horizontal,
+                                              children: [
+                                                getCartMixWidgets(
+                                                    snapshot.data[index].mixrs,
+                                                    index),
+                                              ]))
+                                      : null,
+                                ),
                                 showSated(
+                                    snapshot.data[index].orderidx,
                                     snapshot.data[index].id,
                                     snapshot.data[index].cState,
                                     snapshot.data[index].sttn)
-                                
                               ],
                             )),
                       ),
@@ -418,7 +424,7 @@ class _setPageState extends State<orderPage> {
   }
 
   Widget getCartMixWidgets(List<OrdMixers> strings, int ind) {
-    int select; 
+    int select;
     List<Widget> list = new List<Widget>();
 
     for (var i = 0; i < strings.length; i++) {
@@ -430,16 +436,18 @@ class _setPageState extends State<orderPage> {
               ? new Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(9),
-                    border: Border.all(color: Colors.white54.withOpacity(.5),),
+                    border: Border.all(
+                      color: Colors.white54.withOpacity(.5),
+                    ),
                   ), //
-                  padding: EdgeInsets.all(1),   
+                  padding: EdgeInsets.all(1),
                   child: Row(
                     children: [
                       Text(
                         strings[i].mixName.toString() != null
                             ? strings[i].mixName.toString()
                             : '',
-                            textAlign: TextAlign.center,
+                        textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white54),
                       ),
                     ],
@@ -452,7 +460,8 @@ class _setPageState extends State<orderPage> {
     return new Row(children: list);
   }
 
-  showSated(String id, stt, stn) {
+  showSated(String orderId, id, stt, stn) {
+    print(orderId);
     if (stn == '0') {
       return Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -471,7 +480,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(orderId, id)),
           );
         },
         child: Container(
@@ -492,7 +501,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(orderId, id)),
           );
         },
         child: Container(
@@ -513,7 +522,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(orderId, id)),
           );
         },
         child: Container(
@@ -534,7 +543,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(orderId, id)),
           );
         },
         child: Container(
@@ -731,9 +740,18 @@ class Order {
   final String cState;
   final String sttn;
   final List<OrdMixers> mixrs;
+  final String orderidx;
 
-  Order(this.id, this.timestamp, this.itemslist, this.barid, this.cState,
-      this.sttn, this.mixrs);
+  Order(
+    this.id,
+    this.timestamp,
+    this.itemslist,
+    this.barid,
+    this.cState,
+    this.sttn,
+    this.mixrs,
+    this.orderidx,
+  );
 }
 
 class MyItems {
@@ -742,7 +760,6 @@ class MyItems {
 
   MyItems(this.itemsname, this.itemsquantity);
 }
-
 
 class OrdMixers {
   final String mixName;

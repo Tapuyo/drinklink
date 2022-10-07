@@ -5533,12 +5533,12 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    // if (discountID.isEmpty) {
-    //   totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
-    // } else {
-    //   totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
-    // }
-    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    if (discountID.isEmpty) {
+      totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    } else {
+      totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
+    }
+    // totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
@@ -5627,6 +5627,7 @@ class _MenuPageState extends State<MenuPage> {
       print('success');
       print(response.body.toString());
       getPaymentLink(
+          json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
           json.decode(response.body)['paymentOrderCode'].toString());
@@ -5749,7 +5750,8 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String url, String reference, String paymentCode) async {
+  getPaymentLink(
+      String id, String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -5857,7 +5859,7 @@ class _MenuPageState extends State<MenuPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => OrderDetails('')),
+          MaterialPageRoute(builder: (context) => OrderDetails(id, '')),
         );
       } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
         _showDialog('DrinkLink', 'Cancelled payment!');
@@ -5927,7 +5929,7 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OrderDetails('')),
+        MaterialPageRoute(builder: (context) => OrderDetails(id, '')),
       );
     } else {
       Navigator.of(context).pop();

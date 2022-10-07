@@ -56,6 +56,7 @@ class _HomePageState extends State<HomePage> {
       print('set notif \n \n ');
     } catch (e) {}
   }
+
   final _focusNode = FocusNode();
   bool isSearching = false;
 
@@ -851,10 +852,12 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.bottomCenter,
                       child: Container(
                         decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(14.0), topRight: Radius.circular(14.0)),
-                              color: isSearching ? Colors.grey[900].withOpacity(.8):Colors.transparent
-                              
-                            ),
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(14.0),
+                                topRight: Radius.circular(14.0)),
+                            color: isSearching
+                                ? Colors.grey[900].withOpacity(.8)
+                                : Colors.transparent),
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                         child: TextField(
                           focusNode: _focusNode,
@@ -958,7 +961,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderDetails('')),
+                              builder: (context) => OrderDetails('', '')),
                         );
                       },
                       child: Container(
@@ -1097,6 +1100,7 @@ class _HomePageState extends State<HomePage> {
           }),
     );
   }
+
   _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -1124,24 +1128,23 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-               context.read<AuthProvider>().setToken('');
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                context.read<AuthProvider>().setToken('');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', 'none');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
               },
             )
           ],
@@ -1168,39 +1171,38 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        if(StoreID == ''){
+                        if (StoreID == '') {
                           StoreID = snapshot.data[index].id;
                           myOrder = [];
                           Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MenuPage(
-                                  snapshot.data[index].id,
-                                  snapshot.data[index].name,
-                                  snapshot.data[index].address)),
-                        );
-                        }else{
-                          if(StoreID == snapshot.data[index].id){
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuPage(
+                                    snapshot.data[index].id,
+                                    snapshot.data[index].name,
+                                    snapshot.data[index].address)),
+                          );
+                        } else {
+                          if (StoreID == snapshot.data[index].id) {
                             Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MenuPage(
-                                  snapshot.data[index].id,
-                                  snapshot.data[index].name,
-                                  snapshot.data[index].address)));
-                          }else{
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuPage(
+                                        snapshot.data[index].id,
+                                        snapshot.data[index].name,
+                                        snapshot.data[index].address)));
+                          } else {
                             StoreID = snapshot.data[index].id;
-                          myOrder = [];
-                          Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MenuPage(
-                                  snapshot.data[index].id,
-                                  snapshot.data[index].name,
-                                  snapshot.data[index].address)));
+                            myOrder = [];
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuPage(
+                                        snapshot.data[index].id,
+                                        snapshot.data[index].name,
+                                        snapshot.data[index].address)));
                           }
                         }
-                      
                       },
                       child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -1209,13 +1211,12 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                color: Colors.transparent,
-                                width: 60,
-                                height: 60,
-                                //this will load the image
-                                child: Image.network(ApiCon.baseurl() +
-                                    snapshot.data[index].image)
-                              ),
+                                  color: Colors.transparent,
+                                  width: 60,
+                                  height: 60,
+                                  //this will load the image
+                                  child: Image.network(ApiCon.baseurl() +
+                                      snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
                               ),
