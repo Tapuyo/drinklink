@@ -770,25 +770,12 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                   ),
                   InkWell(
-<<<<<<< HEAD
                     onTap: () {
                       if (_scaffoldKey.currentState.isEndDrawerOpen) {
                         _scaffoldKey.currentState.openDrawer();
                       } else {
                         _scaffoldKey.currentState.openEndDrawer();
                       }
-                      setState(() {
-                        stoken = '';
-
-                        Prefs.setString('token', '');
-                        Prefs.setString('uname', 'none');
-                        Prefs.setString('bfNamenone', '');
-                        Prefs.setString('blMamenone', '');
-                        Prefs.setString('billNamenone', '');
-                        Prefs.setString('billAddnone', '');
-                        Prefs.setString('billEmailnone', '');
-                        context.read<AuthProvider>().setToken('');
-                      });
                       //Navigator.of(context).popAndPushNamed('/home');
                       if (stoken == '' || stoken == null || stoken.isEmpty) {
                         Navigator.pushReplacement(
@@ -796,33 +783,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           MaterialPageRoute(builder: (context) => SignIn()),
                         );
                       } else {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
+                        _showDialogout("Drinklink", "Proceed logout?");
                       }
                     },
-=======
-                      onTap: () {
-                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                              _scaffoldKey.currentState.openDrawer();
-                            } else {
-                              _scaffoldKey.currentState.openEndDrawer();
-                            }
-                            //Navigator.of(context).popAndPushNamed('/home');
-                            if (stoken == '' ||
-                                stoken == null ||
-                                stoken.isEmpty) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignIn()),
-                              );
-                            } else {
-                              _showDialogout("Drinklink", "Proceed logout?");
-                            }
-                          },
->>>>>>> c1739fd2346683246d817eff32a8d766d7807b9a
                     child: Container(
                       height: 50,
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -1086,29 +1049,29 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                             ],
                           ),
-                        ), Visibility(
-
-                            visible: sttn == '103' ? true:false,
-                          child: Row(
-                                children: 
-                                [
-                                   SizedBox(
-                                width: 112,
-                              ),
-                                  Icon( Icons.cancel_schedule_send_outlined,
-                                size: 20,
-                                color: Colors.red,
-                              ),
-                                  SizedBox(
-                                width: 4,
-                              ),
-                                  Text(
+                        ),
+                        Visibility(
+                            visible: sttn == '103' ? true : false,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 112,
+                                ),
+                                Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
                                   'Order is rejected by the store.',
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 15),
                                 ),
-                              ],)
-                          ),
+                              ],
+                            )),
                         SizedBox(
                           height: 10,
                         ),
@@ -1400,6 +1363,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       ),
     );
   }
+
   _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -1427,24 +1391,23 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  context.read<AuthProvider>().setToken('');
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    context.read<AuthProvider>().setToken('');
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', 'none');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
               },
             )
           ],
