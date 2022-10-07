@@ -724,24 +724,21 @@ class _MenuPageState extends State<MenuPage> {
                     ),
                     InkWell(
                       onTap: () {
-                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                              _scaffoldKey.currentState.openDrawer();
-                            } else {
-                              _scaffoldKey.currentState.openEndDrawer();
-                            }
-                            //Navigator.of(context).popAndPushNamed('/home');
-                            if (stoken == '' ||
-                                stoken == null ||
-                                stoken.isEmpty) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignIn()),
-                              );
-                            } else {
-                              _showDialogout("Drinklink", "Proceed logout?");
-                            }
-                          },
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
+                        //Navigator.of(context).popAndPushNamed('/home');
+                        if (stoken == '' || stoken == null || stoken.isEmpty) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => SignIn()),
+                          );
+                        } else {
+                          _showDialogout("Drinklink", "Proceed logout?");
+                        }
+                      },
                       child: Container(
                         height: 50,
                         padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -5085,10 +5082,10 @@ class _MenuPageState extends State<MenuPage> {
                                   print("This is the name:" + ename);
                                   int charLength = ename.length;
                                   var fullname = ename.split(' ');
-                                   if (fullname.length==1){
+                                  if (fullname.length == 1) {
                                     _showDialog(
-                                          'DrinkLink', 'Please input full name.');
-                                      return;
+                                        'DrinkLink', 'Please input full name.');
+                                    return;
                                   }
                                   String firsname = '';
                                   String lastname = '';
@@ -5705,7 +5702,7 @@ class _MenuPageState extends State<MenuPage> {
       ),
     );
   }
-    
+
   _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -5733,24 +5730,23 @@ class _MenuPageState extends State<MenuPage> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  context.read<AuthProvider>().setToken('');
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    context.read<AuthProvider>().setToken('');
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', 'none');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
               },
             )
           ],
