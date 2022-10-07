@@ -1647,10 +1647,10 @@ class _MenuPageState extends State<MenuPage> {
                   Container(
                       height: 60,
                       width: MediaQuery.of(context).size.width / 2,
-                      padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                       child: Text(
                         selectedmenu1,
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: TextStyle(color: Colors.white, fontSize: 17),
                       )),
                   Spacer(),
                   GestureDetector(
