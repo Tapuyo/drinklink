@@ -38,7 +38,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
           AddCard(url);
         }
       } catch (e) {
-        Navigator.pop(context, 'failed');
+       // Navigator.pop(context, 'failed');
       }
     });
   }

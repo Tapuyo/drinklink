@@ -131,7 +131,7 @@ class WebViewExampleState extends State<WebPage> {
         }
       }
     } catch (x) {
-      Navigator.pop(context, 'failed');
+     // Navigator.pop(context, 'failed');
     }
 
     // try {
