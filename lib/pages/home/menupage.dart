@@ -219,7 +219,8 @@ class _MenuPageState extends State<MenuPage> {
     uName = Prefs.getString('uname');
     String fname = Prefs.getString('bfName' + uName) ?? '';
     String lname = Prefs.getString('blMame' + uName) ?? '';
-    billname.text = fname + ' ' + lname;
+    String name = fname + ' ' + lname;
+    billname.text = name.trimLeft();
     billadd.text = Prefs.getString('billAdd' + uName) ?? '';
     String email = Prefs.getString('billEmail' + uName) ?? '';
     billemail.text = email.trim().replaceAll(' ', '');
@@ -5533,12 +5534,12 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    // if (discountID.isEmpty) {
-    //   totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
-    // } else {
-    //   totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
-    // }
-    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    if (discountID.isEmpty) {
+      totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    } else {
+      totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
+    }
+    // totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
@@ -5953,7 +5954,7 @@ class _MenuPageState extends State<MenuPage> {
   double calCulateDecimatPlace(double val) {
     double mySecRoundValue = 0;
     if (val.toString().contains('.')) {
-      final dec = val.toString().split(".")[3];
+      final dec = val.toString().split(".")[2];
       if (dec.length > 2) {
         if (int.parse(dec[3]) < 5) {
           String firstval = val.toString().split(".")[0];
@@ -6233,8 +6234,8 @@ class _MenuPageState extends State<MenuPage> {
       double tot = double.parse(myOrder[i].Price) * myOrder[i].Quant;
       int qty = myOrder[i].Quant;
       setState(() {
-        finaltot = finaltot + tot;
-        finaltot = calCulateDecimatPlace(finaltot);
+        finaltot += finaltot + tot;
+        // finaltot = calCulateDecimatPlace(finaltot);
         print(finaltot);
 
         totalqty = totalqty + qty;

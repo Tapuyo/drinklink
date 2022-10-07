@@ -558,10 +558,10 @@ class _setPageState extends State<setPage> {
   updateChanges() async {
     Prefs.load();
     uName = Prefs.getString('uname');
-    String bname = billname.text;
-    String blast = billlast.text;
+    String bname = billname.text.trimLeft();
+    String blast = billlast.text.trimLeft();
     String badd = billadd.text;
-    String bemail = billemail.text;
+    String bemail = billemail.text.trim();
     bool bsendBill = checkedValue;
     Prefs.setString('bfName' + uName, bname);
     Prefs.setString('blMame' + uName, blast);
