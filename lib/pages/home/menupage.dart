@@ -6243,7 +6243,7 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
-  callcompute() async {
+ callcompute() async {
     finaltot = 0;
     totalqty = 0;
     for (var i = 0; i < myOrder.length; i++) {
@@ -6251,9 +6251,6 @@ class _MenuPageState extends State<MenuPage> {
       int qty = myOrder[i].Quant;
       setState(() {
         finaltot = finaltot + tot;
-        finaltot = calCulateDecimatPlace(finaltot);
-        print(finaltot);
-        
         totalqty = totalqty + qty;
       });
     }
