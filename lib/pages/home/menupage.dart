@@ -5544,7 +5544,12 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    if (discountID.isEmpty) {
+      totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    } else {
+      totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
+    }
+
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
