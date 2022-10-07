@@ -5519,7 +5519,6 @@ class _MenuPageState extends State<MenuPage> {
       drinksorderall = drinksorderall + jsonUser.toString() + ',';
       myPydr.add(pydr);
     }
-   
 
     //print(drinksorderall);
     var tagsJson = jsonEncode(myPydr);
@@ -5534,12 +5533,12 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    if (discountID.isEmpty) {
-      totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
-    } else {
-      totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
-    }
-    
+    // if (discountID.isEmpty) {
+    //   totalPrice = roundtoEven(finaltotwithdiscount, 2).toString();
+    // } else {
+    //   totalPrice = roundDouble(finaltotwithdiscount, 2).toString();
+    // }
+    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(charge);
@@ -5951,31 +5950,32 @@ class _MenuPageState extends State<MenuPage> {
     //Navigator.of(context).pop();
   }
 
-  double calCulateDecimatPlace(double val){
+  double calCulateDecimatPlace(double val) {
     double mySecRoundValue = 0;
     if (val.toString().contains('.')) {
-      final dec = val.toString().split(".")[2];
-      if(dec.length > 2){
-       if(int.parse(dec[3]) < 5){
+      final dec = val.toString().split(".")[3];
+      if (dec.length > 2) {
+        if (int.parse(dec[3]) < 5) {
           String firstval = val.toString().split(".")[0];
           String firstvaldec = dec[0];
           String secvaldec = (int.parse(dec[1]) + 1).toString();
           String finalValue = firstval + '.' + firstvaldec + secvaldec;
           mySecRoundValue = double.parse(finalValue);
-       }else{
+        } else {
           String firstval = val.toString().split(".")[0];
           String firstvaldec = dec[0];
           String secvaldec = (int.parse(dec[1])).toString();
 
           String finalValue = firstval + '.' + firstvaldec + secvaldec;
           mySecRoundValue = double.parse(finalValue);
-       }
-      }else{
+        }
+      } else {
         mySecRoundValue = val;
       }
     }
     return mySecRoundValue;
   }
+
   Future<List<Order>> getOrder() async {
     if (myOrder.length <= 0) {
       setState(() {
@@ -6236,7 +6236,7 @@ class _MenuPageState extends State<MenuPage> {
         finaltot = finaltot + tot;
         finaltot = calCulateDecimatPlace(finaltot);
         print(finaltot);
-        
+
         totalqty = totalqty + qty;
       });
     }
