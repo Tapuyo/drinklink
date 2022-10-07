@@ -231,6 +231,29 @@ class _OrderDetailsState extends State<OrderDetails> {
     }
   }
 
+  _cancelorder() async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    // String myt = "'{'newState': 'Canceled'}'";
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/json'
+    };
+    Map map;
+    map = {'newState': '102', 'reason': 'Cancelled'};
+    var body = json.encode(map);
+    String url = ApiCon.baseurl() + '/Orders/' + id;
+
+    final response = await http.patch(url, headers: headers, body: body);
+    print(response.body);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      _showDialog_message('My order', 'Successfully cancelled order.');
+    } else {
+      _showDialog_message('My order', 'Failed to cancel order.');
+    }
+  }
+
   getToke() {
     try {
       Prefs.load();
@@ -344,21 +367,21 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '3') {
           stt = 'Payment Processed';
         } else if (cState == '4') {
-            DateTime mdate =
-                DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
-            // DateTime parseDate =
-            //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-            print(mdate);
-            //print(parseDate);
-            var diff;
-            //if(DateTime.now().timeZoneName == 'PST'){
-            var dtnow = DateTime.now();
-            diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
-            // }
-            print(diff);
-            if(mounted){
-              _start = diff + 60;
-            }
+          DateTime mdate =
+              DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
+          // DateTime parseDate =
+          //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+          print(mdate);
+          //print(parseDate);
+          var diff;
+          //if(DateTime.now().timeZoneName == 'PST'){
+          var dtnow = DateTime.now();
+          diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
+          // }
+          print(diff);
+          if (mounted) {
+            _start = diff + 60;
+          }
           stt = 'Ready';
         } else if (cState == '5') {
           _timer.cancel();
@@ -460,13 +483,13 @@ class _OrderDetailsState extends State<OrderDetails> {
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
         print(u['name']);
-        if(mounted){
-        setState(() {
-          outletid = u['id'].toString();
-          outletName = u['name'];
-          outletDesciption = u['address'];
-        });
-      }
+        if (mounted) {
+          setState(() {
+            outletid = u['id'].toString();
+            outletName = u['name'];
+            outletDesciption = u['address'];
+          });
+        }
       }
     }
   }
@@ -508,11 +531,11 @@ class _OrderDetailsState extends State<OrderDetails> {
         String et = '2020-07-20T' + u['endTime'];
         String nst = DateFormat.jm().format(DateTime.parse(st));
         String net = DateFormat.jm().format(DateTime.parse(et));
-        if(mounted)
-        setState(() {
-          wk = "Working hours " + nst + " - " + net;
-          isWorkingDay = u['isWorkingDay'];
-        });
+        if (mounted)
+          setState(() {
+            wk = "Working hours " + nst + " - " + net;
+            isWorkingDay = u['isWorkingDay'];
+          });
       }
     }
     //for (var x in jsondata1){
@@ -531,7 +554,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    
+
     uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -557,9 +580,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             onPressed: () {
               if (subbodybool == 1) {
-                  subbodybool = 0;
+                subbodybool = 0;
               } else if (subbodybool == 2) {
-                  subbodybool = 1;
+                subbodybool = 1;
               } else {
                 Navigator.pushReplacement(
                   context,
@@ -751,25 +774,22 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ),
                   ),
                   InkWell(
-                      onTap: () {
-                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                              _scaffoldKey.currentState.openDrawer();
-                            } else {
-                              _scaffoldKey.currentState.openEndDrawer();
-                            }
-                            //Navigator.of(context).popAndPushNamed('/home');
-                            if (stoken == '' ||
-                                stoken == null ||
-                                stoken.isEmpty) {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignIn()),
-                              );
-                            } else {
-                              _showDialogout("Drinklink", "Proceed logout?");
-                            }
-                          },
+                    onTap: () {
+                      if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                        _scaffoldKey.currentState.openDrawer();
+                      } else {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      }
+                      //Navigator.of(context).popAndPushNamed('/home');
+                      if (stoken == '' || stoken == null || stoken.isEmpty) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignIn()),
+                        );
+                      } else {
+                        _showDialogout("Drinklink", "Proceed logout?");
+                      }
+                    },
                     child: Container(
                       height: 50,
                       padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -938,22 +958,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 //visible: sttn == '1' ? true:false,
                                 child: GestureDetector(
                                   onTap: () async {
-                                    Prefs.load();
-                                    String token = Prefs.getString('token');
-                                    String myt = "'{'newState': 'Canceled'}'";
-                                    Map<String, String> headers = {
-                                      'Authorization': 'Bearer ' + token,
-                                      'Content-Type': 'application/json'
-                                    };
-                                    Map<String, String> body = {
-                                      'newState': 'Canceled'
-                                    };
-                                    String url =
-                                        ApiCon.baseurl() + '/Orders/' + id;
-
-                                    final response = await http.patch(url,
-                                        headers: headers, body: myt);
-                                    print(response.body);
+                                    setState(() {
+                                      _cancelorder();
+                                    });
                                   },
                                   child: Container(
                                       width: 90,
@@ -1046,29 +1053,29 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                             ],
                           ),
-                        ), Visibility(
-
-                            visible: sttn == '103' ? true:false,
-                          child: Row(
-                                children: 
-                                [
-                                   SizedBox(
-                                width: 112,
-                              ),
-                                  Icon( Icons.cancel_schedule_send_outlined,
-                                size: 20,
-                                color: Colors.red,
-                              ),
-                                  SizedBox(
-                                width: 4,
-                              ),
-                                  Text(
+                        ),
+                        Visibility(
+                            visible: sttn == '103' ? true : false,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 112,
+                                ),
+                                Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
                                   'Order is rejected by the store.',
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 15),
                                 ),
-                              ],)
-                          ),
+                              ],
+                            )),
                         SizedBox(
                           height: 10,
                         ),
@@ -1360,6 +1367,42 @@ class _OrderDetailsState extends State<OrderDetails> {
       ),
     );
   }
+
+  _showDialog_message(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
@@ -1387,24 +1430,23 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  context.read<AuthProvider>().setToken('');
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    context.read<AuthProvider>().setToken('');
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', 'none');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
               },
             )
           ],
