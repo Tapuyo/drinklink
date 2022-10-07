@@ -2013,6 +2013,7 @@ class _MenuPageState extends State<MenuPage> {
                 // print(strings[i].mx[x].price.toString());
 
               }
+
               showModalBottomSheet<void>(
                 context: context,
                 builder: (BuildContext context) {
@@ -2113,6 +2114,8 @@ class _MenuPageState extends State<MenuPage> {
                                                 tot.toStringAsFixed(2);
                                             strings[i].name =
                                                 chs.cname.toString();
+                                          } else {
+                                            Navigator.pop(context);
                                           }
                                         });
                                       },
