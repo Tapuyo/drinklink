@@ -239,14 +239,18 @@ class _OrderDetailsState extends State<OrderDetails> {
       'Authorization': 'Bearer ' + token,
       'Content-Type': 'application/json'
     };
-    Map<String, String> body = {'newState': '102', 'reason': 'Cancel Order'};
-    // Map<String, String> body = {'newState': 'Canceled'};
+    Map map;
+    map = {'newState': '102', 'reason': 'Cancelled'};
+    var body = json.encode(map);
     String url = ApiCon.baseurl() + '/Orders/' + id;
 
     final response = await http.patch(url, headers: headers, body: body);
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
+      _showDialog_message('My order', 'Successfully cancelled order.');
+    } else {
+      _showDialog_message('My order', 'Failed to cancel order.');
     }
   }
 
@@ -1359,6 +1363,41 @@ class _OrderDetailsState extends State<OrderDetails> {
                   )
                 ],
               )),
+        ),
+      ),
+    );
+  }
+
+  _showDialog_message(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+          ],
         ),
       ),
     );
