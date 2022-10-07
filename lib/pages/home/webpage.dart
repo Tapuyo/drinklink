@@ -32,13 +32,10 @@ class WebViewExampleState extends State<WebPage> {
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
     flutterWebViewPlugin.onUrlChanged.listen((String url) {
       print("This is url: " + url);
-      try {
-        if (url != murl) {
-          //Navigator.pop(context, url);
-          Order(url);
-        }
-      } catch (e) {
-        Navigator.pop(context, 'failed');
+
+      if (url != murl) {
+        //Navigator.pop(context, url);
+        Order(url);
       }
     });
   }
