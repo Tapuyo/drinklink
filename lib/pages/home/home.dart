@@ -9,6 +9,7 @@ import 'package:driklink/pages/login/signin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:driklink/auth_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
@@ -739,7 +740,7 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => SignIn()),
                               );
                             } else {
-                              _showDialogout("Drinklink", "Proceed logout?");
+                              _showDialogout("Drinklink", "Are you sure you want to log out?");
                             }
                           },
                           child: Container(
@@ -1106,10 +1107,10 @@ class _HomePageState extends State<HomePage> {
         child: new AlertDialog(
           elevation: 15,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           title: Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 25),
           ),
           content: Text(
             message,
@@ -1118,8 +1119,12 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             FlatButton(
+              color: Colors.deepPurpleAccent[700],
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+               minWidth: 140,
               child: Text(
-                'Logout',
+                'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
@@ -1142,6 +1147,18 @@ class _HomePageState extends State<HomePage> {
                                   Prefs.setString('billEmailnone', '');
                                 });
                               });
+              },
+            ),
+             FlatButton(
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+               minWidth: 140,
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
               },
             )
           ],

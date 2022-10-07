@@ -736,7 +736,7 @@ class _MenuPageState extends State<MenuPage> {
                             MaterialPageRoute(builder: (context) => SignIn()),
                           );
                         } else {
-                          _showDialogout("Drinklink", "Proceed logout?");
+                          _showDialogout("Drinklink", "Are you sure you want to log out?");
                         }
                       },
                       child: Container(
@@ -5698,7 +5698,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  _showDialogout(String title, String message) {
+   _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -5707,10 +5707,10 @@ class _MenuPageState extends State<MenuPage> {
         child: new AlertDialog(
           elevation: 15,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8))),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           title: Text(
             title,
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 25),
           ),
           content: Text(
             message,
@@ -5719,29 +5719,46 @@ class _MenuPageState extends State<MenuPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             FlatButton(
+              color: Colors.deepPurpleAccent[700],
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+               minWidth: 140,
               child: Text(
-                'Logout',
+                'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-                setState(() {
-                  setState(() {
-                    context.read<AuthProvider>().setToken('');
-                    Prefs.load();
-                    Prefs.setString('token', '');
-                    Prefs.setString('uname', 'none');
-                    Prefs.setString('bfNamenone', '');
-                    Prefs.setString('blMamenone', '');
-                    Prefs.setString('billNamenone', '');
-                    Prefs.setString('billAddnone', '');
-                    Prefs.setString('billEmailnone', '');
-                  });
-                });
+               context.read<AuthProvider>().setToken('');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
+              },
+            ),
+             FlatButton(
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+               minWidth: 140,
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
               },
             )
           ],
