@@ -2014,6 +2014,7 @@ class _MenuPageState extends State<MenuPage> {
 
               }
               showModalBottomSheet<void>(
+                isDismissible: false,
                 context: context,
                 builder: (BuildContext context) {
                   return StatefulBuilder(
