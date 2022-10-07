@@ -363,21 +363,21 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '3') {
           stt = 'Payment Processed';
         } else if (cState == '4') {
-            DateTime mdate =
-                DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
-            // DateTime parseDate =
-            //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-            print(mdate);
-            //print(parseDate);
-            var diff;
-            //if(DateTime.now().timeZoneName == 'PST'){
-            var dtnow = DateTime.now();
-            diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
-            // }
-            print(diff);
-            if(mounted){
-              _start = diff + 60;
-            }
+          DateTime mdate =
+              DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
+          // DateTime parseDate =
+          //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
+          print(mdate);
+          //print(parseDate);
+          var diff;
+          //if(DateTime.now().timeZoneName == 'PST'){
+          var dtnow = DateTime.now();
+          diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
+          // }
+          print(diff);
+          if (mounted) {
+            _start = diff + 60;
+          }
           stt = 'Ready';
         } else if (cState == '5') {
           _timer.cancel();
@@ -479,13 +479,13 @@ class _OrderDetailsState extends State<OrderDetails> {
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
         print(u['name']);
-        if(mounted){
-        setState(() {
-          outletid = u['id'].toString();
-          outletName = u['name'];
-          outletDesciption = u['address'];
-        });
-      }
+        if (mounted) {
+          setState(() {
+            outletid = u['id'].toString();
+            outletName = u['name'];
+            outletDesciption = u['address'];
+          });
+        }
       }
     }
   }
@@ -527,11 +527,11 @@ class _OrderDetailsState extends State<OrderDetails> {
         String et = '2020-07-20T' + u['endTime'];
         String nst = DateFormat.jm().format(DateTime.parse(st));
         String net = DateFormat.jm().format(DateTime.parse(et));
-        if(mounted)
-        setState(() {
-          wk = "Working hours " + nst + " - " + net;
-          isWorkingDay = u['isWorkingDay'];
-        });
+        if (mounted)
+          setState(() {
+            wk = "Working hours " + nst + " - " + net;
+            isWorkingDay = u['isWorkingDay'];
+          });
       }
     }
     //for (var x in jsondata1){
@@ -550,7 +550,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    
+
     uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -576,9 +576,9 @@ class _OrderDetailsState extends State<OrderDetails> {
             ),
             onPressed: () {
               if (subbodybool == 1) {
-                  subbodybool = 0;
+                subbodybool = 0;
               } else if (subbodybool == 2) {
-                  subbodybool = 1;
+                subbodybool = 1;
               } else {
                 Navigator.pushReplacement(
                   context,
@@ -776,26 +776,18 @@ class _OrderDetailsState extends State<OrderDetails> {
                       } else {
                         _scaffoldKey.currentState.openEndDrawer();
                       }
-<<<<<<< HEAD
                       setState(() {
-=======
->>>>>>> 9fa4b557e817ffbc7bbc5b65c8bd55f7c445362d
-                        setState(() {
-                          stoken = '';
+                        stoken = '';
 
-                          Prefs.setString('token', '');
-                          Prefs.setString('uname', 'none');
-                          Prefs.setString('bfNamenone', '');
-                          Prefs.setString('blMamenone', '');
-                          Prefs.setString('billNamenone', '');
-                          Prefs.setString('billAddnone', '');
-                          Prefs.setString('billEmailnone', '');
-                          context.read<AuthProvider>().setToken('');
-                        });
-<<<<<<< HEAD
+                        Prefs.setString('token', '');
+                        Prefs.setString('uname', 'none');
+                        Prefs.setString('bfNamenone', '');
+                        Prefs.setString('blMamenone', '');
+                        Prefs.setString('billNamenone', '');
+                        Prefs.setString('billAddnone', '');
+                        Prefs.setString('billEmailnone', '');
+                        context.read<AuthProvider>().setToken('');
                       });
-=======
->>>>>>> 9fa4b557e817ffbc7bbc5b65c8bd55f7c445362d
                       //Navigator.of(context).popAndPushNamed('/home');
                       if (stoken == '' || stoken == null || stoken.isEmpty) {
                         Navigator.pushReplacement(
