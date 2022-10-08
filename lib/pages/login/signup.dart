@@ -40,6 +40,27 @@ class _SignPageState extends State<SignUp> {
     checkedValue = widget.checkedValuex ?? false;
   }
 
+  updateDefaultSetting() async {
+    Prefs.load();
+    String uName = usernameController.text;
+    String bname = fnameController.text;
+    String blast = lnameController.text;
+    // String badd = billadd.text;
+    String bemail = emailController.text;
+    bool bsendBill = true;
+    Prefs.setString('bfName' + uName, bname.replaceAll(' ', ''));
+    Prefs.setString('blMame' + uName, blast.replaceAll(' ', ''));
+    Prefs.setString('billName' + uName, bname + " " + blast);
+    Prefs.setString('billAdd' + uName, '');
+    Prefs.setString('billEmail' + uName, bemail.replaceAll(' ', ''));
+    Prefs.setBool('bsendBill' + uName + '', bsendBill);
+
+    setState(() {
+      Prefs.setBool('sound' + uName, false);
+      Prefs.setBool('alert' + uName, false);
+    });
+  }
+
   SignUp() async {
     String euser = usernameController.text;
     String em = emailController.text;
@@ -100,6 +121,7 @@ class _SignPageState extends State<SignUp> {
     if (response.statusCode == 200) {
       Prefs.setString('fname', fnameController.text);
       Prefs.setString('lname', lnameController.text);
+      updateDefaultSetting();
 
       Navigator.pushReplacement(
         context,
@@ -112,7 +134,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Username is already taken.", textAlign: TextAlign.center),
+              child: Text("Username is already taken.",
+                  textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -132,7 +155,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Email is already taken.", textAlign: TextAlign.center),
+              child:
+                  Text("Email is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -172,7 +196,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Username.", textAlign: TextAlign.center),
+              child:
+                  Text("Please Input Username.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -186,13 +211,14 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
-      }  else if (response.body.toString().contains("Passwords do not match")) {
+      } else if (response.body.toString().contains("Passwords do not match")) {
         Alert(
           context: context,
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Passwords don't match.", textAlign: TextAlign.center),
+              child:
+                  Text("Passwords don't match.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -212,7 +238,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please input required fields.", textAlign: TextAlign.center),
+              child: Text("Please input required fields.",
+                  textAlign: TextAlign.center),
             ),
           ),
           buttons: [
