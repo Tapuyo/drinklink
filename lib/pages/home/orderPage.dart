@@ -190,15 +190,16 @@ class _setPageState extends State<orderPage> {
           stt = 'Payment Cancelled';
         }
 
-        setState(() {
-          Order myorder = new Order(
-              json.decode(response.body)[i]['orderReference'].toString(),
-              dt.toString(),
-              newItem,
-              bar,
-              stt,
-              cState,
-              mixerI);
+      setState(() {
+        Order myorder = new Order(
+          json.decode(response.body)[i]['id'].toString(),
+            json.decode(response.body)[i]['orderReference'].toString(),
+            dt.toString(),
+            newItem,
+            bar,
+            stt,
+            cState,
+            mixerI);
 
           orderList.add(myorder);
         });
@@ -408,6 +409,7 @@ class _setPageState extends State<orderPage> {
                                 ),
                                 showSated(
                                     snapshot.data[index].id,
+                                    snapshot.data[index].ref,
                                     snapshot.data[index].cState,
                                     snapshot.data[index].sttn)
                               ],
@@ -457,7 +459,7 @@ class _setPageState extends State<orderPage> {
     return new Row(children: list);
   }
 
-  showSated(String id, stt, stn) {
+  showSated(String id, ref, stt, stn) {
     if (stn == '0') {
       return Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -476,7 +478,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
           );
         },
         child: Container(
@@ -497,7 +499,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
           );
         },
         child: Container(
@@ -518,7 +520,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
           );
         },
         child: Container(
@@ -539,7 +541,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
           );
         },
         child: Container(
@@ -730,6 +732,7 @@ class Person {
 
 class Order {
   final String id;
+  final String ref;
   final String timestamp;
   final List<MyItems> itemslist;
   final String barid;
@@ -737,7 +740,7 @@ class Order {
   final String sttn;
   final List<OrdMixers> mixrs;
 
-  Order(this.id, this.timestamp, this.itemslist, this.barid, this.cState,
+  Order(this.id, this.ref, this.timestamp, this.itemslist, this.barid, this.cState,
       this.sttn, this.mixrs);
 }
 

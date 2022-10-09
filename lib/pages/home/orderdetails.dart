@@ -52,14 +52,16 @@ import 'package:email_validator/email_validator.dart';
 
 class OrderDetails extends StatefulWidget {
   String id;
-  OrderDetails(this.id);
+  String ref;
+  OrderDetails(this.id,this.ref);
   @override
-  _OrderDetailsState createState() => _OrderDetailsState(this.id);
+  _OrderDetailsState createState() => _OrderDetailsState(this.id,this.ref);
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
   String id;
-  _OrderDetailsState(this.id);
+   String ref;
+  _OrderDetailsState(this.id,this.ref);
   List<Order> orderList = [];
   Future ord;
   String outletid = '';
@@ -85,7 +87,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   String wk = '';
   bool isWorkingDay = false;
   Timer _timer;
-  int _start = 10;
+  int _start = 0;
   int tipid = 0;
   String idCard = '0';
   String discountID = '';
@@ -282,6 +284,7 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   @override
   void initState() {
+    print(id);
     super.initState();
     getDayofweek();
     getOrders();

@@ -34,11 +34,10 @@ class WebViewExampleState extends State<WebPage> {
       print("This is url: " + url);
       try {
         if (url != murl) {
-          //Navigator.pop(context, url);
           Order(url);
         }
       } catch (e) {
-        Navigator.pop(context, 'failed');
+        print(e.toString());
       }
     });
   }
@@ -131,7 +130,7 @@ class WebViewExampleState extends State<WebPage> {
         }
       }
     } catch (x) {
-      // Navigator.pop(context, 'failed');
+      //Navigator.pop(context, 'failed');
     }
 
     // try {
