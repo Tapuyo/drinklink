@@ -40,6 +40,27 @@ class _SignPageState extends State<SignUp> {
     checkedValue = widget.checkedValuex ?? false;
   }
 
+  updateDefaultSetting() async {
+    Prefs.load();
+    String uName = usernameController.text;
+    String bname = fnameController.text;
+    String blast = lnameController.text;
+    // String badd = billadd.text;
+    String bemail = emailController.text;
+    bool bsendBill = true;
+    Prefs.setString('bfName' + uName, bname.replaceAll(' ', ''));
+    Prefs.setString('blMame' + uName, blast.replaceAll(' ', ''));
+    Prefs.setString('billName' + uName, bname + " " + blast);
+    Prefs.setString('billAdd' + uName, '');
+    Prefs.setString('billEmail' + uName, bemail.replaceAll(' ', ''));
+    Prefs.setBool('bsendBill' + uName + '', bsendBill);
+
+    setState(() {
+      Prefs.setBool('sound' + uName, false);
+      Prefs.setBool('alert' + uName, false);
+    });
+  }
+
   SignUp() async {
     String euser = usernameController.text;
     String em = emailController.text;
@@ -100,7 +121,7 @@ class _SignPageState extends State<SignUp> {
     if (response.statusCode == 200) {
       Prefs.setString('fname', fnameController.text);
       Prefs.setString('lname', lnameController.text);
-
+      updateDefaultSetting();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignIn()),

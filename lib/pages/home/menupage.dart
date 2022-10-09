@@ -208,24 +208,77 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  savebill(String unamex, String fname, String lname, String address,
+      String email, String idCardx, bool savebill) async {
+    Prefs.load();
+    Prefs.setString('sfName' + unamex, fname.replaceAll(' ', ''));
+    Prefs.setString('slMame' + unamex, lname.replaceAll(' ', ''));
+    Prefs.setString('sillName' + unamex, fname + " " + lname);
+    Prefs.setString('sillAdd' + unamex, address);
+    Prefs.setString('sillEmail' + unamex, email.replaceAll(' ', ''));
+    Prefs.setString('sidCard' + unamex + '', idCardx.replaceAll(' ', ''));
+    Prefs.setBool('ssavebill' + unamex + '', savebill);
+  }
+
   loadBill() async {
     Prefs.load();
-
-    // if (token.isEmpty && userName.isEmpty) {
-    //   billname.text = '';
-    //   billadd.text = '';
-    //   billemail.text = '';
-    // } else {
     uName = Prefs.getString('uname');
-    String fname = Prefs.getString('bfName' + uName) ?? '';
-    String lname = Prefs.getString('blMame' + uName) ?? '';
-    String name = fname + ' ' + lname;
-    billname.text = name.trimLeft();
-    billadd.text = Prefs.getString('billAdd' + uName) ?? '';
-    String email = Prefs.getString('billEmail' + uName) ?? '';
-    billemail.text = email.trim().replaceAll(' ', '');
+    String unamex = '';
+    switch (uName) {
+      case '':
+        {
+          unamex = '';
+        }
+        break;
+      case ' ':
+        {
+          unamex = '';
+        }
+        break;
+      case 'guest':
+        {
+          unamex = 'guest';
+        }
+        break;
+      case 'none':
+        {
+          unamex = 'none';
+        }
+        break;
+      default:
+        {
+          unamex = uName;
+        }
+        break;
+    }
 
-    // }
+    bool savebill = Prefs.getBool('ssavebill' + unamex + '') ?? false;
+    if (savebill == true) {
+      checkedValue = savebill;
+      bool usename = Prefs.getBool('ssendBill' + unamex + '') ?? false;
+
+      String fname = Prefs.getString('sfName' + unamex) ?? '';
+      String lname = Prefs.getString('slMame' + unamex) ?? '';
+      billname.text = fname + ' ' + lname;
+
+      billadd.text = Prefs.getString('sillAdd' + unamex) ?? '';
+      String email = Prefs.getString('sillEmail' + unamex) ?? '';
+      billemail.text = email.trim().replaceAll(' ', '');
+
+      idCard = Prefs.getString('sidCard' + unamex) ?? '';
+    } else {
+      checkedValue = false;
+      idCard = '';
+      bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
+      if (usename == true) {
+        String fname = Prefs.getString('bfName' + unamex) ?? '';
+        String lname = Prefs.getString('blMame' + unamex) ?? '';
+        billname.text = fname + ' ' + lname;
+      }
+      billadd.text = Prefs.getString('billAdd' + unamex) ?? '';
+      String email = Prefs.getString('billEmail' + unamex) ?? '';
+      billemail.text = email.trim().replaceAll(' ', '');
+    }
   }
 
   @override
@@ -5073,6 +5126,33 @@ class _MenuPageState extends State<MenuPage> {
                                   // } else {
                                   //   _validate = false;
                                   // }
+                                  String unamex = '';
+                                  switch (uName) {
+                                    case '':
+                                      {
+                                        unamex = '';
+                                      }
+                                      break;
+                                    case ' ':
+                                      {
+                                        unamex = ' ';
+                                      }
+                                      break;
+                                    case 'none':
+                                      {
+                                        unamex = 'none';
+                                      }
+                                      break;
+                                    case 'guest':
+                                      {
+                                        unamex = 'guest';
+                                      }
+                                      break;
+                                    default:
+                                      {
+                                        unamex = uName;
+                                      }
+                                  }
 
                                   bool _validate1;
                                   bool _validate2;
@@ -5170,6 +5250,19 @@ class _MenuPageState extends State<MenuPage> {
                                         _validate5 == true) {
                                       setState(() {
                                         // isloading = true;
+                                        if (checkedValue == true) {
+                                          savebill(
+                                              unamex,
+                                              firsname,
+                                              lastname,
+                                              billadd.text,
+                                              billemail.text,
+                                              idCard,
+                                              checkedValue);
+                                        } else {
+                                          savebill(unamex, '', '', '', '', '',
+                                              false);
+                                        }
                                         tokenChecker();
                                       });
                                     }
