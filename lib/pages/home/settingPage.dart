@@ -83,7 +83,7 @@ class _setPageState extends State<setPage> {
     );
 
     String su = Prefs.getString('token');
-    String un = Prefs.getString('uname');
+    String un = Prefs.getString('uname') ?? '';
     print('Dele Card');
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + su,
@@ -120,7 +120,7 @@ class _setPageState extends State<setPage> {
 
   deleteuser() async {
     String su = Prefs.getString('token');
-    String un = Prefs.getString('uname');
+    String un = Prefs.getString('uname') ?? '';
     print('Dele Card');
     Map<String, String> headers = {
       'Authorization': 'Bearer ' + su,
@@ -557,7 +557,7 @@ class _setPageState extends State<setPage> {
 
   updateChanges() async {
     Prefs.load();
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     String bname = billname.text.trimLeft();
     String blast = billlast.text.trimLeft();
     String badd = billadd.text;

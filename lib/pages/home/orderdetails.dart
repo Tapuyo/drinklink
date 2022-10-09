@@ -260,7 +260,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     try {
       Prefs.load();
       token = Prefs.getString('token');
-      uName = Prefs.getString('uname');
+      uName = Prefs.getString('uname') ?? '';
       print("This is the username:" + uName);
     } catch (e) {
       token = '';
@@ -275,7 +275,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     //   billadd.text = '';
     //   billemail.text = '';
     // } else {
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     billname.text = Prefs.getString('billName' + uName);
     billadd.text = Prefs.getString('billAdd' + uName);
     billemail.text = Prefs.getString('billEmail' + uName);
@@ -558,7 +558,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
 
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {

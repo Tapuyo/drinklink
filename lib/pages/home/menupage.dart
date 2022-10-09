@@ -202,7 +202,7 @@ class _MenuPageState extends State<MenuPage> {
     try {
       Prefs.load();
       token = Prefs.getString('token');
-      uName = Prefs.getString('uname');
+      uName = Prefs.getString('uname') ?? '';
     } catch (e) {
       token = '';
     }
@@ -814,7 +814,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text(
                               stoken == '' || stoken == null || stoken.isEmpty
                                   ? "Sign In / Register"
-                                  : "Sign Out (" + uName + ")",
+                                  : uName != '' || uName != null || uName.isNotEmpty? "Sign Out (" + uName + ")":"Sign Out (guest)",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
