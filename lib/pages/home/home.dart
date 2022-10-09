@@ -961,7 +961,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderDetails('', '')),
+                              builder: (context) => OrderDetails('')),
                         );
                       },
                       child: Container(
