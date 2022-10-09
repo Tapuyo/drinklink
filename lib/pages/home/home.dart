@@ -741,7 +741,8 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => SignIn()),
                               );
                             } else {
-                              _showDialogout("Drinklink", "Are you sure you want to log out?");
+                              _showDialogout("Drinklink",
+                                  "Are you sure you want to log out?");
                             }
                           },
                           child: Container(
@@ -1124,9 +1125,9 @@ class _HomePageState extends State<HomePage> {
           actions: <Widget>[
             FlatButton(
               color: Colors.deepPurpleAccent[700],
-                shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-               minWidth: 140,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1152,10 +1153,10 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             ),
-             FlatButton(
-                shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-               minWidth: 140,
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
