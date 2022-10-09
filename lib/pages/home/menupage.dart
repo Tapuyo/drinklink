@@ -209,15 +209,25 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   savebill(String unamex, String fname, String lname, String address,
-      String email, String idCardx, bool savebill) async {
+      String email, bool savebill) async {
     Prefs.load();
     Prefs.setString('sfName' + unamex, fname.replaceAll(' ', ''));
     Prefs.setString('slMame' + unamex, lname.replaceAll(' ', ''));
     Prefs.setString('sillName' + unamex, fname + " " + lname);
     Prefs.setString('sillAdd' + unamex, address);
     Prefs.setString('sillEmail' + unamex, email.replaceAll(' ', ''));
-    Prefs.setString('sidCard' + unamex + '', idCardx.replaceAll(' ', ''));
     Prefs.setBool('ssavebill' + unamex + '', savebill);
+  }
+
+  savebillcard(String unamex, String sidCard, String smaskedPan, String sexpiry,
+      String scardholderName, String sscheme, String scardToken) async {
+    Prefs.load();
+    Prefs.setString('sidCard' + unamex + '', sidCard.replaceAll(' ', ''));
+    Prefs.setString('smaskedPan' + unamex, smaskedPan);
+    Prefs.setString('sexpiry' + unamex + '', sexpiry.replaceAll(' ', ''));
+    Prefs.setString('scardholderName' + unamex, scardholderName);
+    Prefs.setString('sscheme' + unamex + '', sscheme);
+    Prefs.setString('scardToken' + unamex, scardToken.replaceAll(' ', ''));
   }
 
   loadBill() async {
@@ -266,6 +276,11 @@ class _MenuPageState extends State<MenuPage> {
       billemail.text = email.trim().replaceAll(' ', '');
 
       idCard = Prefs.getString('sidCard' + unamex) ?? '';
+      maskedPan = Prefs.getString('smaskedPan' + unamex) ?? '';
+      expiry = Prefs.getString('sexpiry' + unamex) ?? '';
+      cardholderName = Prefs.getString('scardholderName' + unamex) ?? '';
+      scheme = Prefs.getString('sscheme' + unamex) ?? '';
+      cardToken = Prefs.getString('scardToken' + unamex) ?? '';
     } else {
       checkedValue = false;
       idCard = '';
@@ -5257,12 +5272,23 @@ class _MenuPageState extends State<MenuPage> {
                                               lastname,
                                               billadd.text,
                                               billemail.text,
-                                              idCard,
                                               checkedValue);
+
+                                          savebillcard(
+                                              unamex,
+                                              idCard,
+                                              maskedPan,
+                                              expiry,
+                                              cardholderName,
+                                              scheme,
+                                              cardToken);
                                         } else {
-                                          savebill(unamex, '', '', '', '', '',
-                                              false);
+                                          savebill(
+                                              unamex, '', '', '', '', false);
+                                          savebillcard(
+                                              unamex, '', '', '', '', '', '');
                                         }
+
                                         tokenChecker();
                                       });
                                     }
