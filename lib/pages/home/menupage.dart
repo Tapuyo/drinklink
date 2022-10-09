@@ -219,7 +219,8 @@ class _MenuPageState extends State<MenuPage> {
     uName = Prefs.getString('uname');
     String fname = Prefs.getString('bfName' + uName) ?? '';
     String lname = Prefs.getString('blMame' + uName) ?? '';
-    billname.text = fname + ' ' + lname;
+    String name = fname + ' ' + lname;
+    billname.text = name.trimLeft();
     billadd.text = Prefs.getString('billAdd' + uName) ?? '';
     String email = Prefs.getString('billEmail' + uName) ?? '';
     billemail.text = email.trim().replaceAll(' ', '');
@@ -2013,7 +2014,6 @@ class _MenuPageState extends State<MenuPage> {
                 // print(strings[i].mx[x].price.toString());
 
               }
-
               showModalBottomSheet<void>(
                 context: context,
                 builder: (BuildContext context) {
@@ -2067,56 +2067,51 @@ class _MenuPageState extends State<MenuPage> {
                                     GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          if (mname != null) {
-                                            if (myDrinks[ind]
-                                                .ChMixer
-                                                .isNotEmpty) {
-                                              myDrinks[ind].ChMixer.removeWhere(
-                                                  (element) =>
-                                                      element.cname == mname);
-                                            }
-
-                                            Navigator.pop(context);
-                                            List<chossenMixer> newChs =
-                                                myDrinks[ind].ChMixer;
-
-                                            chossenMixer chs = chossenMixer(
-                                                chid, chname, chprice);
-                                            if (chs.cmid.isNotEmpty) {
-                                              newChs.add(chs);
-                                            }
-
-                                            print(chs.cmid.toString());
-                                            mj = chs.cmid.toString();
-                                            print(mj + "mjjjj");
-                                            print(chs.cname.toString());
-                                            print(chs.cprice.toString());
-                                            myDrinks[ind].ChMixer = newChs;
-
-                                            print(strings[i].mx.length);
-
-                                            print(chs.cname + 'Drinks Here!!');
-                                            double mixertotal = 0;
-                                            for (var i = 0;
-                                                i < newChs.length;
-                                                i++) {
-                                              double cprice = double.parse(
-                                                  newChs[i].cprice);
-                                              setState(() {
-                                                mixertotal += cprice;
-                                              });
-                                            }
-
-                                            double tot = double.parse(
-                                                    myDrinks[ind].origPrice) +
-                                                mixertotal;
-                                            myDrinks[ind].price =
-                                                tot.toStringAsFixed(2);
-                                            strings[i].name =
-                                                chs.cname.toString();
-                                          } else {
-                                            Navigator.pop(context);
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty) {
+                                            myDrinks[ind].ChMixer.removeWhere(
+                                                (element) =>
+                                                    element.cname == mname);
                                           }
+                                          Navigator.pop(context);
+                                          List<chossenMixer> newChs =
+                                              myDrinks[ind].ChMixer;
+
+                                          chossenMixer chs = chossenMixer(
+                                              chid, chname, chprice);
+                                          if (chs.cmid.isNotEmpty) {
+                                            newChs.add(chs);
+                                          }
+
+                                          print(chs.cmid.toString());
+                                          mj = chs.cmid.toString();
+                                          print(mj + "mjjjj");
+                                          print(chs.cname.toString());
+                                          print(chs.cprice.toString());
+                                          myDrinks[ind].ChMixer = newChs;
+
+                                          print(strings[i].mx.length);
+
+                                          print(chs.cname + 'Drinks Here!!');
+                                          double mixertotal = 0;
+                                          for (var i = 0;
+                                              i < newChs.length;
+                                              i++) {
+                                            double cprice =
+                                                double.parse(newChs[i].cprice);
+                                            setState(() {
+                                              mixertotal += cprice;
+                                            });
+                                          }
+
+                                          double tot = double.parse(
+                                                  myDrinks[ind].origPrice) +
+                                              mixertotal;
+                                          myDrinks[ind].price =
+                                              tot.toStringAsFixed(2);
+                                          strings[i].name =
+                                              chs.cname.toString();
                                         });
                                       },
                                       child: Text(
@@ -5633,7 +5628,6 @@ class _MenuPageState extends State<MenuPage> {
       print('success');
       print(response.body.toString());
       getPaymentLink(
-          json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
           json.decode(response.body)['paymentOrderCode'].toString());
@@ -5756,8 +5750,7 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(
-      String id, String url, String reference, String paymentCode) async {
+  getPaymentLink(String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -5865,7 +5858,7 @@ class _MenuPageState extends State<MenuPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => OrderDetails(id, '')),
+          MaterialPageRoute(builder: (context) => OrderDetails('')),
         );
       } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
         _showDialog('DrinkLink', 'Cancelled payment!');
@@ -5935,7 +5928,7 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OrderDetails(id, '')),
+        MaterialPageRoute(builder: (context) => OrderDetails('')),
       );
     } else {
       Navigator.of(context).pop();
@@ -5961,7 +5954,7 @@ class _MenuPageState extends State<MenuPage> {
   double calCulateDecimatPlace(double val) {
     double mySecRoundValue = 0;
     if (val.toString().contains('.')) {
-      final dec = val.toString().split(".")[3];
+      final dec = val.toString().split(".")[2];
       if (dec.length > 2) {
         if (int.parse(dec[3]) < 5) {
           String firstval = val.toString().split(".")[0];
@@ -6241,8 +6234,8 @@ class _MenuPageState extends State<MenuPage> {
       double tot = double.parse(myOrder[i].Price) * myOrder[i].Quant;
       int qty = myOrder[i].Quant;
       setState(() {
-        finaltot = finaltot + tot;
-        finaltot = calCulateDecimatPlace(finaltot);
+        finaltot += finaltot + tot;
+        // finaltot = calCulateDecimatPlace(finaltot);
         print(finaltot);
 
         totalqty = totalqty + qty;
