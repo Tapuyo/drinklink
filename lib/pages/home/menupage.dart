@@ -814,7 +814,11 @@ class _MenuPageState extends State<MenuPage> {
                             Text(
                               stoken == '' || stoken == null || stoken.isEmpty
                                   ? "Sign In / Register"
-                                  : uName != '' || uName != null || uName.isNotEmpty? "Sign Out (" + uName + ")":"Sign Out (guest)",
+                                  : uName != '' ||
+                                          uName != null ||
+                                          uName.isNotEmpty
+                                      ? "Sign Out (" + uName + ")"
+                                      : "Sign Out (guest)",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -1208,7 +1212,7 @@ class _MenuPageState extends State<MenuPage> {
                                   if (discountID.isEmpty) {
                                     // tip = _tip;
                                     // mtip = "";
-                                    
+
                                     double ch = charge / 100;
 
                                     // double a = _tip + finaltot;
@@ -5630,8 +5634,8 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-      totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
-    
+    totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
+
     // totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
@@ -5721,7 +5725,7 @@ class _MenuPageState extends State<MenuPage> {
       print('success');
       print(response.body.toString());
       getPaymentLink(
-        json.decode(response.body)['id'].toString(),
+          json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
           json.decode(response.body)['paymentOrderCode'].toString());
@@ -5860,7 +5864,8 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(String orderID,String url, String reference, String paymentCode) async {
+  getPaymentLink(
+      String orderID, String url, String reference, String paymentCode) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -5968,7 +5973,8 @@ class _MenuPageState extends State<MenuPage> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => OrderDetails(orderID, reference)),
+          MaterialPageRoute(
+              builder: (context) => OrderDetails(orderID, reference)),
         );
       } else if (result.toString().toLowerCase() == ('cancel').toLowerCase()) {
         _showDialog('DrinkLink', 'Cancelled payment!');
@@ -6038,7 +6044,7 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => OrderDetails('','')),
+        MaterialPageRoute(builder: (context) => OrderDetails('', '')),
       );
     } else {
       Navigator.of(context).pop();
