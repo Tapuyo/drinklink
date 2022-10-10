@@ -557,7 +557,6 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-
     uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -1447,7 +1446,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 setState(() {
                                   Prefs.load();
                                   Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('uname', '');
                                   Prefs.setString('bfNamenone', '');
                                   Prefs.setString('blMamenone', '');
                                   Prefs.setString('billNamenone', '');
