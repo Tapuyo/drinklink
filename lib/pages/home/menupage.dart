@@ -719,6 +719,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -981,11 +982,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text(
                               stoken == '' || stoken == null || stoken.isEmpty
                                   ? "Sign In / Register"
-                                  : uName != '' ||
-                                          uName != null ||
-                                          uName.isNotEmpty
-                                      ? "Sign Out (" + uName + ")"
-                                      : "Sign Out (guest)",
+                                  : "Sign Out (" + uName + ")",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -6040,7 +6037,7 @@ class _MenuPageState extends State<MenuPage> {
                   setState(() {
                     Prefs.load();
                     Prefs.setString('token', '');
-                    Prefs.setString('uname', 'none');
+                    Prefs.setString('uname', '');
                     Prefs.setString('bfNamenone', '');
                     Prefs.setString('blMamenone', '');
                     Prefs.setString('billNamenone', '');

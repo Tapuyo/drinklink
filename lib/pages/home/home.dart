@@ -1143,7 +1143,7 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     Prefs.load();
                     Prefs.setString('token', '');
-                    Prefs.setString('uname', 'none');
+                    Prefs.setString('uname', '');
                     Prefs.setString('bfNamenone', '');
                     Prefs.setString('blMamenone', '');
                     Prefs.setString('billNamenone', '');
@@ -1234,7 +1234,8 @@ class _HomePageState extends State<HomePage> {
                                   height: 60,
                                   //this will load the image
                                   child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)),
+                                      snapshot.data[index].image)
+                                      ),
                               SizedBox(
                                 width: 10,
                               ),
