@@ -5956,12 +5956,12 @@ class _MenuPageState extends State<MenuPage> {
 
     //finaltotwithdiscount = finaltot + percentagefee;
 
-    totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
-
-    // totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    //totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
+    print(finaltotwithdiscount);
+   totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
-    print(charge);
+    print(totalPrice);
     print('Total price:' + totalPrice);
     double finalcharge = charge / 100;
 
@@ -6392,21 +6392,44 @@ class _MenuPageState extends State<MenuPage> {
   double calCulateDecimatPlace(double val) {
     double mySecRoundValue = 0;
     if (val.toString().contains('.')) {
-      final dec = val.toString().split(".")[2];
+      final dec = val.toString().split(".")[1];
       if (dec.length > 2) {
-        if (int.parse(dec[3]) < 5) {
+        if (int.parse(dec[2]) > 5) {
           String firstval = val.toString().split(".")[0];
           String firstvaldec = dec[0];
           String secvaldec = (int.parse(dec[1]) + 1).toString();
           String finalValue = firstval + '.' + firstvaldec + secvaldec;
           mySecRoundValue = double.parse(finalValue);
-        } else {
-          String firstval = val.toString().split(".")[0];
-          String firstvaldec = dec[0];
-          String secvaldec = (int.parse(dec[1])).toString();
+        }else  if (int.parse(dec[2]) == 5) {
+            if(int.parse(dec[1]) <= 4){
+              String firstval = val.toString().split(".")[0];
+              String firstvaldec = dec[0];
+              String secvaldec = (int.parse(dec[1]) + 1).toString();
+              String finalValue = firstval + '.' + firstvaldec + secvaldec;
+              mySecRoundValue = double.parse(finalValue);
+            }else{
+               String firstval = val.toString().split(".")[0];
+                String firstvaldec = dec[0];
+                String secvaldec = (int.parse(dec[1])).toString();
 
-          String finalValue = firstval + '.' + firstvaldec + secvaldec;
-          mySecRoundValue = double.parse(finalValue);
+                String finalValue = firstval + '.' + firstvaldec + secvaldec;
+                mySecRoundValue = double.parse(finalValue);
+            }
+            }else  if (int.parse(dec[2]) <= 4) {
+                String firstval = val.toString().split(".")[0];
+                    String firstvaldec = dec[0];
+                    String secvaldec = (int.parse(dec[1])).toString();
+
+                    String finalValue = firstval + '.' + firstvaldec + secvaldec;
+                    mySecRoundValue = double.parse(finalValue);
+            } else {
+              String firstval = val.toString().split(".")[0];
+              String firstvaldec = dec[0];
+              String secvaldec = (int.parse(dec[1])).toString();
+
+              String finalValue = firstval + '.' + firstvaldec + secvaldec;
+              mySecRoundValue = double.parse(finalValue);
+
         }
       } else {
         mySecRoundValue = val;
