@@ -91,6 +91,7 @@ class _MenuPageState extends State<MenuPage> {
   String ord3 = '00';
   bool pickdine = true;
   bool checkedValue = false;
+  bool checkedValue_dsettings = false;
   String sub = '';
   String dri = '';
   String drisub = '';
@@ -126,6 +127,9 @@ class _MenuPageState extends State<MenuPage> {
   int totalqty = 0;
   double chrx = 0;
 
+  bool isbname = true;
+  bool isbaddress = true;
+  bool isemail = true;
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -208,8 +212,15 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
-  savebill(String unamex, String fname, String lname, String address,
-      String email, String idCardx, bool savebill) async {
+  savebill(
+      String unamex,
+      String fname,
+      String lname,
+      String address,
+      String email,
+      String idCardx,
+      bool savebill,
+      bool sdefaultSettings) async {
     Prefs.load();
     Prefs.setString('sfName' + unamex, fname.replaceAll(' ', ''));
     Prefs.setString('slMame' + unamex, lname.replaceAll(' ', ''));
@@ -218,6 +229,7 @@ class _MenuPageState extends State<MenuPage> {
     Prefs.setString('sillEmail' + unamex, email.replaceAll(' ', ''));
     Prefs.setString('sidCard' + unamex + '', idCardx.replaceAll(' ', ''));
     Prefs.setBool('ssavebill' + unamex + '', savebill);
+    Prefs.setBool('sdefaultSettings' + unamex + '', checkedValue_dsettings);
   }
 
   loadBill() async {
@@ -266,19 +278,174 @@ class _MenuPageState extends State<MenuPage> {
       billemail.text = email.trim().replaceAll(' ', '');
 
       idCard = Prefs.getString('sidCard' + unamex) ?? '';
-    } else {
+      maskedPan = Prefs.getString('smaskedPan' + unamex) ?? '';
+      expiry = Prefs.getString('sexpiry' + unamex) ?? '';
+      cardholderName = Prefs.getString('scardholderName' + unamex) ?? '';
+      scheme = Prefs.getString('sscheme' + unamex) ?? '';
+      cardToken = Prefs.getString('scardToken' + unamex) ?? '';
+      bool ds = Prefs.getBool('sdefaultSettings' + unamex + '') ?? false;
+      checkedValue_dsettings = ds;
+      if (ds == true) {
+        isbname = false;
+        isbaddress = false;
+        isemail = false;
+      } else {
+        isbname = true;
+        isbaddress = true;
+        isemail = true;
+      }
+    }
+  }
+
+  saveTempopraryDetails() async {
+    Prefs.load();
+    uName = Prefs.getString('uname');
+    String unamex = '';
+    switch (uName) {
+      case '':
+        {
+          unamex = '';
+        }
+        break;
+      case ' ':
+        {
+          unamex = '';
+        }
+        break;
+      case 'guest':
+        {
+          unamex = 'guest';
+        }
+        break;
+      case 'none':
+        {
+          unamex = 'none';
+        }
+        break;
+      default:
+        {
+          unamex = uName;
+        }
+        break;
+    }
+
+    String billnamex = billname.text;
+    String billaddx = billadd.text;
+    String billemailx = billemail.text;
+
+    Prefs.setString('temp_name' + unamex, billnamex);
+    Prefs.setString('temp_address' + unamex, billaddx);
+    Prefs.setString('temp_email' + unamex, billemailx);
+    Prefs.setBool('temp_semail' + unamex, checkedValue);
+  }
+
+  getTempopraryDetails() async {
+    Prefs.load();
+    uName = Prefs.getString('uname');
+    String unamex = '';
+    switch (uName) {
+      case '':
+        {
+          unamex = '';
+        }
+        break;
+      case ' ':
+        {
+          unamex = '';
+        }
+        break;
+      case 'guest':
+        {
+          unamex = 'guest';
+        }
+        break;
+      case 'none':
+        {
+          unamex = 'none';
+        }
+        break;
+      default:
+        {
+          unamex = uName;
+        }
+        break;
+    }
+    String name = Prefs.getString('temp_name' + unamex) ?? '';
+    String address = Prefs.getString('temp_address' + unamex) ?? '';
+    String email = Prefs.getString('temp_email' + unamex) ?? '';
+    bool semail = Prefs.getBool('temp_semail' + unamex) ?? false;
+
+    billname.text = name;
+    billadd.text = address;
+    billemail.text = email;
+    checkedValue = semail;
+  }
+
+  getDefaultSettings() async {
+    Prefs.load();
+    uName = Prefs.getString('uname');
+    String unamex = '';
+    switch (uName) {
+      case '':
+        {
+          unamex = '';
+        }
+        break;
+      case ' ':
+        {
+          unamex = '';
+        }
+        break;
+      case 'guest':
+        {
+          unamex = 'guest';
+        }
+        break;
+      case 'none':
+        {
+          unamex = 'none';
+        }
+        break;
+      default:
+        {
+          unamex = uName;
+        }
+        break;
+    }
+
+    bool isDefaultSettings = checkedValue_dsettings;
+    if (isDefaultSettings == true) {
       checkedValue = false;
+      isbname = false;
+      isbaddress = false;
+      isemail = false;
       idCard = '';
       bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
       if (usename == true) {
         String fname = Prefs.getString('bfName' + unamex) ?? '';
         String lname = Prefs.getString('blMame' + unamex) ?? '';
-        billname.text = fname + ' ' + lname;
+        String name = fname + ' ' + lname;
+        billname.text = name.trimLeft();
       }
       billadd.text = Prefs.getString('billAdd' + unamex) ?? '';
       String email = Prefs.getString('billEmail' + unamex) ?? '';
       billemail.text = email.trim().replaceAll(' ', '');
+    } else {
+      isbname = true;
+      isbaddress = true;
+      isemail = true;
     }
+  }
+
+  savebillcard(String unamex, String sidCard, String smaskedPan, String sexpiry,
+      String scardholderName, String sscheme, String scardToken) async {
+    Prefs.load();
+    Prefs.setString('sidCard' + unamex + '', sidCard.replaceAll(' ', ''));
+    Prefs.setString('smaskedPan' + unamex, smaskedPan);
+    Prefs.setString('sexpiry' + unamex + '', sexpiry.replaceAll(' ', ''));
+    Prefs.setString('scardholderName' + unamex, scardholderName);
+    Prefs.setString('sscheme' + unamex + '', sscheme);
+    Prefs.setString('scardToken' + unamex, scardToken.replaceAll(' ', ''));
   }
 
   @override
@@ -552,6 +719,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -814,11 +982,7 @@ class _MenuPageState extends State<MenuPage> {
                             Text(
                               stoken == '' || stoken == null || stoken.isEmpty
                                   ? "Sign In / Register"
-                                  : uName != '' ||
-                                          uName != null ||
-                                          uName.isNotEmpty
-                                      ? "Sign Out (" + uName + ")"
-                                      : "Sign Out (guest)",
+                                  : "Sign Out (" + uName + ")",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -5036,8 +5200,31 @@ class _MenuPageState extends State<MenuPage> {
                       color: Colors.white,
                     ),
                     Container(
+                        //padding: EdgeInsets.fromLTRB(0, 10, 15, 5),
+                        child: CheckboxListTile(
+                      checkColor: Colors.white,
+                      title: Text("Use default billing details",
+                          style: TextStyle(color: Colors.white, fontSize: 12)),
+                      value: checkedValue_dsettings,
+                      onChanged: (dsettings) {
+                        setState(() {
+                          checkedValue_dsettings = dsettings;
+
+                          if (checkedValue_dsettings == true) {
+                            saveTempopraryDetails();
+                          } else {
+                            getTempopraryDetails();
+                          }
+                          getDefaultSettings();
+                        });
+                      },
+                      controlAffinity: ListTileControlAffinity
+                          .leading, //  <-- leading Checkbox
+                    )),
+                    Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                       child: TextField(
+                        enabled: isbname,
                         controller: billname,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
@@ -5051,6 +5238,7 @@ class _MenuPageState extends State<MenuPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                       child: TextField(
+                        enabled: isbaddress,
                         controller: billadd,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
@@ -5065,6 +5253,7 @@ class _MenuPageState extends State<MenuPage> {
                     Container(
                       padding: EdgeInsets.fromLTRB(15, 10, 15, 5),
                       child: TextField(
+                        enabled: isemail,
                         controller: billemail,
                         style: TextStyle(color: Colors.white),
                         decoration: new InputDecoration(
@@ -5263,10 +5452,22 @@ class _MenuPageState extends State<MenuPage> {
                                               billadd.text,
                                               billemail.text,
                                               idCard,
-                                              checkedValue);
+                                              checkedValue,
+                                              checkedValue_dsettings);
+
+                                          savebillcard(
+                                              unamex,
+                                              idCard,
+                                              maskedPan,
+                                              expiry,
+                                              cardholderName,
+                                              scheme,
+                                              cardToken);
                                         } else {
                                           savebill(unamex, '', '', '', '', '',
-                                              false);
+                                              false, false);
+                                          savebillcard(
+                                              unamex, '', '', '', '', '', '');
                                         }
                                         tokenChecker();
                                       });
@@ -5836,7 +6037,7 @@ class _MenuPageState extends State<MenuPage> {
                   setState(() {
                     Prefs.load();
                     Prefs.setString('token', '');
-                    Prefs.setString('uname', 'none');
+                    Prefs.setString('uname', '');
                     Prefs.setString('bfNamenone', '');
                     Prefs.setString('blMamenone', '');
                     Prefs.setString('billNamenone', '');
