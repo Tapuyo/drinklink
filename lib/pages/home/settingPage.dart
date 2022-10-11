@@ -44,6 +44,7 @@ class _setPageState extends State<setPage> {
   String cardholderName = '';
   String scheme = '';
   String cardToken = '';
+  String cardnamex = '';
   Color contColor = Colors.green;
 
   @override
@@ -453,6 +454,8 @@ class _setPageState extends State<setPage> {
                 onChanged: (newValue) {
                   setState(() {
                     checkedValue = newValue;
+                    cardnamex = cardnamex;
+                    print(cardnamex);
                   });
                 },
                 controlAffinity:
@@ -569,6 +572,7 @@ class _setPageState extends State<setPage> {
     Prefs.setString('billAdd' + uName, badd);
     Prefs.setString('billEmail' + uName, bemail);
     Prefs.setBool('bsendBill' + uName + '', bsendBill);
+    Prefs.setString('bcardname' + uName, cardnamex);
 
     setState(() {
       Prefs.setBool('sound' + uName, sound);
@@ -872,6 +876,12 @@ class _setPageState extends State<setPage> {
                 ),
               );
             } else {
+              try {
+                cardnamex = snapshot.data[0].cardholderName;
+              } catch (e) {
+                cardnamex = '';
+              }
+
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   // physics: NeverScrollableScrollPhysics(),
@@ -973,12 +983,35 @@ class _setPageState extends State<setPage> {
                                   ),
                                 ),
                                 onTap: () {
+                                  cardnamex =
+                                      snapshot.data[index].cardholderName;
                                   _showDialog_Deletecard(
                                       'Delete card',
                                       'Are you sure you want to delete this card?',
                                       snapshot.data[index].cardToken);
                                 }, //Delete card
                               ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Visibility(
+                                visible: checkedValue == true ? true : false,
+                                child: GestureDetector(
+                                  child: Container(
+                                    // padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                    child: Icon(
+                                      Icons.check_box,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    // _showDialog_Deletecard(
+                                    //     'Delete card',
+                                    //     'Are you sure you want to delete this card?',
+                                    //     snapshot.data[index].cardToken);
+                                  }, //Delete card
+                                ),
+                              )
 
                               // Container(
                               //   padding: EdgeInsets.fromLTRB(63, 0, 0, 0),
