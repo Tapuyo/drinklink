@@ -395,7 +395,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     
 
     for (var i = 0; i < jsondata.length; i++) {
-      if (ref == json.decode(response.body)[i]['orderReference'].toString()) {
+      if (id == json.decode(response.body)[i]['id'].toString()) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
         print(jsondata1.toString());
         List<MyItems> newItem = [];
@@ -465,24 +465,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                     });
         } else if (cState == '101') {
           setState(() {
-                      _timer.cancel();
+                      // _timer.cancel();
           stt = 'Failed';
                     });
         } else if (cState == '102') {
           stt = 'Canceled';
-          // _timer.cancel();
-        } else if (cState == '103') {
           _timer.cancel();
+        } else if (cState == '103') {
+          // _timer.cancel();
           stt = 'Rejected';
         } else if (cState == '104') {
           stt = 'Not Collected';
           _timer.cancel();
         } else if (cState == '105') {
           stt = 'Payment Failed';
-         // _timer.cancel();
+        //  _timer.cancel();
         } else if (cState == '106') {
           stt = 'Payment Failed';
-          _timer.cancel();
+          // _timer.cancel();
         }
 
         setState(() {
@@ -1016,8 +1016,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                             children: [
                                if (sttn == '101' ||
                                         sttn == '102' ||
-                                        sttn == '106' ||
-                                        sttn == '105')(
+                                        sttn == '105' ||
+                                        sttn == '106')(
                                  Icon(
                                   Icons.cancel_rounded,
                                   size: 40,
@@ -1113,6 +1113,28 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 ),
                                 Text(
                                   'Order is cancelled by the user.',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],
+                            )),
+                             Visibility(
+                            visible: sttn == '106' ? true : false,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 112,
+                                ),
+                                Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'Payment is cancelled by the user.',
                                   style: TextStyle(
                                       color: Colors.red, fontSize: 15),
                                 ),

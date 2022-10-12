@@ -190,20 +190,24 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-    try {
+   
       Map<String, String> headers = {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
           ApiCon.baseurl() +
-              '/users/currentUser/orders?pageSize=5&pageNumber=1',
+              '/users/currentUser/orders?pageSize=10&pageNumber=1',
           headers: headers);
       var jsondata = json.decode(response.body);
 
       for (var i = 0; i < jsondata.length; i++) {
         String cState =
             json.decode(response.body)[i]['currentState'].toString();
+        String id =
+            json.decode(response.body)[i]['id'].toString();
+        String ref =
+            json.decode(response.body)[i]['orderReference'].toString();    
         //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
@@ -255,14 +259,17 @@ class _HomePageState extends State<HomePage> {
           stt = 'Not Collected';
         } else if (cState == '105') {
           stt = 'Payment Failed';
+        } else if (cState == '106') {
+          stt = 'Payment Cancelled';
         }
-
+       
         String outletname = await getFacilityInfo(
             json.decode(response.body)[i]['facilityId'].toString());
         print("OUTLET NAME: " + outletname);
+        String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
         setState(() {
-          Order myorder = new Order(dt.toString(), newItem, bar, stt, cState,
-              outletname, newItem.length.toString(), mprice);
+          Order myorder = new Order(json.decode(response.body)[i]['id'].toString(),json.decode(response.body)[i]['orderReference'].toString(),dt.toString(), newItem, bar, stt, cState,
+              outletname, newItem.length.toString(), mprice, timeToCollect);
 
           orderList.add(myorder);
         });
@@ -270,9 +277,7 @@ class _HomePageState extends State<HomePage> {
 
       }
       return orderList;
-    } catch (e) {
-      return null;
-    }
+   
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -941,6 +946,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   mybodyRec() {
+    //
     return Container(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
       height: 250,
@@ -954,149 +960,154 @@ class _HomePageState extends State<HomePage> {
                     ),
               );
             } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderDetails(snapshot.data[index].id,'')),
-                        );
-                      },
-                      child: Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFF2b2b61).withOpacity(.5),
-                          ),
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data[index].outlet,
-                                    style: TextStyle(
-                                        color: Colors.deepOrange, fontSize: 20),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Order (' +
-                                              snapshot.data[index].itemcount +
-                                              ' item):',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].price + ' AED',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+              return Container(
+                height: 500,
+                width: 300,
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OrderDetails(snapshot.data[index].id,'')),
+                          );
+                        },
+                        child: Container(
+                            height: 500,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFF2b2b61).withOpacity(.5),
+                              //color: Colors.white
+                            ),
+                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data[index].outlet,
+                                      style: TextStyle(
+                                          color: Colors.deepOrange, fontSize: 20),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Collect before:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].timestamp,
-                                          style: TextStyle(
-                                              color: Colors.deepOrange,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Status:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].cState,
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    Container(
+                                      height: 20,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2 +
+                                              30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Order (' +
+                                                snapshot.data[index].itemcount +
+                                                ' item):',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].price + ' AED',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Created:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].timestamp,
-                                          style: TextStyle(
-                                              color: Colors.deepOrange,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  )
-                                ],
-                              )
-                            ],
-                          )),
-                    );
-                  });
+                                    Container(
+                                      height: 20,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2 +
+                                              30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Collect before:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].timeToCollect,
+                                            style: TextStyle(
+                                                color: Colors.deepOrange,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 20,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2 +
+                                              30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Status:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].cState,
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 20,
+                                      width:
+                                          MediaQuery.of(context).size.width / 2 +
+                                              30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Created:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].timestamp,
+                                            style: TextStyle(
+                                                color: Colors.deepOrange,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                      );
+                    }),
+              );
             }
           }),
     );
@@ -1280,6 +1291,8 @@ class Store {
 }
 
 class Order {
+  final String id;
+  final String ref;
   final String timestamp;
   final List<MyItems> itemslist;
   final String barid;
@@ -1288,9 +1301,10 @@ class Order {
   final String outlet;
   final String itemcount;
   final String price;
+  final String timeToCollect;
 
-  Order(this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
-      this.outlet, this.itemcount, this.price);
+  Order(this.id, this.ref,this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
+      this.outlet, this.itemcount, this.price,this.timeToCollect);
 }
 
 class MyItems {

@@ -115,7 +115,7 @@ class _setPageState extends State<orderPage> {
       };
       final response = await http.get(
           ApiCon.baseurl() +
-              '/users/currentUser/orders?pageSize=20&pageNumber=1' +
+              '/users/currentUser/orders?pageSize=10&pageNumber=1' +
               sortCode,
           headers: headers);
       var jsondata = json.decode(response.body);
@@ -189,9 +189,10 @@ class _setPageState extends State<orderPage> {
         } else if (cState == '106') {
           stt = 'Payment Cancelled';
         }
-
+      String facility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
       setState(() {
         Order myorder = new Order(
+          facility,
           json.decode(response.body)[i]['id'].toString(),
             json.decode(response.body)[i]['orderReference'].toString(),
             dt.toString(),
@@ -206,6 +207,31 @@ class _setPageState extends State<orderPage> {
       }
       return orderList;
     }
+  }
+
+  Future<String> getFacilityInfo(String id) async {
+    String name = '';
+    Map<String, String> headers = {
+      "Content-type": "application/json",
+      "Accept": "application/json"
+    };
+    String url = ApiCon.baseurl() + '/places/';
+    final response = await http.get(url, headers: headers);
+    //print(response.body.toString());
+    var jsondata = json.decode(response.body);
+
+    for (var u in jsondata) {
+      if (u['id'].toString() == id) {
+        print(u['name']);
+        if (mounted) {
+          setState(() {
+            
+            name = u['name'];
+          });
+        }
+      }
+    }
+    return name;
   }
 
   @override
@@ -338,17 +364,14 @@ class _setPageState extends State<orderPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                                   width: MediaQuery.of(context).size.width,
                                   height: 50,
                                   color: Color(0xFF303052),
                                   child: Row(
                                     children: [
                                       Text(
-                                        '#' +
-                                            snapshot.data[index].barid
-                                                .toString() +
-                                            ' Bar',
+                                            snapshot.data[index].facility,
                                         style: TextStyle(
                                             color: Colors.white, fontSize: 14),
                                       ),
@@ -465,7 +488,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -486,7 +509,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -507,7 +530,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -528,7 +551,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -549,7 +572,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -570,7 +593,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -591,7 +614,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -611,7 +634,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -631,7 +654,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -651,7 +674,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -671,7 +694,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -691,7 +714,7 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -781,6 +804,7 @@ class Person {
 }
 
 class Order {
+  final String facility;
   final String id;
   final String ref;
   final String timestamp;
@@ -790,7 +814,7 @@ class Order {
   final String sttn;
   final List<OrdMixers> mixrs;
 
-  Order(this.id, this.ref, this.timestamp, this.itemslist, this.barid, this.cState,
+  Order(this.facility,this.id, this.ref, this.timestamp, this.itemslist, this.barid, this.cState,
       this.sttn, this.mixrs);
 }
 
