@@ -361,7 +361,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
-      getOrders();
+      
     });
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
@@ -372,7 +372,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     //
     //
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      getOrders();
+      
     });
   }
 
@@ -392,12 +392,12 @@ class _OrderDetailsState extends State<OrderDetails> {
             '/users/currentUser/orders?pageSize=1000&pageNumber=1',
         headers: headers);
     var jsondata = json.decode(response.body);
-    print(id);
+    
 
     for (var i = 0; i < jsondata.length; i++) {
-      if (id == json.decode(response.body)[i]['id'].toString()) {
+      if (ref == json.decode(response.body)[i]['orderReference'].toString()) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
-
+        print(jsondata1.toString());
         List<MyItems> newItem = [];
         for (var x in jsondata1) {
           MyItems nt =
@@ -440,28 +440,34 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '3') {
           stt = 'Payment Processed';
         } else if (cState == '4') {
-          DateTime mdate =
-              DateTime.parse(json.decode(response.body)[i]['timeToCollect']);
-          // DateTime parseDate =
-          //     new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-          print(mdate);
-          //print(parseDate);
-          var diff;
-          //if(DateTime.now().timeZoneName == 'PST'){
-          var dtnow = DateTime.now();
-          diff = mdate.difference(DateTime.parse(dtnow.toString())).inSeconds;
-          // }
-          print(diff);
-          if (mounted) {
-            _start = diff + 60;
+           setState(() {
+          String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
+          
+          print('time to collect:' + timeToCollect);
+          final format = DateFormat('hh:mm:ss');
+          final dt = format.parse(timeToCollect, true);
+          print(dt.toString());
+          double sec = Duration(milliseconds: dt.millisecondsSinceEpoch).inMilliseconds / 1000;
+        
+          print('in seconds');
+          print(sec.toString());
+         
+                       if (mounted) {
+            _start = int.parse(sec.round().toString()) + 60 ?? 0;
           }
+                    });
           stt = 'Ready';
         } else if (cState == '5') {
-          _timer.cancel();
+          setState(() {
+            _start = 0;
+                      _timer.cancel();
           stt = 'Completed';
+                    });
         } else if (cState == '101') {
-          // _timer.cancel();
+          setState(() {
+                      _timer.cancel();
           stt = 'Failed';
+                    });
         } else if (cState == '102') {
           stt = 'Canceled';
           // _timer.cancel();
@@ -493,14 +499,17 @@ class _OrderDetailsState extends State<OrderDetails> {
       }
     }
     if (_start > 0) {
-      startTimer();
+     
+        startTimer();
+      
     }
     return orderList;
   }
 
   void startTimer() {
+    print('kjaskjdhakjsdhkjahsd');
     if (mounted) {
-      const oneSec = const Duration(seconds: 2);
+      const oneSec = const Duration(seconds: 1);
       _timer = new Timer.periodic(
         oneSec,
         (Timer timer) {
@@ -630,6 +639,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+
     uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
@@ -670,7 +680,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           //   IconButton(
           //     icon: Icon(Icons.menu, size: 35, color: Colors.white,),
           //     onPressed: () {
-          //       _scaffoldKey.currentState.openEndDrawer();
+          //       getOrders();
           //     },
           //   )
           // ],
@@ -1582,23 +1592,24 @@ class _OrderDetailsState extends State<OrderDetails> {
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.read<AuthProvider>().setToken('');
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                );
-                setState(() {
-                  setState(() {
-                    Prefs.load();
-                    Prefs.setString('token', '');
-                    Prefs.setString('uname', '');
-                    Prefs.setString('bfNamenone', '');
-                    Prefs.setString('blMamenone', '');
-                    Prefs.setString('billNamenone', '');
-                    Prefs.setString('billAddnone', '');
-                    Prefs.setString('billEmailnone', '');
-                  });
-                });
+               context.read<AuthProvider>().setToken('');
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()),
+                              );
+                              setState(() {
+                                setState(() {
+                                  Prefs.load();
+                                  Prefs.setString('token', '');
+                                  Prefs.setString('uname', 'none');
+                                  Prefs.setString('bfNamenone', '');
+                                  Prefs.setString('blMamenone', '');
+                                  Prefs.setString('billNamenone', '');
+                                  Prefs.setString('billAddnone', '');
+                                  Prefs.setString('billEmailnone', '');
+                                });
+                              });
               },
             ),
             FlatButton(
