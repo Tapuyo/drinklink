@@ -1005,7 +1005,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Spacer(),
                                         Text(
-                                          snapshot.data[index].price + ' AED):',
+                                          snapshot.data[index].price + ' AED',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14),
@@ -1031,8 +1031,7 @@ class _HomePageState extends State<HomePage> {
                                         ),
                                         Spacer(),
                                         Text(
-                                          snapshot.data[index].itemcount +
-                                              ' AED):',
+                                          snapshot.data[index].timestamp,
                                           style: TextStyle(
                                               color: Colors.deepOrange,
                                               fontSize: 14),

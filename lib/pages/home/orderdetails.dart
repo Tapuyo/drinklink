@@ -395,7 +395,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     print(id);
 
     for (var i = 0; i < jsondata.length; i++) {
-      if (id == json.decode(response.body)[i]['orderReference'].toString()) {
+      if (id == json.decode(response.body)[i]['id'].toString()) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
 
         List<MyItems> newItem = [];
@@ -460,11 +460,11 @@ class _OrderDetailsState extends State<OrderDetails> {
           _timer.cancel();
           stt = 'Completed';
         } else if (cState == '101') {
-          _timer.cancel();
+          // _timer.cancel();
           stt = 'Failed';
         } else if (cState == '102') {
           stt = 'Canceled';
-          _timer.cancel();
+          // _timer.cancel();
         } else if (cState == '103') {
           _timer.cancel();
           stt = 'Rejected';
@@ -472,6 +472,9 @@ class _OrderDetailsState extends State<OrderDetails> {
           stt = 'Not Collected';
           _timer.cancel();
         } else if (cState == '105') {
+          stt = 'Payment Failed';
+         // _timer.cancel();
+        } else if (cState == '106') {
           stt = 'Payment Failed';
           _timer.cancel();
         }
@@ -542,7 +545,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     _timer.cancel();
   }
 
-  getFacilityInfo(String id) async {
+  void getFacilityInfo(String id) async {
     String name = '';
     Map<String, String> headers = {
       "Content-type": "application/json",
@@ -567,7 +570,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     }
   }
 
-  getDayofweek() {
+ void getDayofweek() {
     DateTime date = DateTime.now();
     String dateFormat = DateFormat('EEEE').format(date);
     if (dateFormat == 'Monday') {
@@ -589,7 +592,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     }
   }
 
-  getSched(String id) async {
+ void getSched(String id) async {
     Map<String, String> headers = {
       "Content-type": "application/json",
       "Accept": "application/json"
@@ -1001,22 +1004,21 @@ class _OrderDetailsState extends State<OrderDetails> {
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(
-                                sttn != '101' ||
-                                        sttn != '102' ||
-                                        sttn != '103' ||
-                                        sttn != '104' ||
-                                        sttn != '105'
-                                    ? Icons.check_circle
-                                    : Icons.access_time_rounded,
-                                size: 40,
-                                color: sttn != '101' ||
-                                        sttn != '102' ||
-                                        sttn != '103' ||
-                                        sttn != '104' ||
-                                        sttn != '105'
-                                    ? Colors.green
-                                    : Colors.deepOrange,
+                               if (sttn == '101' ||
+                                        sttn == '102' ||
+                                        sttn == '106' ||
+                                        sttn == '105')(
+                                 Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red[900],
+                                )
+                              )else(
+                                 Icon(
+                                  Icons.check_circle,
+                                  size: 40,
+                                  color: Colors.green,
+                                )
                               ),
                               SizedBox(
                                 width: 20,
@@ -1028,7 +1030,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                               Spacer(),
                               Visibility(
-                                //visible: sttn == '1' ? true:false,
+                                visible: sttn == '1' || sttn == '0'  ? true:false,
                                 child: GestureDetector(
                                   onTap: () async {
                                     setState(() {
@@ -1061,27 +1063,75 @@ class _OrderDetailsState extends State<OrderDetails> {
                             ],
                           ),
                         ),
-                        Divider(),
+                        // Divider(),
+                        Visibility(
+                            visible: sttn == '105'||sttn == '101' ? true : false,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 112,
+                                ),
+                                Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'Payment Failed.',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],
+                            )),
+                            Visibility(
+                            visible: sttn == '102' ? true : false,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: 112,
+                                ),
+                                Icon(
+                                  Icons.cancel_schedule_send_outlined,
+                                  size: 20,
+                                  color: Colors.red,
+                                ),
+                                SizedBox(
+                                  width: 4,
+                                ),
+                                Text(
+                                  'Order is cancelled by the user.',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 15),
+                                ),
+                              ],
+                            )),
                         Container(
                           padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
                           width: MediaQuery.of(context).size.width,
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(
-                                sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Icons.check_circle
-                                    : Icons.access_time_rounded,
-                                size: 40,
-                                color: sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Colors.green
-                                    : Colors.deepOrange,
+                              if (sttn == '2' || sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
+                                 Icon(
+                                  Icons.check_circle,
+                                  size: 40,
+                                  color: Colors.green,
+                                )
+                              )else if(sttn == '1' || sttn == '0' )(
+                                 Icon(
+                                  Icons.access_time_rounded,
+                                  size: 40,
+                                  color: Colors.deepOrange,
+                                )
+                              )else (
+                                 Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red[900],
+                                )
                               ),
                               SizedBox(
                                 width: 20,
@@ -1093,43 +1143,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                               ),
                             ],
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              Icon(
-                                sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Icons.check_circle
-                                    : Icons.access_time_rounded,
-                                size: 40,
-                                color: sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Colors.green
-                                    : Colors.deepOrange,
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Order Process',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Visibility(
+                        ),Visibility(
                             visible: sttn == '103' ? true : false,
                             child: Row(
                               children: [
@@ -1160,20 +1174,63 @@ class _OrderDetailsState extends State<OrderDetails> {
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(
-                                sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Icons.check_circle
-                                    : Icons.access_time_rounded,
-                                size: 40,
-                                color: sttn == '2' ||
-                                        sttn == '3' ||
-                                        sttn == '4' ||
-                                        sttn == '5'
-                                    ? Colors.green
-                                    : Colors.deepOrange,
+                             if ( sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
+                                 Icon(
+                                  Icons.check_circle,
+                                  size: 40,
+                                  color: Colors.green,
+                                )
+                              )else if(sttn == '1' || sttn == '0'||sttn == '2'  )(
+                                 Icon(
+                                  Icons.access_time_rounded,
+                                  size: 40,
+                                  color: Colors.deepOrange,
+                                )
+                              )else (
+                                 Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red[900],
+                                )
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                'Order Process',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                          width: MediaQuery.of(context).size.width,
+                          height: 50,
+                          child: Row(
+                            children: [
+                             if (sttn == '4' ||sttn == '5'||sttn == '104')(
+                                 Icon(
+                                  Icons.check_circle,
+                                  size: 40,
+                                  color: Colors.green,
+                                )
+                              )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
+                                 Icon(
+                                  Icons.access_time_rounded,
+                                  size: 40,
+                                  color: Colors.deepOrange,
+                                )
+                              )else (
+                                 Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red[900],
+                                )
                               ),
                               SizedBox(
                                 width: 20,
@@ -1195,14 +1252,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                           height: 50,
                           child: Row(
                             children: [
-                              Icon(
-                                sttn == '4' || sttn == '5'
-                                    ? Icons.check_circle
-                                    : Icons.access_time_rounded,
-                                size: 40,
-                                color: sttn == '4' || sttn == '5'
-                                    ? Colors.green
-                                    : Colors.deepOrange,
+                               if (sttn == '4' ||sttn == '5'||sttn == '104')(
+                                 Icon(
+                                  Icons.check_circle,
+                                  size: 40,
+                                  color: Colors.green,
+                                )
+                              )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
+                                 Icon(
+                                  Icons.access_time_rounded,
+                                  size: 40,
+                                  color: Colors.deepOrange,
+                                )
+                              )else (
+                                 Icon(
+                                  Icons.cancel_rounded,
+                                  size: 40,
+                                  color: Colors.red[900],
+                                )
                               ),
                               SizedBox(
                                 width: 20,
@@ -1244,37 +1311,37 @@ class _OrderDetailsState extends State<OrderDetails> {
                         SizedBox(
                           height: 10,
                         ),
-                        Visibility(
-                          visible: sttn == '101' ||
-                                  sttn == '102' ||
-                                  sttn == '103' ||
-                                  sttn == '104' ||
-                                  sttn == '105'
-                              ? true
-                              : false,
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                            width: MediaQuery.of(context).size.width,
-                            height: 50,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.access_time_rounded,
-                                  size: 40,
-                                  color: Colors.deepOrange,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  state,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Visibility(
+                        //   visible: sttn == '101' ||
+                        //           sttn == '102' ||
+                        //           sttn == '103' ||
+                        //           sttn == '104' ||
+                        //           sttn == '105'
+                        //       ? true
+                        //       : false,
+                        //   child: Container(
+                        //     padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                        //     width: MediaQuery.of(context).size.width,
+                        //     height: 50,
+                        //     child: Row(
+                        //       children: [
+                        //         Icon(
+                        //           Icons.access_time_rounded,
+                        //           size: 40,
+                        //           color: Colors.deepOrange,
+                        //         ),
+                        //         SizedBox(
+                        //           width: 20,
+                        //         ),
+                        //         Text(
+                        //           state,
+                        //           style: TextStyle(
+                        //               color: Colors.white, fontSize: 18),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),

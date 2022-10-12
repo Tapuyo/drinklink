@@ -461,7 +461,14 @@ class _setPageState extends State<orderPage> {
 
   showSated(String id, ref, stt, stn) {
     if (stn == '0') {
-      return Container(
+       return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -472,7 +479,8 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+              )))),
+              );
     } else if (stn == '1') {
       return GestureDetector(
         onTap: () {
@@ -560,10 +568,10 @@ class _setPageState extends State<orderPage> {
     } else if (stn == '5') {
       return GestureDetector(
         onTap: () {
-          // Navigator.pushReplacement(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => OrderDetails(id)),
-          // );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
         },
         child: Container(
             padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
@@ -579,7 +587,14 @@ class _setPageState extends State<orderPage> {
                 )))),
       );
     } else if (stn == '101') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -590,9 +605,16 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+              )))),);
     } else if (stn == '102') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -603,9 +625,16 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+         )))),);
     } else if (stn == '103') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -616,9 +645,16 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+             )))),);
     } else if (stn == '104') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -629,9 +665,16 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+           )))),);
     } else if (stn == '105') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -642,9 +685,16 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+             )))),);
     } else if (stn == '106') {
-      return Container(
+        return GestureDetector(
+        onTap: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => OrderDetails(id, ref)),
+          );
+        },
+        child: Container(
           padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
           width: MediaQuery.of(context).size.width,
           child: Container(
@@ -655,7 +705,7 @@ class _setPageState extends State<orderPage> {
                   child: Text(
                 stt.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ))));
+              )))),);
     }
   }
 
