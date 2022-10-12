@@ -53,15 +53,15 @@ import 'package:email_validator/email_validator.dart';
 class OrderDetails extends StatefulWidget {
   String id;
   String ref;
-  OrderDetails(this.id,this.ref);
+  OrderDetails(this.id, this.ref);
   @override
-  _OrderDetailsState createState() => _OrderDetailsState(this.id,this.ref);
+  _OrderDetailsState createState() => _OrderDetailsState(this.id, this.ref);
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
   String id;
-   String ref;
-  _OrderDetailsState(this.id,this.ref);
+  String ref;
+  _OrderDetailsState(this.id, this.ref);
   List<Order> orderList = [];
   Future ord;
   String outletid = '';
@@ -233,7 +233,76 @@ class _OrderDetailsState extends State<OrderDetails> {
     }
   }
 
+  confirmDialog(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Yes',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () async {
+                Navigator.of(context, rootNavigator: true).pop();
+                _cancelorder();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   _cancelorder() async {
+    Navigator.of(context).push(new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        }));
+
     Prefs.load();
     String token = Prefs.getString('token');
     // String myt = "'{'newState': 'Canceled'}'";
@@ -250,10 +319,11 @@ class _OrderDetailsState extends State<OrderDetails> {
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
-      _showDialog_message('My order', 'Successfully cancelled order.');
+      _showDialog_message('My order', 'Successfully cancelled order.', true);
     } else {
-      _showDialog_message('My order', 'Failed to cancel order.');
+      _showDialog_message('My order', 'Failed to cancel order.', false);
     }
+    Navigator.of(context).pop();
   }
 
   getToke() {
@@ -789,7 +859,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                           MaterialPageRoute(builder: (context) => SignIn()),
                         );
                       } else {
-                        _showDialogout("Drinklink", "Are you sure you want to log out?");
+                        _showDialogout(
+                            "Drinklink", "Are you sure you want to log out?");
                       }
                     },
                     child: Container(
@@ -961,7 +1032,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                                 child: GestureDetector(
                                   onTap: () async {
                                     setState(() {
-                                      _cancelorder();
+                                      // _cancelorder();
+                                      confirmDialog('Cancel order',
+                                          'Are you sure you want to cancel this order?');
                                     });
                                   },
                                   child: Container(
@@ -1370,7 +1443,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 
-  _showDialog_message(String title, String message) {
+  _showDialog_message(String title, String message, bool state) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -1396,7 +1469,13 @@ class _OrderDetailsState extends State<OrderDetails> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
+                if (state) {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => orderPage()));
+                } else {
+                  Navigator.of(context, rootNavigator: true).pop();
+                }
               },
             ),
           ],
@@ -1405,7 +1484,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     );
   }
 
-   _showDialogout(String title, String message) {
+  _showDialogout(String title, String message) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -1427,39 +1506,38 @@ class _OrderDetailsState extends State<OrderDetails> {
           actions: <Widget>[
             FlatButton(
               color: Colors.deepPurpleAccent[700],
-                shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-               minWidth: 140,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
-               context.read<AuthProvider>().setToken('');
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', '');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                context.read<AuthProvider>().setToken('');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', '');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
               },
             ),
-             FlatButton(
-                shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-               minWidth: 140,
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
