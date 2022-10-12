@@ -2240,6 +2240,8 @@ class _MenuPageState extends State<MenuPage> {
           padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
           child: GestureDetector(
             onTap: () {
+              print('ajkshdkajhsdkj');
+              if(myMenu != null || myMenu != [])
               //print(strings[i].id.toString());
 
               // for (var x = 0; x < strings[i].mx.length; x++) {
@@ -2247,8 +2249,7 @@ class _MenuPageState extends State<MenuPage> {
               //   // print(strings[i].mx[x].price.toString());
 
               // }
-              var a = strings[i].name;
-              myDrinks[ind].mid = a;
+              myDrinks[ind].mid = strings[i].name;
               showModalBottomSheet<void>(
                 isDismissible: false,
                 context: context,

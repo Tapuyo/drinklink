@@ -189,10 +189,10 @@ class _setPageState extends State<orderPage> {
         } else if (cState == '106') {
           stt = 'Payment Cancelled';
         }
-      String facility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
+      String namefacility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
       setState(() {
         Order myorder = new Order(
-          facility,
+          namefacility,
           json.decode(response.body)[i]['id'].toString(),
             json.decode(response.body)[i]['orderReference'].toString(),
             dt.toString(),
