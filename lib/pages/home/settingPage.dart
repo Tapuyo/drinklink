@@ -731,9 +731,7 @@ class _setPageState extends State<setPage> {
             ),
           );
         }));
-    // await Future.delayed(const Duration(seconds: 1), () {
-    //   Navigator.of(context).pop();
-    // });
+   
 
     Prefs.load();
     String token = Prefs.getString('token');
@@ -748,6 +746,9 @@ class _setPageState extends State<setPage> {
       String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
       final response = await http.post(url, headers: headers);
       print(json.decode(response.body));
+       await Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pop();
+    });
       if (response.statusCode == 200) {
         linkpayment = json.decode(response.body)['paymentLink'];
         reference = json.decode(response.body)['orderReference'];
@@ -762,10 +763,8 @@ class _setPageState extends State<setPage> {
         isActive = true;
         print(isActive);
       });
-
       _showDialog1('DrinkLink', 'Please login first.');
     }
-    Navigator.of(context).pop();
   }
 
   confirmDialog(
