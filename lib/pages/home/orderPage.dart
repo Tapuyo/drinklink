@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as dev;
 // import 'package:flutter_dropdown/flutter_dropdown.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -120,10 +121,9 @@ class _setPageState extends State<orderPage> {
           headers: headers);
       var jsondata = json.decode(response.body);
 
-      print(json.decode(response.body));
+      debugPrint(json.decode(response.body).toString());
       for (var i = 0; i < jsondata.length; i++) {
         var jsondata1 = await json.decode(response.body)[i]['items'];
-        print(json.decode(response.body)[i]['orderReference'].toString());
         List<OrdMixers> mixerI = [];
         List<MyItems> newItem = [];
         for (var x in jsondata1) {
@@ -143,7 +143,7 @@ class _setPageState extends State<orderPage> {
           newItem.add(nt);
         }
         String st = json.decode(response.body)[i]['timestamp'].toString();
-
+        String facility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
         String dt = '';
         String stt = '';
         final toDayDate = DateTime.now();
@@ -219,7 +219,6 @@ class _setPageState extends State<orderPage> {
     final response = await http.get(url, headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
-
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
         print(u['name']);
