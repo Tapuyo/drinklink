@@ -422,10 +422,17 @@ class _MenuPageState extends State<MenuPage> {
       idCard = '';
       bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
       if (usename == true) {
-        String fname = Prefs.getString('bfName' + unamex) ?? '';
-        String lname = Prefs.getString('blMame' + unamex) ?? '';
-        String name = fname + ' ' + lname;
-        billname.text = name.trimLeft();
+        String cardname = Prefs.getString('bcardname' + unamex) ?? '';
+        if (cardname.isNotEmpty) {
+          isbname = true;
+          billname.text = cardname;
+        } else {
+          isbname = false;
+          String fname = Prefs.getString('bfName' + unamex) ?? '';
+          String lname = Prefs.getString('blMame' + unamex) ?? '';
+          String name = fname + ' ' + lname;
+          billname.text = name.trimLeft();
+        }
       }
       billadd.text = Prefs.getString('billAdd' + unamex) ?? '';
       String email = Prefs.getString('billEmail' + unamex) ?? '';
