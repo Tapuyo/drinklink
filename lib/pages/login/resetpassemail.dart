@@ -23,16 +23,46 @@ class _ResetPassPageState extends State<ResetPassEmail> {
   final passController = TextEditingController();
 
   forgotpassword() async {
-    Codec<String, String> stringToBase64 = utf8.fuse(base64);
-    String encoded = stringToBase64.encode(emailController.text);
-
-    String email = emailController.text.trimLeft();
+    String email = emailController.text.replaceAll(' ', '');
     final bool isValid = EmailValidator.validate(email);
     print(isValid);
     if (isValid == false) {
       _showDialog('Reset Password', 'Enter valid email address.');
       return;
     }
+    _sendcode();
+  }
+
+  _sendcode() async {
+    Navigator.of(context).push(
+      new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    String encoded = stringToBase64.encode(emailController.text);
 
     Map<String, String> headers = {"Content-Type": "application/json"};
     String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
@@ -40,11 +70,16 @@ class _ResetPassPageState extends State<ResetPassEmail> {
     final response = await http.get(url, headers: headers);
     print(response.body.toString());
     if (response.body.isNotEmpty) {
+      Navigator.pop(context);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => ResetPass(emailController.text)),
       );
+    } else {
+      Navigator.pop(context);
+      _showDialog('Reset Password', 'Enter valid email address.');
+      return;
     }
   }
 
