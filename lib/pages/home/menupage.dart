@@ -1285,7 +1285,7 @@ class _MenuPageState extends State<MenuPage> {
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: GestureDetector(
                               onTap: () {
-                                return setState(() {
+                                setState(() {
                                   myDrinks.clear();
                                   myTempCart = getDrinks();
                                   orderlenght = 0;
@@ -2241,15 +2241,15 @@ class _MenuPageState extends State<MenuPage> {
           child: GestureDetector(
             onTap: () {
               print('ajkshdkajhsdkj');
-              if(myMenu != null || myMenu != [])
-              //print(strings[i].id.toString());
+              if (myMenu != null || myMenu != [])
+                //print(strings[i].id.toString());
 
-              // for (var x = 0; x < strings[i].mx.length; x++) {
-              //   // print(strings[i].mx[x].name.toString());
-              //   // print(strings[i].mx[x].price.toString());
+                // for (var x = 0; x < strings[i].mx.length; x++) {
+                //   // print(strings[i].mx[x].name.toString());
+                //   // print(strings[i].mx[x].price.toString());
 
-              // }
-              myDrinks[ind].mid = strings[i].name;
+                // }
+                myDrinks[ind].mid = strings[i].name;
               showModalBottomSheet<void>(
                 isDismissible: false,
                 context: context,
@@ -3000,15 +3000,14 @@ class _MenuPageState extends State<MenuPage> {
                                           // }
                                         },
                                         child: Container(
-                                            height: 40,
                                             child: Center(
-                                                child: Text(
-                                              '-',
-                                              style: TextStyle(
-                                                  fontSize: 50,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.deepOrange),
-                                            ))),
+                                                child: Text('−',
+                                                    style: TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors
+                                                            .deepOrange)))),
                                       ),
                                     ],
                                   ),
@@ -3021,16 +3020,14 @@ class _MenuPageState extends State<MenuPage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                          height: 60,
                                           child: Center(
                                               child: Text(
-                                            snapshot.data[index].Quant
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ))),
+                                        snapshot.data[index].Quant.toString(),
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ))),
                                     ],
                                   ),
                                   SizedBox(
@@ -3109,15 +3106,14 @@ class _MenuPageState extends State<MenuPage> {
                                           // }
                                         },
                                         child: Container(
-                                            height: 60,
                                             child: Center(
                                                 child: Text(
-                                              '+',
-                                              style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.deepOrange),
-                                            ))),
+                                          '+',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.deepOrange),
+                                        ))),
                                       ),
                                     ],
                                   ),
@@ -5959,7 +5955,7 @@ class _MenuPageState extends State<MenuPage> {
 
     //totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
     print(finaltotwithdiscount);
-   totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(totalPrice);
@@ -6294,6 +6290,17 @@ class _MenuPageState extends State<MenuPage> {
           Prefs.setBool('billcheck', checkedValue);
         }
 
+        setState(() {
+          myDrinks.clear();
+          myTempCart = getDrinks();
+          orderlenght = 0;
+          myOrder.clear();
+          temporder.clear();
+          finaltot = 0;
+          myCartFuture = getOrder();
+          chrx = 0;
+        });
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -6401,36 +6408,35 @@ class _MenuPageState extends State<MenuPage> {
           String secvaldec = (int.parse(dec[1]) + 1).toString();
           String finalValue = firstval + '.' + firstvaldec + secvaldec;
           mySecRoundValue = double.parse(finalValue);
-        }else  if (int.parse(dec[2]) == 5) {
-            if(int.parse(dec[1]) <= 4){
-              String firstval = val.toString().split(".")[0];
-              String firstvaldec = dec[0];
-              String secvaldec = (int.parse(dec[1]) + 1).toString();
-              String finalValue = firstval + '.' + firstvaldec + secvaldec;
-              mySecRoundValue = double.parse(finalValue);
-            }else{
-               String firstval = val.toString().split(".")[0];
-                String firstvaldec = dec[0];
-                String secvaldec = (int.parse(dec[1])).toString();
+        } else if (int.parse(dec[2]) == 5) {
+          if (int.parse(dec[1]) <= 4) {
+            String firstval = val.toString().split(".")[0];
+            String firstvaldec = dec[0];
+            String secvaldec = (int.parse(dec[1]) + 1).toString();
+            String finalValue = firstval + '.' + firstvaldec + secvaldec;
+            mySecRoundValue = double.parse(finalValue);
+          } else {
+            String firstval = val.toString().split(".")[0];
+            String firstvaldec = dec[0];
+            String secvaldec = (int.parse(dec[1])).toString();
 
-                String finalValue = firstval + '.' + firstvaldec + secvaldec;
-                mySecRoundValue = double.parse(finalValue);
-            }
-            }else  if (int.parse(dec[2]) <= 4) {
-                String firstval = val.toString().split(".")[0];
-                    String firstvaldec = dec[0];
-                    String secvaldec = (int.parse(dec[1])).toString();
+            String finalValue = firstval + '.' + firstvaldec + secvaldec;
+            mySecRoundValue = double.parse(finalValue);
+          }
+        } else if (int.parse(dec[2]) <= 4) {
+          String firstval = val.toString().split(".")[0];
+          String firstvaldec = dec[0];
+          String secvaldec = (int.parse(dec[1])).toString();
 
-                    String finalValue = firstval + '.' + firstvaldec + secvaldec;
-                    mySecRoundValue = double.parse(finalValue);
-            } else {
-              String firstval = val.toString().split(".")[0];
-              String firstvaldec = dec[0];
-              String secvaldec = (int.parse(dec[1])).toString();
+          String finalValue = firstval + '.' + firstvaldec + secvaldec;
+          mySecRoundValue = double.parse(finalValue);
+        } else {
+          String firstval = val.toString().split(".")[0];
+          String firstvaldec = dec[0];
+          String secvaldec = (int.parse(dec[1])).toString();
 
-              String finalValue = firstval + '.' + firstvaldec + secvaldec;
-              mySecRoundValue = double.parse(finalValue);
-
+          String finalValue = firstval + '.' + firstvaldec + secvaldec;
+          mySecRoundValue = double.parse(finalValue);
         }
       } else {
         mySecRoundValue = val;

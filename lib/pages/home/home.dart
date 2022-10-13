@@ -190,94 +190,113 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-   
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + mytoken
-      };
-      final response = await http.get(
-          ApiCon.baseurl() +
-              '/users/currentUser/orders?pageSize=10&pageNumber=1',
-          headers: headers);
-      var jsondata = json.decode(response.body);
 
-      for (var i = 0; i < jsondata.length; i++) {
-        String cState =
-            json.decode(response.body)[i]['currentState'].toString();
-        String id =
-            json.decode(response.body)[i]['id'].toString();
-        String ref =
-            json.decode(response.body)[i]['orderReference'].toString();    
-        //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
-        var jsondata1 = await json.decode(response.body)[i]['items'];
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + mytoken
+    };
+    final response = await http.get(
+        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=10&pageNumber=1',
+        headers: headers);
+    var jsondata = json.decode(response.body);
 
-        List<MyItems> newItem = [];
-        for (var x in jsondata1) {
-          MyItems nt =
-              new MyItems(x['drink']['name'], x['quantity'].toString());
+    for (var i = 0; i < jsondata.length; i++) {
+      String cState = json.decode(response.body)[i]['currentState'].toString();
+      String id = json.decode(response.body)[i]['id'].toString();
+      String ref = json.decode(response.body)[i]['orderReference'].toString();
+      //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
+      var jsondata1 = await json.decode(response.body)[i]['items'];
 
-          newItem.add(nt);
-        }
-        String st = json.decode(response.body)[i]['timestamp'].toString();
-        String mprice = json.decode(response.body)[i]['finalPrice'].toString();
+      List<MyItems> newItem = [];
+      for (var x in jsondata1) {
+        MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
 
-        String dt = '';
-        String stt = '';
-        final toDayDate = DateTime.now();
-        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-        if (different < 60) {
+        newItem.add(nt);
+      }
+      String st = json.decode(response.body)[i]['timestamp'].toString();
+      String mprice = json.decode(response.body)[i]['finalPrice'].toString();
+
+      String dt = '';
+      String stt = '';
+      final toDayDate = DateTime.now();
+      var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
+      if (different < 60) {
+        if (toDayDate.difference(DateTime.parse(st)).inMinutes <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' min';
+        } else {
           dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
               ' mins';
-        } else if (different > 60 && different < 1440) {
+        }
+      } else if (different > 60 && different < 1440) {
+        if (toDayDate.difference(DateTime.parse(st)).inHours <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hour';
+        } else {
           dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
               ' hours';
+        }
+      } else {
+        if (toDayDate.difference(DateTime.parse(st)).inDays <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' day';
         } else {
           dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
               ' days';
         }
-        String bar = json.decode(response.body)[i]['tableId'].toString();
-        // String cState = json.decode(response.body)[i]['currentState'].toString();
-        if (cState == '0') {
-          stt = 'Order Created';
-        } else if (cState == '1') {
-          stt = 'Pending';
-        } else if (cState == '2') {
-          stt = 'Accepted';
-        } else if (cState == '3') {
-          stt = 'Payment Processed';
-        } else if (cState == '4') {
-          stt = 'Ready';
-        } else if (cState == '5') {
-          stt = 'Completed';
-        } else if (cState == '101') {
-          stt = 'Failed';
-        } else if (cState == '102') {
-          stt = 'Canceled';
-        } else if (cState == '103') {
-          stt = 'Rejected';
-        } else if (cState == '104') {
-          stt = 'Not Collected';
-        } else if (cState == '105') {
-          stt = 'Payment Failed';
-        } else if (cState == '106') {
-          stt = 'Payment Cancelled';
-        }
-       
-        String outletname = await getFacilityInfo(
-            json.decode(response.body)[i]['facilityId'].toString());
-        print("OUTLET NAME: " + outletname);
-        String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
-        setState(() {
-          Order myorder = new Order(json.decode(response.body)[i]['id'].toString(),json.decode(response.body)[i]['orderReference'].toString(),dt.toString(), newItem, bar, stt, cState,
-              outletname, newItem.length.toString(), mprice, timeToCollect);
-
-          orderList.add(myorder);
-        });
-        // }
-
       }
-      return orderList;
-   
+      String bar = json.decode(response.body)[i]['tableId'].toString();
+      // String cState = json.decode(response.body)[i]['currentState'].toString();
+      if (cState == '0') {
+        stt = 'Order Created';
+      } else if (cState == '1') {
+        stt = 'Pending';
+      } else if (cState == '2') {
+        stt = 'Accepted';
+      } else if (cState == '3') {
+        stt = 'Payment Processed';
+      } else if (cState == '4') {
+        stt = 'Ready';
+      } else if (cState == '5') {
+        stt = 'Completed';
+      } else if (cState == '101') {
+        stt = 'Failed';
+      } else if (cState == '102') {
+        stt = 'Canceled';
+      } else if (cState == '103') {
+        stt = 'Rejected';
+      } else if (cState == '104') {
+        stt = 'Not Collected';
+      } else if (cState == '105') {
+        stt = 'Payment Failed';
+      } else if (cState == '106') {
+        stt = 'Payment Cancelled';
+      }
+
+      String outletname = await getFacilityInfo(
+          json.decode(response.body)[i]['facilityId'].toString());
+      print("OUTLET NAME: " + outletname);
+      String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
+      setState(() {
+        Order myorder = new Order(
+            json.decode(response.body)[i]['id'].toString(),
+            json.decode(response.body)[i]['orderReference'].toString(),
+            dt.toString(),
+            newItem,
+            bar,
+            stt,
+            cState,
+            outletname,
+            newItem.length.toString(),
+            mprice,
+            timeToCollect);
+
+        orderList.add(myorder);
+      });
+      // }
+
+    }
+    return orderList;
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -972,7 +991,8 @@ class _HomePageState extends State<HomePage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => OrderDetails(snapshot.data[index].id,'')),
+                                builder: (context) =>
+                                    OrderDetails(snapshot.data[index].id, '')),
                           );
                         },
                         child: Container(
@@ -993,16 +1013,17 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       snapshot.data[index].outlet,
                                       style: TextStyle(
-                                          color: Colors.deepOrange, fontSize: 20),
+                                          color: Colors.deepOrange,
+                                          fontSize: 20),
                                     ),
                                     SizedBox(
                                       height: 10,
                                     ),
                                     Container(
                                       height: 20,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2 +
-                                              30,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
                                       child: Row(
                                         children: [
                                           Text(
@@ -1028,9 +1049,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     Container(
                                       height: 20,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2 +
-                                              30,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
                                       child: Row(
                                         children: [
                                           Text(
@@ -1054,9 +1075,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     Container(
                                       height: 20,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2 +
-                                              30,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
                                       child: Row(
                                         children: [
                                           Text(
@@ -1080,9 +1101,9 @@ class _HomePageState extends State<HomePage> {
                                     ),
                                     Container(
                                       height: 20,
-                                      width:
-                                          MediaQuery.of(context).size.width / 2 +
-                                              30,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
                                       child: Row(
                                         children: [
                                           Text(
@@ -1244,8 +1265,7 @@ class _HomePageState extends State<HomePage> {
                                   height: 60,
                                   //this will load the image
                                   child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)
-                                      ),
+                                      snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
                               ),
@@ -1303,8 +1323,18 @@ class Order {
   final String price;
   final String timeToCollect;
 
-  Order(this.id, this.ref,this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
-      this.outlet, this.itemcount, this.price,this.timeToCollect);
+  Order(
+      this.id,
+      this.ref,
+      this.timestamp,
+      this.itemslist,
+      this.barid,
+      this.cState,
+      this.sttn,
+      this.outlet,
+      this.itemcount,
+      this.price,
+      this.timeToCollect);
 }
 
 class MyItems {
