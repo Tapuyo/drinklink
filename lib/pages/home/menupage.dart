@@ -252,9 +252,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -317,9 +317,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -359,9 +359,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -401,9 +401,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -2241,15 +2241,15 @@ class _MenuPageState extends State<MenuPage> {
           child: GestureDetector(
             onTap: () {
               print('ajkshdkajhsdkj');
-              if(myMenu != null || myMenu != [])
-              //print(strings[i].id.toString());
+              if (myMenu != null || myMenu != [])
+                //print(strings[i].id.toString());
 
-              // for (var x = 0; x < strings[i].mx.length; x++) {
-              //   // print(strings[i].mx[x].name.toString());
-              //   // print(strings[i].mx[x].price.toString());
+                // for (var x = 0; x < strings[i].mx.length; x++) {
+                //   // print(strings[i].mx[x].name.toString());
+                //   // print(strings[i].mx[x].price.toString());
 
-              // }
-              myDrinks[ind].mid = strings[i].name;
+                // }
+                myDrinks[ind].mid = strings[i].name;
               showModalBottomSheet<void>(
                 isDismissible: false,
                 context: context,
@@ -2498,11 +2498,11 @@ class _MenuPageState extends State<MenuPage> {
                                           setState(() {
                                             modsetState(() {
                                               _isnone = true;
-                                              none = 'none';
-                                              myDrinks[ind].mid = 'none';
+                                              none = 'None';
+                                              myDrinks[ind].mid = 'None';
 
                                               chid = '';
-                                              chname = 'none';
+                                              chname = 'None';
                                               chprice = '0';
 
                                               myindex = index;
@@ -2510,7 +2510,7 @@ class _MenuPageState extends State<MenuPage> {
                                               print(index);
                                               print(chid);
 
-                                              myDrinks[ind].mid = 'none';
+                                              myDrinks[ind].mid = 'None';
                                               myDrinks[ind].mprice = '0';
                                               mname = strings[i].name;
                                             });
@@ -5454,9 +5454,9 @@ class _MenuPageState extends State<MenuPage> {
                                         unamex = ' ';
                                       }
                                       break;
-                                    case 'none':
+                                    case 'None':
                                       {
-                                        unamex = 'none';
+                                        unamex = 'None';
                                       }
                                       break;
                                     case 'guest':
@@ -5959,7 +5959,7 @@ class _MenuPageState extends State<MenuPage> {
 
     //totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
     print(finaltotwithdiscount);
-   totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
     // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
     //totalPrice = '1.08';
     print(totalPrice);
@@ -6401,36 +6401,35 @@ class _MenuPageState extends State<MenuPage> {
           String secvaldec = (int.parse(dec[1]) + 1).toString();
           String finalValue = firstval + '.' + firstvaldec + secvaldec;
           mySecRoundValue = double.parse(finalValue);
-        }else  if (int.parse(dec[2]) == 5) {
-            if(int.parse(dec[1]) <= 4){
-              String firstval = val.toString().split(".")[0];
-              String firstvaldec = dec[0];
-              String secvaldec = (int.parse(dec[1]) + 1).toString();
-              String finalValue = firstval + '.' + firstvaldec + secvaldec;
-              mySecRoundValue = double.parse(finalValue);
-            }else{
-               String firstval = val.toString().split(".")[0];
-                String firstvaldec = dec[0];
-                String secvaldec = (int.parse(dec[1])).toString();
+        } else if (int.parse(dec[2]) == 5) {
+          if (int.parse(dec[1]) <= 4) {
+            String firstval = val.toString().split(".")[0];
+            String firstvaldec = dec[0];
+            String secvaldec = (int.parse(dec[1]) + 1).toString();
+            String finalValue = firstval + '.' + firstvaldec + secvaldec;
+            mySecRoundValue = double.parse(finalValue);
+          } else {
+            String firstval = val.toString().split(".")[0];
+            String firstvaldec = dec[0];
+            String secvaldec = (int.parse(dec[1])).toString();
 
-                String finalValue = firstval + '.' + firstvaldec + secvaldec;
-                mySecRoundValue = double.parse(finalValue);
-            }
-            }else  if (int.parse(dec[2]) <= 4) {
-                String firstval = val.toString().split(".")[0];
-                    String firstvaldec = dec[0];
-                    String secvaldec = (int.parse(dec[1])).toString();
+            String finalValue = firstval + '.' + firstvaldec + secvaldec;
+            mySecRoundValue = double.parse(finalValue);
+          }
+        } else if (int.parse(dec[2]) <= 4) {
+          String firstval = val.toString().split(".")[0];
+          String firstvaldec = dec[0];
+          String secvaldec = (int.parse(dec[1])).toString();
 
-                    String finalValue = firstval + '.' + firstvaldec + secvaldec;
-                    mySecRoundValue = double.parse(finalValue);
-            } else {
-              String firstval = val.toString().split(".")[0];
-              String firstvaldec = dec[0];
-              String secvaldec = (int.parse(dec[1])).toString();
+          String finalValue = firstval + '.' + firstvaldec + secvaldec;
+          mySecRoundValue = double.parse(finalValue);
+        } else {
+          String firstval = val.toString().split(".")[0];
+          String firstvaldec = dec[0];
+          String secvaldec = (int.parse(dec[1])).toString();
 
-              String finalValue = firstval + '.' + firstvaldec + secvaldec;
-              mySecRoundValue = double.parse(finalValue);
-
+          String finalValue = firstval + '.' + firstvaldec + secvaldec;
+          mySecRoundValue = double.parse(finalValue);
         }
       } else {
         mySecRoundValue = val;
