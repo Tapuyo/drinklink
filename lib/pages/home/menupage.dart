@@ -1296,7 +1296,7 @@ class _MenuPageState extends State<MenuPage> {
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
                             child: GestureDetector(
                               onTap: () {
-                                return setState(() {
+                                setState(() {
                                   myDrinks.clear();
                                   myTempCart = getDrinks();
                                   orderlenght = 0;
@@ -3011,15 +3011,14 @@ class _MenuPageState extends State<MenuPage> {
                                           // }
                                         },
                                         child: Container(
-                                            height: 40,
                                             child: Center(
-                                                child: Text(
-                                              '-',
-                                              style: TextStyle(
-                                                  fontSize: 50,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.deepOrange),
-                                            ))),
+                                                child: Text('−',
+                                                    style: TextStyle(
+                                                        fontSize: 30,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors
+                                                            .deepOrange)))),
                                       ),
                                     ],
                                   ),
@@ -3032,16 +3031,14 @@ class _MenuPageState extends State<MenuPage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       Container(
-                                          height: 60,
                                           child: Center(
                                               child: Text(
-                                            snapshot.data[index].Quant
-                                                .toString(),
-                                            style: TextStyle(
-                                                fontSize: 30,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ))),
+                                        snapshot.data[index].Quant.toString(),
+                                        style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
+                                      ))),
                                     ],
                                   ),
                                   SizedBox(
@@ -3120,15 +3117,14 @@ class _MenuPageState extends State<MenuPage> {
                                           // }
                                         },
                                         child: Container(
-                                            height: 60,
                                             child: Center(
                                                 child: Text(
-                                              '+',
-                                              style: TextStyle(
-                                                  fontSize: 30,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.deepOrange),
-                                            ))),
+                                          '+',
+                                          style: TextStyle(
+                                              fontSize: 30,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.deepOrange),
+                                        ))),
                                       ),
                                     ],
                                   ),
@@ -6304,7 +6300,18 @@ class _MenuPageState extends State<MenuPage> {
           Prefs.setString('billEmail', billemail.text);
           Prefs.setBool('billcheck', checkedValue);
         }
-        _resetorder();
+
+        setState(() {
+          myDrinks.clear();
+          myTempCart = getDrinks();
+          orderlenght = 0;
+          myOrder.clear();
+          temporder.clear();
+          finaltot = 0;
+          myCartFuture = getOrder();
+          chrx = 0;
+        });
+
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

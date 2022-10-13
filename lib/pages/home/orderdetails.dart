@@ -76,7 +76,7 @@ class _OrderDetailsState extends State<OrderDetails> {
 
   String barid = '';
   String state = '';
-  String sttn = '';
+  String sttn = '1';
   String outlet = '';
   String itemcount = '';
   String price = '';
