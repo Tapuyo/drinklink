@@ -452,8 +452,13 @@ class _OrderDetailsState extends State<OrderDetails> {
           print('in seconds');
           print(sec.toString());
          
-                       if (mounted) {
-            _start = int.parse(sec.round().toString()) + 60 ?? 0;
+          if (mounted) {
+            if(int.parse(sec.round().toString()) > 0){
+              _start = int.parse(sec.round().toString()) + 60 ?? 0;
+            }else{
+              _start = 0;
+            }
+            
           }
                     });
           stt = 'Ready';
