@@ -737,11 +737,15 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
 
     return MaterialApp(
