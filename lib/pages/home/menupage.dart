@@ -202,6 +202,17 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  _resetorder() {
+    myDrinks.clear();
+    myTempCart = getDrinks();
+    orderlenght = 0;
+    myOrder.clear();
+    temporder.clear();
+    finaltot = 0;
+    myCartFuture = getOrder();
+    chrx = 0;
+  }
+
   getToke() {
     try {
       Prefs.load();
@@ -6293,7 +6304,7 @@ class _MenuPageState extends State<MenuPage> {
           Prefs.setString('billEmail', billemail.text);
           Prefs.setBool('billcheck', checkedValue);
         }
-
+        _resetorder();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
