@@ -62,8 +62,8 @@ class _SignPageState extends State<SignUp> {
   }
 
   SignUp() async {
-    String euser = usernameController.text;
-    String em = emailController.text;
+    String euser = usernameController.text.trimLeft();
+    String em = emailController.text.trimLeft();
     String pss = passController.text;
     String pssc = passConfirmController.text;
     bool v1 = false, v2 = false, v3 = false, v4 = false;
@@ -79,6 +79,29 @@ class _SignPageState extends State<SignUp> {
     }
     if (pssc.isNotEmpty) {
       v4 = true;
+    }
+
+    if (euser.contains(' ')) {
+      Alert(
+        context: context,
+        title: "Sign up",
+        content: Container(
+          child: Center(
+            child: Text("Please input username without space."),
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            color: Color(0xFF2b2b61).withOpacity(.7),
+          ),
+        ],
+      ).show();
+      return;
     }
 
     if (v1 == false && v2 == false && v3 == false && v4 == false) {
