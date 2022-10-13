@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:provider/provider.dart';
+import 'package:driklink/pages/login/help.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -797,6 +798,55 @@ class _HomePageState extends State<HomePage> {
                                               stoken.isEmpty
                                           ? "Sign In / Register"
                                           : "Sign Out (" + uName + ")",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => help()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  MaterialCommunityIcons.help_circle_outline,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                new Expanded(
+                                  flex: 1,
+                                  child: new SingleChildScrollView(
+                                    scrollDirection:
+                                        Axis.horizontal, //.horizontal
+                                    child: new Text(
+                                      'Help Centre',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,

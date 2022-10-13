@@ -202,6 +202,17 @@ class _MenuPageState extends State<MenuPage> {
     }
   }
 
+  _resetorder() {
+    myDrinks.clear();
+    myTempCart = getDrinks();
+    orderlenght = 0;
+    myOrder.clear();
+    temporder.clear();
+    finaltot = 0;
+    myCartFuture = getOrder();
+    chrx = 0;
+  }
+
   getToke() {
     try {
       Prefs.load();
@@ -252,9 +263,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -317,9 +328,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -359,9 +370,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -401,9 +412,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = 'guest';
         }
         break;
-      case 'none':
+      case 'None':
         {
-          unamex = 'none';
+          unamex = 'None';
         }
         break;
       default:
@@ -2498,11 +2509,11 @@ class _MenuPageState extends State<MenuPage> {
                                           setState(() {
                                             modsetState(() {
                                               _isnone = true;
-                                              none = 'none';
-                                              myDrinks[ind].mid = 'none';
+                                              none = 'None';
+                                              myDrinks[ind].mid = 'None';
 
                                               chid = '';
-                                              chname = 'none';
+                                              chname = 'None';
                                               chprice = '0';
 
                                               myindex = index;
@@ -2510,7 +2521,7 @@ class _MenuPageState extends State<MenuPage> {
                                               print(index);
                                               print(chid);
 
-                                              myDrinks[ind].mid = 'none';
+                                              myDrinks[ind].mid = 'None';
                                               myDrinks[ind].mprice = '0';
                                               mname = strings[i].name;
                                             });
@@ -5450,9 +5461,9 @@ class _MenuPageState extends State<MenuPage> {
                                         unamex = ' ';
                                       }
                                       break;
-                                    case 'none':
+                                    case 'None':
                                       {
-                                        unamex = 'none';
+                                        unamex = 'None';
                                       }
                                       break;
                                     case 'guest':
