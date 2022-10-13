@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
@@ -387,4 +384,3 @@ class _helpignPageState extends State<help> {
     );
   }
 }
->>>>>>> 340291ce6f82d26fa8aaf62b6182b5834f96df5c
