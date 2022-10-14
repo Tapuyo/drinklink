@@ -40,7 +40,6 @@ class _setPageState extends State<orderPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     selectedPerson = persons[0];
     orderList = [];
@@ -101,15 +100,15 @@ class _setPageState extends State<orderPage> {
   }
 
   Future<List<Order>> getOrders() async {
+    print('Call again');
+    List<String> tempOrderList = [];
     setState(() {
       orderList = [];
     });
-    Prefs.load();
     String token = Prefs.getString('token');
     if (token.isEmpty) {
       _showDialog("Drinklink", "Please login first.");
     } else {
-      print(token);
       Map<String, String> headers = {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + token
@@ -121,92 +120,98 @@ class _setPageState extends State<orderPage> {
           headers: headers);
       var jsondata = json.decode(response.body);
 
-      debugPrint(json.decode(response.body).toString());
-      for (var i = 0; i < jsondata.length; i++) {
-        var jsondata1 = await json.decode(response.body)[i]['items'];
-        List<OrdMixers> mixerI = [];
-        List<MyItems> newItem = [];
-        for (var x in jsondata1) {
-          MyItems nt =
-              new MyItems(x['drink']['name'], x['quantity'].toString());
-          var mixerItems = x['selectedMixers'];
-          if (mixerItems != null ||
-              mixerItems != [] ||
-              mixerItems.length <= 0) {
-            for (var x in mixerItems) {
-              print(x['name']);
-              OrdMixers mix = new OrdMixers(x['name'], x['price'].toString());
-              mixerI.add(mix);
+      for (var u in jsondata) {
+        if (!tempOrderList.contains(u['id'].toString())) {
+          print(u['id'].toString());
+          var jsondata1 = await u['items'];
+          var orderID = await u['id'];
+
+          //print(orderID);
+          List<OrdMixers> mixerI = [];
+          List<MyItems> newItem = [];
+          for (var x in jsondata1) {
+            MyItems nt =
+                new MyItems(x['drink']['name'], x['quantity'].toString());
+            var mixerItems = x['selectedMixers'];
+            if (mixerItems != null ||
+                mixerItems != [] ||
+                mixerItems.length <= 0) {
+              for (var x in mixerItems) {
+                print(x['name']);
+                OrdMixers mix = new OrdMixers(x['name'], x['price'].toString());
+                mixerI.add(mix);
+              }
             }
+
+            newItem.add(nt);
           }
+          String st = u['timestamp'].toString();
+          String dt = '';
+          String stt = '';
+          final toDayDate = DateTime.now();
+          var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
+          if (different < 60) {
+            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+                ' mins';
+          } else if (different > 60 && different < 1440) {
+            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+                ' hours';
+          } else {
+            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+                ' days';
+          }
+          String bar = u['tableId'].toString();
+          if (bar == null || bar == 'null') {
+            bar = '';
+          }
+          String cState = u['currentState'].toString();
+          if (cState == '0') {
+            stt = 'Order Created';
+          } else if (cState == '1') {
+            stt = 'Pending';
+          } else if (cState == '2') {
+            stt = 'Accepted';
+          } else if (cState == '3') {
+            stt = 'Payment Processed';
+          } else if (cState == '4') {
+            stt = 'Ready';
+          } else if (cState == '5') {
+            stt = 'Completed';
+          } else if (cState == '101') {
+            stt = 'Failed';
+          } else if (cState == '102') {
+            stt = 'Canceled';
+          } else if (cState == '103') {
+            stt = 'Rejected';
+          } else if (cState == '104') {
+            stt = 'Not Collected';
+          } else if (cState == '105') {
+            stt = 'Payment Failed';
+          } else if (cState == '106') {
+            stt = 'Payment Cancelled';
+          }
+          String namefacility =
+              await getFacilityInfo(u['facilityId'].toString());
+          setState(() {
+            Order myorder = new Order(
+                namefacility,
+                u['id'].toString(),
+                u['orderReference'].toString(),
+                dt.toString(),
+                newItem,
+                bar,
+                stt,
+                cState,
+                mixerI);
 
-          newItem.add(nt);
+            tempOrderList.add(u['id'].toString());
+            orderList.add(myorder);
+          });
         }
-        String st = json.decode(response.body)[i]['timestamp'].toString();
-        String facility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
-        String dt = '';
-        String stt = '';
-        final toDayDate = DateTime.now();
-        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-        if (different < 60) {
-          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-              ' mins';
-        } else if (different > 60 && different < 1440) {
-          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-              ' hours';
-        } else {
-          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-              ' days';
-        }
-        String bar = json.decode(response.body)[i]['tableId'].toString();
-        if (bar == null || bar == 'null') {
-          bar = '';
-        }
-        String cState =
-            json.decode(response.body)[i]['currentState'].toString();
-        if (cState == '0') {
-          stt = 'Order Created';
-        } else if (cState == '1') {
-          stt = 'Pending';
-        } else if (cState == '2') {
-          stt = 'Accepted';
-        } else if (cState == '3') {
-          stt = 'Payment Processed';
-        } else if (cState == '4') {
-          stt = 'Ready';
-        } else if (cState == '5') {
-          stt = 'Completed';
-        } else if (cState == '101') {
-          stt = 'Failed';
-        } else if (cState == '102') {
-          stt = 'Canceled';
-        } else if (cState == '103') {
-          stt = 'Rejected';
-        } else if (cState == '104') {
-          stt = 'Not Collected';
-        } else if (cState == '105') {
-          stt = 'Payment Failed';
-        } else if (cState == '106') {
-          stt = 'Payment Cancelled';
-        }
-      String namefacility = await getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
-      setState(() {
-        Order myorder = new Order(
-          namefacility,
-          json.decode(response.body)[i]['id'].toString(),
-            json.decode(response.body)[i]['orderReference'].toString(),
-            dt.toString(),
-            newItem,
-            bar,
-            stt,
-            cState,
-            mixerI);
-
-          orderList.add(myorder);
-        });
       }
-      return orderList;
     }
+    print(tempOrderList.toString());
+    return orderList;
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -221,12 +226,12 @@ class _setPageState extends State<orderPage> {
     var jsondata = json.decode(response.body);
     for (var u in jsondata) {
       if (u['id'].toString() == id) {
-        print(u['name']);
+        // print(u['name']);
         if (mounted) {
-          setState(() {
-            
-            name = u['name'];
-          });
+          //setState(() {
+
+          name = u['name'];
+          // });
         }
       }
     }
@@ -275,13 +280,7 @@ class _setPageState extends State<orderPage> {
                   height: 40,
                   width: 120,
                   padding: EdgeInsets.all(5.0),
-                  // decoration: BoxDecoration(
-                  //   borderRadius: BorderRadius.circular(60.0),
-                  //   border: Border.all(
-                  //       color: Colors.white,
-                  //       style: BorderStyle.solid,
-                  //       width: 1.80),
-                  // ),
+                  
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
                       dropdownColor: Color(0xFF2b2b61),
@@ -302,6 +301,9 @@ class _setPageState extends State<orderPage> {
                                   color: Colors.white),
                             ));
                       }).toList(),
+                      onTap: () {
+                        ord = getOrders();
+                      },
                       onChanged: (String newValue) {
                         setState(() {
                           dropdownvalue = newValue;
@@ -314,7 +316,6 @@ class _setPageState extends State<orderPage> {
                           } else if (dropdownvalue == 'ALL') {
                             sortCode = '';
                           }
-                          didChangeDependencies();
                         });
                       },
                     ),
@@ -329,119 +330,138 @@ class _setPageState extends State<orderPage> {
     );
   }
 
-  didChangeDependencies() {
-    ord = getOrders();
-  }
+  
 
   mybody() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-      height: MediaQuery.of(context).size.height - 170,
-      child: FutureBuilder(
-          future: ord,
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) {
-              return Container(
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: Card(
-                        child: Container(
-                            color: Color(0xFF3e3e66),
-                            height: 200,
-                            width: MediaQuery.of(context).size.width - 20,
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  width: MediaQuery.of(context).size.width,
-                                  height: 50,
-                                  color: Color(0xFF303052),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                            snapshot.data[index].facility,
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
-                                      ),
-                                      Spacer(),
-                                      Text(
-                                        snapshot.data[index].timestamp
-                                                .toString() +
-                                            ' ago',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(2, 10, 2, 2),
-                                  //visible: snapshot.data[index].mixer == null ? false:true,
-                                  child: snapshot.data[index].itemslist != null
-                                      ? Container(
-                                          height:
-                                              snapshot.data[index].itemslist ==
-                                                      null
-                                                  ? 0
-                                                  : 40,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ListView(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              scrollDirection: Axis.horizontal,
-                                              children: [
-                                                getTextWidgets(
-                                                    snapshot
-                                                        .data[index].itemslist,
-                                                    index),
-                                              ]))
-                                      : null,
-                                ),
-                                Container(
-                                  //visible: snapshot.data[index].mixer == null ? false:true,
-                                  child: snapshot.data[index].mixrs != null
-                                      ? Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(10, 0, 0, 10),
-                                          height: 28,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: ListView(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 15),
-                                              scrollDirection: Axis.horizontal,
-                                              children: [
-                                                getCartMixWidgets(
-                                                    snapshot.data[index].mixrs,
-                                                    index),
-                                              ]))
-                                      : null,
-                                ),
-                                showSated(
-                                    snapshot.data[index].id,
-                                    snapshot.data[index].ref,
-                                    snapshot.data[index].cState,
-                                    snapshot.data[index].sttn)
-                              ],
-                            )),
+    return orderList.length > 0
+        ? Container(
+            padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+            height: MediaQuery.of(context).size.height - 200,
+            child: FutureBuilder(
+                future: ord,
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return Container(
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
                     );
-                  });
-            }
-          }),
-    );
+                  } else {
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {},
+                            child: Card(
+                              child: Container(
+                                  color: Color(0xFF3e3e66),
+                                  height: 200,
+                                  width: MediaQuery.of(context).size.width - 20,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        height: 50,
+                                        color: Color(0xFF303052),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              snapshot.data[index].facility,
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                            Spacer(),
+                                            Text(
+                                              snapshot.data[index].timestamp
+                                                      .toString() +
+                                                  ' ago',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(2, 10, 2, 2),
+                                        //visible: snapshot.data[index].mixer == null ? false:true,
+                                        child: snapshot.data[index].itemslist !=
+                                                null
+                                            ? Container(
+                                                height: snapshot.data[index]
+                                                            .itemslist ==
+                                                        null
+                                                    ? 0
+                                                    : 40,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ListView(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    children: [
+                                                      getTextWidgets(
+                                                          snapshot.data[index]
+                                                              .itemslist,
+                                                          index),
+                                                    ]))
+                                            : null,
+                                      ),
+                                      Container(
+                                        //visible: snapshot.data[index].mixer == null ? false:true,
+                                        child: snapshot.data[index].mixrs !=
+                                                null
+                                            ? Container(
+                                                padding: EdgeInsets.fromLTRB(
+                                                    10, 0, 0, 10),
+                                                height: 28,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: ListView(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 15),
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    children: [
+                                                      getCartMixWidgets(
+                                                          snapshot.data[index]
+                                                              .mixrs,
+                                                          index),
+                                                    ]))
+                                            : null,
+                                      ),
+                                      showSated(
+                                          snapshot.data[index].id,
+                                          snapshot.data[index].ref,
+                                          snapshot.data[index].cState,
+                                          snapshot.data[index].sttn)
+                                    ],
+                                  )),
+                            ),
+                          );
+                        });
+                  }
+                }),
+          )
+        : Container(
+            height: MediaQuery.of(context).size.height - 200,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ));
   }
 
   Widget getCartMixWidgets(List<OrdMixers> strings, int ind) {
@@ -483,32 +503,34 @@ class _setPageState extends State<orderPage> {
 
   showSated(String id, ref, stt, stn) {
     if (stn == '0') {
-       return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.green.withOpacity(.2),
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )))),
-              );
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.green.withOpacity(.2),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '1') {
       return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -529,7 +551,8 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -550,7 +573,8 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -571,7 +595,8 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -592,7 +617,8 @@ class _setPageState extends State<orderPage> {
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
@@ -609,125 +635,137 @@ class _setPageState extends State<orderPage> {
                 )))),
       );
     } else if (stn == '101') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '102') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-         )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '103') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-             )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '104') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-           )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '105') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-             )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     } else if (stn == '106') {
-        return GestureDetector(
+      return GestureDetector(
         onTap: () {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => OrderDetails(id, ref ?? '')),
+            MaterialPageRoute(
+                builder: (context) => OrderDetails(id, ref ?? '')),
           );
         },
         child: Container(
-          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-          width: MediaQuery.of(context).size.width,
-          child: Container(
-              color: Colors.redAccent,
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Center(
-                  child: Text(
-                stt.toString(),
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              )))),);
+            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
+            width: MediaQuery.of(context).size.width,
+            child: Container(
+                color: Colors.redAccent,
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Center(
+                    child: Text(
+                  stt.toString(),
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                )))),
+      );
     }
   }
 
@@ -813,8 +851,8 @@ class Order {
   final String sttn;
   final List<OrdMixers> mixrs;
 
-  Order(this.facility,this.id, this.ref, this.timestamp, this.itemslist, this.barid, this.cState,
-      this.sttn, this.mixrs);
+  Order(this.facility, this.id, this.ref, this.timestamp, this.itemslist,
+      this.barid, this.cState, this.sttn, this.mixrs);
 }
 
 class MyItems {

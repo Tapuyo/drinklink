@@ -222,14 +222,29 @@ class _HomePageState extends State<HomePage> {
       final toDayDate = DateTime.now();
       var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
       if (different < 60) {
-        dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-            ' mins';
+        if (toDayDate.difference(DateTime.parse(st)).inMinutes <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' min';
+        } else {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' mins';
+        }
       } else if (different > 60 && different < 1440) {
-        dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-            ' hours';
+        if (toDayDate.difference(DateTime.parse(st)).inHours <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hour';
+        } else {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hours';
+        }
       } else {
-        dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-            ' days';
+        if (toDayDate.difference(DateTime.parse(st)).inDays <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' day';
+        } else {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' days';
+        }
       }
       String bar = json.decode(response.body)[i]['tableId'].toString();
       // String cState = json.decode(response.body)[i]['currentState'].toString();
