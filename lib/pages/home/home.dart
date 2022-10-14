@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-
+try{
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
@@ -298,6 +298,9 @@ class _HomePageState extends State<HomePage> {
 
     }
     return orderList;
+  }catch(e){
+    return null;
+  }
   }
 
   Future<String> getFacilityInfo(String id) async {
