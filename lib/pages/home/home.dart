@@ -191,13 +191,13 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-
+try{
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=10&pageNumber=1',
+        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=2&pageNumber=1',
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -298,6 +298,9 @@ class _HomePageState extends State<HomePage> {
 
     }
     return orderList;
+}catch(e){
+  return null;
+}
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -862,7 +865,7 @@ class _HomePageState extends State<HomePage> {
                         // Spacer(),
                         Row(children: [
                           Container(
-                            padding: EdgeInsets.fromLTRB(0, 50, 10, 50),
+                            padding: EdgeInsets.fromLTRB(0, 50, 0, 50),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1018,7 +1021,7 @@ class _HomePageState extends State<HomePage> {
     //
     return Container(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
-      height: 250,
+      height: 260,
       child: FutureBuilder(
           future: ord,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -1030,11 +1033,11 @@ class _HomePageState extends State<HomePage> {
               );
             } else {
               return Container(
-                height: 500,
-                width: 300,
+                height: 100,
+                width: 264,
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
-                    physics: NeverScrollableScrollPhysics(),
+                    // physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -1046,7 +1049,7 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                         child: Container(
-                            height: 500,
+                            height: 190,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Color(0xFF2b2b61).withOpacity(.5),
