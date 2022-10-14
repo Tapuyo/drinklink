@@ -107,6 +107,12 @@ class _setPageState extends State<setPage> {
     if (response.statusCode == 200) {
       print(response.statusCode);
       _showDialog_deletecard_single('My Card', 'Successfully deleted.');
+      cardidx = '';
+      cardnamex = '';
+      checkedValue = false;
+      Prefs.setString('bcardname' + uName, cardnamex);
+      Prefs.setString('bcardid' + uName, cardidx);
+      Prefs.setBool('bsendBill' + uName + '', checkedValue);
     } else {
       _showDialog_deletecard_single('My Card', 'Failed to delete card.');
     }
@@ -195,6 +201,7 @@ class _setPageState extends State<setPage> {
 
       checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
       cardidx = Prefs.getString('bcardid' + uName) ?? '';
+      cardnamex = Prefs.getString('bcardname' + uName) ?? '';
     });
   }
 
@@ -456,8 +463,8 @@ class _setPageState extends State<setPage> {
                 onChanged: (newValue) {
                   setState(() {
                     checkedValue = newValue;
-                    cardnamex = cardnamex;
-                    cardidx = cardidx;
+                    cardnamex = '';
+                    cardidx = '';
                     print(cardnamex);
                   });
                 },
@@ -748,7 +755,6 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -894,12 +900,11 @@ class _setPageState extends State<setPage> {
 
                 if (result == 'Added') {
                   _showDialog1('DrinkLink', 'New card saved.');
-                  myCardFuture = getCard();
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');
-                  myCardFuture = getCard();
                 }
+                myCardFuture = getCard();
               },
             ),
           ],
@@ -1033,11 +1038,13 @@ class _setPageState extends State<setPage> {
                                   ),
                                   onTap: () {
                                     setState(() {
-                                      cardnamex =
-                                          snapshot.data[index].cardholderName;
-                                      cardidx = snapshot.data[index].cardid;
-                                      myCardList = [];
-                                      myCardFuture = getCard();
+                                      if (checkedValue) {
+                                        cardnamex =
+                                            snapshot.data[index].cardholderName;
+                                        cardidx = snapshot.data[index].cardid;
+                                        myCardList = [];
+                                        myCardFuture = getCard();
+                                      }
                                     });
                                   },
                                 ),

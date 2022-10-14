@@ -427,9 +427,9 @@ class _MenuPageState extends State<MenuPage> {
     bool isDefaultSettings = checkedValue_dsettings;
     if (isDefaultSettings == true) {
       checkedValue = false;
-      isbname = false;
-      isbaddress = false;
-      isemail = false;
+      isbname = true;
+      isbaddress = true;
+      isemail = true;
       idCard = '';
       bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
       if (usename == true) {
@@ -437,14 +437,15 @@ class _MenuPageState extends State<MenuPage> {
         if (cardname.isNotEmpty) {
           isbname = true;
           billname.text = cardname;
-        } else {
-          isbname = false;
-          String fname = Prefs.getString('bfName' + unamex) ?? '';
-          String lname = Prefs.getString('blMame' + unamex) ?? '';
-          String name = fname + ' ' + lname;
-          billname.text = name.trimLeft();
         }
+      } else {
+        isbname = true;
+        String fname = Prefs.getString('bfName' + unamex) ?? '';
+        String lname = Prefs.getString('blMame' + unamex) ?? '';
+        String name = fname + ' ' + lname;
+        billname.text = name.trimLeft();
       }
+
       billadd.text = Prefs.getString('billAdd' + unamex) ?? '';
       String email = Prefs.getString('billEmail' + unamex) ?? '';
       billemail.text = email.trim().replaceAll(' ', '');
