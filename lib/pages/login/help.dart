@@ -56,7 +56,14 @@ class _helpignPageState extends State<help> {
     return true;
   }
 
+  _clear() {
+    // nameController.text = '';
+    // emailController.text = '';
+    messageController.text = '';
+  }
+
   main() async {
+    _loadPreview();
     // Note that using a username and password for gmail only works if
     // you have two-factor authentication enabled and created an App password.
     // Search for "gmail app password 2fa"
@@ -97,13 +104,21 @@ class _helpignPageState extends State<help> {
 
     try {
       final sendReport = await send(message, smtpServer);
+      if (sendReport.toString().contains('successfully sent')) {
+        _messageDialog('Help Center', 'Your message was sent successfully!', '',
+            'Send Again');
+        _clear();
+      }
       print('Message sent: ' + sendReport.toString());
     } on MailerException catch (e) {
       print('Message not sent.');
       for (var p in e.problems) {
         print('Problem: ${p.code}: ${p.msg}');
       }
+      _messageDialog('Help Center', 'Failed to send message!', '', 'Ok');
     }
+    Navigator.pop(context);
+
     // DONE
 
     // Let's send another message using a slightly different syntax:
@@ -176,6 +191,35 @@ class _helpignPageState extends State<help> {
     if (_validate()) {
       main();
     }
+  }
+
+  _loadPreview() async {
+    Navigator.of(context).push(
+      new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   @override
