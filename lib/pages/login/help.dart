@@ -56,7 +56,7 @@ class _helpignPageState extends State<help> {
     return true;
   }
 
-  _clear() {
+  _clear() async {
     // nameController.text = '';
     // emailController.text = '';
     messageController.text = '';
@@ -105,19 +105,20 @@ class _helpignPageState extends State<help> {
     try {
       final sendReport = await send(message, smtpServer);
       if (sendReport.toString().contains('successfully sent')) {
+        Navigator.pop(context);
         _messageDialog('Help Center', 'Your message was sent successfully!', '',
             'Send Again');
         _clear();
       }
       print('Message sent: ' + sendReport.toString());
     } on MailerException catch (e) {
+      Navigator.pop(context);
       print('Message not sent.');
       for (var p in e.problems) {
         print('Problem: ${p.code}: ${p.msg}');
       }
       _messageDialog('Help Center', 'Failed to send message!', '', 'Ok');
     }
-    Navigator.pop(context);
 
     // DONE
 
