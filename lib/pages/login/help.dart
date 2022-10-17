@@ -1,4 +1,3 @@
-
 import 'package:driklink/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -56,41 +55,8 @@ class _helpignPageState extends State<help> {
   }
 
   main() async {
-<<<<<<< HEAD
     _loadPreview();
 
-=======
-    Navigator.of(context).push(
-      new PageRouteBuilder(
-        opaque: false,
-        barrierDismissible: true,
-        pageBuilder: (BuildContext context, _, __) {
-          return Center(
-            child: Container(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              width: 150,
-              height: 150,
-              color: Colors.transparent,
-              child: Center(
-                child: new SizedBox(
-                  height: 50.0,
-                  width: 50.0,
-                  child: new CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 7.0,
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-    // Note that using a username and password for gmail only works if
-    // you have two-factor authentication enabled and created an App password.
-    // Search for "gmail app password 2fa"
-    // The alternative is to use oauth.
->>>>>>> 1b55f0cdc28802c334dc4a683d8b45ac746b09a5
     String username = 'leepe@drinklinkph.com';
     String password = 'P@ssw0rd';
 
@@ -116,18 +82,17 @@ class _helpignPageState extends State<help> {
               "\n"
               "DrinkLinkTeamSupport";
 
-    try {
-      final sendReport = await send(message, smtpServer);
-      print('Message sent: ' + sendReport.toString());
-      _showDialogSuccess('DrinkLink', 'Successfully sent message');
-      
-    } on MailerException catch (e) {
-      _showDialog('DrinkLink', 'Something went wrong!');
-      print('Message not sent.');
-      for (var p in e.problems) {
-        print('Problem: ${p.code}: ${p.msg}');
-      }
-    }
+    // try {
+    //   final sendReport = await send(message, smtpServer);
+    //   print('Message sent: ' + sendReport.toString());
+    //   _showDialogSuccess('DrinkLink', 'Successfully sent message');
+    // } on MailerException catch (e) {
+    //   _showDialog('DrinkLink', 'Something went wrong!');
+    //   print('Message not sent.');
+    //   for (var p in e.problems) {
+    //     print('Problem: ${p.code}: ${p.msg}');
+    //   }
+    // }
 
     final equivalentMessage = Message()
       ..from = Address(
@@ -138,9 +103,15 @@ class _helpignPageState extends State<help> {
       // ..bccRecipients.add('bccAddress@example.com')
       ..subject = 'DrinkLink@support : ${DateTime.now()}'
       // ..text = 'This is the plain text.\nThis is line 2 of the text part.'
-      ..html = "<h5> Hi there! I'm " +
+      ..html = "<h5> Hi there, </h5>\n" +
+          "\n" +
+          "<p>Name: " +
           nameController.text +
-          ",</h5>\n<p>" +
+          "</p>"
+              "<p>Email: " +
+          emailController.text +
+          "</p><p>Date: ${DateTime.now()}</p>"
+              "<p>Message: " +
           messageController.text +
           "</p>";
     // final sendReport2 = await send(equivalentMessage, smtpServer);
@@ -164,7 +135,6 @@ class _helpignPageState extends State<help> {
 
     // close the connection
     await connection.close();
-    Navigator.pop(context);
   }
 
   _showDialog(String title, String message) {
@@ -230,9 +200,9 @@ class _helpignPageState extends State<help> {
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
                 Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
             )
           ],
