@@ -96,28 +96,18 @@ class _setPageState extends State<setPage> {
         '/users/currentUser/deletecard?cardtoken=' +
         cardtoken;
 
-    // final request = http.Request('DELETE', Uri.parse(url));
-    // request.headers.addAll(headers);
-    // request.body = cardtoken;
-
-    // final response = await request.send();
-
     final response = await http.delete(url, headers: headers);
 
     if (response.statusCode == 200) {
       print(response.statusCode);
+      Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Successfully deleted.');
     } else {
+      Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Failed to delete card.');
     }
+
     myCardFuture = getCard();
-    Navigator.pop(context);
-    // print(response.body);
-    // print(response.statusCode);
-    // if (response.statusCode == 200) {
-    //   print(response.statusCode);
-    //   getCard();
-    // }
   }
 
   deleteuser() async {
@@ -675,9 +665,8 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                deleteusercardsingle(Token);
-                // myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
+                deleteusercardsingle(Token);
               },
             ),
           ],
@@ -712,7 +701,6 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
