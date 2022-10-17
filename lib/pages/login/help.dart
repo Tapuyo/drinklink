@@ -1,4 +1,3 @@
-
 import 'package:driklink/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
@@ -56,10 +55,6 @@ class _helpignPageState extends State<help> {
   }
 
   main() async {
-<<<<<<< HEAD
-    _loadPreview();
-
-=======
     Navigator.of(context).push(
       new PageRouteBuilder(
         opaque: false,
@@ -90,7 +85,6 @@ class _helpignPageState extends State<help> {
     // you have two-factor authentication enabled and created an App password.
     // Search for "gmail app password 2fa"
     // The alternative is to use oauth.
->>>>>>> 1b55f0cdc28802c334dc4a683d8b45ac746b09a5
     String username = 'leepe@drinklinkph.com';
     String password = 'P@ssw0rd';
 
@@ -114,7 +108,6 @@ class _helpignPageState extends State<help> {
       final sendReport = await send(message, smtpServer);
       print('Message sent: ' + sendReport.toString());
       _showDialogSuccess('DrinkLink', 'Successfully sent message');
-      
     } on MailerException catch (e) {
       _showDialog('DrinkLink', 'Something went wrong!');
       print('Message not sent.');
@@ -140,24 +133,25 @@ class _helpignPageState extends State<help> {
 
     var connection = PersistentConnection(smtpServer);
 
+    await connection.send(message);
+
     // Send the first message
-    final rsult = await connection.send(message);
-    if (rsult.toString().contains('Message successfully sent')) {
-      Navigator.of(context).pop();
-      _messageDialog('Help Center', 'Your message was sent successfully!', '',
-          'Send Again');
-      _clear();
-    } else {
-      Navigator.of(context).pop();
-      _messageDialog('Help Center', 'Failed to send message!', '', 'Ok');
-    }
+    // final rsult = await connection.send(message);
+    // if (rsult.toString().contains('Message successfully sent')) {
+    //   Navigator.of(context).pop();
+    //   _messageDialog('Help Center', 'Your message was sent successfully!', '',
+    //       'Send Again');
+    //   _clear();
+    // } else {
+    //   Navigator.of(context).pop();
+    //   _messageDialog('Help Center', 'Failed to send message!', '', 'Ok');
+    // }
 
     // send the equivalent message
     // await connection.send(equivalentMessage);
 
     // close the connection
     await connection.close();
-    Navigator.pop(context);
   }
 
   _showDialog(String title, String message) {
@@ -223,9 +217,9 @@ class _helpignPageState extends State<help> {
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
                 Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
-                    );
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
             )
           ],
