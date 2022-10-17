@@ -102,6 +102,12 @@ class _setPageState extends State<setPage> {
       print(response.statusCode);
       Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Successfully deleted.');
+      cardidx = '';
+      cardnamex = '';
+      checkedValue = false;
+      Prefs.setString('bcardname' + uName, cardnamex);
+      Prefs.setString('bcardid' + uName, cardidx);
+      Prefs.setBool('bsendBill' + uName + '', checkedValue);
     } else {
       Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Failed to delete card.');
@@ -185,6 +191,7 @@ class _setPageState extends State<setPage> {
 
       checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
       cardidx = Prefs.getString('bcardid' + uName) ?? '';
+      cardnamex = Prefs.getString('bcardname' + uName) ?? '';
     });
   }
 
@@ -446,8 +453,8 @@ class _setPageState extends State<setPage> {
                 onChanged: (newValue) {
                   setState(() {
                     checkedValue = newValue;
-                    cardnamex = cardnamex;
-                    cardidx = cardidx;
+                    cardnamex = '';
+                    cardidx = '';
                     print(cardnamex);
                   });
                 },
@@ -736,7 +743,6 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -882,12 +888,11 @@ class _setPageState extends State<setPage> {
 
                 if (result == 'Added') {
                   _showDialog1('DrinkLink', 'New card saved.');
-                  myCardFuture = getCard();
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');
-                  myCardFuture = getCard();
                 }
+                myCardFuture = getCard();
               },
             ),
           ],
@@ -909,6 +914,17 @@ class _setPageState extends State<setPage> {
                 ),
               );
             } else {
+<<<<<<< HEAD
+=======
+              // try {
+              //   cardnamex = snapshot.data[0].cardholderName;
+              //   cardidx = snapshot.data[0].cardid;
+              // } catch (e) {
+              //   cardnamex = '';
+              //   cardidx = '';
+              // }
+
+>>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   // physics: NeverScrollableScrollPhysics(),
@@ -921,6 +937,7 @@ class _setPageState extends State<setPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+<<<<<<< HEAD
                               // Container(
                               //   width: 200,
                               //   child: Column(
@@ -971,6 +988,8 @@ class _setPageState extends State<setPage> {
                               //     ],
                               //   ),
                               // ),
+=======
+>>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
                               Container(
                                 child: Text(
                                   snapshot.data[index].scheme,
@@ -978,6 +997,7 @@ class _setPageState extends State<setPage> {
                                       color: Colors.white, fontSize: 20),
                                 ),
                               ),
+<<<<<<< HEAD
 
                               SizedBox(
                                 width: 10,
@@ -1013,6 +1033,44 @@ class _setPageState extends State<setPage> {
                                 },
                               ),
 
+=======
+                              SizedBox(
+                                width: 10,
+                              ),
+                              GestureDetector(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data[index].cardholderName,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20),
+                                    ),
+                                    Text(
+                                      snapshot.data[index].showmask +
+                                          "  " +
+                                          snapshot.data[index].expiry,
+                                      style: TextStyle(
+                                          color: Colors.white70, fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    if (checkedValue) {
+                                      cardnamex =
+                                          snapshot.data[index].cardholderName;
+                                      cardidx = snapshot.data[index].cardid;
+                                      myCardList = [];
+                                      myCardFuture = getCard();
+                                    }
+                                  });
+                                },
+                              ),
+
+>>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
                               GestureDetector(
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
