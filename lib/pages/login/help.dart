@@ -369,6 +369,7 @@ class _helpignPageState extends State<help> {
                         child: Padding(
                           padding: EdgeInsets.all(10.0),
                           child: TextField(
+                             textInputAction: TextInputAction.done,
                             controller: messageController,
                             maxLines: 14, //or null
                             decoration:
