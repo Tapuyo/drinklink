@@ -135,20 +135,8 @@ class _helpignPageState extends State<help> {
 
     await connection.send(message);
 
-    // Send the first message
-    // final rsult = await connection.send(message);
-    // if (rsult.toString().contains('Message successfully sent')) {
-    //   Navigator.of(context).pop();
-    //   _messageDialog('Help Center', 'Your message was sent successfully!', '',
-    //       'Send Again');
-    //   _clear();
-    // } else {
-    //   Navigator.of(context).pop();
-    //   _messageDialog('Help Center', 'Failed to send message!', '', 'Ok');
-    // }
-
     // send the equivalent message
-    // await connection.send(equivalentMessage);
+    await connection.send(equivalentMessage);
 
     // close the connection
     await connection.close();
