@@ -1,14 +1,6 @@
-import 'dart:convert';
-import 'package:driklink/pages/Api.dart';
+
 import 'package:driklink/pages/home/home.dart';
-import 'package:driklink/pages/login/signin.dart';
-import 'package:http/http.dart' as http;
-import 'package:driklink/pages/home/menupage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:driklink/pages/home/termPage.dart';
-import 'package:driklink/data/pref_manager.dart';
 import 'package:email_validator/email_validator.dart';
 
 import 'package:mailer/mailer.dart';
@@ -23,6 +15,7 @@ class _helpignPageState extends State<help> {
   final emailController = TextEditingController();
   final nameController = TextEditingController();
   final messageController = TextEditingController();
+  bool progress = false;
 
   @override
   void initState() {}
@@ -63,8 +56,41 @@ class _helpignPageState extends State<help> {
   }
 
   main() async {
+<<<<<<< HEAD
     _loadPreview();
 
+=======
+    Navigator.of(context).push(
+      new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+    // Note that using a username and password for gmail only works if
+    // you have two-factor authentication enabled and created an App password.
+    // Search for "gmail app password 2fa"
+    // The alternative is to use oauth.
+>>>>>>> 1b55f0cdc28802c334dc4a683d8b45ac746b09a5
     String username = 'leepe@drinklinkph.com';
     String password = 'P@ssw0rd';
 
@@ -87,7 +113,10 @@ class _helpignPageState extends State<help> {
     try {
       final sendReport = await send(message, smtpServer);
       print('Message sent: ' + sendReport.toString());
+      _showDialogSuccess('DrinkLink', 'Successfully sent message');
+      
     } on MailerException catch (e) {
+      _showDialog('DrinkLink', 'Something went wrong!');
       print('Message not sent.');
       for (var p in e.problems) {
         print('Problem: ${p.code}: ${p.msg}');
@@ -128,6 +157,81 @@ class _helpignPageState extends State<help> {
 
     // close the connection
     await connection.close();
+    Navigator.pop(context);
+  }
+
+  _showDialog(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  _showDialogSuccess(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   _sendMessage() async {
