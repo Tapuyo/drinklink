@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-
+try{
     Map<String, String> headers = {
       "Content-Type": "application/json",
       'Authorization': 'Bearer ' + mytoken
@@ -275,9 +275,8 @@ class _HomePageState extends State<HomePage> {
         stt = 'Payment Cancelled';
       }
 
-      String outletname = await getFacilityInfo(
-          json.decode(response.body)[i]['facilityId'].toString());
-      print("OUTLET NAME: " + outletname);
+      String outletname =  json.decode(response.body)[i]['facilityName'].toString();
+      
       String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
       final format = DateFormat('hh:mm:ss');
       final dtCollect = format.parse(timeToCollect, true);
@@ -315,6 +314,9 @@ class _HomePageState extends State<HomePage> {
 
     }
     return orderList;
+    } catch (e) {
+      return null;
+    }
   }
 
   String mins = '00';
@@ -563,11 +565,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
