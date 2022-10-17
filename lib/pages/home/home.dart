@@ -275,9 +275,8 @@ try{
         stt = 'Payment Cancelled';
       }
 
-      String outletname = await getFacilityInfo(
-          json.decode(response.body)[i]['facilityId'].toString());
-      print("OUTLET NAME: " + outletname);
+      String outletname =  json.decode(response.body)[i]['facilityName'].toString();
+      
       String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
       final format = DateFormat('hh:mm:ss');
       final dtCollect = format.parse(timeToCollect, true);

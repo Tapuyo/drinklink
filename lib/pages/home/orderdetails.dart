@@ -429,7 +429,13 @@ class _OrderDetailsState extends State<OrderDetails> {
         String byww = json.decode(response.body)[i]['bartender'].toString();
 
         getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
+       
         getSched(json.decode(response.body)[i]['facilityId'].toString());
+
+        setState(() {
+                  
+                   outletName = json.decode(response.body)[i]['facilityId'].toString();
+                });
 
         if (cState == '0') {
           stt = 'Order Created';
@@ -441,6 +447,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           stt = 'Payment Processed';
         } else if (cState == '4') {
            setState(() {
+
           String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
           
           print('time to collect:' + timeToCollect);
@@ -559,7 +566,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     _timer.cancel();
   }
 
-  void getFacilityInfo(String id) async {
+  void getFacilityInfo(String id,) async {
     String name = '';
     Map<String, String> headers = {
       "Content-type": "application/json",

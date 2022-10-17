@@ -6315,7 +6315,7 @@ class _MenuPageState extends State<MenuPage> {
           finaltot = 0;
           myCartFuture = getOrder();
           chrx = 0;
-        });
+        }); 
         setNotif(token, uname);
         Navigator.pushReplacement(
           context,
