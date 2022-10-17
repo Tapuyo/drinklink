@@ -914,8 +914,6 @@ class _setPageState extends State<setPage> {
                 ),
               );
             } else {
-<<<<<<< HEAD
-=======
               // try {
               //   cardnamex = snapshot.data[0].cardholderName;
               //   cardidx = snapshot.data[0].cardid;
@@ -924,7 +922,6 @@ class _setPageState extends State<setPage> {
               //   cardidx = '';
               // }
 
->>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   // physics: NeverScrollableScrollPhysics(),
@@ -937,59 +934,6 @@ class _setPageState extends State<setPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-<<<<<<< HEAD
-                              // Container(
-                              //   width: 200,
-                              //   child: Column(
-                              //     mainAxisAlignment: MainAxisAlignment.start,
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       CheckboxListTile(
-                              //         title: Text(
-                              //           snapshot.data[index].scheme,
-                              //           style: TextStyle(color: Colors.white),
-                              //         ),
-                              //         value:
-                              //             idCard == snapshot.data[index].cardid
-                              //                 ? true
-                              //                 : false,
-                              //         onChanged: (newValue) {
-                              //           setState(() {
-                              //             if (idCard ==
-                              //                 snapshot.data[index].cardid) {
-                              //               idCard = '';
-                              //               maskedPan = '';
-                              //               expiry = '';
-                              //               cardholderName = '';
-                              //               scheme = '';
-                              //               cardToken = '';
-                              //             } else {
-                              //               idCard =
-                              //                   snapshot.data[index].cardid;
-                              //               maskedPan =
-                              //                   snapshot.data[index].maskedPan;
-                              //               expiry =
-                              //                   snapshot.data[index].expiry;
-                              //               cardholderName = snapshot
-                              //                   .data[index].cardholderName;
-                              //               scheme =
-                              //                   snapshot.data[index].scheme;
-                              //               cardToken =
-                              //                   snapshot.data[index].cardToken;
-                              //             }
-                              //           });
-                              //         },
-                              //         secondary: Icon(Icons.account_box,
-                              //             color: Colors.white),
-                              //         // controlAffinity: ListTileControlAffinity
-                              //         //     .leading, //  <-- leading Checkbox
-                              //       ),
-
-                              //     ],
-                              //   ),
-                              // ),
-=======
->>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
                               Container(
                                 child: Text(
                                   snapshot.data[index].scheme,
@@ -997,43 +941,6 @@ class _setPageState extends State<setPage> {
                                       color: Colors.white, fontSize: 20),
                                 ),
                               ),
-<<<<<<< HEAD
-
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data[index].cardholderName,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    Text(
-                                      snapshot.data[index].showmask +
-                                          "  " +
-                                          snapshot.data[index].expiry,
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 14),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    cardnamex =
-                                        snapshot.data[index].cardholderName;
-                                    cardidx = snapshot.data[index].cardid;
-                                    myCardList = [];
-                                    myCardFuture = getCard();
-                                  });
-                                },
-                              ),
-
-=======
                               SizedBox(
                                 width: 10,
                               ),
@@ -1070,7 +977,6 @@ class _setPageState extends State<setPage> {
                                 },
                               ),
 
->>>>>>> 942198ec3ed744115d00aa9772f6868bbc61fece
                               GestureDetector(
                                 child: Container(
                                   padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
