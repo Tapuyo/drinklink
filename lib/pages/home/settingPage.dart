@@ -953,56 +953,6 @@ class _setPageState extends State<setPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Container(
-                                //   width: 200,
-                                //   child: Column(
-                                //     mainAxisAlignment: MainAxisAlignment.start,
-                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                //     children: [
-                                //       CheckboxListTile(
-                                //         title: Text(
-                                //           snapshot.data[index].scheme,
-                                //           style: TextStyle(color: Colors.white),
-                                //         ),
-                                //         value:
-                                //             idCard == snapshot.data[index].cardid
-                                //                 ? true
-                                //                 : false,
-                                //         onChanged: (newValue) {
-                                //           setState(() {
-                                //             if (idCard ==
-                                //                 snapshot.data[index].cardid) {
-                                //               idCard = '';
-                                //               maskedPan = '';
-                                //               expiry = '';
-                                //               cardholderName = '';
-                                //               scheme = '';
-                                //               cardToken = '';
-                                //             } else {
-                                //               idCard =
-                                //                   snapshot.data[index].cardid;
-                                //               maskedPan =
-                                //                   snapshot.data[index].maskedPan;
-                                //               expiry =
-                                //                   snapshot.data[index].expiry;
-                                //               cardholderName = snapshot
-                                //                   .data[index].cardholderName;
-                                //               scheme =
-                                //                   snapshot.data[index].scheme;
-                                //               cardToken =
-                                //                   snapshot.data[index].cardToken;
-                                //             }
-                                //           });
-                                //         },
-                                //         secondary: Icon(Icons.account_box,
-                                //             color: Colors.white),
-                                //         // controlAffinity: ListTileControlAffinity
-                                //         //     .leading, //  <-- leading Checkbox
-                                //       ),
-
-                                //     ],
-                                //   ),
-                                // ),
                                 Container(
                                   child: Text(
                                     snapshot.data[index].scheme,
@@ -1010,7 +960,6 @@ class _setPageState extends State<setPage> {
                                         color: Colors.white, fontSize: 20),
                                   ),
                                 ),
-
                                 SizedBox(
                                   width: 10,
                                 ),
