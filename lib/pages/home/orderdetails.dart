@@ -118,7 +118,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   List<TempOrder> temporder = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
-  List<Order> myOrder = [];
+  // List<Order> myOrder = [];
   List<Discount> mydicount = [];
   PanelController _pc = new PanelController();
   bool _pcb = false;
@@ -1518,12 +1518,24 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MenuPage(outletid,
-                                          outletName, outletDesciption)),
-                                );
+                            if (StoreID == outletid) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MenuPage(outletid,
+                                            outletName, outletDesciption)),
+                              );
+                            } else {
+                              myOrder = [];
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MenuPage(outletid,
+                                            outletName, outletDesciption)),
+                              );
+                            }
                               },
                               child: Container(
                                   width: 90,
