@@ -197,7 +197,7 @@ try{
       'Authorization': 'Bearer ' + mytoken
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=10&pageNumber=1',
+        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -247,6 +247,7 @@ try{
         }
       }
       String bar = json.decode(response.body)[i]['tableId'].toString();
+
       // String cState = json.decode(response.body)[i]['currentState'].toString();
       if (cState == '0') {
         stt = 'Order Created';
@@ -274,10 +275,25 @@ try{
         stt = 'Payment Cancelled';
       }
 
-      String outletname = await getFacilityInfo(
-          json.decode(response.body)[i]['facilityId'].toString());
-      print("OUTLET NAME: " + outletname);
+      String outletname =  json.decode(response.body)[i]['facilityName'].toString();
+      
       String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
+      final format = DateFormat('hh:mm:ss');
+      final dtCollect = format.parse(timeToCollect, true);
+
+      double sec = Duration(milliseconds: dtCollect.millisecondsSinceEpoch)
+              .inMilliseconds /
+          1000;
+
+      print('in seconds');
+      print(sec.toString());
+
+      if (int.parse(sec.round().toString()) > 0) {
+        startTimer(int.parse(sec.round().toString()) + 60 ?? 0);
+      } else {
+        startTimer(0);
+      }
+
       setState(() {
         Order myorder = new Order(
             json.decode(response.body)[i]['id'].toString(),
@@ -290,7 +306,7 @@ try{
             outletname,
             newItem.length.toString(),
             mprice,
-            timeToCollect);
+            timeToCollect.toString());
 
         orderList.add(myorder);
       });
@@ -298,9 +314,35 @@ try{
 
     }
     return orderList;
-  }catch(e){
-    return null;
+    } catch (e) {
+      return null;
+    }
   }
+
+  String mins = '00';
+  String secs = '00';
+  String hours = '00';
+  void startTimer(int _start) {
+    setState(() {
+      if (_start > 60) {
+        int val = (_start ~/ 60) - 1;
+        mins = val.ceil().toStringAsFixed(0);
+        int rem = _start % 60;
+        if (rem < 10) {
+          secs = '0' + rem.toString();
+        } else {
+          secs = rem.toString();
+        }
+      } else {
+        hours = '';
+        mins = '00';
+        if (_start < 10) {
+          secs = '0' + _start.toString();
+        } else {
+          secs = _start.toString();
+        }
+      }
+    });
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -523,11 +565,15 @@ try{
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -1115,7 +1161,7 @@ try{
                                           ),
                                           Spacer(),
                                           Text(
-                                            snapshot.data[index].timeToCollect,
+                                             mins.toString() + ':' + secs.toString(),
                                             style: TextStyle(
                                                 color: Colors.deepOrange,
                                                 fontSize: 14),
