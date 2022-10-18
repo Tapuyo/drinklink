@@ -743,9 +743,9 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       stoken = token;
     }
-    if(stoken == _token){
-    uName = Prefs.getString('uname') ?? '';
-    }else{
+    if (stoken == _token) {
+      uName = Prefs.getString('uname') ?? '';
+    } else {
       uName = "Guest Mode" ?? '';
     }
 
@@ -6064,7 +6064,8 @@ class _MenuPageState extends State<MenuPage> {
           json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
-          json.decode(response.body)['paymentOrderCode'].toString(),uname);
+          json.decode(response.body)['paymentOrderCode'].toString(),
+          uname);
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -6200,8 +6201,8 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(
-      String orderID, String url, String reference, String paymentCode, String uname) async {
+  getPaymentLink(String orderID, String url, String reference,
+      String paymentCode, String uname) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -6316,7 +6317,7 @@ class _MenuPageState extends State<MenuPage> {
           finaltot = 0;
           myCartFuture = getOrder();
           chrx = 0;
-        }); 
+        });
         setNotif(token, uname);
         Navigator.pushReplacement(
           context,
