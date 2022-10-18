@@ -190,8 +190,7 @@ class _setPageState extends State<orderPage> {
           } else if (cState == '106') {
             stt = 'Payment Cancelled';
           }
-          String namefacility =
-              await getFacilityInfo(u['facilityId'].toString());
+          String namefacility = u['facilityName'].toString();
           setState(() {
             Order myorder = new Order(
                 namefacility,

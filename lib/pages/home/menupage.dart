@@ -427,9 +427,9 @@ class _MenuPageState extends State<MenuPage> {
     bool isDefaultSettings = checkedValue_dsettings;
     if (isDefaultSettings == true) {
       checkedValue = false;
-      isbname = false;
-      isbaddress = false;
-      isemail = false;
+      isbname = true;
+      isbaddress = true;
+      isemail = true;
       idCard = '';
       bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
       if (usename == true) {
@@ -437,14 +437,15 @@ class _MenuPageState extends State<MenuPage> {
         if (cardname.isNotEmpty) {
           isbname = true;
           billname.text = cardname;
-        } else {
-          isbname = false;
-          String fname = Prefs.getString('bfName' + unamex) ?? '';
-          String lname = Prefs.getString('blMame' + unamex) ?? '';
-          String name = fname + ' ' + lname;
-          billname.text = name.trimLeft();
         }
+      } else {
+        isbname = true;
+        String fname = Prefs.getString('bfName' + unamex) ?? '';
+        String lname = Prefs.getString('blMame' + unamex) ?? '';
+        String name = fname + ' ' + lname;
+        billname.text = name.trimLeft();
       }
+
       billadd.text = Prefs.getString('billAdd' + unamex) ?? '';
       String email = Prefs.getString('billEmail' + unamex) ?? '';
       billemail.text = email.trim().replaceAll(' ', '');
@@ -737,11 +738,15 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
 
     return MaterialApp(
@@ -6311,7 +6316,7 @@ class _MenuPageState extends State<MenuPage> {
           finaltot = 0;
           myCartFuture = getOrder();
           chrx = 0;
-        });
+        }); 
         setNotif(token, uname);
         Navigator.pushReplacement(
           context,
