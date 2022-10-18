@@ -111,13 +111,57 @@ class _ResetPassPageState extends State<ResetPass> {
         if (response.body.contains('Invalid password reset code')) {
           _showDialog('Reset Password', 'Please input correct code.');
           return;
-        } else {
+        } else if (response.body.contains('Could not reset password')) {
+           Alert(
+            context: context,
+            title: "Reset Password",
+            content: Container(
+              child: Center(
+                child: Text("Password does not meet requirements."),
+              ),
+            ),
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Close",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(),
+                color: Color(0xFF2b2b61).withOpacity(.7),
+              ),
+            ],
+          ).show();
+          return;
+        } else if (response.body.contains('Password mismatched')) {
+           Alert(
+            context: context,
+            title: "Reset Password",
+            content: Container(
+              child: Center(
+                child: Text("Password don't match."),
+              ),
+            ),
+            buttons: [
+              DialogButton(
+                child: Text(
+                  "Close",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+                onPressed: () =>
+                    Navigator.of(context, rootNavigator: true).pop(),
+                color: Color(0xFF2b2b61).withOpacity(.7),
+              ),
+            ],
+          ).show();
+          return;
+        } else  {
           Alert(
             context: context,
             title: "Reset Password",
             content: Container(
               child: Center(
-                child: Text('Please input correct code.'),
+                child: Text("Please check inputs."),
               ),
             ),
             buttons: [
