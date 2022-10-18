@@ -197,11 +197,7 @@ try{
       'Authorization': 'Bearer ' + mytoken
     };
     final response = await http.get(
-<<<<<<< HEAD
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=2&pageNumber=1',
-=======
         ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
->>>>>>> 1f28dd91822336502cd31a0cf47dd7f9fc5fde92
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -318,11 +314,6 @@ try{
 
     }
     return orderList;
-<<<<<<< HEAD
-}catch(e){
-  return null;
-}
-=======
     } catch (e) {
       return null;
     }
@@ -352,7 +343,6 @@ try{
         }
       }
     });
->>>>>>> 1f28dd91822336502cd31a0cf47dd7f9fc5fde92
   }
 
   Future<String> getFacilityInfo(String id) async {
