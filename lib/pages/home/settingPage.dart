@@ -102,6 +102,12 @@ class _setPageState extends State<setPage> {
       print(response.statusCode);
       Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Successfully deleted.');
+      cardidx = '';
+      cardnamex = '';
+      checkedValue = false;
+      Prefs.setString('bcardname' + uName, cardnamex);
+      Prefs.setString('bcardid' + uName, cardidx);
+      Prefs.setBool('bsendBill' + uName + '', checkedValue);
     } else {
       Navigator.pop(context);
       _showDialog_deletecard_single('My Card', 'Failed to delete card.');
@@ -185,6 +191,7 @@ class _setPageState extends State<setPage> {
 
       checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
       cardidx = Prefs.getString('bcardid' + uName) ?? '';
+      cardnamex = Prefs.getString('bcardname' + uName) ?? '';
     });
   }
 
@@ -446,8 +453,8 @@ class _setPageState extends State<setPage> {
                 onChanged: (newValue) {
                   setState(() {
                     checkedValue = newValue;
-                    cardnamex = cardnamex;
-                    cardidx = cardidx;
+                    cardnamex = '';
+                    cardidx = '';
                     print(cardnamex);
                   });
                 },
@@ -736,7 +743,6 @@ class _setPageState extends State<setPage> {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                myCardFuture = getCard();
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
@@ -882,12 +888,11 @@ class _setPageState extends State<setPage> {
 
                 if (result == 'Added') {
                   _showDialog1('DrinkLink', 'New card saved.');
-                  myCardFuture = getCard();
                 } else {
                   print(result);
                   _showDialog1('DrinkLink', 'Failed to save card.');
-                  myCardFuture = getCard();
                 }
+                myCardFuture = getCard();
               },
             ),
           ],
@@ -909,6 +914,14 @@ class _setPageState extends State<setPage> {
                 ),
               );
             } else {
+              // try {
+              //   cardnamex = snapshot.data[0].cardholderName;
+              //   cardidx = snapshot.data[0].cardid;
+              // } catch (e) {
+              //   cardnamex = '';
+              //   cardidx = '';
+              // }
+
               return ListView.builder(
                   itemCount: snapshot.data.length,
                   // physics: NeverScrollableScrollPhysics(),
@@ -921,56 +934,6 @@ class _setPageState extends State<setPage> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Container(
-                              //   width: 200,
-                              //   child: Column(
-                              //     mainAxisAlignment: MainAxisAlignment.start,
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       CheckboxListTile(
-                              //         title: Text(
-                              //           snapshot.data[index].scheme,
-                              //           style: TextStyle(color: Colors.white),
-                              //         ),
-                              //         value:
-                              //             idCard == snapshot.data[index].cardid
-                              //                 ? true
-                              //                 : false,
-                              //         onChanged: (newValue) {
-                              //           setState(() {
-                              //             if (idCard ==
-                              //                 snapshot.data[index].cardid) {
-                              //               idCard = '';
-                              //               maskedPan = '';
-                              //               expiry = '';
-                              //               cardholderName = '';
-                              //               scheme = '';
-                              //               cardToken = '';
-                              //             } else {
-                              //               idCard =
-                              //                   snapshot.data[index].cardid;
-                              //               maskedPan =
-                              //                   snapshot.data[index].maskedPan;
-                              //               expiry =
-                              //                   snapshot.data[index].expiry;
-                              //               cardholderName = snapshot
-                              //                   .data[index].cardholderName;
-                              //               scheme =
-                              //                   snapshot.data[index].scheme;
-                              //               cardToken =
-                              //                   snapshot.data[index].cardToken;
-                              //             }
-                              //           });
-                              //         },
-                              //         secondary: Icon(Icons.account_box,
-                              //             color: Colors.white),
-                              //         // controlAffinity: ListTileControlAffinity
-                              //         //     .leading, //  <-- leading Checkbox
-                              //       ),
-
-                              //     ],
-                              //   ),
-                              // ),
                               Container(
                                 child: Text(
                                   snapshot.data[index].scheme,
@@ -978,7 +941,6 @@ class _setPageState extends State<setPage> {
                                       color: Colors.white, fontSize: 20),
                                 ),
                               ),
-
                               SizedBox(
                                 width: 10,
                               ),
@@ -1004,11 +966,13 @@ class _setPageState extends State<setPage> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                    cardnamex =
-                                        snapshot.data[index].cardholderName;
-                                    cardidx = snapshot.data[index].cardid;
-                                    myCardList = [];
-                                    myCardFuture = getCard();
+                                    if (checkedValue) {
+                                      cardnamex =
+                                          snapshot.data[index].cardholderName;
+                                      cardidx = snapshot.data[index].cardid;
+                                      myCardList = [];
+                                      myCardFuture = getCard();
+                                    }
                                   });
                                 },
                               ),
