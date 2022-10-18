@@ -737,11 +737,15 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
 
     return MaterialApp(
@@ -5813,7 +5817,8 @@ class _MenuPageState extends State<MenuPage> {
     if (tk == null || tk == '') {
       SignUpPay();
     } else {
-      OrderNow();
+      String uname = Prefs.getString('uname') ?? '';
+      OrderNow(uname);
       // isloading = false;
       //getPaymentLink();
 
@@ -5874,8 +5879,8 @@ class _MenuPageState extends State<MenuPage> {
       setState(() {
         Prefs.setString('token', token);
       });
-      setNotif(token, uname);
-      OrderNow();
+      // setNotif(token, uname);
+      OrderNow(uname);
       //getPaymentLink();
     }
   }
@@ -5898,7 +5903,7 @@ class _MenuPageState extends State<MenuPage> {
     print(response.body);
   }
 
-  OrderNow() async {
+  OrderNow(String uname) async {
     Prefs.load();
     String token = Prefs.getString('token');
     print(token);
@@ -6058,7 +6063,7 @@ class _MenuPageState extends State<MenuPage> {
           json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
-          json.decode(response.body)['paymentOrderCode'].toString());
+          json.decode(response.body)['paymentOrderCode'].toString(),uname);
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -6195,7 +6200,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 
   getPaymentLink(
-      String orderID, String url, String reference, String paymentCode) async {
+      String orderID, String url, String reference, String paymentCode, String uname) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -6310,8 +6315,8 @@ class _MenuPageState extends State<MenuPage> {
           finaltot = 0;
           myCartFuture = getOrder();
           chrx = 0;
-        });
-
+        }); 
+        setNotif(token, uname);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
