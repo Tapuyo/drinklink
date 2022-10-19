@@ -300,9 +300,9 @@ class _setPageState extends State<orderPage> {
                                   color: Colors.white),
                             ));
                       }).toList(),
-                      onTap: () {
-                        ord = getOrders();
-                      },
+                      // onTap: () {
+                      //   ord = getOrders();
+                      // },
                       onChanged: (String newValue) {
                         setState(() {
                           dropdownvalue = newValue;
@@ -315,6 +315,7 @@ class _setPageState extends State<orderPage> {
                           } else if (dropdownvalue == 'ALL') {
                             sortCode = '';
                           }
+                          ord = getOrders();
                         });
                       },
                     ),
