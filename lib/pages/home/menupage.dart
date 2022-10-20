@@ -78,6 +78,8 @@ class _MenuPageState extends State<MenuPage> {
   List<Store> myList = [];
   List<SubMenu> myMenu = [];
   List<Drinks> myDrinks = [];
+  List<chossenMixerMultiple> newChsmx;
+  List<chossenMixerMultipleRemoved> newChsmxRemoved;
 
   List<Table> mytable = [];
   List<Discount> mydicount = [];
@@ -211,6 +213,8 @@ class _MenuPageState extends State<MenuPage> {
     finaltot = 0;
     myCartFuture = getOrder();
     chrx = 0;
+    newChsmx = [];
+    newChsmxRemoved = [];
   }
 
   getToke() {
@@ -486,6 +490,8 @@ class _MenuPageState extends State<MenuPage> {
 
     getTable();
     mytable = [];
+    newChsmx = [];
+    newChsmxRemoved = [];
   }
 
   Future<List<CardDetails>> getCard() async {
@@ -1310,6 +1316,8 @@ class _MenuPageState extends State<MenuPage> {
                                   finaltot = 0;
                                   myCartFuture = getOrder();
                                   chrx = 0;
+                                  newChsmx = [];
+                                  newChsmxRemoved = [];
                                 });
                               },
                               child: Container(
@@ -1913,6 +1921,9 @@ class _MenuPageState extends State<MenuPage> {
 
                           myCartFuture = getOrder();
                           callcompute();
+
+                          newChsmx = [];
+                          newChsmxRemoved = [];
                         });
                       }
                     },
@@ -2247,7 +2258,20 @@ class _MenuPageState extends State<MenuPage> {
     String mj;
     bool _isnone = false;
     String none = '';
+    List<String> userChecked = [];
 
+    if (newChsmx == null) {
+      newChsmx = [];
+    }
+
+    if (newChsmxRemoved == null) {
+      newChsmxRemoved = [];
+    }
+
+    for (var jom = 0; jom < newChsmx.length; jom++) {
+      userChecked.add(newChsmx[jom].cname);
+    }
+    print(userChecked);
     if (strings.length <= 0) {
       list.add(Container());
     } else {
@@ -2407,6 +2431,93 @@ class _MenuPageState extends State<MenuPage> {
                                                   chs.cname.toString();
                                             }
                                           } else {
+                                            if (strings[i].ismSelect ==
+                                                'true') {
+                                              print(newChsmx);
+
+                                              List<chossenMixer> newChs =
+                                                  myDrinks[ind].ChMixer;
+                                              newChs = [];
+                                              if (newChsmxRemoved.length > 0) {
+                                                for (var ia = 0;
+                                                    ia < newChsmxRemoved.length;
+                                                    ia++) {
+                                                  newChsmx.removeWhere(
+                                                      (element) =>
+                                                          element.cname ==
+                                                          newChsmxRemoved[ia]
+                                                              .cname);
+                                                  newChs.removeWhere(
+                                                      (element) =>
+                                                          element.cname ==
+                                                          newChsmxRemoved[ia]
+                                                              .cname);
+                                                }
+                                              }
+                                              bool isContain = false;
+                                              for (var ib = 0;
+                                                  ib < newChsmx.length;
+                                                  ib++) {
+                                                for (var ic = 0;
+                                                    ic < newChs.length;
+                                                    ic++) {
+                                                  if (newChsmx[ib].cname ==
+                                                      newChs[ic].cname) {
+                                                    isContain = true;
+                                                    break;
+                                                  }
+                                                }
+                                              }
+
+                                              if (isContain == false) {
+                                                // newChsmx.remove(newChsmxRemoved);
+                                                print(newChsmx);
+
+                                                for (var i = 0;
+                                                    i < newChsmx.length;
+                                                    i++) {
+                                                  chossenMixer chs =
+                                                      chossenMixer(
+                                                          newChsmx[i].cmid,
+                                                          newChsmx[i].cname,
+                                                          newChsmx[i].cprice);
+                                                  if (chs.cmid.isNotEmpty) {
+                                                    newChs.add(chs);
+                                                  }
+                                                }
+                                              }
+                                              myDrinks[ind].ChMixer = newChs;
+
+                                              print(strings[i].mx.length);
+
+                                              double mixertotal = 0;
+                                              for (var i = 0;
+                                                  i < newChs.length;
+                                                  i++) {
+                                                double cprice = double.parse(
+                                                    newChs[i].cprice);
+                                                setState(() {
+                                                  mixertotal += cprice;
+                                                });
+                                              }
+
+                                              double tot = double.parse(
+                                                      myDrinks[ind].origPrice) +
+                                                  mixertotal;
+                                              myDrinks[ind].price =
+                                                  tot.toStringAsFixed(2);
+                                              if (newChs.length <= 0) {
+                                                strings[i].name = 'none';
+                                              } else {
+                                                strings[i].name = '';
+                                                strings[i].name =
+                                                    newChs.length.toString() +
+                                                        ' ' +
+                                                        'add Ons';
+                                              }
+                                            }
+                                            print(userChecked);
+                                            newChsmxRemoved = [];
                                             Navigator.pop(context);
                                           }
                                         });
@@ -2470,71 +2581,72 @@ class _MenuPageState extends State<MenuPage> {
                               //   ),
                               // ),
                               //body
-                              Container(
-                                color: Colors.white,
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                height: 35,
-                                child: ListView.builder(
-                                    padding: EdgeInsets.all(10.0),
-                                    shrinkWrap: false,
-                                    itemCount: 1,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return GestureDetector(
-                                        child: Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 0, 0, 20),
-                                          child: Row(children: [
-                                            Icon(
-                                              Icons.circle,
-                                              color: myDrinks[ind].mid == none
-                                                  ? Colors.deepOrange[700]
-                                                  : Colors.black
-                                                      .withOpacity(.5),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: SingleChildScrollView(
-                                                scrollDirection:
-                                                    Axis.horizontal,
-                                                child: Text(
-                                                  'None',
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 12),
+                              if (strings[i].ismSelect != 'true')
+                                (Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  height: 35,
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.all(10.0),
+                                      shrinkWrap: false,
+                                      itemCount: 1,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          child: Container(
+                                            padding: EdgeInsets.fromLTRB(
+                                                0, 0, 0, 20),
+                                            child: Row(children: [
+                                              Icon(
+                                                Icons.circle,
+                                                color: myDrinks[ind].mid == none
+                                                    ? Colors.deepOrange[700]
+                                                    : Colors.black
+                                                        .withOpacity(.5),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Text(
+                                                    'None',
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 12),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ]),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            modsetState(() {
-                                              _isnone = true;
-                                              none = 'None';
-                                              myDrinks[ind].mid = 'None';
+                                            ]),
+                                          ),
+                                          onTap: () {
+                                            setState(() {
+                                              modsetState(() {
+                                                _isnone = true;
+                                                none = 'None';
+                                                myDrinks[ind].mid = 'None';
 
-                                              chid = '';
-                                              chname = 'None';
-                                              chprice = '0';
+                                                chid = '';
+                                                chname = 'None';
+                                                chprice = '0';
 
-                                              myindex = index;
-                                              print(myindex);
-                                              print(index);
-                                              print(chid);
+                                                myindex = index;
+                                                print(myindex);
+                                                print(index);
+                                                print(chid);
 
-                                              myDrinks[ind].mid = 'None';
-                                              myDrinks[ind].mprice = '0';
-                                              mname = strings[i].name;
+                                                myDrinks[ind].mid = 'None';
+                                                myDrinks[ind].mprice = '0';
+                                                mname = strings[i].name;
+                                              });
                                             });
-                                          });
-                                        },
-                                      );
-                                    }),
-                              ),
+                                          },
+                                        );
+                                      }),
+                                )),
                               if (strings[i].mx.length <= 0)
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -2552,124 +2664,210 @@ class _MenuPageState extends State<MenuPage> {
                                     itemCount: strings[i].mx.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            chid = strings[i].mx[index].id;
-                                            chname = strings[i].mx[index].name;
-                                            chprice =
-                                                strings[i].mx[index].price;
+                                      if (strings[i].ismSelect == 'true')
+                                        return ListTile(
+                                            title:
+                                                Text(strings[i].mx[index].name),
+                                            trailing: Checkbox(
+                                              value: userChecked.contains(
+                                                  strings[i].mx[index].name),
+                                              onChanged: (val) {
+                                                modsetState(() {
+                                                  if (val == true) {
+                                                    setState(() {
+                                                      // if (newChsmx.length > 0) {
+                                                      //   newChsmx = [];
+                                                      // }
+                                                      userChecked.add(strings[i]
+                                                          .mx[index]
+                                                          .name);
+                                                      chid = strings[i]
+                                                          .mx[index]
+                                                          .id;
+                                                      chname = strings[i]
+                                                          .mx[index]
+                                                          .name;
+                                                      chprice = strings[i]
+                                                          .mx[index]
+                                                          .price;
 
-                                            myindex = index;
-                                            print(myindex);
-                                            print(index);
-                                            print(chid);
-
-                                            myDrinks[ind].mid =
-                                                strings[i].mx[index].name;
-                                            myDrinks[ind].mprice =
-                                                strings[i].mx[index].price;
-                                            mname = strings[i].name;
-                                          });
-
-                                          modsetState(() {
-                                            if (strings[i].name ==
-                                                strings[i].mx[index].name) {
-                                              strings[i].name =
-                                                  strings[i].mx[index].name;
-                                            } else {
-                                              strings[i].name = strings[i].name;
-                                            }
-
-                                            myDrinks[ind].mid =
-                                                strings[i].mx[index].name;
-                                            myDrinks[ind].mprice =
-                                                strings[i].mx[index].price;
-                                            select = myindex;
-                                            int Row = index;
-                                          });
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0, 0, 0, 20),
-                                            child: Row(
-                                              children: [
-                                                // if (strings[i].name.toString() ==
-                                                //     strings[i].mx[index].name)
-                                                //   (Icon(
-                                                //     Icons.circle,
-                                                //     color: strings[i]
-                                                //                 .name
-                                                //                 .toString() ==
-                                                //             strings[i]
-                                                //                 .mx[index]
-                                                //                 .name
-                                                //         ? Colors.green
-                                                //         : Colors.deepOrange[700],
-                                                //   ))
-                                                // else
-                                                //   (Icon(
-                                                //     Icons.circle,
-                                                //     color: myDrinks[ind].mid ==
-                                                //             strings[i]
-                                                //                 .mx[index]
-                                                //                 .id
-                                                //         ? Colors.deepOrange[700]
-                                                //         : Colors.black
-                                                //             .withOpacity(.5),
-                                                //   )),
-
-                                                Icon(
-                                                  Icons.circle,
-                                                  color: myDrinks[ind].mid ==
+                                                      chossenMixerMultiple chs =
+                                                          chossenMixerMultiple(
+                                                              chid,
+                                                              chname,
+                                                              chprice);
+                                                      if (chs.cmid.isNotEmpty) {
+                                                        var isContain = newChsmx
+                                                            .contains(chs);
+                                                        if (isContain ==
+                                                            false) {
+                                                          newChsmx.add(chs);
+                                                        }
+                                                      }
+                                                      print(newChsmx);
+                                                    });
+                                                  } else {
+                                                    setState(() {
+                                                      userChecked.remove(
                                                           strings[i]
                                                               .mx[index]
-                                                              .name
-                                                      ? Colors.deepOrange[700]
-                                                      : Colors.black
-                                                          .withOpacity(.5),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    child: Text(
-                                                      strings[i]
-                                                                  .mx[index]
-                                                                  .name
-                                                                  .toString() !=
-                                                              null
-                                                          ? strings[i]
-                                                              .mx[index]
-                                                              .name
-                                                              .toString()
-                                                          : '',
-                                                      style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 12),
+                                                              .name);
+                                                      chid = strings[i]
+                                                          .mx[index]
+                                                          .id;
+                                                      chname = strings[i]
+                                                          .mx[index]
+                                                          .name;
+                                                      chprice = strings[i]
+                                                          .mx[index]
+                                                          .price;
+
+                                                      chossenMixerMultipleRemoved
+                                                          chs =
+                                                          chossenMixerMultipleRemoved(
+                                                              chid,
+                                                              chname,
+                                                              chprice);
+                                                      if (chs.cmid.isNotEmpty) {
+                                                        var isContain =
+                                                            newChsmxRemoved
+                                                                .contains(chs);
+                                                        if (isContain ==
+                                                            false) {
+                                                          newChsmxRemoved
+                                                              .add(chs);
+                                                        }
+                                                      }
+                                                      print(newChsmx);
+                                                    });
+                                                  }
+                                                });
+                                              },
+                                            )
+                                            //you can use checkboxlistTile too
+                                            );
+                                      else
+                                        return GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              chid = strings[i].mx[index].id;
+                                              chname =
+                                                  strings[i].mx[index].name;
+                                              chprice =
+                                                  strings[i].mx[index].price;
+
+                                              myindex = index;
+                                              print(myindex);
+                                              print(index);
+                                              print(chid);
+
+                                              myDrinks[ind].mid =
+                                                  strings[i].mx[index].name;
+                                              myDrinks[ind].mprice =
+                                                  strings[i].mx[index].price;
+                                              mname = strings[i].name;
+                                            });
+
+                                            modsetState(() {
+                                              if (strings[i].name ==
+                                                  strings[i].mx[index].name) {
+                                                strings[i].name =
+                                                    strings[i].mx[index].name;
+                                              } else {
+                                                strings[i].name =
+                                                    strings[i].name;
+                                              }
+
+                                              myDrinks[ind].mid =
+                                                  strings[i].mx[index].name;
+                                              myDrinks[ind].mprice =
+                                                  strings[i].mx[index].price;
+                                              select = myindex;
+                                              int Row = index;
+                                            });
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 0, 0, 20),
+                                              child: Row(
+                                                children: [
+                                                  // if (strings[i].name.toString() ==
+                                                  //     strings[i].mx[index].name)
+                                                  //   (Icon(
+                                                  //     Icons.circle,
+                                                  //     color: strings[i]
+                                                  //                 .name
+                                                  //                 .toString() ==
+                                                  //             strings[i]
+                                                  //                 .mx[index]
+                                                  //                 .name
+                                                  //         ? Colors.green
+                                                  //         : Colors.deepOrange[700],
+                                                  //   ))
+                                                  // else
+                                                  //   (Icon(
+                                                  //     Icons.circle,
+                                                  //     color: myDrinks[ind].mid ==
+                                                  //             strings[i]
+                                                  //                 .mx[index]
+                                                  //                 .id
+                                                  //         ? Colors.deepOrange[700]
+                                                  //         : Colors.black
+                                                  //             .withOpacity(.5),
+                                                  //   )),
+
+                                                  Icon(
+                                                    Icons.circle,
+                                                    color: myDrinks[ind].mid ==
+                                                            strings[i]
+                                                                .mx[index]
+                                                                .name
+                                                        ? Colors.deepOrange[700]
+                                                        : Colors.black
+                                                            .withOpacity(.5),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    flex: 1,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      scrollDirection:
+                                                          Axis.horizontal,
+                                                      child: Text(
+                                                        strings[i]
+                                                                    .mx[index]
+                                                                    .name
+                                                                    .toString() !=
+                                                                null
+                                                            ? strings[i]
+                                                                .mx[index]
+                                                                .name
+                                                                .toString()
+                                                            : '',
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 12),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text(
-                                                  strings[i]
-                                                          .mx[index]
-                                                          .price
-                                                          .toString() +
-                                                      " AED",
-                                                  style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 16),
-                                                ),
-                                              ],
-                                            )),
-                                      );
+                                                  SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Text(
+                                                    strings[i]
+                                                            .mx[index]
+                                                            .price
+                                                            .toString() +
+                                                        " AED",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              )),
+                                        );
                                     },
                                   ),
                                 ))
@@ -3222,7 +3420,8 @@ class _MenuPageState extends State<MenuPage> {
               } catch (e) {
                 print("empty mixer");
               }
-              Mixer mymix = Mixer(m['id'], m['name'], mixCat);
+              Mixer mymix = Mixer(m['id'], m['name'],
+                  m['isMultipleSelectionAlowed'].toString(), mixCat);
               setState(() {
                 mix.add(mymix);
               });
@@ -3289,7 +3488,8 @@ class _MenuPageState extends State<MenuPage> {
                     print('empty mixer');
                   }
 
-                  Mixer mymix = Mixer(m['id'], m['name'], mixCat);
+                  Mixer mymix = Mixer(m['id'], m['name'],
+                      m['isMultipleSelectionAlowed'].toString(), mixCat);
                   setState(() {
                     mix.add(mymix);
                   });
@@ -6794,6 +6994,22 @@ class Drinks {
       this.addIce);
 }
 
+class chossenMixerMultiple {
+  String cmid;
+  String cname;
+  String cprice;
+
+  chossenMixerMultiple(this.cmid, this.cname, this.cprice);
+}
+
+class chossenMixerMultipleRemoved {
+  String cmid;
+  String cname;
+  String cprice;
+
+  chossenMixerMultipleRemoved(this.cmid, this.cname, this.cprice);
+}
+
 class chossenMixer {
   String cmid;
   String cname;
@@ -6805,9 +7021,10 @@ class chossenMixer {
 class Mixer {
   final int id;
   String name;
+  final String ismSelect;
   final List<MixerCat> mx;
 
-  Mixer(this.id, this.name, this.mx);
+  Mixer(this.id, this.name, this.ismSelect, this.mx);
 }
 
 class MixerCat {
