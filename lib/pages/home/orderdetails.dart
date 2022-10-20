@@ -482,7 +482,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                     });
         } else if (cState == '102') {
           stt = 'Canceled';
-          _timer.cancel();
+          // _timer.cancel();
         } else if (cState == '103') {
           // _timer.cancel();
           stt = 'Rejected';
