@@ -432,10 +432,10 @@ class _OrderDetailsState extends State<OrderDetails> {
        
         getSched(json.decode(response.body)[i]['facilityId'].toString());
 
-        setState(() {
+        // setState(() {
                   
-                   outletName = json.decode(response.body)[i]['facilityId'].toString();
-                });
+        //            outletName = json.decode(response.body)[i]['facilityId'].toString();
+        //         });
 
         if (cState == '0') {
           stt = 'Order Created';
