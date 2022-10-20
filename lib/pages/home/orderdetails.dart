@@ -429,6 +429,8 @@ class _OrderDetailsState extends State<OrderDetails> {
         String byww = json.decode(response.body)[i]['bartender'].toString();
 
         getFacilityInfo(json.decode(response.body)[i]['facilityId'].toString());
+
+        
        
         getSched(json.decode(response.body)[i]['facilityId'].toString());
 
@@ -498,6 +500,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         }
 
         setState(() {
+        outletName = json.decode(response.body)[i]['facilityName'].toString();
           barid = bar.toString();
           state = stt.toString();
           //state =  json.decode(response.body)[i]['currentState'].toString();
@@ -519,7 +522,6 @@ class _OrderDetailsState extends State<OrderDetails> {
   }
 
   void startTimer() {
-    print('kjaskjdhakjsdhkjahsd');
     if (mounted) {
       const oneSec = const Duration(seconds: 1);
       _timer = new Timer.periodic(
@@ -582,8 +584,8 @@ class _OrderDetailsState extends State<OrderDetails> {
         print(u['name']);
         if (mounted) {
           setState(() {
-            outletid = u['id'].toString();
-            outletName = u['name'];
+             outletid = u['id'].toString();
+            // outletName = u['name'];
             outletDesciption = u['address'];
           });
         }
@@ -940,132 +942,610 @@ class _OrderDetailsState extends State<OrderDetails> {
               )),
         ),
         backgroundColor: Colors.transparent,
-        body: SingleChildScrollView(
-          child: Container(
-              color: Colors.transparent,
-              height: MediaQuery.of(context).size.height - 75,
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Container(
-                        //   width: MediaQuery.of(context).size.width,
-                        //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        //   child: Row(
-                        //     crossAxisAlignment: CrossAxisAlignment.end,
-                        //     children: [
-                        //       GestureDetector(
-                        //         onTap: (){
-                        //           getOrders();
-                        //         },
-                        //           //padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        //           child: Icon(Icons.refresh,color: Colors.white,),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        Container(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Text(
-                              outletDesciption,
-                              style: TextStyle(
-                                color: Colors.deepOrange,
-                                fontSize: 16,
-                              ),
-                            )),
-                        Container(
-                            padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                            child: Text(
-                              outletName,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold),
-                            )),
-                        Container(
-                          height: 30,
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Visibility(
-                                visible: isWorkingDay,
-                                child: Container(
-                                    child: Text(
-                                  wk,
-                                  style: TextStyle(color: Colors.white),
+        body: SafeArea(
+          child: Stack(
+            children: [
+              
+              SingleChildScrollView(
+              child: Container(
+                  color: Colors.transparent,
+                  height: MediaQuery.of(context).size.height - 75,
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Container(
+                            //   width: MediaQuery.of(context).size.width,
+                            //   padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            //   child: Row(
+                            //     crossAxisAlignment: CrossAxisAlignment.end,
+                            //     children: [
+                            //       GestureDetector(
+                            //         onTap: (){
+                            //           getOrders();
+                            //         },
+                            //           //padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                            //           child: Icon(Icons.refresh,color: Colors.white,),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
+                            Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                child: Text(
+                                  outletDesciption,
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 16,
+                                  ),
                                 )),
+                            Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                child: Text(
+                                  outletName,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                            Container(
+                              height: 30,
+                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Visibility(
+                                    visible: isWorkingDay,
+                                    child: Container(
+                                        child: Text(
+                                      wk,
+                                      style: TextStyle(color: Colors.white),
+                                    )),
+                                  ),
+                                  Spacer(),
+                                  Container(
+                                      padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
+                                      color: isWorkingDay == true
+                                          ? Colors.green
+                                          : Colors.red,
+                                      child: Text(
+                                        isWorkingDay == true ? 'online' : 'offline',
+                                        style: TextStyle(color: Colors.white),
+                                      ))
+                                ],
                               ),
-                              Spacer(),
-                              Container(
-                                  padding: EdgeInsets.fromLTRB(4, 4, 4, 4),
-                                  color: isWorkingDay == true
-                                      ? Colors.green
-                                      : Colors.red,
-                                  child: Text(
-                                    isWorkingDay == true ? 'online' : 'offline',
-                                    style: TextStyle(color: Colors.white),
-                                  ))
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Divider(
+                              color: Colors.deepOrange,
+                              thickness: 2,
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                   if (sttn == '101' ||
+                                            sttn == '102' ||
+                                            sttn == '105' ||
+                                            sttn == '106')(
+                                     Icon(
+                                      Icons.cancel_rounded,
+                                      size: 40,
+                                      color: Colors.red[900],
+                                    )
+                                  )else(
+                                     Icon(
+                                      Icons.check_circle,
+                                      size: 40,
+                                      color: Colors.green,
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    'Order on Hold',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                  Spacer(),
+                                  Visibility(
+                                    visible: sttn == '1' || sttn == '0'  ? true:false,
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        setState(() {
+                                          // _cancelorder();
+                                          confirmDialog('Cancel order',
+                                              'Are you sure you want to cancel this order?');
+                                        });
+                                      },
+                                      child: Container(
+                                          width: 90,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(10),
+                                            color: Colors.transparent,
+                                            border: Border.all(
+                                              color: Colors
+                                                  .white, //                   <--- border color
+                                              width: 2.0,
+                                            ),
+                                          ),
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                          child: Center(
+                                              child: Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 14),
+                                          ))),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            // Divider(),
+                            Visibility(
+                                visible: sttn == '105'||sttn == '101' ? true : false,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 112,
+                                    ),
+                                    Icon(
+                                      Icons.cancel_schedule_send_outlined,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      'Payment Failed.',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 15),
+                                    ),
+                                  ],
+                                )),
+                                Visibility(
+                                visible: sttn == '102' ? true : false,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 112,
+                                    ),
+                                    Icon(
+                                      Icons.cancel_schedule_send_outlined,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      'Order is cancelled by the user.',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 15),
+                                    ),
+                                  ],
+                                )),
+                                 Visibility(
+                                visible: sttn == '106' ? true : false,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 112,
+                                    ),
+                                    Icon(
+                                      Icons.cancel_schedule_send_outlined,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      'Payment is cancelled by the user.',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 15),
+                                    ),
+                                  ],
+                                )),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                  if (sttn == '2' || sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
+                                     Icon(
+                                      Icons.check_circle,
+                                      size: 40,
+                                      color: Colors.green,
+                                    )
+                                  )else if(sttn == '1' || sttn == '0' )(
+                                     Icon(
+                                      Icons.access_time_rounded,
+                                      size: 40,
+                                      color: Colors.deepOrange,
+                                    )
+                                  )else (
+                                     Icon(
+                                      Icons.cancel_rounded,
+                                      size: 40,
+                                      color: Colors.red[900],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    'Order Accepted',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),Visibility(
+                                visible: sttn == '103' ? true : false,
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 112,
+                                    ),
+                                    Icon(
+                                      Icons.cancel_schedule_send_outlined,
+                                      size: 20,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                    Text(
+                                      'Order is rejected by the store.',
+                                      style: TextStyle(
+                                          color: Colors.red, fontSize: 15),
+                                    ),
+                                  ],
+                                )),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                 if ( sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
+                                     Icon(
+                                      Icons.check_circle,
+                                      size: 40,
+                                      color: Colors.green,
+                                    )
+                                  )else if(sttn == '1' || sttn == '0'||sttn == '2'  )(
+                                     Icon(
+                                      Icons.access_time_rounded,
+                                      size: 40,
+                                      color: Colors.deepOrange,
+                                    )
+                                  )else (
+                                     Icon(
+                                      Icons.cancel_rounded,
+                                      size: 40,
+                                      color: Colors.red[900],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    'Order Process',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                 if (sttn == '4' ||sttn == '5'||sttn == '104')(
+                                     Icon(
+                                      Icons.check_circle,
+                                      size: 40,
+                                      color: Colors.green,
+                                    )
+                                  )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
+                                     Icon(
+                                      Icons.access_time_rounded,
+                                      size: 40,
+                                      color: Colors.deepOrange,
+                                    )
+                                  )else (
+                                     Icon(
+                                      Icons.cancel_rounded,
+                                      size: 40,
+                                      color: Colors.red[900],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    'Preparing Order',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                              width: MediaQuery.of(context).size.width,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                   if (sttn == '4' ||sttn == '5'||sttn == '104')(
+                                     Icon(
+                                      Icons.check_circle,
+                                      size: 40,
+                                      color: Colors.green,
+                                    )
+                                  )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
+                                     Icon(
+                                      Icons.access_time_rounded,
+                                      size: 40,
+                                      color: Colors.deepOrange,
+                                    )
+                                  )else (
+                                     Icon(
+                                      Icons.cancel_rounded,
+                                      size: 40,
+                                      color: Colors.red[900],
+                                    )
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  Text(
+                                    'Collect Order',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            //Spacer(),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Visibility(
+                              visible: sttn == '5' ? true : false,
+                              child: Container(
+                                padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                                width: MediaQuery.of(context).size.width,
+                                height: 50,
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.check_circle,
+                                        size: 40, color: Colors.green),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Text(
+                                      'Complete',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 18),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // Visibility(
+                            //   visible: sttn == '101' ||
+                            //           sttn == '102' ||
+                            //           sttn == '103' ||
+                            //           sttn == '104' ||
+                            //           sttn == '105'
+                            //       ? true
+                            //       : false,
+                            //   child: Container(
+                            //     padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
+                            //     width: MediaQuery.of(context).size.width,
+                            //     height: 50,
+                            //     child: Row(
+                            //       children: [
+                            //         Icon(
+                            //           Icons.access_time_rounded,
+                            //           size: 40,
+                            //           color: Colors.deepOrange,
+                            //         ),
+                            //         SizedBox(
+                            //           width: 20,
+                            //         ),
+                            //         Text(
+                            //           state,
+                            //           style: TextStyle(
+                            //               color: Colors.white, fontSize: 18),
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 3,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.black12,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height / 3,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.grey.withOpacity(.5),
+                            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Time will start when your order is ready',
+                                  style:
+                                      TextStyle(color: Colors.white, fontSize: 14),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          'TIME LEFT TO',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 20),
+                                        ),
+                                        Text(
+                                          'COLLECT',
+                                          style: TextStyle(
+                                              color: Colors.white, fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      mins.toString() + ':' + secs.toString(),
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text(
+                                      'min',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 30),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: FlatButton(
+                                    height: 50,
+                                    minWidth: double.infinity,
+                                    color: Colors.deepOrange,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10)),
+                                    onPressed: () {
+                                      if (sttn == '2' ||
+                                          sttn == '3' ||
+                                          sttn == '4' ||
+                                          sttn == '5') {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MoreDetails(
+                                                  code, byw, outletName)),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 70,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          // Image.asset(
+                                          //   'assets/images/applelogo.png',
+                                          //   height: 30.0,
+                                          //   width: 30.0,
+                                          // ),
+                                          //SizedBox(width: 10,),
+                                          Text(
+                                            'View Order',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 18),
+                                          ),
+                                          Text(
+                                            '(click at collection point)',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 18),
+                                          )
+                                        ],
+                                      ),
+                                    )),
+                              ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Divider(
-                          color: Colors.deepOrange,
-                          thickness: 2,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
                           child: Row(
                             children: [
-                               if (sttn == '101' ||
-                                        sttn == '102' ||
-                                        sttn == '105' ||
-                                        sttn == '106')(
-                                 Icon(
-                                  Icons.cancel_rounded,
-                                  size: 40,
-                                  color: Colors.red[900],
-                                )
-                              )else(
-                                 Icon(
-                                  Icons.check_circle,
-                                  size: 40,
-                                  color: Colors.green,
-                                )
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Order on Hold',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                              Spacer(),
-                              Visibility(
-                                visible: sttn == '1' || sttn == '0'  ? true:false,
+                              Expanded(
                                 child: GestureDetector(
-                                  onTap: () async {
-                                    setState(() {
-                                      // _cancelorder();
-                                      confirmDialog('Cancel order',
-                                          'Are you sure you want to cancel this order?');
-                                    });
+                                  onTap: () {
+                                if (StoreID == outletid) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MenuPage(outletid,
+                                                outletName, outletDesciption)),
+                                  );
+                                } else {
+                                  myOrder = [];
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MenuPage(outletid,
+                                                outletName, outletDesciption)),
+                                  );
+                                }
                                   },
                                   child: Container(
                                       width: 90,
+                                      height: 50,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                         color: Colors.transparent,
@@ -1075,495 +1555,27 @@ class _OrderDetailsState extends State<OrderDetails> {
                                           width: 2.0,
                                         ),
                                       ),
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
                                       child: Center(
                                           child: Text(
-                                        'Cancel',
+                                        'NEW ORDER',
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 14),
+                                            color: Colors.white, fontSize: 20),
                                       ))),
                                 ),
-                              )
-                            ],
-                          ),
-                        ),
-                        // Divider(),
-                        Visibility(
-                            visible: sttn == '105'||sttn == '101' ? true : false,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 112,
-                                ),
-                                Icon(
-                                  Icons.cancel_schedule_send_outlined,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  'Payment Failed.',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                ),
-                              ],
-                            )),
-                            Visibility(
-                            visible: sttn == '102' ? true : false,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 112,
-                                ),
-                                Icon(
-                                  Icons.cancel_schedule_send_outlined,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  'Order is cancelled by the user.',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                ),
-                              ],
-                            )),
-                             Visibility(
-                            visible: sttn == '106' ? true : false,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 112,
-                                ),
-                                Icon(
-                                  Icons.cancel_schedule_send_outlined,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  'Payment is cancelled by the user.',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                ),
-                              ],
-                            )),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              if (sttn == '2' || sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
-                                 Icon(
-                                  Icons.check_circle,
-                                  size: 40,
-                                  color: Colors.green,
-                                )
-                              )else if(sttn == '1' || sttn == '0' )(
-                                 Icon(
-                                  Icons.access_time_rounded,
-                                  size: 40,
-                                  color: Colors.deepOrange,
-                                )
-                              )else (
-                                 Icon(
-                                  Icons.cancel_rounded,
-                                  size: 40,
-                                  color: Colors.red[900],
-                                )
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Order Accepted',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),Visibility(
-                            visible: sttn == '103' ? true : false,
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 112,
-                                ),
-                                Icon(
-                                  Icons.cancel_schedule_send_outlined,
-                                  size: 20,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text(
-                                  'Order is rejected by the store.',
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                ),
-                              ],
-                            )),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                             if ( sttn == '3' ||sttn == '4' ||sttn == '5'||sttn == '104')(
-                                 Icon(
-                                  Icons.check_circle,
-                                  size: 40,
-                                  color: Colors.green,
-                                )
-                              )else if(sttn == '1' || sttn == '0'||sttn == '2'  )(
-                                 Icon(
-                                  Icons.access_time_rounded,
-                                  size: 40,
-                                  color: Colors.deepOrange,
-                                )
-                              )else (
-                                 Icon(
-                                  Icons.cancel_rounded,
-                                  size: 40,
-                                  color: Colors.red[900],
-                                )
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Order Process',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                             if (sttn == '4' ||sttn == '5'||sttn == '104')(
-                                 Icon(
-                                  Icons.check_circle,
-                                  size: 40,
-                                  color: Colors.green,
-                                )
-                              )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
-                                 Icon(
-                                  Icons.access_time_rounded,
-                                  size: 40,
-                                  color: Colors.deepOrange,
-                                )
-                              )else (
-                                 Icon(
-                                  Icons.cancel_rounded,
-                                  size: 40,
-                                  color: Colors.red[900],
-                                )
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Preparing Order',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                          width: MediaQuery.of(context).size.width,
-                          height: 50,
-                          child: Row(
-                            children: [
-                               if (sttn == '4' ||sttn == '5'||sttn == '104')(
-                                 Icon(
-                                  Icons.check_circle,
-                                  size: 40,
-                                  color: Colors.green,
-                                )
-                              )else if(sttn == '1' || sttn == '0'||sttn == '2' || sttn == '3' )(
-                                 Icon(
-                                  Icons.access_time_rounded,
-                                  size: 40,
-                                  color: Colors.deepOrange,
-                                )
-                              )else (
-                                 Icon(
-                                  Icons.cancel_rounded,
-                                  size: 40,
-                                  color: Colors.red[900],
-                                )
-                              ),
-                              SizedBox(
-                                width: 20,
-                              ),
-                              Text(
-                                'Collect Order',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        //Spacer(),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Visibility(
-                          visible: sttn == '5' ? true : false,
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                            width: MediaQuery.of(context).size.width,
-                            height: 50,
-                            child: Row(
-                              children: [
-                                Icon(Icons.check_circle,
-                                    size: 40, color: Colors.green),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Text(
-                                  'Complete',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 18),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        // Visibility(
-                        //   visible: sttn == '101' ||
-                        //           sttn == '102' ||
-                        //           sttn == '103' ||
-                        //           sttn == '104' ||
-                        //           sttn == '105'
-                        //       ? true
-                        //       : false,
-                        //   child: Container(
-                        //     padding: EdgeInsets.fromLTRB(50, 0, 20, 0),
-                        //     width: MediaQuery.of(context).size.width,
-                        //     height: 50,
-                        //     child: Row(
-                        //       children: [
-                        //         Icon(
-                        //           Icons.access_time_rounded,
-                        //           size: 40,
-                        //           color: Colors.deepOrange,
-                        //         ),
-                        //         SizedBox(
-                        //           width: 20,
-                        //         ),
-                        //         Text(
-                        //           state,
-                        //           style: TextStyle(
-                        //               color: Colors.white, fontSize: 18),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height / 3,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.black12,
-                      child: Container(
-                        height: MediaQuery.of(context).size.height / 3,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.grey.withOpacity(.5),
-                        padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Time will start when your order is ready',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      'TIME LEFT TO',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    Text(
-                                      'COLLECT',
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                  ],
-                                ),
-                                Spacer(),
-                                Text(
-                                  mins.toString() + ':' + secs.toString(),
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'min',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 30),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: FlatButton(
-                                height: 50,
-                                minWidth: double.infinity,
-                                color: Colors.deepOrange,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                onPressed: () {
-                                  if (sttn == '2' ||
-                                      sttn == '3' ||
-                                      sttn == '4' ||
-                                      sttn == '5') {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MoreDetails(
-                                              code, byw, outletName)),
-                                    );
-                                  }
-                                },
-                                child: Container(
-                                  height: 70,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Image.asset(
-                                      //   'assets/images/applelogo.png',
-                                      //   height: 30.0,
-                                      //   width: 30.0,
-                                      // ),
-                                      //SizedBox(width: 10,),
-                                      Text(
-                                        'View Order',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
-                                      ),
-                                      Text(
-                                        '(click at collection point)',
-                                        style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
-                                      )
-                                    ],
-                                  ),
-                                )),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () {
-                            if (StoreID == outletid) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MenuPage(outletid,
-                                            outletName, outletDesciption)),
-                              );
-                            } else {
-                              myOrder = [];
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        MenuPage(outletid,
-                                            outletName, outletDesciption)),
-                              );
-                            }
-                              },
-                              child: Container(
-                                  width: 90,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.transparent,
-                                    border: Border.all(
-                                      color: Colors
-                                          .white, //                   <--- border color
-                                      width: 2.0,
-                                    ),
-                                  ),
-                                  padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                  child: Center(
-                                      child: Text(
-                                    'NEW ORDER',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 20),
-                                  ))),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              )),
+                      )
+                    ],
+                  )),
+            ),
+            if(outletName == '')
+            Container(color: Colors.white10.withOpacity(.5), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
+             child: Center(child: CircularProgressIndicator(),),)
+            ],
+          ),
         ),
       ),
     );
