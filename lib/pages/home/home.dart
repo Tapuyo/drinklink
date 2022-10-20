@@ -428,6 +428,8 @@ try{
     for (var u in jsondata) {
       if (setext == '') {
         print(u['name']);
+        print(u['address']);
+
         String id,
             name,
             address,
@@ -486,7 +488,8 @@ try{
         myList.add(store);
       } else {
         String storename = u['name'].toString().toLowerCase();
-        if (storename.contains(setext)) {
+        String storeaddress = u['address'].toString().toLowerCase();
+        if (storename.contains(setext) || storeaddress.contains(setext) ) {
           print(u['name']);
           String id,
               name,
