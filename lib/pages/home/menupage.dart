@@ -743,9 +743,9 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       stoken = token;
     }
-    if(stoken == _token){
-    uName = Prefs.getString('uname') ?? '';
-    }else{
+    if (stoken == _token) {
+      uName = Prefs.getString('uname') ?? '';
+    } else {
       uName = "Guest Mode" ?? '';
     }
 
@@ -5932,12 +5932,15 @@ class _MenuPageState extends State<MenuPage> {
     for (var i = 0; i < myOrder.length; i++) {
       PayOrder ord = PayOrder(myOrder[i].drinkId.toString(),
           myOrder[i].CatId.toString(), myOrder[i].origPrice.toString());
+      List<PayMixer> mymixer = [];
       PayMixer ord1;
-
+      List strings = [];
       for (var jo = 0; jo < myOrder[i].mxir.length; jo++) {
         if (myOrder[i].mxir[jo].id.toString() != '') {
           ord1 = PayMixer(myOrder[i].mxir[jo].id.toString(),
               myOrder[i].mxir[jo].price.toString());
+          mymixer.add(ord1);
+          strings.add(ord1);
           for (var j = 0; j < myOrder[i].mxir.length; j++) {
             print(myOrder[i].mxir[j].id.toString());
           }
@@ -5945,11 +5948,11 @@ class _MenuPageState extends State<MenuPage> {
           ord1 = null;
         }
       }
-
+      print(strings);
       double price = double.parse(myOrder[i].Quant.toString()) *
           double.parse(myOrder[i].Price.toString());
       PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(),
-          price.toStringAsFixed(2), myOrder[i].aIce, ord, ord1);
+          price.toStringAsFixed(2), myOrder[i].aIce, ord, mymixer);
 
       String jsonUser = jsonEncode(pydr);
 
@@ -6064,7 +6067,8 @@ class _MenuPageState extends State<MenuPage> {
           json.decode(response.body)['id'].toString(),
           json.decode(response.body)['paymentLink'].toString(),
           json.decode(response.body)['orderReference'].toString(),
-          json.decode(response.body)['paymentOrderCode'].toString(),uname);
+          json.decode(response.body)['paymentOrderCode'].toString(),
+          uname);
     } else {
       print('error');
       print(response.statusCode.toString());
@@ -6200,8 +6204,8 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  getPaymentLink(
-      String orderID, String url, String reference, String paymentCode, String uname) async {
+  getPaymentLink(String orderID, String url, String reference,
+      String paymentCode, String uname) async {
     Prefs.load();
     double price = Prefs.getDouble('Price');
     String maskedPan = Prefs.getString('maskedPan');
@@ -6316,7 +6320,7 @@ class _MenuPageState extends State<MenuPage> {
           finaltot = 0;
           myCartFuture = getOrder();
           chrx = 0;
-        }); 
+        });
         setNotif(token, uname);
         Navigator.pushReplacement(
           context,
@@ -6901,16 +6905,17 @@ class PayDrinks {
   String quantity;
   String price;
   PayOrder payOrd;
-  PayMixer mixOrd;
+  List<PayMixer> mixOrd = [];
   bool ice;
 
   PayDrinks(this.quantity, this.price, this.ice, [this.payOrd, this.mixOrd]);
 
   Map toJson() {
+    var mix = jsonEncode(this.mixOrd);
     Map author = this.payOrd != null ? this.payOrd.toJson() : null;
-    Map mi = this.mixOrd != null ? this.mixOrd.toJson() : null;
-
-    if (mi == null) {
+    // Map mi = mix.map != null ? mix.length : null;
+    print(this.mixOrd);
+    if (mix == null) {
       return {
         'drink': author,
         'quantity': quantity,
@@ -6920,7 +6925,7 @@ class PayDrinks {
     } else {
       return {
         'drink': author,
-        'selectedMixers': [mi],
+        'selectedMixers': this.mixOrd,
         'quantity': quantity,
         'price': price,
         'withIce': ice
