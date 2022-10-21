@@ -949,7 +949,7 @@ class _OrderDetailsState extends State<OrderDetails> {
               SingleChildScrollView(
               child: Container(
                   color: Colors.transparent,
-                  height: MediaQuery.of(context).size.height - 75,
+                  height: MediaQuery.of(context).size.height - 100,
                   padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
                   child: Stack(
                     children: [
@@ -1401,7 +1401,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          height: MediaQuery.of(context).size.height / 3,
+                          height: MediaQuery.of(context).size.height / 3 - 30,
                           width: MediaQuery.of(context).size.width,
                           color: Colors.black12,
                           child: Container(
@@ -1463,7 +1463,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 70),
                           child: Row(
                             children: [
                               Expanded(
@@ -1487,7 +1487,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       }
                                     },
                                     child: Container(
-                                      height: 70,
+                                      height: 60,
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
@@ -1518,7 +1518,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 30),
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
                           child: Row(
                             children: [
                               Expanded(
@@ -1571,8 +1571,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                     ],
                   )),
             ),
-            if(outletName == '')
-            Container(color: Colors.white10.withOpacity(.5), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
+            if( outletDesciption == '')
+            Container(color: Colors.transparent, width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
              child: Center(child: CircularProgressIndicator(),),)
             ],
           ),
