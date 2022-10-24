@@ -122,8 +122,8 @@ class _helpignPageState extends State<help> {
     final rsult = await connection.send(message);
     if (rsult.toString().contains('Message successfully sent')) {
       Navigator.of(context).pop();
-      _messageDialog('Help Center', 'Your message was sent successfully!', '',
-          'Send Again');
+      _messageDialog('Help Center', 'Your message was sent successfully!',
+          'Close', 'Send Again');
       _clear();
     } else {
       Navigator.of(context).pop();
@@ -434,7 +434,17 @@ class _helpignPageState extends State<help> {
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
                 onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  switch (a) {
+                    case 'Close':
+                      Navigator.of(context, rootNavigator: true).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                      );
+                      break;
+                    default:
+                      Navigator.of(context, rootNavigator: true).pop();
+                  }
                 },
               ),
             if (b != '')
