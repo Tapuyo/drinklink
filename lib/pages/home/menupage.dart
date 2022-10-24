@@ -133,6 +133,7 @@ class _MenuPageState extends State<MenuPage> {
   bool isbname = true;
   bool isbaddress = true;
   bool isemail = true;
+  bool isedit = false;
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -2264,7 +2265,6 @@ class _MenuPageState extends State<MenuPage> {
     bool _isnone = false;
     String none = '';
     bool close = false;
-
     double qty = 0;
     userChecked = [];
     if (newChsmx == null) {
@@ -2345,6 +2345,34 @@ class _MenuPageState extends State<MenuPage> {
                                             children: [
                                               Text(
                                                 "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.deepOrange,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: strings[i].ismSelect == 'true',
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            modsetState(() {
+                                              close = false;
+                                              isedit = true;
+                                              userChecked = [];
+                                              newChsmx = [];
+                                            });
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          width: 100,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Edit",
                                                 style: TextStyle(
                                                     color: Colors.deepOrange,
                                                     fontSize: 16),
@@ -2530,7 +2558,8 @@ class _MenuPageState extends State<MenuPage> {
                                                 if (qty <= 0) {
                                                   strings[i].name = 'None';
                                                 } else {
-                                                  strings[i].name = 'Add Ons';
+                                                  strings[i].name =
+                                                      qty.toStringAsFixed(0);
                                                 }
                                               }
 
@@ -2728,90 +2757,98 @@ class _MenuPageState extends State<MenuPage> {
                                               strings[i].mx[index].name),
                                           onChanged: (val) {
                                             modsetState(() {
-                                              if (val == true) {
-                                                setState(() {
-                                                  // if (newChsmx.length > 0) {
-                                                  //   newChsmx = [];
-                                                  // }
-                                                  userChecked.add(strings[i]
-                                                      .mx[index]
-                                                      .name);
-                                                  chid =
-                                                      strings[i].mx[index].id;
-                                                  chname =
-                                                      strings[i].mx[index].name;
-                                                  chprice = strings[i]
-                                                      .mx[index]
-                                                      .price;
-                                                  qty += 1;
-                                                  close = true;
-                                                  chossenMixerMultiple chs =
-                                                      chossenMixerMultiple(chid,
-                                                          chname, chprice);
-                                                  if (chs.cmid.isNotEmpty) {
-                                                    var isContain =
-                                                        newChsmx.contains(chs);
-                                                    if (isContain == false) {
-                                                      newChsmx.add(chs);
+                                              if (isedit == true) {
+                                                if (val == true) {
+                                                  setState(() {
+                                                    // if (newChsmx.length > 0) {
+                                                    //   newChsmx = [];
+                                                    // }
+                                                    userChecked.add(strings[i]
+                                                        .mx[index]
+                                                        .name);
+                                                    chid =
+                                                        strings[i].mx[index].id;
+                                                    chname = strings[i]
+                                                        .mx[index]
+                                                        .name;
+                                                    chprice = strings[i]
+                                                        .mx[index]
+                                                        .price;
+                                                    qty += 1;
+                                                    close = true;
+                                                    chossenMixerMultiple chs =
+                                                        chossenMixerMultiple(
+                                                            chid,
+                                                            chname,
+                                                            chprice);
+                                                    if (chs.cmid.isNotEmpty) {
+                                                      var isContain = newChsmx
+                                                          .contains(chs);
+                                                      if (isContain == false) {
+                                                        newChsmx.add(chs);
+                                                      }
                                                     }
-                                                  }
-                                                  print(newChsmx);
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  userChecked.remove(strings[i]
-                                                      .mx[index]
-                                                      .name);
-                                                  chid =
-                                                      strings[i].mx[index].id;
-                                                  chname =
-                                                      strings[i].mx[index].name;
-                                                  chprice = strings[i]
-                                                      .mx[index]
-                                                      .price;
-                                                  if (qty > 0) {
-                                                    qty = qty - 1;
-                                                  }
-                                                  close = true;
-                                                  chossenMixerMultipleRemoved
-                                                      chs =
-                                                      chossenMixerMultipleRemoved(
-                                                          chid,
-                                                          chname,
-                                                          chprice);
-                                                  if (chs.cmid.isNotEmpty) {
-                                                    var isContain =
+                                                    print(newChsmx);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    userChecked.remove(
+                                                        strings[i]
+                                                            .mx[index]
+                                                            .name);
+                                                    chid =
+                                                        strings[i].mx[index].id;
+                                                    chname = strings[i]
+                                                        .mx[index]
+                                                        .name;
+                                                    chprice = strings[i]
+                                                        .mx[index]
+                                                        .price;
+                                                    if (qty > 0) {
+                                                      qty = qty - 1;
+                                                    }
+                                                    close = true;
+                                                    chossenMixerMultipleRemoved
+                                                        chs =
+                                                        chossenMixerMultipleRemoved(
+                                                            chid,
+                                                            chname,
+                                                            chprice);
+                                                    if (chs.cmid.isNotEmpty) {
+                                                      var isContain =
+                                                          newChsmxRemoved
+                                                              .contains(chs);
+                                                      if (isContain == false) {
                                                         newChsmxRemoved
-                                                            .contains(chs);
-                                                    if (isContain == false) {
-                                                      newChsmxRemoved.add(chs);
+                                                            .add(chs);
+                                                      }
                                                     }
-                                                  }
-                                                  List<chossenMixer> newChs =
-                                                      myDrinks[ind].ChMixer;
-                                                  if (newChsmxRemoved.length >
-                                                      0) {
-                                                    for (var ia = 0;
-                                                        ia <
-                                                            newChsmxRemoved
-                                                                .length;
-                                                        ia++) {
-                                                      newChsmx.removeWhere(
-                                                          (element) =>
-                                                              element.cname ==
-                                                              newChsmxRemoved[
-                                                                      ia]
-                                                                  .cname);
-                                                      newChs.removeWhere(
-                                                          (element) =>
-                                                              element.cname ==
-                                                              newChsmxRemoved[
-                                                                      ia]
-                                                                  .cname);
+                                                    List<chossenMixer> newChs =
+                                                        myDrinks[ind].ChMixer;
+                                                    if (newChsmxRemoved.length >
+                                                        0) {
+                                                      for (var ia = 0;
+                                                          ia <
+                                                              newChsmxRemoved
+                                                                  .length;
+                                                          ia++) {
+                                                        newChsmx.removeWhere(
+                                                            (element) =>
+                                                                element.cname ==
+                                                                newChsmxRemoved[
+                                                                        ia]
+                                                                    .cname);
+                                                        newChs.removeWhere(
+                                                            (element) =>
+                                                                element.cname ==
+                                                                newChsmxRemoved[
+                                                                        ia]
+                                                                    .cname);
+                                                      }
                                                     }
-                                                  }
-                                                  print(newChsmx);
-                                                });
+                                                    print(newChsmx);
+                                                  });
+                                                }
                                               }
                                             });
                                           },
