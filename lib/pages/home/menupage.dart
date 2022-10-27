@@ -2484,7 +2484,8 @@ class _MenuPageState extends State<MenuPage> {
                                               if (close == true) {
                                                 List<chossenMixer> newChs =
                                                     myDrinks[ind].ChMixer;
-                                                newChs = [];
+                                                // newChs = [];
+                                                print(newChs);
                                                 if (newChsmxRemoved.length >
                                                     0) {
                                                   for (var ia = 0;
@@ -2504,41 +2505,51 @@ class _MenuPageState extends State<MenuPage> {
                                                                 .cname);
                                                   }
                                                 }
-                                                bool isContain = false;
-                                                for (var ib = 0;
-                                                    ib < newChsmx.length;
-                                                    ib++) {
-                                                  for (var ic = 0;
-                                                      ic < newChs.length;
-                                                      ic++) {
-                                                    if (newChsmx[ib].cname ==
-                                                        newChs[ic].cname) {
-                                                      isContain = true;
-                                                      break;
-                                                    }
+                                                // bool isContain = false;
+                                                // for (var ib = 0;
+                                                //     ib < newChsmx.length;
+                                                //     ib++) {
+                                                //   for (var ic = 0;
+                                                //       ic < newChs.length;
+                                                //       ic++) {
+                                                //     if (newChsmx[ib].cname ==
+                                                //         newChs[ic].cname) {
+                                                //       isContain = true;
+                                                //       break;
+                                                //     }
+                                                //   }
+                                                // }
+
+                                                // if (isContain == false) {
+                                                // newChsmx.remove(newChsmxRemoved);
+                                                print(newChsmx);
+                                                // newChsmx.removeWhere(
+                                                //     (element) =>
+                                                //         element.indId ==
+                                                //         strings[i]
+                                                //             .id
+                                                //             .toString());
+
+                                                for (var i = 0;
+                                                    i < newChsmx.length;
+                                                    i++) {
+                                                  newChs.removeWhere(
+                                                      (element) =>
+                                                          element.cmid ==
+                                                          newChsmx[i].cmid);
+                                                  chossenMixer chs =
+                                                      chossenMixer(
+                                                          strings[i]
+                                                              .id
+                                                              .toString(),
+                                                          newChsmx[i].cmid,
+                                                          newChsmx[i].cname,
+                                                          newChsmx[i].cprice);
+                                                  if (chs.cmid.isNotEmpty) {
+                                                    newChs.add(chs);
                                                   }
                                                 }
-
-                                                if (isContain == false) {
-                                                  // newChsmx.remove(newChsmxRemoved);
-                                                  print(newChsmx);
-
-                                                  for (var i = 0;
-                                                      i < newChsmx.length;
-                                                      i++) {
-                                                    chossenMixer chs =
-                                                        chossenMixer(
-                                                            strings[i]
-                                                                .id
-                                                                .toString(),
-                                                            newChsmx[i].cmid,
-                                                            newChsmx[i].cname,
-                                                            newChsmx[i].cprice);
-                                                    if (chs.cmid.isNotEmpty) {
-                                                      newChs.add(chs);
-                                                    }
-                                                  }
-                                                }
+                                                // }
 
                                                 myDrinks[ind].ChMixer = newChs;
 
@@ -2896,6 +2907,7 @@ class _MenuPageState extends State<MenuPage> {
                                         return GestureDetector(
                                           onTap: () {
                                             setState(() {
+                                              indId = strings[i].id.toString();
                                               chid = strings[i].mx[index].id;
                                               chname =
                                                   strings[i].mx[index].name;
