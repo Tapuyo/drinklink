@@ -2484,7 +2484,7 @@ class _MenuPageState extends State<MenuPage> {
                                               if (close == true) {
                                                 List<chossenMixer> newChs =
                                                     myDrinks[ind].ChMixer;
-                                                // newChs = [];
+                                                newChs = [];
                                                 if (newChsmxRemoved.length >
                                                     0) {
                                                   for (var ia = 0;
@@ -2581,6 +2581,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     chmqty.add(chqty);
                                                   }
                                                 }
+
                                                 qty = double.parse(
                                                     chmqty.length.toString());
 
