@@ -474,7 +474,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '5') {
           setState(() {
             _start = 0;
-                      _timer.cancel();
+                      // _timer.cancel();
           stt = 'Completed';
                     });
         } else if (cState == '101') {
