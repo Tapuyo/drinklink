@@ -8,49 +8,49 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-
-
-
 class termPage extends StatefulWidget {
-
-
   @override
   WebViewExampleState createState() => WebViewExampleState();
 }
-class termsSign extends StatefulWidget {
 
+class termsSign extends StatefulWidget {
+  String fname, lname, email, uname, pwd, cpwd;
+  bool checkedValuex;
+
+  termsSign(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd,
+      this.checkedValuex);
 
   @override
   WebViewExampleState1 createState() => WebViewExampleState1();
 }
 
-
 class WebViewExampleState extends State<termPage> {
-  String murl = 'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
+  String murl =
+      'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
   final flutterWebViewPlugin = FlutterWebviewPlugin();
-
 
   @override
   void initState() {
     super.initState();
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebViewPlugin.onUrlChanged.listen((String url) {
-
-    });
+    flutterWebViewPlugin.onUrlChanged.listen((String url) {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
-
       url: murl,
       appBar: new AppBar(
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text("Terms of Service",style: TextStyle(fontSize: 20, color: Colors.white),),
-        leading:  IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+        title: new Text(
+          "Terms of Service",
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -58,7 +58,6 @@ class WebViewExampleState extends State<termPage> {
             );
           },
         ),
-
       ),
       initialChild: Container(
         color: Colors.white,
@@ -68,43 +67,50 @@ class WebViewExampleState extends State<termPage> {
       ),
     );
   }
-
 }
 
 class WebViewExampleState1 extends State<termsSign> {
-  String murl = 'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
+  String murl =
+      'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
   final flutterWebViewPlugin = FlutterWebviewPlugin();
-
 
   @override
   void initState() {
     super.initState();
     final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebViewPlugin.onUrlChanged.listen((String url) {
-
-    });
+    flutterWebViewPlugin.onUrlChanged.listen((String url) {});
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     return WebviewScaffold(
-
       url: murl,
       appBar: new AppBar(
         backgroundColor: Color(0xFF2b2b61),
-        title: new Text("Terms of Service",style: TextStyle(fontSize: 20, color: Colors.white),),
-        leading:  IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white,),
+        title: new Text(
+          "Terms of Service",
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => SignUp()),
+              MaterialPageRoute(
+                  builder: (context) => SignUp(
+                      widget.fname,
+                      widget.lname,
+                      widget.email,
+                      widget.uname,
+                      widget.pwd,
+                      widget.cpwd,
+                      widget.checkedValuex)),
             );
           },
         ),
-
       ),
       initialChild: Container(
         color: Colors.white,
@@ -114,6 +120,4 @@ class WebViewExampleState1 extends State<termsSign> {
       ),
     );
   }
-
 }
-

@@ -85,23 +85,23 @@ class _MoreDetailsState extends State<MoreDetails> {
       } else if (cState == '3') {
         stt = 'Payment Processed';
       } else if (cState == '4') {
-        setState(() {
-          String mdate =
-              json.decode(response.body)[i]['timeToCollect'].toString();
-          DateTime parseDate =
-              new DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(mdate);
-          var inputDate = DateTime.parse(parseDate.toString());
-          setState(() {
-            int mmint = inputDate.minute * 60;
-            int msec = inputDate.second;
-
-            _start = mmint + msec;
-          });
-          if (_start > 0) {
-            startTimer();
+         setState(() {
+          String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
+          
+          print('time to collect:' + timeToCollect);
+          final format = DateFormat('hh:mm:ss');
+          final dt = format.parse(timeToCollect, true);
+          print(dt.toString());
+          double sec = Duration(milliseconds: dt.millisecondsSinceEpoch).inMilliseconds / 1000;
+        
+          print('in seconds');
+          print(sec.toString());
+         
+                       if (mounted) {
+            _start = int.parse(sec.round().toString()) ?? 0;
           }
-        });
-        stt = 'Ready';
+                    });
+          stt = 'Ready';
       } else if (cState == '5') {
         _timer.cancel();
         stt = 'Collected';
@@ -125,9 +125,13 @@ class _MoreDetailsState extends State<MoreDetails> {
         _timer.cancel();
       }
     }
+    if (_start > 0) {
+      startTimer();
+    }
   }
 
   void startTimer() {
+    print('kjaskjdhakjsdhkjahsd');
     const oneSec = const Duration(seconds: 1);
     _timer = new Timer.periodic(
       oneSec,

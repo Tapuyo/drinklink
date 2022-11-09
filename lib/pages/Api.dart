@@ -1,5 +1,4 @@
-import 'dart:async';
-import 'dart:io';
+import 'package:driklink/pages/home/menupage.dart';
 
 class ApiCon {
   //pre production
@@ -24,7 +23,7 @@ class ApiCon {
   }
 
   static String paymenturl() {
-    bool isPro = false;
+    bool isPro = true;
 
     String url;
     String prepro = 'https://paypage.sandbox.ngenius-payments.com';
@@ -37,3 +36,6 @@ class ApiCon {
     return url;
   }
 }
+
+List<Order> myOrder = [];
+String StoreID = '';

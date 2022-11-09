@@ -9,12 +9,14 @@ import 'package:driklink/pages/login/signin.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:driklink/auth_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:provider/provider.dart';
+import 'package:driklink/pages/login/help.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -57,11 +59,17 @@ class _HomePageState extends State<HomePage> {
     } catch (e) {}
   }
 
+  final _focusNode = FocusNode();
+  bool isSearching = false;
+
   void initState() {
     Prefs.load();
     super.initState();
     _ontap = true;
-
+    _focusNode.addListener(() {
+      print("Has focus: ${_focusNode.hasFocus}");
+      isSearching = _focusNode.hasFocus;
+    });
     // myList = [];
     // myStore = getStore();
 
@@ -183,89 +191,158 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-    try {
-      Map<String, String> headers = {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + mytoken
-      };
-      final response = await http.get(
-          ApiCon.baseurl() +
-              '/users/currentUser/orders?pageSize=5&pageNumber=1',
-          headers: headers);
-      var jsondata = json.decode(response.body);
+try{
+    Map<String, String> headers = {
+      "Content-Type": "application/json",
+      'Authorization': 'Bearer ' + mytoken
+    };
+    final response = await http.get(
+        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        headers: headers);
+    var jsondata = json.decode(response.body);
 
-      for (var i = 0; i < jsondata.length; i++) {
-        String cState =
-            json.decode(response.body)[i]['currentState'].toString();
-        //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
-        var jsondata1 = await json.decode(response.body)[i]['items'];
+    for (var i = 0; i < jsondata.length; i++) {
+      String cState = json.decode(response.body)[i]['currentState'].toString();
+      String id = json.decode(response.body)[i]['id'].toString();
+      String ref = json.decode(response.body)[i]['orderReference'].toString();
+      //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
+      var jsondata1 = await json.decode(response.body)[i]['items'];
 
-        List<MyItems> newItem = [];
-        for (var x in jsondata1) {
-          MyItems nt =
-              new MyItems(x['drink']['name'], x['quantity'].toString());
+      List<MyItems> newItem = [];
+      for (var x in jsondata1) {
+        MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
 
-          newItem.add(nt);
-        }
-        String st = json.decode(response.body)[i]['timestamp'].toString();
-        String mprice = json.decode(response.body)[i]['finalPrice'].toString();
+        newItem.add(nt);
+      }
+      String st = json.decode(response.body)[i]['timestamp'].toString();
+      String mprice = json.decode(response.body)[i]['finalPrice'].toString();
 
-        String dt = '';
-        String stt = '';
-        final toDayDate = DateTime.now();
-        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-        if (different < 60) {
+      String dt = '';
+      String stt = '';
+      final toDayDate = DateTime.now();
+      var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
+      if (different < 60) {
+        if (toDayDate.difference(DateTime.parse(st)).inMinutes <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+              ' min';
+        } else {
           dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
               ' mins';
-        } else if (different > 60 && different < 1440) {
+        }
+      } else if (different > 60 && different < 1440) {
+        if (toDayDate.difference(DateTime.parse(st)).inHours <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+              ' hour';
+        } else {
           dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
               ' hours';
+        }
+      } else {
+        if (toDayDate.difference(DateTime.parse(st)).inDays <= 1) {
+          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+              ' day';
         } else {
           dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
               ' days';
         }
-        String bar = json.decode(response.body)[i]['tableId'].toString();
-        // String cState = json.decode(response.body)[i]['currentState'].toString();
-        if (cState == '0') {
-          stt = 'Order Created';
-        } else if (cState == '1') {
-          stt = 'Pending';
-        } else if (cState == '2') {
-          stt = 'Accepted';
-        } else if (cState == '3') {
-          stt = 'Payment Processed';
-        } else if (cState == '4') {
-          stt = 'Ready';
-        } else if (cState == '5') {
-          stt = 'Completed';
-        } else if (cState == '101') {
-          stt = 'Failed';
-        } else if (cState == '102') {
-          stt = 'Canceled';
-        } else if (cState == '103') {
-          stt = 'Rejected';
-        } else if (cState == '104') {
-          stt = 'Not Collected';
-        } else if (cState == '105') {
-          stt = 'Payment Failed';
-        }
-
-        String outletname = await getFacilityInfo(
-            json.decode(response.body)[i]['facilityId'].toString());
-        print("OUTLET NAME: " + outletname);
-        setState(() {
-          Order myorder = new Order(dt.toString(), newItem, bar, stt, cState,
-              outletname, newItem.length.toString(), mprice);
-
-          orderList.add(myorder);
-        });
-        // }
-
       }
-      return orderList;
+      String bar = json.decode(response.body)[i]['tableId'].toString();
+
+      // String cState = json.decode(response.body)[i]['currentState'].toString();
+      if (cState == '0') {
+        stt = 'Order Created';
+      } else if (cState == '1') {
+        stt = 'Pending';
+      } else if (cState == '2') {
+        stt = 'Accepted';
+      } else if (cState == '3') {
+        stt = 'Payment Processed';
+      } else if (cState == '4') {
+        stt = 'Ready';
+      } else if (cState == '5') {
+        stt = 'Completed';
+      } else if (cState == '101') {
+        stt = 'Failed';
+      } else if (cState == '102') {
+        stt = 'Canceled';
+      } else if (cState == '103') {
+        stt = 'Rejected';
+      } else if (cState == '104') {
+        stt = 'Not Collected';
+      } else if (cState == '105') {
+        stt = 'Payment Failed';
+      } else if (cState == '106') {
+        stt = 'Payment Cancelled';
+      }
+
+      String outletname =  json.decode(response.body)[i]['facilityName'].toString();
+      
+      String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
+      final format = DateFormat('hh:mm:ss');
+      final dtCollect = format.parse(timeToCollect, true);
+
+      double sec = Duration(milliseconds: dtCollect.millisecondsSinceEpoch)
+              .inMilliseconds /
+          1000;
+
+      print('in seconds');
+      print(sec.toString());
+
+      if (int.parse(sec.round().toString()) > 0) {
+        startTimer(int.parse(sec.round().toString()) + 60 ?? 0);
+      } else {
+        startTimer(0);
+      }
+
+      setState(() {
+        Order myorder = new Order(
+            json.decode(response.body)[i]['id'].toString(),
+            json.decode(response.body)[i]['orderReference'].toString(),
+            dt.toString(),
+            newItem,
+            bar,
+            stt,
+            cState,
+            outletname,
+            newItem.length.toString(),
+            mprice,
+            timeToCollect.toString());
+
+        orderList.add(myorder);
+      });
+      // }
+
+    }
+    return orderList;
     } catch (e) {
       return null;
     }
+  }
+
+  String mins = '00';
+  String secs = '00';
+  String hours = '00';
+  void startTimer(int _start) {
+    setState(() {
+      if (_start > 60) {
+        int val = (_start ~/ 60) - 1;
+        mins = val.ceil().toStringAsFixed(0);
+        int rem = _start % 60;
+        if (rem < 10) {
+          secs = '0' + rem.toString();
+        } else {
+          secs = rem.toString();
+        }
+      } else {
+        hours = '';
+        mins = '00';
+        if (_start < 10) {
+          secs = '0' + _start.toString();
+        } else {
+          secs = _start.toString();
+        }
+      }
+    });
   }
 
   Future<String> getFacilityInfo(String id) async {
@@ -351,6 +428,8 @@ class _HomePageState extends State<HomePage> {
     for (var u in jsondata) {
       if (setext == '') {
         print(u['name']);
+        print(u['address']);
+
         String id,
             name,
             address,
@@ -409,7 +488,8 @@ class _HomePageState extends State<HomePage> {
         myList.add(store);
       } else {
         String storename = u['name'].toString().toLowerCase();
-        if (storename.contains(setext)) {
+        String storeaddress = u['address'].toString().toLowerCase();
+        if (storename.contains(setext) || storeaddress.contains(setext) ) {
           print(u['name']);
           String id,
               name,
@@ -488,11 +568,15 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
+    }
+    if(stoken == _token){
+    uName = Prefs.getString('uname') ?? '';
+    }else{
+      uName = "Guest Mode" ?? '';
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -734,24 +818,8 @@ class _HomePageState extends State<HomePage> {
                                     builder: (context) => SignIn()),
                               );
                             } else {
-                              context.read<AuthProvider>().setToken('');
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomePage()),
-                              );
-                              setState(() {
-                                setState(() {
-                                  Prefs.load();
-                                  Prefs.setString('token', '');
-                                  Prefs.setString('uname', 'none');
-                                  Prefs.setString('bfNamenone', '');
-                                  Prefs.setString('blMamenone', '');
-                                  Prefs.setString('billNamenone', '');
-                                  Prefs.setString('billAddnone', '');
-                                  Prefs.setString('billEmailnone', '');
-                                });
-                              });
+                              _showDialogout("Drinklink",
+                                  "Are you sure you want to log out?");
                             }
                           },
                           child: Container(
@@ -782,6 +850,55 @@ class _HomePageState extends State<HomePage> {
                                               stoken.isEmpty
                                           ? "Sign In / Register"
                                           : "Sign Out (" + uName + ")",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                              _scaffoldKey.currentState.openDrawer();
+                            } else {
+                              _scaffoldKey.currentState.openEndDrawer();
+                            }
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => help()),
+                            );
+                          },
+                          child: Container(
+                            height: 50,
+                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Icon(
+                                  MaterialCommunityIcons.help_circle_outline,
+                                  size: 30,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                new Expanded(
+                                  flex: 1,
+                                  child: new SingleChildScrollView(
+                                    scrollDirection:
+                                        Axis.horizontal, //.horizontal
+                                    child: new Text(
+                                      'Help Centre',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
@@ -854,9 +971,7 @@ class _HomePageState extends State<HomePage> {
                       padding: EdgeInsets.fromLTRB(0, 60, 0, 30),
                       child: SingleChildScrollView(
                         child: SizedBox(
-                          height: _ontap == true
-                              ? MediaQuery.of(context).size.height - 300
-                              : MediaQuery.of(context).size.height - 600,
+                          height: MediaQuery.of(context).size.height - 320,
                           child: mybody(),
                         ),
                       ),
@@ -864,8 +979,16 @@ class _HomePageState extends State<HomePage> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(14.0),
+                                topRight: Radius.circular(14.0)),
+                            color: isSearching
+                                ? Colors.grey[900].withOpacity(.8)
+                                : Colors.transparent),
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 100),
                         child: TextField(
+                          focusNode: _focusNode,
                           style: TextStyle(
                             fontSize: 20.0,
                             color: Colors.white70,
@@ -944,6 +1067,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   mybodyRec() {
+    //
     return Container(
       padding: EdgeInsets.fromLTRB(10, 0, 10, 20),
       height: 250,
@@ -957,152 +1081,226 @@ class _HomePageState extends State<HomePage> {
                     ),
               );
             } else {
-              return ListView.builder(
-                  itemCount: snapshot.data.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => OrderDetails('')),
-                        );
-                      },
-                      child: Container(
-                          height: 500,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFF2b2b61).withOpacity(.5),
-                          ),
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    snapshot.data[index].outlet,
-                                    style: TextStyle(
-                                        color: Colors.deepOrange, fontSize: 20),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Order (' +
-                                              snapshot.data[index].itemcount +
-                                              ' item):',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].price + ' AED):',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+              return Container(
+                height: 500,
+                width: 300,
+                child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    OrderDetails(snapshot.data[index].id, '')),
+                          );
+                        },
+                        child: Container(
+                            height: 500,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFF2b2b61).withOpacity(.5),
+                              //color: Colors.white
+                            ),
+                            padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.data[index].outlet,
+                                      style: TextStyle(
+                                          color: Colors.deepOrange,
+                                          fontSize: 20),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Collect before:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].itemcount +
-                                              ' AED):',
-                                          style: TextStyle(
-                                              color: Colors.deepOrange,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Status:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].cState,
-                                          style: TextStyle(
-                                              color: Colors.green,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    Container(
+                                      height: 20,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Order (' +
+                                                snapshot.data[index].itemcount +
+                                                ' item):',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].price + ' AED',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                    height: 20,
-                                    width:
-                                        MediaQuery.of(context).size.width / 2 +
-                                            30,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          'Created:',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 14),
-                                        ),
-                                        Spacer(),
-                                        Text(
-                                          snapshot.data[index].timestamp,
-                                          style: TextStyle(
-                                              color: Colors.deepOrange,
-                                              fontSize: 14),
-                                        ),
-                                      ],
+                                    SizedBox(
+                                      height: 10,
                                     ),
-                                  )
-                                ],
-                              )
-                            ],
-                          )),
-                    );
-                  });
+                                    Container(
+                                      height: 20,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Collect before:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                             mins.toString() + ':' + secs.toString(),
+                                            style: TextStyle(
+                                                color: Colors.deepOrange,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 20,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Status:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].cState,
+                                            style: TextStyle(
+                                                color: Colors.green,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Container(
+                                      height: 20,
+                                      width: MediaQuery.of(context).size.width /
+                                              2 +
+                                          30,
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Created:',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14),
+                                          ),
+                                          Spacer(),
+                                          Text(
+                                            snapshot.data[index].timestamp,
+                                            style: TextStyle(
+                                                color: Colors.deepOrange,
+                                                fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            )),
+                      );
+                    }),
+              );
             }
           }),
+    );
+  }
+
+  _showDialogout(String title, String message) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 15,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          title: Text(
+            title,
+            style: TextStyle(color: Colors.white, fontSize: 25),
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white, fontSize: 18),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            FlatButton(
+              color: Colors.deepPurpleAccent[700],
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
+              child: Text(
+                'Yes',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.read<AuthProvider>().setToken('');
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
+                setState(() {
+                  setState(() {
+                    Prefs.load();
+                    Prefs.setString('token', '');
+                    Prefs.setString('uname', '');
+                    Prefs.setString('bfNamenone', '');
+                    Prefs.setString('blMamenone', '');
+                    Prefs.setString('billNamenone', '');
+                    Prefs.setString('billAddnone', '');
+                    Prefs.setString('billEmailnone', '');
+                  });
+                });
+              },
+            ),
+            FlatButton(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              minWidth: 140,
+              child: Text(
+                'No',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -1124,14 +1322,38 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MenuPage(
-                                  snapshot.data[index].id,
-                                  snapshot.data[index].name,
-                                  snapshot.data[index].address)),
-                        );
+                        if (StoreID == '') {
+                          StoreID = snapshot.data[index].id;
+                          myOrder = [];
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuPage(
+                                    snapshot.data[index].id,
+                                    snapshot.data[index].name,
+                                    snapshot.data[index].address)),
+                          );
+                        } else {
+                          if (StoreID == snapshot.data[index].id) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuPage(
+                                        snapshot.data[index].id,
+                                        snapshot.data[index].name,
+                                        snapshot.data[index].address)));
+                          } else {
+                            StoreID = snapshot.data[index].id;
+                            myOrder = [];
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuPage(
+                                        snapshot.data[index].id,
+                                        snapshot.data[index].name,
+                                        snapshot.data[index].address)));
+                          }
+                        }
                       },
                       child: Container(
                           padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -1145,8 +1367,7 @@ class _HomePageState extends State<HomePage> {
                                   height: 60,
                                   //this will load the image
                                   child: Image.network(ApiCon.baseurl() +
-                                      snapshot.data[index].image)
-                                  ),
+                                      snapshot.data[index].image)),
                               SizedBox(
                                 width: 10,
                               ),
@@ -1192,6 +1413,8 @@ class Store {
 }
 
 class Order {
+  final String id;
+  final String ref;
   final String timestamp;
   final List<MyItems> itemslist;
   final String barid;
@@ -1200,9 +1423,20 @@ class Order {
   final String outlet;
   final String itemcount;
   final String price;
+  final String timeToCollect;
 
-  Order(this.timestamp, this.itemslist, this.barid, this.cState, this.sttn,
-      this.outlet, this.itemcount, this.price);
+  Order(
+      this.id,
+      this.ref,
+      this.timestamp,
+      this.itemslist,
+      this.barid,
+      this.cState,
+      this.sttn,
+      this.outlet,
+      this.itemcount,
+      this.price,
+      this.timeToCollect);
 }
 
 class MyItems {

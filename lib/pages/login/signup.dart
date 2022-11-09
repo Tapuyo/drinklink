@@ -10,6 +10,12 @@ import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/data/pref_manager.dart';
 
 class SignUp extends StatefulWidget {
+  String fname, lname, email, uname, pwd, cpwd;
+  bool checkedValuex;
+
+  SignUp(this.fname, this.lname, this.email, this.uname, this.pwd, this.cpwd,
+      this.checkedValuex);
+
   @override
   _SignPageState createState() => _SignPageState();
 }
@@ -23,9 +29,41 @@ class _SignPageState extends State<SignUp> {
   final fnameController = TextEditingController();
   final lnameController = TextEditingController();
 
+  @override
+  void initState() {
+    fnameController.text = widget.fname ?? '';
+    lnameController.text = widget.lname ?? '';
+    emailController.text = widget.email ?? '';
+    usernameController.text = widget.uname ?? '';
+    passController.text = widget.pwd ?? '';
+    passConfirmController.text = widget.cpwd ?? '';
+    checkedValue = widget.checkedValuex ?? false;
+  }
+
+  updateDefaultSetting() async {
+    Prefs.load();
+    String uName = usernameController.text;
+    String bname = fnameController.text;
+    String blast = lnameController.text;
+    // String badd = billadd.text;
+    String bemail = emailController.text;
+    bool bsendBill = true;
+    Prefs.setString('bfName' + uName, bname.replaceAll(' ', ''));
+    Prefs.setString('blMame' + uName, blast.replaceAll(' ', ''));
+    Prefs.setString('billName' + uName, bname + " " + blast);
+    Prefs.setString('billAdd' + uName, '');
+    Prefs.setString('billEmail' + uName, bemail.replaceAll(' ', ''));
+    Prefs.setBool('bsendBill' + uName + '', bsendBill);
+
+    setState(() {
+      Prefs.setBool('sound' + uName, false);
+      Prefs.setBool('alert' + uName, false);
+    });
+  }
+
   SignUp() async {
-    String euser = usernameController.text;
-    String em = emailController.text;
+    String euser = usernameController.text.trimLeft();
+    String em = emailController.text.trimLeft();
     String pss = passController.text;
     String pssc = passConfirmController.text;
     bool v1 = false, v2 = false, v3 = false, v4 = false;
@@ -41,6 +79,29 @@ class _SignPageState extends State<SignUp> {
     }
     if (pssc.isNotEmpty) {
       v4 = true;
+    }
+
+    if (euser.contains(' ')) {
+      Alert(
+        context: context,
+        title: "Sign up",
+        content: Container(
+          child: Center(
+            child: Text("Please input username without space."),
+          ),
+        ),
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Close",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+            color: Color(0xFF2b2b61).withOpacity(.7),
+          ),
+        ],
+      ).show();
+      return;
     }
 
     if (v1 == false && v2 == false && v3 == false && v4 == false) {
@@ -83,7 +144,7 @@ class _SignPageState extends State<SignUp> {
     if (response.statusCode == 200) {
       Prefs.setString('fname', fnameController.text);
       Prefs.setString('lname', lnameController.text);
-
+      updateDefaultSetting();
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => SignIn()),
@@ -95,7 +156,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Username is already taken."),
+              child: Text("Username is already taken.",
+                  textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -115,7 +177,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Email is already taken."),
+              child:
+                  Text("Email is already taken.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -135,7 +198,7 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Email."),
+              child: Text("Please Input Email.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -155,7 +218,50 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please Input Username."),
+              child:
+                  Text("Please Input Username.", textAlign: TextAlign.center),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
+      } else if (response.body.toString().contains("Passwords do not match")) {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child:
+                  Text("Passwords don't match.", textAlign: TextAlign.center),
+            ),
+          ),
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Close",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
+              color: Color(0xFF2b2b61).withOpacity(.7),
+            ),
+          ],
+        ).show();
+      } else if (response.body.toString().contains("Passwords must use at least 6 different characters")) {
+        Alert(
+          context: context,
+          title: "Sign up",
+          content: Container(
+            child: Center(
+              child:
+                  Text("Password does not meet requirements.", textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -175,7 +281,8 @@ class _SignPageState extends State<SignUp> {
           title: "Sign up",
           content: Container(
             child: Center(
-              child: Text("Please input required fields."),
+              child: Text("Please input required fields.",
+                  textAlign: TextAlign.center),
             ),
           ),
           buttons: [
@@ -360,7 +467,15 @@ class _SignPageState extends State<SignUp> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => termsSign()),
+                    MaterialPageRoute(
+                        builder: (context) => termsSign(
+                            fnameController.text,
+                            lnameController.text,
+                            emailController.text,
+                            usernameController.text,
+                            passController.text,
+                            passConfirmController.text,
+                            checkedValue)),
                   );
                 },
                 child: Container(
