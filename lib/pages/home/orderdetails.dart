@@ -653,15 +653,16 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname');
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
     }
-    if(stoken == _token){
-    uName = Prefs.getString('uname') ?? '';
+    if(uName.isEmpty){
+    uName ='Guest Mode';
     }else{
-      uName = "Guest Mode" ?? '';
+      uName = uName;
     }
     return Container(
       decoration: BoxDecoration(
