@@ -749,7 +749,7 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -2947,7 +2947,7 @@ class _MenuPageState extends State<MenuPage> {
                                           },
                                           child: Container(
                                               padding: EdgeInsets.fromLTRB(
-                                                  20, 0, 20, 0),
+                                                  20, 0, 20, 20),
                                               child: Row(
                                                 children: [
                                                   Icon(

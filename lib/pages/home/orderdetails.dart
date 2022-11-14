@@ -474,7 +474,7 @@ class _OrderDetailsState extends State<OrderDetails> {
         } else if (cState == '5') {
           setState(() {
             _start = 0;
-                      _timer.cancel();
+                      // _timer.cancel();
           stt = 'Completed';
                     });
         } else if (cState == '101') {
@@ -653,7 +653,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
@@ -1573,7 +1573,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   )),
             ),
             if(outletName == '')
-            Container(color: Colors.white10.withOpacity(.5), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
+            Container(color: Colors.white10.withOpacity(.1), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
              child: Center(child: CircularProgressIndicator(),),)
             ],
           ),
