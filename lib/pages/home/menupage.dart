@@ -2326,37 +2326,38 @@ class _MenuPageState extends State<MenuPage> {
                                 padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
                                 child: Row(
                                   children: [
-                                    Visibility(
-                                      visible: strings[i].ismSelect != 'true',
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (myDrinks[ind]
-                                              .ChMixer
-                                              .isNotEmpty) {
-                                            myDrinks[ind].mid = '';
-                                            setState(() {
-                                              myDrinks[ind].mid = myDrinks[ind]
-                                                  .ChMixer[ind]
-                                                  .cname;
-                                            });
-                                            Navigator.pop(context);
-                                          } else {
-                                            myDrinks[ind].mid = '';
-                                            Navigator.pop(context);
-                                          }
-                                        },
-                                        child: SizedBox(
-                                          width: 100,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.deepOrange,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        if(strings[i].ismSelect != 'true'){
+                                        if (myDrinks[ind]
+                                            .ChMixer
+                                            .isNotEmpty) {
+                                          myDrinks[ind].mid = '';
+                                          setState(() {
+                                            myDrinks[ind].mid = myDrinks[ind]
+                                                .ChMixer[ind]
+                                                .cname;
+                                          });
+                                          Navigator.pop(context);
+                                        } else {
+                                          myDrinks[ind].mid = '';
+                                          Navigator.pop(context);
+                                        }
+                                        }else{
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width: 100,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.deepOrange,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -2713,7 +2714,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     'None',
                                                     style: TextStyle(
                                                         color: Colors.black,
-                                                        fontSize: 12),
+                                                        fontSize: 16),
                                                   ),
                                                 ),
                                               ),
@@ -2766,7 +2767,7 @@ class _MenuPageState extends State<MenuPage> {
                                       //   qty += 1;
                                       // }
 
-                                      if (strings[i].ismSelect == 'true')
+                                      if (strings[i].ismSelect == 'true') {
                                         return CheckboxListTile(
                                           title: Row(
                                             children: [
@@ -2777,6 +2778,9 @@ class _MenuPageState extends State<MenuPage> {
                                                       Axis.horizontal,
                                                   child: Text(
                                                     strings[i].mx[index].name,
+                                                    style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 16),
                                                   ),
                                                 ),
                                               ),
@@ -2900,11 +2904,13 @@ class _MenuPageState extends State<MenuPage> {
                                             });
                                           },
                                           activeColor: Colors.deepOrange,
-                                          checkColor: Colors.white,
+                                          checkColor: Colors.deepOrange,
+                                          shape: RoundedRectangleBorder(
+  borderRadius: BorderRadius.circular(20.0), // Optionally
+    side: const BorderSide(color: Colors.pink),
+  ),
                                         );
-                                      //you can use checkboxlistTile too
-
-                                      else
+                                      } else {
                                         return GestureDetector(
                                           onTap: () {
                                             setState(() {
@@ -2982,7 +2988,7 @@ class _MenuPageState extends State<MenuPage> {
                                                             : '',
                                                         style: TextStyle(
                                                             color: Colors.black,
-                                                            fontSize: 12),
+                                                            fontSize: 16),
                                                       ),
                                                     ),
                                                   ),
@@ -3002,6 +3008,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 ],
                                               )),
                                         );
+                                      }
                                     },
                                   ),
                                 ))
