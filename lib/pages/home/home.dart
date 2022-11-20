@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       String url =
           ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-      final response = await http.patch(url, headers: headers, body: bod);
+      final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
       print(response.body);
       print(response.statusCode);
       print('set notif \n \n ');
@@ -198,7 +198,7 @@ try{
       'Authorization': 'Bearer ' + mytoken
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -355,7 +355,7 @@ try{
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/';
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
@@ -422,7 +422,7 @@ try{
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + ApiCon.storeUrl;
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 

@@ -316,7 +316,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     var body = json.encode(map);
     String url = ApiCon.baseurl() + '/Orders/' + id;
 
-    final response = await http.patch(url, headers: headers, body: body);
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
@@ -389,8 +389,8 @@ class _OrderDetailsState extends State<OrderDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() +
-            '/users/currentUser/orders?pageSize=1000&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1000&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
     
@@ -576,7 +576,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/';
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
@@ -622,7 +622,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
     for (var u in jsondata) {

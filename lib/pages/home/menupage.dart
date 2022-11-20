@@ -508,7 +508,7 @@ class _MenuPageState extends State<MenuPage> {
         'Authorization': 'Bearer ' + mytoken
       };
       final response = await http.get(
-          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          Uri.parse(ApiCon.baseurl() + '/users/currentUser/savedCards'),
           headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
@@ -542,7 +542,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     var jsondata = json.decode(response.body);
 
     vip = double.parse(jsondata['vipOrderCharge'].toString());
@@ -584,7 +584,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
     for (var u in jsondata) {
@@ -637,7 +637,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['tables'];
     for (var u in jsondata) {
@@ -661,7 +661,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     Discount tb = Discount("", "No Discount", 0);
 
@@ -690,7 +690,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body)['menu'];
     for (var u in jsondata) {
@@ -722,7 +722,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
 
@@ -3522,7 +3522,7 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
 
     var jsondata = json.decode(response.body)['menu'];
 
@@ -6186,7 +6186,7 @@ class _MenuPageState extends State<MenuPage> {
     var body = json.encode(map['data']);
     print(body);
     String url = ApiCon.baseurl() + '/auth/users';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     print(response.statusCode);
@@ -6209,7 +6209,7 @@ class _MenuPageState extends State<MenuPage> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/Token';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -6238,7 +6238,7 @@ class _MenuPageState extends State<MenuPage> {
     };
     String url = ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-    final response = await http.patch(url, headers: headers, body: bod);
+    final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
     print(response.body);
   }
 
@@ -6395,7 +6395,7 @@ class _MenuPageState extends State<MenuPage> {
     print(body.toString());
     String url = ApiCon.baseurl() + '/orders';
     String _cm = '';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     //print(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -6721,7 +6721,7 @@ class _MenuPageState extends State<MenuPage> {
     Map<String, String> headers = {
       "Content-Type": "application/json; charset=utf-8"
     };
-    final response = await http.get(myurl, headers: headers);
+    final response = await http.get(Uri.parse(myurl), headers: headers);
     var jsondata = json.decode(response.body);
 
     print(jsondata.toString());

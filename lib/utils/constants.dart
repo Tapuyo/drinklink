@@ -55,10 +55,11 @@ const kTextStyleHeadline6 = TextStyle(
   fontFamily: 'NunitoSans',
 );
 final ButtonStyle flatButtonStyle = TextButton.styleFrom(
+  backgroundColor: Colors.deepOrange,
   primary: Colors.black87,
-  minimumSize: Size(88, 36),
+  minimumSize: Size(88, 50),
   padding: EdgeInsets.symmetric(horizontal: 16.0),
   shape: const RoundedRectangleBorder(
-    borderRadius: BorderRadius.all(Radius.circular(2.0)),
+    borderRadius: BorderRadius.all(Radius.circular(12.0)),
   ),
 );

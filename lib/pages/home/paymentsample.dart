@@ -1,9 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:driklink/pages/home/post_api.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:retrofit/retrofit.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
@@ -24,7 +20,7 @@ class _HomePageState extends State<PaymentSample> {
     Map<String, String> headers = {"Content-type": "application/json", "Accept": "application/json"};
     String url = "https://drinklink-preprod-be.azurewebsites.net/api/";
     //String url = "http://10.0.2.2:3000/";
-    final response = await http.get(url,headers: headers);
+    final response = await http.get(Uri.parse(url),headers: headers);
 
     var jsondata = json.decode(response.body);
 

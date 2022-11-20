@@ -108,7 +108,7 @@ class _setPageState extends State<setPage> {
         '/users/currentUser/deletecard?cardtoken=' +
         cardtoken;
 
-    final response = await http.delete(url, headers: headers);
+    final response = await http.delete(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
       print(response.statusCode);
@@ -139,7 +139,7 @@ class _setPageState extends State<setPage> {
 
     String url = ApiCon.baseurl() + '/users/currentUser/savedcards';
 
-    final response = await http.delete(url, headers: headers);
+    final response = await http.delete(Uri.parse(url), headers: headers);
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -159,7 +159,7 @@ class _setPageState extends State<setPage> {
     };
     try {
       final response = await http.get(
-          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          Uri.parse(ApiCon.baseurl() + '/users/currentUser/savedCards'),
           headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
@@ -1106,7 +1106,7 @@ class _setPageState extends State<setPage> {
         'Authorization': 'Bearer ' + token
       };
       String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
-      final response = await http.post(url, headers: headers);
+      final response = await http.post(Uri.parse(url), headers: headers);
       print(json.decode(response.body));
       await Future.delayed(const Duration(seconds: 1), () {
         Navigator.of(context).pop();

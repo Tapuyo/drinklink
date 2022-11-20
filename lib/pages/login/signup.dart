@@ -139,7 +139,7 @@ class _SignPageState extends State<SignUp> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/users';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     if (response.statusCode == 200) {

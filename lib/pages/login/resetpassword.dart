@@ -97,7 +97,7 @@ class _ResetPassPageState extends State<ResetPass> {
       var body = json.encode(map['data']);
       String url = ApiCon.baseurl() + '/auth/users/$encoded/resetpassword';
       print(url);
-      final response = await http.post(url, headers: headers, body: body);
+      final response = await http.post(Uri.parse(url), headers: headers, body: body);
       print(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.pushReplacement(
@@ -214,7 +214,7 @@ class _ResetPassPageState extends State<ResetPass> {
     Map<String, String> headers = {"Content-Type": "application/json"};
     String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     if (response.statusCode == 200 || response.statusCode == 201) {
       Alert(
         context: context,

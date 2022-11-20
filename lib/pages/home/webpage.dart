@@ -53,7 +53,7 @@ class WebViewExampleState extends State<WebPage> {
       'Authorization': 'Bearer ' + token
     };
 
-    final response = await http.post(url, headers: headers);
+    final response = await http.post(Uri.parse(url), headers: headers);
     if (response.statusCode == '201' || response.statusCode == '200') {
       print(response.statusCode);
     }
@@ -116,7 +116,7 @@ class WebViewExampleState extends State<WebPage> {
     };
 
     try {
-      final response = await http.post(url, headers: headers);
+      final response = await http.post(Uri.parse(url), headers: headers);
       String mystate =
           json.decode(response.body)['_embedded']['payment'][0]['state'];
 

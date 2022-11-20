@@ -97,7 +97,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
     };
 
     // String url = ApiCon.baseurl() + '/users/paidCard/?ref=' + reference;
-    final response = await http.post(url, headers: headers);
+    final response = await http.post(Uri.parse(url), headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
     String mystate =
