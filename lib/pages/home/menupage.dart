@@ -8,6 +8,7 @@ import 'package:driklink/pages/home/settingPage.dart';
 import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/pages/home/webpage.dart';
 import 'package:driklink/pages/login/signin.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -5766,12 +5767,8 @@ class _MenuPageState extends State<MenuPage> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: FlatButton(
-                                height: 50,
-                                minWidth: double.infinity,
-                                color: Colors.deepOrange,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
+                            child: TextButton(
+                                style: flatButtonStyle,
                                 onPressed: () {
                                   //samplecheck();
 
@@ -6462,7 +6459,7 @@ class _MenuPageState extends State<MenuPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Close',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -6497,11 +6494,8 @@ class _MenuPageState extends State<MenuPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.deepPurpleAccent[700],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -6527,10 +6521,8 @@ class _MenuPageState extends State<MenuPage> {
                 });
               },
             ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),

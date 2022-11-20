@@ -7,6 +7,7 @@ import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/login/resetpassemail.dart';
 import 'package:driklink/pages/login/signin.dart';
 import 'package:driklink/pages/login/signup.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
@@ -48,7 +49,7 @@ class _ResetPassPageState extends State<ResetPass> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -390,12 +391,8 @@ class _ResetPassPageState extends State<ResetPass> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                          style: flatButtonStyle,
                           onPressed: () {
                             ResetPassword();
                             // if (reserPass) {

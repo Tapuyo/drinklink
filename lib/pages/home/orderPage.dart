@@ -66,7 +66,7 @@ class _setPageState extends State<orderPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),

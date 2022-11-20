@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/login/signin.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:flutter/material.dart';
@@ -496,12 +497,8 @@ class _SignPageState extends State<SignUp> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                          style: flatButtonStyle,
                           onPressed: () {
                             if (checkedValue) {
                               SignUp();

@@ -2,6 +2,7 @@ import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/savecard.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -471,7 +472,7 @@ class _setPageState extends State<setPage> {
                         });
                       },
                     ),
-                    FlatButton(
+                    TextButton(
                       onPressed: () {},
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -608,12 +609,8 @@ class _setPageState extends State<setPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                          style: flatButtonStyle,
                           onPressed: () async {
                             if (checkedValue) {
                               if (cardidx.isEmpty) {
@@ -818,7 +815,7 @@ class _setPageState extends State<setPage> {
             //     Navigator.of(context, rootNavigator: true).pop();
             //   },
             // ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -853,7 +850,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Cancel',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -862,7 +859,7 @@ class _setPageState extends State<setPage> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -898,7 +895,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -933,7 +930,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -992,7 +989,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Cancel',
                 style: TextStyle(color: Colors.white, fontSize: 14),
@@ -1002,7 +999,7 @@ class _setPageState extends State<setPage> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Verify',
                 style: TextStyle(color: Colors.deepOrange, fontSize: 14),
@@ -1058,7 +1055,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 14),
@@ -1153,7 +1150,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1162,7 +1159,7 @@ class _setPageState extends State<setPage> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),

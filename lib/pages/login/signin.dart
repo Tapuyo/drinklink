@@ -8,6 +8,7 @@ import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/login/resetpassemail.dart';
 import 'package:driklink/pages/login/resetpassword.dart';
 import 'package:driklink/pages/login/signup.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
@@ -211,12 +212,8 @@ class _SignPageState extends State<SignIn> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                         style: flatButtonStyle,
                           onPressed: () {
                             login(context);
                           },

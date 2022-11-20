@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:driklink/pages/home/ordermoredetailed.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:driklink/data/pref_manager.dart';
@@ -253,7 +254,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -262,7 +263,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1468,12 +1469,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: FlatButton(
-                                    height: 50,
-                                    minWidth: double.infinity,
-                                    color: Colors.deepOrange,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
+                                child: TextButton(
+                                    style: flatButtonStyle,
                                     onPressed: () {
                                       if (sttn == '2' ||
                                           sttn == '3' ||
@@ -1602,7 +1599,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1643,11 +1640,8 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.deepPurpleAccent[700],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1674,10 +1668,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                               });
               },
             ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
