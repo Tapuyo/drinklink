@@ -49,7 +49,7 @@ class _MoreDetailsState extends State<MoreDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -398,7 +398,7 @@ class _MoreDetailsState extends State<MoreDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 

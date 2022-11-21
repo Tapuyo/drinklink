@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:driklink/pages/home/ordermoredetailed.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:driklink/data/pref_manager.dart';
@@ -253,7 +254,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -262,7 +263,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -315,7 +316,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     var body = json.encode(map);
     String url = ApiCon.baseurl() + '/Orders/' + id;
 
-    final response = await http.patch(url, headers: headers, body: body);
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
@@ -388,8 +389,8 @@ class _OrderDetailsState extends State<OrderDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        ApiCon.baseurl() +
-            '/users/currentUser/orders?pageSize=1000&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1000&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
     
@@ -575,7 +576,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/';
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
@@ -621,7 +622,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     var jsondata = json.decode(response.body)['workHours'];
 
     for (var u in jsondata) {
@@ -653,15 +654,16 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
     }
-    if(stoken == _token){
-    uName = Prefs.getString('uname') ?? '';
+    if(uName.isEmpty){
+    uName ='Guest Mode';
     }else{
-      uName = "Guest Mode" ?? '';
+      uName = uName;
     }
     return Container(
       decoration: BoxDecoration(
@@ -1467,12 +1469,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                           child: Row(
                             children: [
                               Expanded(
-                                child: FlatButton(
-                                    height: 50,
-                                    minWidth: double.infinity,
-                                    color: Colors.deepOrange,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)),
+                                child: TextButton(
+                                    style: flatButtonStyle,
                                     onPressed: () {
                                       if (sttn == '2' ||
                                           sttn == '3' ||
@@ -1572,7 +1570,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                   )),
             ),
             if(outletName == '')
-            Container(color: Colors.white10.withOpacity(.5), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
+            Container(color: Colors.white10.withOpacity(.1), width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height,
              child: Center(child: CircularProgressIndicator(),),)
             ],
           ),
@@ -1601,7 +1599,7 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1642,11 +1640,8 @@ class _OrderDetailsState extends State<OrderDetails> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.deepPurpleAccent[700],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1673,10 +1668,8 @@ class _OrderDetailsState extends State<OrderDetails> {
                               });
               },
             ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),

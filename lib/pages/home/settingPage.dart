@@ -2,6 +2,7 @@ import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/savecard.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -9,6 +10,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:uuid/uuid.dart';
+import 'package:email_validator/email_validator.dart';
+
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:otp/otp.dart';
 
 class setPage extends StatefulWidget {
   @override
@@ -25,6 +31,9 @@ class _setPageState extends State<setPage> {
   TextEditingController billadd = new TextEditingController();
   TextEditingController billemail = new TextEditingController();
   bool isActive = true;
+
+  TextEditingController otp = new TextEditingController();
+  bool isVerified = false;
 
   List<CardDetails> myCardList = [];
   Future myCardFuture;
@@ -47,6 +56,9 @@ class _setPageState extends State<setPage> {
   String cardnamex = '';
   String cardidx = '';
   Color contColor = Colors.green;
+  String otpcode = OTP.generateTOTPCodeString(
+      'JBSWY3DPEHPK3PXP', DateTime.now().millisecondsSinceEpoch,
+      interval: 60);
 
   @override
   void initState() {
@@ -96,7 +108,7 @@ class _setPageState extends State<setPage> {
         '/users/currentUser/deletecard?cardtoken=' +
         cardtoken;
 
-    final response = await http.delete(url, headers: headers);
+    final response = await http.delete(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
       print(response.statusCode);
@@ -127,7 +139,7 @@ class _setPageState extends State<setPage> {
 
     String url = ApiCon.baseurl() + '/users/currentUser/savedcards';
 
-    final response = await http.delete(url, headers: headers);
+    final response = await http.delete(Uri.parse(url), headers: headers);
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -147,7 +159,7 @@ class _setPageState extends State<setPage> {
     };
     try {
       final response = await http.get(
-          ApiCon.baseurl() + '/users/currentUser/savedCards',
+          Uri.parse(ApiCon.baseurl() + '/users/currentUser/savedCards'),
           headers: headers);
       var jsondata = json.decode(response.body);
       print(response.body);
@@ -192,6 +204,10 @@ class _setPageState extends State<setPage> {
       checkedValue = Prefs.getBool('bsendBill' + uName) ?? '';
       cardidx = Prefs.getString('bcardid' + uName) ?? '';
       cardnamex = Prefs.getString('bcardname' + uName) ?? '';
+      String vemail = Prefs.getString('verifiedemail' + uName) ?? '';
+      if (vemail == billemail.text.trim()) {
+        isVerified = Prefs.getBool('isVerified' + uName) ?? false;
+      }
     });
   }
 
@@ -432,15 +448,91 @@ class _setPageState extends State<setPage> {
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(0, 10, 0, 5),
-                child: TextField(
-                  controller: billemail,
-                  style: TextStyle(color: Colors.white),
-                  decoration: new InputDecoration(
-                    hintText: "Send bill to email",
-                    hintStyle: TextStyle(color: Colors.white54),
-                    labelStyle: new TextStyle(color: Colors.white),
-                    labelText: 'Send bill to email',
-                  ),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: billemail,
+                      style: TextStyle(color: Colors.white),
+                      decoration: new InputDecoration(
+                        hintText: "Send bill to email",
+                        hintStyle: TextStyle(color: Colors.white54),
+                        labelStyle: new TextStyle(color: Colors.white),
+                        labelText: 'Send bill to email',
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          String vemail =
+                              Prefs.getString('verifiedemail' + uName) ?? '';
+                          if (vemail == text.trim()) {
+                            isVerified =
+                                Prefs.getBool('isVerified' + uName) ?? false;
+                          } else {
+                            isVerified = false;
+                          }
+                        });
+                      },
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (isVerified == true)
+                            Container(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.verified_rounded,
+                                    color: Colors.green,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    ' VERIFIED',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            GestureDetector(
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.email_rounded,
+                                    color: Colors.deepOrange,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    ' SEND VERIFICATION EMAIL',
+                                    style: TextStyle(color: Colors.deepOrange),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  if (isVerified != true) {
+                                    var email = billemail.text.trim();
+                                    final bool isValid =
+                                        EmailValidator.validate(email);
+                                    print(isValid);
+                                    if (isValid == false) {
+                                      _messageDialog('DrinkLink',
+                                          'Enter valid email address.', '');
+                                      return;
+                                    }
+                                    sendOTP();
+                                  }
+                                });
+                              },
+                            )
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Container(
@@ -517,20 +609,30 @@ class _setPageState extends State<setPage> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                          style: flatButtonStyle,
                           onPressed: () async {
                             if (checkedValue) {
                               if (cardidx.isEmpty) {
                                 _messageDialog('Select Card',
-                                    'Please choose your default card.');
+                                    'Please choose your default card.', '');
                                 return;
                               }
                             }
+                            var email = billemail.text.trim();
+                            final bool isValid = EmailValidator.validate(email);
+                            print(isValid);
+                            if (isValid == false) {
+                              _messageDialog('DrinkLink',
+                                  'Enter valid email address.', '');
+                              return;
+                            }
+                            if (isVerified == false) {
+                              _messageDialog('DrinkLink',
+                                  'Email address is not verified.', '');
+                              return;
+                            }
+
                             updateChanges();
                             Navigator.pushReplacement(
                               context,
@@ -565,9 +667,100 @@ class _setPageState extends State<setPage> {
     );
   }
 
+  sendOTP() async {
+    _loadPreview();
+    print(otpcode);
+    String username = 'leepe@drinklinkph.com';
+    String password = 'P@ssw0rd';
+    String bemail = billemail.text.trim();
+
+    final smtpServer =
+        SmtpServer('plesk5600.is.cc', username: username, password: password);
+
+    final message = Message()
+      ..from = Address(username, bemail)
+      ..recipients.add(bemail)
+      // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
+      // ..bccRecipients.add(Address('bccAddress@example.com'))
+      ..subject = 'DrinkLink@support : ${DateTime.now()}'
+      // ..text = messageController.text;
+      ..html = "<h5>Hi " +
+          bemail +
+          " ,</h5>\n<p> We received your request for a single-use OTP to use with your DrinkLink account." +
+          "</p>"
+              "\n"
+              "<p> Your single-use OTP is:" +
+          otpcode +
+          "</p>"
+              "\n"
+              "<p>If you didn't request this OTP, you can safely ignore this email. Someone else might have typed your email address by mistake</p>"
+              "\n"
+              "<p>Thanks,</p>"
+              "DrinkLinkTeamSupport";
+
+    var connection = PersistentConnection(smtpServer);
+
+    // Send the first message
+    try {
+      final rsult = await connection.send(message);
+      if (rsult.toString().contains('Message successfully sent')) {
+        await connection.close();
+        Navigator.of(context).pop();
+        _messageDialog(
+            'Verify Your Email Address',
+            'We have sent an email to ' +
+                bemail +
+                ' to verify your email address. The OTP will expire in 5m.',
+            'otp');
+      } else {
+        await connection.close();
+        Navigator.of(context).pop();
+        _messageDialog(
+            'Verify Your Email Address', 'Failed to send request!', '');
+      }
+    } catch (error) {
+      await connection.close();
+      Navigator.of(context).pop();
+      _messageDialog(
+          'Verify Your Email Address', 'Failed to send request!', '');
+    }
+
+    // close the connection
+  }
+
+  _loadPreview() async {
+    Navigator.of(context).push(
+      new PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: false,
+        pageBuilder: (BuildContext context, _, __) {
+          return Center(
+            child: Container(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+              width: 150,
+              height: 150,
+              color: Colors.transparent,
+              child: Center(
+                child: new SizedBox(
+                  height: 50.0,
+                  width: 50.0,
+                  child: new CircularProgressIndicator(
+                    value: null,
+                    strokeWidth: 7.0,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
   updateChanges() async {
     Prefs.load();
     uName = Prefs.getString('uname') ?? '';
+
     String bname = billname.text.trimLeft();
     String blast = billlast.text.trimLeft();
     String badd = billadd.text;
@@ -622,7 +815,7 @@ class _setPageState extends State<setPage> {
             //     Navigator.of(context, rootNavigator: true).pop();
             //   },
             // ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -657,7 +850,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Cancel',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -666,7 +859,7 @@ class _setPageState extends State<setPage> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -702,7 +895,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -717,7 +910,7 @@ class _setPageState extends State<setPage> {
     );
   }
 
-  _messageDialog(String title, String message) {
+  _messageDialog(String title, String message, String action) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -733,14 +926,139 @@ class _setPageState extends State<setPage> {
           ),
           content: Text(
             message,
-            style: TextStyle(color: Colors.white, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              onPressed: () {
+                switch (action) {
+                  case 'otp':
+                    Navigator.of(context, rootNavigator: true).pop();
+                    _confirmOTP();
+                    break;
+                  default:
+                    Navigator.of(context, rootNavigator: true).pop();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _confirmOTP() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            'Verify Your Email Address',
+            style: TextStyle(color: Colors.deepOrange, fontSize: 18),
+          ),
+          content: Container(
+            height: 80,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Check your email for the OTP.',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+                TextField(
+                  textAlign: TextAlign.center,
+                  controller: otp,
+                  style: TextStyle(color: Colors.deepOrange),
+                  decoration: new InputDecoration(
+                    hintText: "Enter OTP",
+                    hintStyle: TextStyle(color: Colors.deepOrange),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+              onPressed: () {
+                otp.text = '';
+                Navigator.of(context, rootNavigator: true).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'Verify',
+                style: TextStyle(color: Colors.deepOrange, fontSize: 14),
+              ),
+              onPressed: () async {
+                setState(() {
+                  if (otpcode == otp.text) {
+                    uName = Prefs.getString('uname') ?? '';
+                    Prefs.setString(
+                        'verifiedemail' + uName, billemail.text.trim());
+                    Prefs.setBool('isVerified' + uName, true);
+                    isVerified = true;
+                    otp.text = '';
+                    Navigator.of(context, rootNavigator: true).pop();
+                  } else {
+                    otp.text = '';
+                    _otperrordialog();
+                  }
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _otperrordialog() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (ctx) => WillPopScope(
+        onWillPop: () async => false,
+        child: new AlertDialog(
+          elevation: 50,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(8))),
+          title: Text(
+            'Verify Your Email Address',
+            style: TextStyle(color: Colors.deepOrange, fontSize: 18),
+          ),
+          content: Container(
+            height: 30,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'Invalid OTP!',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ],
+            ),
+          ),
+          backgroundColor: Color(0xFF2b2b61),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'OK',
+                style: TextStyle(color: Colors.white, fontSize: 14),
               ),
               onPressed: () {
                 Navigator.of(context, rootNavigator: true).pop();
@@ -788,7 +1106,7 @@ class _setPageState extends State<setPage> {
         'Authorization': 'Bearer ' + token
       };
       String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
-      final response = await http.post(url, headers: headers);
+      final response = await http.post(Uri.parse(url), headers: headers);
       print(json.decode(response.body));
       await Future.delayed(const Duration(seconds: 1), () {
         Navigator.of(context).pop();
@@ -832,7 +1150,7 @@ class _setPageState extends State<setPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -841,7 +1159,7 @@ class _setPageState extends State<setPage> {
                 Navigator.of(context, rootNavigator: true).pop();
               },
             ),
-            FlatButton(
+            TextButton(
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),

@@ -6,6 +6,7 @@ import 'package:driklink/pages/home/orderdetails.dart';
 import 'package:driklink/pages/home/settingPage.dart';
 import 'package:driklink/pages/home/termPage.dart';
 import 'package:driklink/pages/login/signin.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:driklink/auth_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       String url =
           ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-      final response = await http.patch(url, headers: headers, body: bod);
+      final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
       print(response.body);
       print(response.statusCode);
       print('set notif \n \n ');
@@ -197,7 +198,7 @@ try{
       'Authorization': 'Bearer ' + mytoken
     };
     final response = await http.get(
-        ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1',
+        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -354,7 +355,7 @@ try{
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/';
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
@@ -421,7 +422,7 @@ try{
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + ApiCon.storeUrl;
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
 
@@ -568,15 +569,16 @@ try{
   Widget build(BuildContext context) {
     String _token = context.read<AuthProvider>().token;
     String token = Prefs.getString('token');
+    uName = Prefs.getString('uname') ?? '';
     if (_token.isNotEmpty) {
       stoken = _token;
     } else {
       stoken = token;
     }
-    if(stoken == _token){
-    uName = Prefs.getString('uname') ?? '';
+    if(uName.isEmpty){
+    uName ='Guest Mode';
     }else{
-      uName = "Guest Mode" ?? '';
+      uName = uName;
     }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -1024,12 +1026,8 @@ try{
                         child: Row(
                           children: [
                             Expanded(
-                              child: FlatButton(
-                                height: 50,
-                                minWidth: double.infinity,
-                                color: Colors.deepOrange,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
+                              child: TextButton(
+                                style: flatButtonStyle,
                                 onPressed: () {
                                   //getOrders();
                                   getStore();
@@ -1256,11 +1254,8 @@ try{
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
-              color: Colors.deepPurpleAccent[700],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1286,10 +1281,8 @@ try{
                 });
               },
             ),
-            FlatButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))),
-              minWidth: 140,
+            TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),

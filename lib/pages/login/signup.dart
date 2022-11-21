@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/login/signin.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:flutter/material.dart';
@@ -138,7 +139,7 @@ class _SignPageState extends State<SignUp> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/users';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     if (response.statusCode == 200) {
@@ -496,12 +497,8 @@ class _SignPageState extends State<SignUp> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                          style: flatButtonStyle,
                           onPressed: () {
                             if (checkedValue) {
                               SignUp();

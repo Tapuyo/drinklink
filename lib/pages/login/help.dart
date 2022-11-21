@@ -1,4 +1,5 @@
 import 'package:driklink/pages/home/home.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 
@@ -157,7 +158,7 @@ class _helpignPageState extends State<help> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Close',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -192,7 +193,7 @@ class _helpignPageState extends State<help> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'Close',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -340,7 +341,7 @@ class _helpignPageState extends State<help> {
                         child: Padding(
                           padding: EdgeInsets.all(10.0),
                           child: TextField(
-                             textInputAction: TextInputAction.done,
+                            textInputAction: TextInputAction.done,
                             controller: messageController,
                             maxLines: 14, //or null
                             decoration:
@@ -361,12 +362,8 @@ class _helpignPageState extends State<help> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                        height: 50,
-                        minWidth: double.infinity,
-                        color: Colors.deepOrange,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                        style: flatButtonStyle,
                         onPressed: () {
                           setState(() {
                             _sendMessage();
@@ -428,7 +425,7 @@ class _helpignPageState extends State<help> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             if (a != '')
-              FlatButton(
+              TextButton(
                 child: Text(
                   a,
                   style: TextStyle(color: Colors.white, fontSize: 18),
@@ -438,7 +435,7 @@ class _helpignPageState extends State<help> {
                 },
               ),
             if (b != '')
-              FlatButton(
+              TextButton(
                 child: Text(
                   b,
                   style: TextStyle(color: Colors.white, fontSize: 18),

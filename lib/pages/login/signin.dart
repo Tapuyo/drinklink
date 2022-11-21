@@ -8,6 +8,7 @@ import 'package:driklink/pages/home/menupage.dart';
 import 'package:driklink/pages/login/resetpassemail.dart';
 import 'package:driklink/pages/login/resetpassword.dart';
 import 'package:driklink/pages/login/signup.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +36,7 @@ class _SignPageState extends State<SignIn> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/Token';
-    final response = await http.post(url, headers: headers, body: body);
+    final response = await http.post(Uri.parse(url), headers: headers, body: body);
     print(response.body);
     if (response.statusCode == 200 || response.statusCode == 201) {
       String token = json.decode(response.body)['token'];
@@ -101,7 +102,7 @@ class _SignPageState extends State<SignIn> {
     };
     String url = ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-    final response = await http.patch(url, headers: headers, body: bod);
+    final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
     print('notif response: ');
     print(response.statusCode);
   }
@@ -113,7 +114,7 @@ class _SignPageState extends State<SignIn> {
     Map<String, String> headers = {"Content-Type": "application/json"};
     String url = ApiCon.baseurl() + '/auth/users/$encoded/resetcode';
 
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     print(response.body.toString());
   }
 
@@ -211,12 +212,8 @@ class _SignPageState extends State<SignIn> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: FlatButton(
-                          height: 50,
-                          minWidth: double.infinity,
-                          color: Colors.deepOrange,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                      child: TextButton(
+                         style: flatButtonStyle,
                           onPressed: () {
                             login(context);
                           },

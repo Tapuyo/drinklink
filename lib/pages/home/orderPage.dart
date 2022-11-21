@@ -66,7 +66,7 @@ class _setPageState extends State<orderPage> {
           ),
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -93,7 +93,7 @@ class _setPageState extends State<orderPage> {
         'Authorization': 'Bearer ' + token
       };
       String url = ApiCon.baseurl() + '/users/currentUser/savedCards';
-      final response = await http.post(url, headers: headers);
+      final response = await http.post(Uri.parse(url), headers: headers);
       print(json.decode(response.body));
       if (response.statusCode == 200) {}
     } catch (e) {}
@@ -114,9 +114,9 @@ class _setPageState extends State<orderPage> {
         'Authorization': 'Bearer ' + token
       };
       final response = await http.get(
-          ApiCon.baseurl() +
+          Uri.parse(ApiCon.baseurl() +
               '/users/currentUser/orders?pageSize=10&pageNumber=1' +
-              sortCode,
+              sortCode),
           headers: headers);
       var jsondata = json.decode(response.body);
 
@@ -220,7 +220,7 @@ class _setPageState extends State<orderPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/';
-    final response = await http.get(url, headers: headers);
+    final response = await http.get(Uri.parse(url), headers: headers);
     //print(response.body.toString());
     var jsondata = json.decode(response.body);
     for (var u in jsondata) {
