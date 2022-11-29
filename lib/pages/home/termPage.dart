@@ -6,7 +6,7 @@ import 'package:driklink/pages/login/signup.dart';
 import 'package:driklink/pages/home/menupage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class termPage extends StatefulWidget {
   @override
@@ -27,44 +27,44 @@ class termsSign extends StatefulWidget {
 class WebViewExampleState extends State<termPage> {
   String murl =
       'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  // final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
   void initState() {
     super.initState();
-    final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebViewPlugin.onUrlChanged.listen((String url) {});
+    // final flutterWebviewPlugin = new FlutterWebviewPlugin();
+    // flutterWebViewPlugin.onUrlChanged.listen((String url) {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: murl,
-      appBar: new AppBar(
-        backgroundColor: Color(0xFF2b2b61),
-        title: new Text(
-          "Terms of Service",
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
-      ),
-      initialChild: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text('Waiting.....'),
-        ),
-      ),
+    return WebView(
+      initialUrl: murl,
+      // appBar: new AppBar(
+      //   backgroundColor: Color(0xFF2b2b61),
+      //   title: new Text(
+      //     "Terms of Service",
+      //     style: TextStyle(fontSize: 20, color: Colors.white),
+      //   ),
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => HomePage()),
+      //       );
+      //     },
+      //   ),
+      // ),
+      // initialChild: Container(
+      //   color: Colors.white,
+      //   child: const Center(
+      //     child: Text('Waiting.....'),
+      //   ),
+      // ),
     );
   }
 }
@@ -72,52 +72,53 @@ class WebViewExampleState extends State<termPage> {
 class WebViewExampleState1 extends State<termsSign> {
   String murl =
       'https://drinklink.ae/oathygow/2020/12/Terms-of-Service-DrinkLink.pdf';
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  // final flutterWebViewPlugin = FlutterWebviewPlugin();
 
   @override
   void initState() {
     super.initState();
-    final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebViewPlugin.onUrlChanged.listen((String url) {});
+    // final flutterWebviewPlugin = new FlutterWebviewPlugin();
+    // flutterWebViewPlugin.onUrlChanged.listen((String url) {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: murl,
-      appBar: new AppBar(
-        backgroundColor: Color(0xFF2b2b61),
-        title: new Text(
-          "Terms of Service",
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SignUp(
-                      widget.fname,
-                      widget.lname,
-                      widget.email,
-                      widget.uname,
-                      widget.pwd,
-                      widget.cpwd,
-                      widget.checkedValuex)),
-            );
-          },
-        ),
-      ),
-      initialChild: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text('Waiting.....'),
-        ),
-      ),
+    return WebView(
+      initialUrl: murl,
+
+      // appBar: new AppBar(
+      //   backgroundColor: Color(0xFF2b2b61),
+      //   title: new Text(
+      //     "Terms of Service",
+      //     style: TextStyle(fontSize: 20, color: Colors.white),
+      //   ),
+      //   leading: IconButton(
+      //     icon: Icon(
+      //       Icons.arrow_back,
+      //       color: Colors.white,
+      //     ),
+      //     onPressed: () {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(
+      //             builder: (context) => SignUp(
+      //                 widget.fname,
+      //                 widget.lname,
+      //                 widget.email,
+      //                 widget.uname,
+      //                 widget.pwd,
+      //                 widget.cpwd,
+      //                 widget.checkedValuex)),
+      //       );
+      //     },
+      //   ),
+      // ),
+      // initialChild: Container(
+      //   color: Colors.white,
+      //   child: const Center(
+      //     child: Text('Waiting.....'),
+      //   ),
+      // ),
     );
   }
 }
