@@ -2696,13 +2696,32 @@ class _MenuPageState extends State<MenuPage> {
                                             padding: EdgeInsets.fromLTRB(
                                                 0, 0, 0, 20),
                                             child: Row(children: [
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid == none
-                                                    ? Colors.deepOrange[700]
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
+                                                  Container(
+                                                    height: 19,
+                                                    width: 19,
+                                                    decoration: BoxDecoration(
+                                                        color: myDrinks[ind]
+                                                                    .mid ==
+                                                                strings[i]
+                                                                    .mx[index]
+                                                                    .name
+                                                            ? Colors
+                                                                .deepOrange[700]
+                                                            : Colors.black,
+                                                        shape: BoxShape.circle),
+                                                    child: Icon(
+                                                      Icons.circle,
+                                                      size : 18,
+                                                      color: myDrinks[ind]
+                                                                  .mid ==
+                                                              strings[i]
+                                                                  .mx[index]
+                                                                  .name
+                                                          ? Colors
+                                                              .deepOrange[700]
+                                                          : Colors.white,
+                                                    ),
+                                                  ),
                                               SizedBox(
                                                 width: 10,
                                               ),
@@ -2778,7 +2797,7 @@ class _MenuPageState extends State<MenuPage> {
                                               ),
                                             ),
                                             unselectedWidgetColor:
-                                                Colors.black54,
+                                                Colors.black,
                                             backgroundColor: Colors.black54,
                                           ),
                                           child: CheckboxListTile(
@@ -2968,15 +2987,31 @@ class _MenuPageState extends State<MenuPage> {
                                                   20, 0, 20, 20),
                                               child: Row(
                                                 children: [
-                                                  Icon(
-                                                    Icons.circle,
-                                                    color: myDrinks[ind].mid ==
-                                                            strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                        ? Colors.deepOrange[700]
-                                                        : Colors.black
-                                                            .withOpacity(.5),
+                                                  Container(
+                                                    height: 19,
+                                                    width: 19,
+                                                    decoration: BoxDecoration(
+                                                        color: myDrinks[ind]
+                                                                    .mid ==
+                                                                strings[i]
+                                                                    .mx[index]
+                                                                    .name
+                                                            ? Colors
+                                                                .deepOrange[700]
+                                                            : Colors.black,
+                                                        shape: BoxShape.circle),
+                                                    child: Icon(
+                                                      Icons.circle,
+                                                      size : 18,
+                                                      color: myDrinks[ind]
+                                                                  .mid ==
+                                                              strings[i]
+                                                                  .mx[index]
+                                                                  .name
+                                                          ? Colors
+                                                              .deepOrange[700]
+                                                          : Colors.white,
+                                                    ),
                                                   ),
                                                   SizedBox(
                                                     width: 10,
