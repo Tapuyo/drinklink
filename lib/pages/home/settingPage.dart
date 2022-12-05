@@ -896,6 +896,7 @@ class _setPageState extends State<setPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1151,6 +1152,7 @@ class _setPageState extends State<setPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1160,6 +1162,7 @@ class _setPageState extends State<setPage> {
               },
             ),
             TextButton(
+              style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
