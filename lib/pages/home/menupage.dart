@@ -2769,7 +2769,21 @@ class _MenuPageState extends State<MenuPage> {
                                       // }
 
                                       if (strings[i].ismSelect == 'true') {
-                                        return CheckboxListTile(
+                                        return Theme(
+                                          data: ThemeData(
+                                            checkboxTheme: CheckboxThemeData(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            unselectedWidgetColor:
+                                                Colors.black54,
+                                            backgroundColor: Colors.black54,
+                                          ),
+                                          child: CheckboxListTile(
+                                            shape: CircleBorder(),
+                                            tileColor: Colors.black54,
                                           title: Row(
                                             children: [
                                               Expanded(
@@ -2906,10 +2920,7 @@ class _MenuPageState extends State<MenuPage> {
                                           },
                                           activeColor: Colors.deepOrange,
                                           checkColor: Colors.deepOrange,
-                                          shape: RoundedRectangleBorder(
-  borderRadius: BorderRadius.circular(20.0), // Optionally
-    side: const BorderSide(color: Colors.pink),
-  ),
+                                          ),
                                         );
                                       } else {
                                         return GestureDetector(
