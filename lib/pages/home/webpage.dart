@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:driklink/data/pref_manager.dart';
@@ -25,6 +26,8 @@ class WebViewExampleState extends State<WebPage> {
   String reference;
 
   WebViewExampleState(this.murl, this.reference);
+  final Completer<WebViewController> _controller =
+      Completer<WebViewController>();
 
   @override
   void initState() {
@@ -158,69 +161,115 @@ class WebViewExampleState extends State<WebPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: murl,
-       navigationDelegate: (action) {
-      // if (action.url.contains('google.com')) {
-      //   // Won't redirect url
-      //   print('Trying to open google');
-      //   Navigator.pop(context); 
-      //   return NavigationDecision.prevent; 
-      // } else if (action.url.contains('youtube.com')) {
-      // // Allow opening url
-      //   print('Trying to open Youtube');
-      //   return NavigationDecision.navigate; 
-      // } else {
-      //   return NavigationDecision.navigate; 
-      // }
-      print("This is url: " + action.url);
-       try {
-        if (action.url != murl) {
-          Order(action.url);
+    return Scaffold(
+      appBar: new AppBar(
+          backgroundColor: Color(0xFF2b2b61),
+          title: new Text(
+            "Payment",
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+          //     actions: [
+          //       Padding(
+          //   padding: EdgeInsets.only(right: 20.0),
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Order();
+          //     },
+          //     child: Icon(
+          //       Icons.search,
+          //       size: 26.0,
+          //     ),
+          //   )
+          // ),
+          //     ],
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              cancel_order();
+              Navigator.pop(context, 'cancel');
+            },
+          ),
+        ),
+      body: WebView(
+        initialUrl: murl,
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController webViewController) {
+          _controller.complete(webViewController);
+        },
+        onProgress: (int progress) {
+          print('WebView is loading (progress : $progress%)');
+          child: const Center(
+              child: Text(
+                'Loading......',
+                style: TextStyle(color: Colors.black),
+              ),
+            );
+        },
+         navigationDelegate: (action) {
+        // if (action.url.contains('google.com')) {
+        //   // Won't redirect url
+        //   print('Trying to open google');
+        //   Navigator.pop(context); 
+        //   return NavigationDecision.prevent; 
+        // } else if (action.url.contains('youtube.com')) {
+        // // Allow opening url
+        //   print('Trying to open Youtube');
+        //   return NavigationDecision.navigate; 
+        // } else {
+        //   return NavigationDecision.navigate; 
+        // }
+        print("This is url: " + action.url);
+         try {
+          if (action.url != murl) {
+            Order(action.url);
+          }
+        } catch (e) {
+          print(e.toString());
         }
-      } catch (e) {
-        print(e.toString());
-      }
-
-      return NavigationDecision.navigate; 
-    },
-      // appBar: new AppBar(
-      //   backgroundColor: Color(0xFF2b2b61),
-      //   title: new Text(
-      //     "Payment",
-      //     style: TextStyle(fontSize: 20, color: Colors.white),
-      //   ),
-      //   //     actions: [
-      //   //       Padding(
-      //   //   padding: EdgeInsets.only(right: 20.0),
-      //   //   child: GestureDetector(
-      //   //     onTap: () {
-      //   //       Order();
-      //   //     },
-      //   //     child: Icon(
-      //   //       Icons.search,
-      //   //       size: 26.0,
-      //   //     ),
-      //   //   )
-      //   // ),
-      //   //     ],
-      //   leading: IconButton(
-      //     icon: Icon(
-      //       Icons.arrow_back,
-      //       color: Colors.white,
-      //     ),
-      //     onPressed: () {
-      //       cancel_order();
-      //       Navigator.pop(context, 'cancel');
-      //     },
-      //   ),
-      // ),
-      // initialChild: Container(
-      //   color: Colors.white,
-      //   child: const Center(
-      //     child: Text('Waiting.....'),
-      //   ),
-      // ),
+    
+        return NavigationDecision.navigate; 
+      },
+        // appBar: new AppBar(
+        //   backgroundColor: Color(0xFF2b2b61),
+        //   title: new Text(
+        //     "Payment",
+        //     style: TextStyle(fontSize: 20, color: Colors.white),
+        //   ),
+        //   //     actions: [
+        //   //       Padding(
+        //   //   padding: EdgeInsets.only(right: 20.0),
+        //   //   child: GestureDetector(
+        //   //     onTap: () {
+        //   //       Order();
+        //   //     },
+        //   //     child: Icon(
+        //   //       Icons.search,
+        //   //       size: 26.0,
+        //   //     ),
+        //   //   )
+        //   // ),
+        //   //     ],
+        //   leading: IconButton(
+        //     icon: Icon(
+        //       Icons.arrow_back,
+        //       color: Colors.white,
+        //     ),
+        //     onPressed: () {
+        //       cancel_order();
+        //       Navigator.pop(context, 'cancel');
+        //     },
+        //   ),
+        // ),
+        // initialChild: Container(
+        //   color: Colors.white,
+        //   child: const Center(
+        //     child: Text('Waiting.....'),
+        //   ),
+        // ),
+      ),
     );
   }
 }
