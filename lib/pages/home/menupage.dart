@@ -2348,12 +2348,12 @@ class _MenuPageState extends State<MenuPage> {
               print('ajkshdkajhsdkj');
               if (myMenu != null || myMenu != [])
                 //print(strings[i].id.toString());
-              // for (var x = 0; x < strings[i].mx.length; x++) {
-              //   // print(strings[i].mx[x].name.toString());
-              //   // print(strings[i].mx[x].price.toString());
+                // for (var x = 0; x < strings[i].mx.length; x++) {
+                //   // print(strings[i].mx[x].name.toString());
+                //   // print(strings[i].mx[x].price.toString());
 
-              // }
-              myDrinks[ind].mid = strings[i].name;
+                // }
+                myDrinks[ind].mid = strings[i].name;
               // var res = userChecked.sublist(userChecked.indexOf(''));
               // print(res);
               showModalBottomSheet<void>(
@@ -2377,11 +2377,6 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        for (var jom = 0; jom < newChsmx.length; jom++) {
-      userChecked.add(newChsmx[jom].cname);
-    }
-
-
                                         if (strings[i].ismSelect != 'true') {
                                           if (myDrinks[ind]
                                               .ChMixer
@@ -2397,8 +2392,6 @@ class _MenuPageState extends State<MenuPage> {
                                             myDrinks[ind].mid = '';
                                             Navigator.pop(context);
                                           }
-
-                                          
                                         } else {
                                           Navigator.pop(context);
                                         }
