@@ -2375,38 +2375,42 @@ class _MenuPageState extends State<MenuPage> {
                                 padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
                                 child: Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (strings[i].ismSelect != 'true') {
-                                          if (myDrinks[ind]
-                                              .ChMixer
-                                              .isNotEmpty) {
-                                            myDrinks[ind].mid = '';
-                                            setState(() {
-                                              myDrinks[ind].mid = myDrinks[ind]
-                                                  .ChMixer[ind]
-                                                  .cname;
-                                            });
-                                            Navigator.pop(context);
+                                    Visibility(
+                                      visible: strings[i].ismSelect != 'true',
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (strings[i].ismSelect != 'true') {
+                                            if (myDrinks[ind]
+                                                .ChMixer
+                                                .isNotEmpty) {
+                                              myDrinks[ind].mid = '';
+                                              setState(() {
+                                                myDrinks[ind].mid =
+                                                    myDrinks[ind]
+                                                        .ChMixer[ind]
+                                                        .cname;
+                                              });
+                                              Navigator.pop(context);
+                                            } else {
+                                              myDrinks[ind].mid = '';
+                                              Navigator.pop(context);
+                                            }
                                           } else {
-                                            myDrinks[ind].mid = '';
                                             Navigator.pop(context);
                                           }
-                                        } else {
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                      child: SizedBox(
-                                        width: 100,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  color: Colors.deepOrange,
-                                                  fontSize: 16),
-                                            ),
-                                          ],
+                                        },
+                                        child: SizedBox(
+                                          width: 100,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.deepOrange,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
