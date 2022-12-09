@@ -260,7 +260,7 @@ class _MenuPageState extends State<MenuPage> {
     switch (uName) {
       case '':
         {
-          unamex = '';
+          unamex = 'Guest Mode';
         }
         break;
       case ' ':
