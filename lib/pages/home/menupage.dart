@@ -2415,7 +2415,9 @@ class _MenuPageState extends State<MenuPage> {
                                               newChs.add(chs);
                                             }
                                           }
-
+                                          if (chmqty == null) {
+                                            chmqty = [];
+                                          }
                                           for (var a = 0;
                                               a < chmqty.length;
                                               a++) {
