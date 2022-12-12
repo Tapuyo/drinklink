@@ -2354,6 +2354,9 @@ class _MenuPageState extends State<MenuPage> {
 
                 // }
                 myDrinks[ind].mid = strings[i].name;
+              if (strings[i].name == 'None') {
+                none = 'None';
+              }
               // var res = userChecked.sublist(userChecked.indexOf(''));
               // print(res);
               showModalBottomSheet<void>(
