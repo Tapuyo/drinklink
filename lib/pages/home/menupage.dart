@@ -132,7 +132,6 @@ class _MenuPageState extends State<MenuPage> {
   bool isloading;
   int totalqty = 0;
   double chrx = 0;
-  bool isaddonsClose = false;
 
   bool isbname = true;
   bool isbaddress = true;
@@ -2321,7 +2320,7 @@ class _MenuPageState extends State<MenuPage> {
     String mj;
     bool _isnone = false;
     String none = '';
-    bool close = false;
+    bool iCancel = false;
     double qty = 0;
     String Ids = '';
     userChecked = [];
@@ -2400,6 +2399,23 @@ class _MenuPageState extends State<MenuPage> {
 
                                           List<chossenMixer> newChs =
                                               myDrinks[ind].ChMixer;
+
+                                          for (var i = 0;
+                                              i < newChsmx.length;
+                                              i++) {
+                                            newChs.removeWhere((element) =>
+                                                element.cmid ==
+                                                newChsmx[i].cmid);
+                                            chossenMixer chs = chossenMixer(
+                                                Ids,
+                                                newChsmx[i].cmid,
+                                                newChsmx[i].cname,
+                                                newChsmx[i].cprice);
+                                            if (chs.cmid.isNotEmpty) {
+                                              newChs.add(chs);
+                                            }
+                                          }
+
                                           for (var a = 0;
                                               a < chmqty.length;
                                               a++) {
@@ -2440,7 +2456,7 @@ class _MenuPageState extends State<MenuPage> {
                                           // if (chs.cmid.isNotEmpty) {
                                           //   chs.add(chs);
                                           // }
-                                          isaddonsClose = true;
+                                          iCancel = true;
                                           Navigator.pop(context);
                                         }
                                       },
@@ -2580,7 +2596,7 @@ class _MenuPageState extends State<MenuPage> {
                                             if (strings[i].ismSelect ==
                                                 'true') {
                                               print(newChsmx);
-                                              if (close == true) {
+                                              if (iCancel == false) {
                                                 List<chossenMixer> newChs =
                                                     myDrinks[ind].ChMixer;
                                                 // newChs = [];
@@ -2674,24 +2690,23 @@ class _MenuPageState extends State<MenuPage> {
                                                 var indx =
                                                     strings[i].id.toString();
                                                 chmqty = [];
-                                                if (isaddonsClose == false) {
-                                                  for (var i = 0;
-                                                      i < newChsmx.length;
-                                                      i++) {
-                                                    if (indx ==
-                                                        newChsmx[i].indId) {
-                                                      chossenMixerMultipleQty
-                                                          chqty =
-                                                          chossenMixerMultipleQty(
-                                                              newChsmx[i].indId,
-                                                              newChsmx[i].cmid,
-                                                              newChsmx[i].cname,
-                                                              newChsmx[i]
-                                                                  .cprice);
-                                                      chmqty.add(chqty);
-                                                    }
+
+                                                for (var i = 0;
+                                                    i < newChsmx.length;
+                                                    i++) {
+                                                  if (indx ==
+                                                      newChsmx[i].indId) {
+                                                    chossenMixerMultipleQty
+                                                        chqty =
+                                                        chossenMixerMultipleQty(
+                                                            newChsmx[i].indId,
+                                                            newChsmx[i].cmid,
+                                                            newChsmx[i].cname,
+                                                            newChsmx[i].cprice);
+                                                    chmqty.add(chqty);
                                                   }
                                                 }
+
                                                 qty = double.parse(
                                                     chmqty.length.toString());
 
@@ -2706,7 +2721,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                               print(userChecked);
                                               newChsmxRemoved = [];
-                                              isaddonsClose = false;
+                                              iCancel = false;
                                               // chmqty = [];
 
                                               // if (qty != 0) {
@@ -2918,7 +2933,7 @@ class _MenuPageState extends State<MenuPage> {
                                             onChanged: (val) {
                                               modsetState(() {
                                                 // if (isedit == true) {
-                                                isaddonsClose = false;
+                                                iCancel = false;
                                                 if (val == true) {
                                                   setState(() {
                                                     // if (newChsmx.length > 0) {
@@ -2940,7 +2955,6 @@ class _MenuPageState extends State<MenuPage> {
                                                         .mx[index]
                                                         .price;
                                                     qty += 1;
-                                                    close = true;
                                                     chossenMixerMultiple chs =
                                                         chossenMixerMultiple(
                                                             indId,
@@ -2976,7 +2990,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     if (qty > 0) {
                                                       qty = qty - 1;
                                                     }
-                                                    close = true;
+
                                                     chossenMixerMultipleRemoved
                                                         chs =
                                                         chossenMixerMultipleRemoved(
