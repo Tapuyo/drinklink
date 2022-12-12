@@ -132,6 +132,7 @@ class _MenuPageState extends State<MenuPage> {
   bool isloading;
   int totalqty = 0;
   double chrx = 0;
+  bool isaddonsClose = false;
 
   bool isbname = true;
   bool isbaddress = true;
@@ -2375,42 +2376,85 @@ class _MenuPageState extends State<MenuPage> {
                                 padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
                                 child: Row(
                                   children: [
-                                    Visibility(
-                                      visible: strings[i].ismSelect != 'true',
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (strings[i].ismSelect != 'true') {
-                                            if (myDrinks[ind]
-                                                .ChMixer
-                                                .isNotEmpty) {
-                                              myDrinks[ind].mid = '';
-                                              setState(() {
-                                                myDrinks[ind].mid =
-                                                    myDrinks[ind]
-                                                        .ChMixer[ind]
-                                                        .cname;
-                                              });
-                                              Navigator.pop(context);
-                                            } else {
-                                              myDrinks[ind].mid = '';
-                                              Navigator.pop(context);
-                                            }
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (strings[i].ismSelect != 'true') {
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty) {
+                                            myDrinks[ind].mid = '';
+                                            setState(() {
+                                              myDrinks[ind].mid = myDrinks[ind]
+                                                  .ChMixer[ind]
+                                                  .cname;
+                                            });
+                                            Navigator.pop(context);
                                           } else {
+                                            myDrinks[ind].mid = '';
                                             Navigator.pop(context);
                                           }
-                                        },
-                                        child: SizedBox(
-                                          width: 100,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Cancel",
-                                                style: TextStyle(
-                                                    color: Colors.deepOrange,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          ),
+                                        } else {
+                                          print(chmqty);
+                                          newChsmx.clear();
+                                          userChecked.clear();
+
+                                          List<chossenMixer> newChs =
+                                              myDrinks[ind].ChMixer;
+                                          for (var a = 0;
+                                              a < chmqty.length;
+                                              a++) {
+                                            chossenMixerMultiple chsa =
+                                                chossenMixerMultiple(
+                                                    chmqty[a].indId,
+                                                    chmqty[a].cmid,
+                                                    chmqty[a].cname,
+                                                    chmqty[a].cprice);
+                                            // chossenMixer chs = chossenMixer(
+                                            //     indId, chid, chname, chprice);
+                                            if (chsa.cmid.isNotEmpty) {
+                                              newChsmx.add(chsa);
+                                            }
+                                          }
+                                          print(newChsmx);
+
+                                          for (var b = 0;
+                                              b < newChsmx.length;
+                                              b++) {
+                                            chossenMixer cm = chossenMixer(
+                                                newChsmx[b].indId,
+                                                newChsmx[b].cmid,
+                                                newChsmx[b].cname,
+                                                newChsmx[b].cprice);
+                                            if (cm.cmid.isNotEmpty) {
+                                              newChs.add(cm);
+                                              userChecked
+                                                  .add(newChsmx[b].cname);
+                                            }
+                                          }
+
+                                          // chossenMixer chs = chossenMixer(
+                                          //     Ids,
+                                          //     newChsmx[i].cmid,
+                                          //     newChsmx[i].cname,
+                                          //     newChsmx[i].cprice);
+                                          // if (chs.cmid.isNotEmpty) {
+                                          //   chs.add(chs);
+                                          // }
+                                          isaddonsClose = true;
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width: 100,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                  color: Colors.deepOrange,
+                                                  fontSize: 16),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -2630,22 +2674,24 @@ class _MenuPageState extends State<MenuPage> {
                                                 var indx =
                                                     strings[i].id.toString();
                                                 chmqty = [];
-                                                for (var i = 0;
-                                                    i < newChsmx.length;
-                                                    i++) {
-                                                  if (indx ==
-                                                      newChsmx[i].indId) {
-                                                    chossenMixerMultipleQty
-                                                        chqty =
-                                                        chossenMixerMultipleQty(
-                                                            newChsmx[i].indId,
-                                                            newChsmx[i].cmid,
-                                                            newChsmx[i].cname,
-                                                            newChsmx[i].cprice);
-                                                    chmqty.add(chqty);
+                                                if (isaddonsClose == false) {
+                                                  for (var i = 0;
+                                                      i < newChsmx.length;
+                                                      i++) {
+                                                    if (indx ==
+                                                        newChsmx[i].indId) {
+                                                      chossenMixerMultipleQty
+                                                          chqty =
+                                                          chossenMixerMultipleQty(
+                                                              newChsmx[i].indId,
+                                                              newChsmx[i].cmid,
+                                                              newChsmx[i].cname,
+                                                              newChsmx[i]
+                                                                  .cprice);
+                                                      chmqty.add(chqty);
+                                                    }
                                                   }
                                                 }
-
                                                 qty = double.parse(
                                                     chmqty.length.toString());
 
@@ -2660,6 +2706,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                               print(userChecked);
                                               newChsmxRemoved = [];
+                                              isaddonsClose = false;
                                               // chmqty = [];
 
                                               // if (qty != 0) {
@@ -2871,6 +2918,7 @@ class _MenuPageState extends State<MenuPage> {
                                             onChanged: (val) {
                                               modsetState(() {
                                                 // if (isedit == true) {
+                                                isaddonsClose = false;
                                                 if (val == true) {
                                                   setState(() {
                                                     // if (newChsmx.length > 0) {
