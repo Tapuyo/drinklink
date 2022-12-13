@@ -2331,10 +2331,12 @@ class _MenuPageState extends State<MenuPage> {
     if (newChsmxRemoved == null) {
       newChsmxRemoved = [];
     }
-
+    print(newChsmx);
     for (var jom = 0; jom < newChsmx.length; jom++) {
       userChecked.add(newChsmx[jom].cname);
     }
+
+    iCancel = true;
 
     print(userChecked);
     if (strings.length <= 0) {
