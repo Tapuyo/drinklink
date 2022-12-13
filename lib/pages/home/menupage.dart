@@ -2398,72 +2398,81 @@ class _MenuPageState extends State<MenuPage> {
                                             Navigator.pop(context);
                                           }
                                         } else {
-                                          print(chmqty);
-                                          newChsmx.clear();
-                                          userChecked.clear();
-
-                                          List<chossenMixer> newChs =
-                                              myDrinks[ind].ChMixer;
-
-                                          for (var i = 0;
-                                              i < newChsmx.length;
-                                              i++) {
-                                            newChs.removeWhere((element) =>
-                                                element.cmid ==
-                                                newChsmx[i].cmid);
-                                            chossenMixer chs = chossenMixer(
-                                                Ids,
-                                                newChsmx[i].cmid,
-                                                newChsmx[i].cname,
-                                                newChsmx[i].cprice);
-                                            if (chs.cmid.isNotEmpty) {
-                                              newChs.add(chs);
+                                          if (iCancel == false) {
+                                            print(chmqty);
+                                            newChsmx.clear();
+                                            userChecked.clear();
+                                            newChsmx.clear();
+                                            List<chossenMixer> newChs =
+                                                myDrinks[ind].ChMixer;
+                                            print(newChs);
+                                            newChs.clear();
+                                            for (var i = 0;
+                                                i < newChsmx.length;
+                                                i++) {
+                                              newChs.removeWhere((element) =>
+                                                  element.cmid ==
+                                                  newChsmx[i].cmid);
+                                              chossenMixer chs = chossenMixer(
+                                                  Ids,
+                                                  newChsmx[i].cmid,
+                                                  newChsmx[i].cname,
+                                                  newChsmx[i].cprice);
+                                              if (chs.cmid.isNotEmpty) {
+                                                newChs.add(chs);
+                                              }
                                             }
-                                          }
-                                          if (chmqty == null) {
-                                            chmqty = [];
-                                          }
-                                          for (var a = 0;
-                                              a < chmqty.length;
-                                              a++) {
-                                            chossenMixerMultiple chsa =
-                                                chossenMixerMultiple(
-                                                    chmqty[a].indId,
-                                                    chmqty[a].cmid,
-                                                    chmqty[a].cname,
-                                                    chmqty[a].cprice);
+                                            if (chmqty == null) {
+                                              chmqty = [];
+                                            }
+
+                                            for (var a = 0;
+                                                a < chmqty.length;
+                                                a++) {
+                                              chossenMixerMultiple chsa =
+                                                  chossenMixerMultiple(
+                                                      chmqty[a].indId,
+                                                      chmqty[a].cmid,
+                                                      chmqty[a].cname,
+                                                      chmqty[a].cprice);
+                                              // chossenMixer chs = chossenMixer(
+                                              //     indId, chid, chname, chprice);
+                                              if (chsa.cmid.isNotEmpty) {
+                                                newChsmx.add(chsa);
+                                              }
+                                            }
+                                            print(newChsmx);
+
+                                            for (var b = 0;
+                                                b < newChsmx.length;
+                                                b++) {
+                                              chossenMixer cm = chossenMixer(
+                                                  newChsmx[b].indId,
+                                                  newChsmx[b].cmid,
+                                                  newChsmx[b].cname,
+                                                  newChsmx[b].cprice);
+                                              if (cm.cmid.isNotEmpty) {
+                                                newChs.add(cm);
+                                                userChecked
+                                                    .add(newChsmx[b].cname);
+                                              }
+                                            }
+
                                             // chossenMixer chs = chossenMixer(
-                                            //     indId, chid, chname, chprice);
-                                            if (chsa.cmid.isNotEmpty) {
-                                              newChsmx.add(chsa);
-                                            }
-                                          }
-                                          print(newChsmx);
-
-                                          for (var b = 0;
-                                              b < newChsmx.length;
-                                              b++) {
-                                            chossenMixer cm = chossenMixer(
-                                                newChsmx[b].indId,
-                                                newChsmx[b].cmid,
-                                                newChsmx[b].cname,
-                                                newChsmx[b].cprice);
-                                            if (cm.cmid.isNotEmpty) {
-                                              newChs.add(cm);
-                                              userChecked
-                                                  .add(newChsmx[b].cname);
-                                            }
+                                            //     Ids,
+                                            //     newChsmx[i].cmid,
+                                            //     newChsmx[i].cname,
+                                            //     newChsmx[i].cprice);
+                                            // if (chs.cmid.isNotEmpty) {
+                                            //   chs.add(chs);
+                                            // }
+                                            iCancel = true;
                                           }
 
-                                          // chossenMixer chs = chossenMixer(
-                                          //     Ids,
-                                          //     newChsmx[i].cmid,
-                                          //     newChsmx[i].cname,
-                                          //     newChsmx[i].cprice);
-                                          // if (chs.cmid.isNotEmpty) {
-                                          //   chs.add(chs);
-                                          // }
-                                          iCancel = true;
+                                          // indId = '';
+                                          // chid = '';
+                                          // chname = 'None';
+                                          // chprice = '0';
                                           Navigator.pop(context);
                                         }
                                       },
@@ -2523,25 +2532,27 @@ class _MenuPageState extends State<MenuPage> {
                                             }
 
                                             Navigator.pop(context);
+
                                             if (_isnone == true) {
                                               List<chossenMixer> newChs =
                                                   myDrinks[ind].ChMixer;
+                                              print(newChs);
                                               chossenMixer chs = chossenMixer(
                                                   indId, chid, chname, chprice);
                                               if (chs.cmid.isNotEmpty) {
                                                 newChs.add(chs);
                                               }
-                                              print(chs.cmid.toString());
-                                              mj = chs.cmid.toString();
-                                              print(mj + "mjjjj");
-                                              print(chs.cname.toString());
-                                              print(chs.cprice.toString());
+                                              // print(chs.cmid.toString());
+                                              // mj = chs.cmid.toString();
+                                              // print(mj + "mjjjj");
+                                              // print(chs.cname.toString());
+                                              // print(chs.cprice.toString());
                                               myDrinks[ind].ChMixer = newChs;
 
                                               print(strings[i].mx.length);
 
-                                              print(
-                                                  chs.cname + 'Drinks Here!!');
+                                              // print(
+                                              //     chs.cname + 'Drinks Here!!');
                                               double mixertotal = 0;
                                               for (var i = 0;
                                                   i < newChs.length;
@@ -2558,28 +2569,27 @@ class _MenuPageState extends State<MenuPage> {
                                                   mixertotal;
                                               myDrinks[ind].price =
                                                   tot.toStringAsFixed(2);
-                                              strings[i].name =
-                                                  chs.cname.toString();
+                                              strings[i].name = chname;
                                             } else {
                                               List<chossenMixer> newChs =
                                                   myDrinks[ind].ChMixer;
-
+                                              print(newChs);
                                               chossenMixer chs = chossenMixer(
                                                   indId, chid, chname, chprice);
                                               if (chs.cmid.isNotEmpty) {
                                                 newChs.add(chs);
                                               }
-                                              print(chs.cmid.toString());
-                                              mj = chs.cmid.toString();
-                                              print(mj + "mjjjj");
-                                              print(chs.cname.toString());
-                                              print(chs.cprice.toString());
+                                              // print(chs.cmid.toString());
+                                              // mj = chs.cmid.toString();
+                                              // print(mj + "mjjjj");
+                                              // print(chs.cname.toString());
+                                              // print(chs.cprice.toString());
                                               myDrinks[ind].ChMixer = newChs;
 
                                               print(strings[i].mx.length);
 
-                                              print(
-                                                  chs.cname + 'Drinks Here!!');
+                                              // print(
+                                              //     chs.cname + 'Drinks Here!!');
                                               double mixertotal = 0;
                                               for (var i = 0;
                                                   i < newChs.length;
@@ -2596,8 +2606,7 @@ class _MenuPageState extends State<MenuPage> {
                                                   mixertotal;
                                               myDrinks[ind].price =
                                                   tot.toStringAsFixed(2);
-                                              strings[i].name =
-                                                  chs.cname.toString();
+                                              strings[i].name = chname;
                                             }
                                           } else {
                                             if (strings[i].ismSelect ==
@@ -3050,42 +3059,50 @@ class _MenuPageState extends State<MenuPage> {
                                       } else {
                                         return GestureDetector(
                                           onTap: () {
+                                            var a = myDrinks[ind].mid;
+                                            var b = strings[i].mx[index].name;
                                             setState(() {
-                                              indId = strings[i].id.toString();
-                                              chid = strings[i].mx[index].id;
-                                              chname =
-                                                  strings[i].mx[index].name;
-                                              chprice =
-                                                  strings[i].mx[index].price;
+                                              if (a != b) {
+                                                print(a + '' + b);
+                                                indId =
+                                                    strings[i].id.toString();
+                                                chid = strings[i].mx[index].id;
+                                                chname =
+                                                    strings[i].mx[index].name;
+                                                chprice =
+                                                    strings[i].mx[index].price;
 
-                                              myindex = index;
-                                              print(myindex);
-                                              print(index);
-                                              print(chid);
+                                                myindex = index;
+                                                print(myindex);
+                                                print(index);
+                                                print(chid);
 
-                                              myDrinks[ind].mid =
-                                                  strings[i].mx[index].name;
-                                              myDrinks[ind].mprice =
-                                                  strings[i].mx[index].price;
-                                              mname = strings[i].name;
+                                                myDrinks[ind].mid =
+                                                    strings[i].mx[index].name;
+                                                myDrinks[ind].mprice =
+                                                    strings[i].mx[index].price;
+                                                mname = strings[i].name;
+                                              }
                                             });
 
                                             modsetState(() {
-                                              if (strings[i].name ==
-                                                  strings[i].mx[index].name) {
-                                                strings[i].name =
-                                                    strings[i].mx[index].name;
-                                              } else {
-                                                strings[i].name =
-                                                    strings[i].name;
-                                              }
+                                              if (a != b) {
+                                                if (strings[i].name ==
+                                                    strings[i].mx[index].name) {
+                                                  strings[i].name =
+                                                      strings[i].mx[index].name;
+                                                } else {
+                                                  strings[i].name =
+                                                      strings[i].name;
+                                                }
 
-                                              myDrinks[ind].mid =
-                                                  strings[i].mx[index].name;
-                                              myDrinks[ind].mprice =
-                                                  strings[i].mx[index].price;
-                                              select = myindex;
-                                              int Row = index;
+                                                myDrinks[ind].mid =
+                                                    strings[i].mx[index].name;
+                                                myDrinks[ind].mprice =
+                                                    strings[i].mx[index].price;
+                                                select = myindex;
+                                                int Row = index;
+                                              }
                                             });
                                           },
                                           child: Container(
