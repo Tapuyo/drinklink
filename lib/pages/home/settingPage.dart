@@ -671,12 +671,14 @@ class _setPageState extends State<setPage> {
   sendOTP() async {
     _loadPreview();
     print(otpcode);
-    String username = 'leepe@drinklinkph.com';
-    String password = 'P@ssw0rd';
+    // String username = 'leepe@drinklinkph.com';
+    // String password = 'P@ssw0rd';
+    String username = 'leepeapp1@gmail.com';
+    String password = 'ioafduzyrulejpqj';
     String bemail = billemail.text.trim();
 
     final smtpServer =
-        SmtpServer('plesk5600.is.cc', username: username, password: password);
+        SmtpServer('smtp.gmail.com', username: username, password: password);
 
     final message = Message()
       ..from = Address(username, bemail)
@@ -904,10 +906,9 @@ class _setPageState extends State<setPage> {
               ),
               onPressed: () {
                 Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SignIn()),
-                              );
+                  context,
+                  MaterialPageRoute(builder: (context) => SignIn()),
+                );
               },
             ),
           ],
