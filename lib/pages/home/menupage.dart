@@ -757,9 +757,9 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       stoken = token;
     }
-    if(uName.isEmpty){
-    uName ='Guest Mode';
-    }else{
+    if (uName.isEmpty) {
+      uName = 'Guest Mode';
+    } else {
       uName = uName;
     }
 
@@ -1031,54 +1031,53 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                     ),
                     InkWell(
-                          onTap: () {
-                            if (_scaffoldKey.currentState.isEndDrawerOpen) {
-                              _scaffoldKey.currentState.openDrawer();
-                            } else {
-                              _scaffoldKey.currentState.openEndDrawer();
-                            }
+                      onTap: () {
+                        if (_scaffoldKey.currentState.isEndDrawerOpen) {
+                          _scaffoldKey.currentState.openDrawer();
+                        } else {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        }
 
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => help()),
-                            );
-                          },
-                          child: Container(
-                            height: 50,
-                            padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Icon(
-                                  MaterialCommunityIcons.help_circle_outline,
-                                  size: 30,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                new Expanded(
-                                  flex: 1,
-                                  child: new SingleChildScrollView(
-                                    scrollDirection:
-                                        Axis.horizontal, //.horizontal
-                                    child: new Text(
-                                      'Help Centre',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => help()),
+                        );
+                      },
+                      child: Container(
+                        height: 50,
+                        padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              MaterialCommunityIcons.help_circle_outline,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            new Expanded(
+                              flex: 1,
+                              child: new SingleChildScrollView(
+                                scrollDirection: Axis.horizontal, //.horizontal
+                                child: new Text(
+                                  'Help Centre',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w500,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
+                      ),
+                    ),
                     Spacer(),
                     // Container(
                     //   padding: EdgeInsets.fromLTRB(0, 0, 10, 50),
@@ -2323,6 +2322,7 @@ class _MenuPageState extends State<MenuPage> {
     String none = '';
     bool close = false;
     double qty = 0;
+    String Ids = '';
     userChecked = [];
     if (newChsmx == null) {
       newChsmx = [];
@@ -2348,7 +2348,6 @@ class _MenuPageState extends State<MenuPage> {
               print('ajkshdkajhsdkj');
               if (myMenu != null || myMenu != [])
                 //print(strings[i].id.toString());
-
                 // for (var x = 0; x < strings[i].mx.length; x++) {
                 //   // print(strings[i].mx[x].name.toString());
                 //   // print(strings[i].mx[x].price.toString());
@@ -2361,9 +2360,8 @@ class _MenuPageState extends State<MenuPage> {
                 isDismissible: false,
                 context: context,
                 builder: (BuildContext context) {
-                  return StatefulBuilder(
-                      builder: (BuildContext context, StateSetter modsetState
-                          /*You can rename this!*/) {
+                  return StatefulBuilder(builder: (BuildContext context,
+                      StateSetter modsetState /*You can rename this!*/) {
                     return SingleChildScrollView(
                       child: Container(
                         height: 500,
@@ -2379,22 +2377,22 @@ class _MenuPageState extends State<MenuPage> {
                                   children: [
                                     GestureDetector(
                                       onTap: () {
-                                        if(strings[i].ismSelect != 'true'){
-                                        if (myDrinks[ind]
-                                            .ChMixer
-                                            .isNotEmpty) {
-                                          myDrinks[ind].mid = '';
-                                          setState(() {
-                                            myDrinks[ind].mid = myDrinks[ind]
-                                                .ChMixer[ind]
-                                                .cname;
-                                          });
-                                          Navigator.pop(context);
+                                        if (strings[i].ismSelect != 'true') {
+                                          if (myDrinks[ind]
+                                              .ChMixer
+                                              .isNotEmpty) {
+                                            myDrinks[ind].mid = '';
+                                            setState(() {
+                                              myDrinks[ind].mid = myDrinks[ind]
+                                                  .ChMixer[ind]
+                                                  .cname;
+                                            });
+                                            Navigator.pop(context);
+                                          } else {
+                                            myDrinks[ind].mid = '';
+                                            Navigator.pop(context);
+                                          }
                                         } else {
-                                          myDrinks[ind].mid = '';
-                                          Navigator.pop(context);
-                                        }
-                                        }else{
                                           Navigator.pop(context);
                                         }
                                       },
@@ -2592,9 +2590,7 @@ class _MenuPageState extends State<MenuPage> {
                                                           newChsmx[i].cmid);
                                                   chossenMixer chs =
                                                       chossenMixer(
-                                                          strings[i]
-                                                              .id
-                                                              .toString(),
+                                                          Ids,
                                                           newChsmx[i].cmid,
                                                           newChsmx[i].cname,
                                                           newChsmx[i].cprice);
@@ -2660,7 +2656,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                               print(userChecked);
                                               newChsmxRemoved = [];
-                                              chmqty = [];
+                                              // chmqty = [];
 
                                               // if (qty != 0) {
                                               //   qty = 0;
@@ -2834,142 +2830,148 @@ class _MenuPageState extends State<MenuPage> {
                                           child: CheckboxListTile(
                                             shape: CircleBorder(),
                                             tileColor: Colors.black54,
-                                          title: Row(
-                                            children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: SingleChildScrollView(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
-                                                  child: Text(
-                                                    strings[i].mx[index].name,
-                                                    style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16),
+                                            title: Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Text(
+                                                      strings[i].mx[index].name,
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 16),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                strings[i]
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  strings[i]
+                                                          .mx[index]
+                                                          .price
+                                                          .toString() +
+                                                      " AED",
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                            controlAffinity:
+                                                ListTileControlAffinity.leading,
+                                            value: userChecked.contains(
+                                                strings[i].mx[index].name),
+                                            onChanged: (val) {
+                                              modsetState(() {
+                                                // if (isedit == true) {
+                                                if (val == true) {
+                                                  setState(() {
+                                                    // if (newChsmx.length > 0) {
+                                                    //   newChsmx = [];
+                                                    // }
+                                                    userChecked.add(strings[i]
                                                         .mx[index]
-                                                        .price
-                                                        .toString() +
-                                                    " AED",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 16),
-                                              ),
-                                            ],
-                                          ),
-                                          controlAffinity:
-                                              ListTileControlAffinity.leading,
-                                          value: userChecked.contains(
-                                              strings[i].mx[index].name),
-                                          onChanged: (val) {
-                                            modsetState(() {
-                                              // if (isedit == true) {
-                                              if (val == true) {
-                                                setState(() {
-                                                  // if (newChsmx.length > 0) {
-                                                  //   newChsmx = [];
-                                                  // }
-                                                  userChecked.add(strings[i]
-                                                      .mx[index]
-                                                      .name);
+                                                        .name);
 
-                                                  indId =
-                                                      strings[i].id.toString();
-                                                  chid =
-                                                      strings[i].mx[index].id;
-                                                  chname =
-                                                      strings[i].mx[index].name;
-                                                  chprice = strings[i]
-                                                      .mx[index]
-                                                      .price;
-                                                  qty += 1;
-                                                  close = true;
-                                                  chossenMixerMultiple chs =
-                                                      chossenMixerMultiple(
-                                                          indId,
-                                                          chid,
-                                                          chname,
-                                                          chprice);
-                                                  if (chs.cmid.isNotEmpty) {
-                                                    var isContain =
-                                                        newChsmx.contains(chs);
-                                                    if (isContain == false) {
-                                                      newChsmx.add(chs);
+                                                    indId = strings[i]
+                                                        .id
+                                                        .toString();
+                                                    chid =
+                                                        strings[i].mx[index].id;
+                                                    chname = strings[i]
+                                                        .mx[index]
+                                                        .name;
+                                                    chprice = strings[i]
+                                                        .mx[index]
+                                                        .price;
+                                                    qty += 1;
+                                                    close = true;
+                                                    chossenMixerMultiple chs =
+                                                        chossenMixerMultiple(
+                                                            indId,
+                                                            chid,
+                                                            chname,
+                                                            chprice);
+                                                    if (chs.cmid.isNotEmpty) {
+                                                      var isContain = newChsmx
+                                                          .contains(chs);
+                                                      if (isContain == false) {
+                                                        newChsmx.add(chs);
+                                                      }
                                                     }
-                                                  }
-                                                  print(newChsmx);
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  userChecked.remove(strings[i]
-                                                      .mx[index]
-                                                      .name);
-                                                  indId =
-                                                      strings[i].id.toString();
-                                                  chid =
-                                                      strings[i].mx[index].id;
-                                                  chname =
-                                                      strings[i].mx[index].name;
-                                                  chprice = strings[i]
-                                                      .mx[index]
-                                                      .price;
-                                                  if (qty > 0) {
-                                                    qty = qty - 1;
-                                                  }
-                                                  close = true;
-                                                  chossenMixerMultipleRemoved
-                                                      chs =
-                                                      chossenMixerMultipleRemoved(
-                                                          indId,
-                                                          chid,
-                                                          chname,
-                                                          chprice);
-                                                  if (chs.cmid.isNotEmpty) {
-                                                    var isContain =
+                                                    print(newChsmx);
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    userChecked.remove(
+                                                        strings[i]
+                                                            .mx[index]
+                                                            .name);
+                                                    indId = strings[i]
+                                                        .id
+                                                        .toString();
+                                                    chid =
+                                                        strings[i].mx[index].id;
+                                                    chname = strings[i]
+                                                        .mx[index]
+                                                        .name;
+                                                    chprice = strings[i]
+                                                        .mx[index]
+                                                        .price;
+                                                    if (qty > 0) {
+                                                      qty = qty - 1;
+                                                    }
+                                                    close = true;
+                                                    chossenMixerMultipleRemoved
+                                                        chs =
+                                                        chossenMixerMultipleRemoved(
+                                                            indId,
+                                                            chid,
+                                                            chname,
+                                                            chprice);
+                                                    if (chs.cmid.isNotEmpty) {
+                                                      var isContain =
+                                                          newChsmxRemoved
+                                                              .contains(chs);
+                                                      if (isContain == false) {
                                                         newChsmxRemoved
-                                                            .contains(chs);
-                                                    if (isContain == false) {
-                                                      newChsmxRemoved.add(chs);
+                                                            .add(chs);
+                                                      }
                                                     }
-                                                  }
-                                                  List<chossenMixer> newChs =
-                                                      myDrinks[ind].ChMixer;
-                                                  if (newChsmxRemoved.length >
-                                                      0) {
-                                                    for (var ia = 0;
-                                                        ia <
-                                                            newChsmxRemoved
-                                                                .length;
-                                                        ia++) {
-                                                      newChsmx.removeWhere(
-                                                          (element) =>
-                                                              element.cname ==
-                                                              newChsmxRemoved[
-                                                                      ia]
-                                                                  .cname);
-                                                      newChs.removeWhere(
-                                                          (element) =>
-                                                              element.cname ==
-                                                              newChsmxRemoved[
-                                                                      ia]
-                                                                  .cname);
+                                                    List<chossenMixer> newChs =
+                                                        myDrinks[ind].ChMixer;
+                                                    if (newChsmxRemoved.length >
+                                                        0) {
+                                                      for (var ia = 0;
+                                                          ia <
+                                                              newChsmxRemoved
+                                                                  .length;
+                                                          ia++) {
+                                                        newChsmx.removeWhere(
+                                                            (element) =>
+                                                                element.cname ==
+                                                                newChsmxRemoved[
+                                                                        ia]
+                                                                    .cname);
+                                                        newChs.removeWhere(
+                                                            (element) =>
+                                                                element.cname ==
+                                                                newChsmxRemoved[
+                                                                        ia]
+                                                                    .cname);
+                                                      }
                                                     }
-                                                  }
-                                                  print(newChsmx);
-                                                });
-                                              }
-                                              // }
-                                            });
-                                          },
-                                          activeColor: Colors.deepOrange,
-                                          checkColor: Colors.deepOrange,
+                                                    print(newChsmx);
+                                                  });
+                                                }
+                                                // }
+                                              });
+                                            },
+                                            activeColor: Colors.deepOrange,
+                                            checkColor: Colors.deepOrange,
                                           ),
                                         );
                                       } else {
@@ -6247,7 +6249,8 @@ class _MenuPageState extends State<MenuPage> {
     var body = json.encode(map['data']);
     print(body);
     String url = ApiCon.baseurl() + '/auth/users';
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     print(response.statusCode);
@@ -6270,7 +6273,8 @@ class _MenuPageState extends State<MenuPage> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/Token';
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
     print(response.body);
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -6299,7 +6303,8 @@ class _MenuPageState extends State<MenuPage> {
     };
     String url = ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-    final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
+    final response =
+        await http.patch(Uri.parse(url), headers: headers, body: bod);
     print(response.body);
   }
 
@@ -6456,7 +6461,8 @@ class _MenuPageState extends State<MenuPage> {
     print(body.toString());
     String url = ApiCon.baseurl() + '/orders';
     String _cm = '';
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     //print(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
