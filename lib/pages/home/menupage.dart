@@ -2406,13 +2406,14 @@ class _MenuPageState extends State<MenuPage> {
                                             List<chossenMixer> newChs =
                                                 myDrinks[ind].ChMixer;
                                             print(newChs);
-                                            newChs.clear();
+                                            // newChs.clear();
+
                                             for (var i = 0;
                                                 i < newChsmx.length;
                                                 i++) {
                                               newChs.removeWhere((element) =>
-                                                  element.cmid ==
-                                                  newChsmx[i].cmid);
+                                                  element.cname ==
+                                                  newChsmx[i].cname);
                                               chossenMixer chs = chossenMixer(
                                                   Ids,
                                                   newChsmx[i].cmid,
@@ -2452,12 +2453,30 @@ class _MenuPageState extends State<MenuPage> {
                                                   newChsmx[b].cname,
                                                   newChsmx[b].cprice);
                                               if (cm.cmid.isNotEmpty) {
-                                                newChs.add(cm);
-                                                userChecked
-                                                    .add(newChsmx[b].cname);
+                                                setState(() {
+                                                  newChs.add(cm);
+                                                });
                                               }
                                             }
-
+                                            print(newChs);
+                                            for (var bx = 0;
+                                                bx < newChs.length;
+                                                bx++) {
+                                              if (newChs[bx].cname.isNotEmpty) {
+                                                setState(() {
+                                                  chossenMixerMultiple chsa =
+                                                      chossenMixerMultiple(
+                                                          newChs[bx].indId,
+                                                          newChs[bx].cmid,
+                                                          newChs[bx].cname,
+                                                          newChs[bx].cprice);
+                                                  userChecked
+                                                      .add(newChs[bx].cname);
+                                                  newChsmx.add(chsa);
+                                                });
+                                              }
+                                            }
+                                            print(userChecked);
                                             // chossenMixer chs = chossenMixer(
                                             //     Ids,
                                             //     newChsmx[i].cmid,
@@ -2666,8 +2685,8 @@ class _MenuPageState extends State<MenuPage> {
                                                     i++) {
                                                   newChs.removeWhere(
                                                       (element) =>
-                                                          element.cmid ==
-                                                          newChsmx[i].cmid);
+                                                          element.cname ==
+                                                          newChsmx[i].cname);
                                                   chossenMixer chs =
                                                       chossenMixer(
                                                           Ids,
