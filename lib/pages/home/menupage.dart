@@ -440,7 +440,7 @@ class _MenuPageState extends State<MenuPage> {
       isbname = true;
       isbaddress = true;
       isemail = true;
-      idCard = '';
+      // idCard = '';
       bool usename = Prefs.getBool('bsendBill' + unamex + '') ?? false;
       if (usename == true) {
         String cardname = Prefs.getString('bcardname' + unamex) ?? '';
