@@ -2320,7 +2320,7 @@ class _MenuPageState extends State<MenuPage> {
     String mj;
     bool _isnone = false;
     String none = '';
-    bool close = false;
+    bool iCancel = false;
     double qty = 0;
     String Ids = '';
     userChecked = [];
@@ -2331,10 +2331,12 @@ class _MenuPageState extends State<MenuPage> {
     if (newChsmxRemoved == null) {
       newChsmxRemoved = [];
     }
-
+    print(newChsmx);
     for (var jom = 0; jom < newChsmx.length; jom++) {
       userChecked.add(newChsmx[jom].cname);
     }
+
+    iCancel = true;
 
     print(userChecked);
     if (strings.length <= 0) {
@@ -2354,6 +2356,9 @@ class _MenuPageState extends State<MenuPage> {
 
                 // }
                 myDrinks[ind].mid = strings[i].name;
+              if (strings[i].name == 'None') {
+                none = 'None';
+              }
               // var res = userChecked.sublist(userChecked.indexOf(''));
               // print(res);
               showModalBottomSheet<void>(
@@ -2393,6 +2398,100 @@ class _MenuPageState extends State<MenuPage> {
                                             Navigator.pop(context);
                                           }
                                         } else {
+                                          if (iCancel == false) {
+                                            print(chmqty);
+                                            newChsmx.clear();
+                                            userChecked.clear();
+                                            newChsmx.clear();
+                                            List<chossenMixer> newChs =
+                                                myDrinks[ind].ChMixer;
+                                            print(newChs);
+                                            // newChs.clear();
+
+                                            for (var i = 0;
+                                                i < newChsmx.length;
+                                                i++) {
+                                              newChs.removeWhere((element) =>
+                                                  element.cname ==
+                                                  newChsmx[i].cname);
+                                              chossenMixer chs = chossenMixer(
+                                                  Ids,
+                                                  newChsmx[i].cmid,
+                                                  newChsmx[i].cname,
+                                                  newChsmx[i].cprice);
+                                              if (chs.cmid.isNotEmpty) {
+                                                newChs.add(chs);
+                                              }
+                                            }
+                                            if (chmqty == null) {
+                                              chmqty = [];
+                                            }
+
+                                            for (var a = 0;
+                                                a < chmqty.length;
+                                                a++) {
+                                              chossenMixerMultiple chsa =
+                                                  chossenMixerMultiple(
+                                                      chmqty[a].indId,
+                                                      chmqty[a].cmid,
+                                                      chmqty[a].cname,
+                                                      chmqty[a].cprice);
+                                              // chossenMixer chs = chossenMixer(
+                                              //     indId, chid, chname, chprice);
+                                              if (chsa.cmid.isNotEmpty) {
+                                                newChsmx.add(chsa);
+                                              }
+                                            }
+                                            print(newChsmx);
+
+                                            for (var b = 0;
+                                                b < newChsmx.length;
+                                                b++) {
+                                              chossenMixer cm = chossenMixer(
+                                                  newChsmx[b].indId,
+                                                  newChsmx[b].cmid,
+                                                  newChsmx[b].cname,
+                                                  newChsmx[b].cprice);
+                                              if (cm.cmid.isNotEmpty) {
+                                                setState(() {
+                                                  newChs.add(cm);
+                                                });
+                                              }
+                                            }
+                                            print(newChs);
+                                            for (var bx = 0;
+                                                bx < newChs.length;
+                                                bx++) {
+                                              if (newChs[bx].cname.isNotEmpty) {
+                                                setState(() {
+                                                  chossenMixerMultiple chsa =
+                                                      chossenMixerMultiple(
+                                                          newChs[bx].indId,
+                                                          newChs[bx].cmid,
+                                                          newChs[bx].cname,
+                                                          newChs[bx].cprice);
+                                                  userChecked
+                                                      .add(newChs[bx].cname);
+                                                  newChsmx.add(chsa);
+                                                });
+                                              }
+                                            }
+                                            print(userChecked);
+                                            // chossenMixer chs = chossenMixer(
+                                            //     Ids,
+                                            //     newChsmx[i].cmid,
+                                            //     newChsmx[i].cname,
+                                            //     newChsmx[i].cprice);
+                                            // if (chs.cmid.isNotEmpty) {
+                                            //   chs.add(chs);
+                                            // }
+                                            iCancel = true;
+                                          }
+
+                                          // indId = '';
+                                          // chid = '';
+                                          // chname = 'None';
+                                          // chprice = '0';
                                           Navigator.pop(context);
                                         }
                                       },
@@ -2452,25 +2551,27 @@ class _MenuPageState extends State<MenuPage> {
                                             }
 
                                             Navigator.pop(context);
+
                                             if (_isnone == true) {
                                               List<chossenMixer> newChs =
                                                   myDrinks[ind].ChMixer;
+                                              print(newChs);
                                               chossenMixer chs = chossenMixer(
                                                   indId, chid, chname, chprice);
                                               if (chs.cmid.isNotEmpty) {
                                                 newChs.add(chs);
                                               }
-                                              print(chs.cmid.toString());
-                                              mj = chs.cmid.toString();
-                                              print(mj + "mjjjj");
-                                              print(chs.cname.toString());
-                                              print(chs.cprice.toString());
+                                              // print(chs.cmid.toString());
+                                              // mj = chs.cmid.toString();
+                                              // print(mj + "mjjjj");
+                                              // print(chs.cname.toString());
+                                              // print(chs.cprice.toString());
                                               myDrinks[ind].ChMixer = newChs;
 
                                               print(strings[i].mx.length);
 
-                                              print(
-                                                  chs.cname + 'Drinks Here!!');
+                                              // print(
+                                              //     chs.cname + 'Drinks Here!!');
                                               double mixertotal = 0;
                                               for (var i = 0;
                                                   i < newChs.length;
@@ -2487,28 +2588,27 @@ class _MenuPageState extends State<MenuPage> {
                                                   mixertotal;
                                               myDrinks[ind].price =
                                                   tot.toStringAsFixed(2);
-                                              strings[i].name =
-                                                  chs.cname.toString();
+                                              strings[i].name = chname;
                                             } else {
                                               List<chossenMixer> newChs =
                                                   myDrinks[ind].ChMixer;
-
+                                              print(newChs);
                                               chossenMixer chs = chossenMixer(
                                                   indId, chid, chname, chprice);
                                               if (chs.cmid.isNotEmpty) {
                                                 newChs.add(chs);
                                               }
-                                              print(chs.cmid.toString());
-                                              mj = chs.cmid.toString();
-                                              print(mj + "mjjjj");
-                                              print(chs.cname.toString());
-                                              print(chs.cprice.toString());
+                                              // print(chs.cmid.toString());
+                                              // mj = chs.cmid.toString();
+                                              // print(mj + "mjjjj");
+                                              // print(chs.cname.toString());
+                                              // print(chs.cprice.toString());
                                               myDrinks[ind].ChMixer = newChs;
 
                                               print(strings[i].mx.length);
 
-                                              print(
-                                                  chs.cname + 'Drinks Here!!');
+                                              // print(
+                                              //     chs.cname + 'Drinks Here!!');
                                               double mixertotal = 0;
                                               for (var i = 0;
                                                   i < newChs.length;
@@ -2525,14 +2625,13 @@ class _MenuPageState extends State<MenuPage> {
                                                   mixertotal;
                                               myDrinks[ind].price =
                                                   tot.toStringAsFixed(2);
-                                              strings[i].name =
-                                                  chs.cname.toString();
+                                              strings[i].name = chname;
                                             }
                                           } else {
                                             if (strings[i].ismSelect ==
                                                 'true') {
                                               print(newChsmx);
-                                              if (close == true) {
+                                              if (iCancel == false) {
                                                 List<chossenMixer> newChs =
                                                     myDrinks[ind].ChMixer;
                                                 // newChs = [];
@@ -2586,8 +2685,8 @@ class _MenuPageState extends State<MenuPage> {
                                                     i++) {
                                                   newChs.removeWhere(
                                                       (element) =>
-                                                          element.cmid ==
-                                                          newChsmx[i].cmid);
+                                                          element.cname ==
+                                                          newChsmx[i].cname);
                                                   chossenMixer chs =
                                                       chossenMixer(
                                                           Ids,
@@ -2626,6 +2725,7 @@ class _MenuPageState extends State<MenuPage> {
                                                 var indx =
                                                     strings[i].id.toString();
                                                 chmqty = [];
+
                                                 for (var i = 0;
                                                     i < newChsmx.length;
                                                     i++) {
@@ -2656,6 +2756,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                               print(userChecked);
                                               newChsmxRemoved = [];
+                                              iCancel = false;
                                               // chmqty = [];
 
                                               // if (qty != 0) {
@@ -2867,6 +2968,7 @@ class _MenuPageState extends State<MenuPage> {
                                             onChanged: (val) {
                                               modsetState(() {
                                                 // if (isedit == true) {
+                                                iCancel = false;
                                                 if (val == true) {
                                                   setState(() {
                                                     // if (newChsmx.length > 0) {
@@ -2888,7 +2990,6 @@ class _MenuPageState extends State<MenuPage> {
                                                         .mx[index]
                                                         .price;
                                                     qty += 1;
-                                                    close = true;
                                                     chossenMixerMultiple chs =
                                                         chossenMixerMultiple(
                                                             indId,
@@ -2924,7 +3025,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     if (qty > 0) {
                                                       qty = qty - 1;
                                                     }
-                                                    close = true;
+
                                                     chossenMixerMultipleRemoved
                                                         chs =
                                                         chossenMixerMultipleRemoved(
@@ -2977,42 +3078,50 @@ class _MenuPageState extends State<MenuPage> {
                                       } else {
                                         return GestureDetector(
                                           onTap: () {
+                                            var a = myDrinks[ind].mid;
+                                            var b = strings[i].mx[index].name;
                                             setState(() {
-                                              indId = strings[i].id.toString();
-                                              chid = strings[i].mx[index].id;
-                                              chname =
-                                                  strings[i].mx[index].name;
-                                              chprice =
-                                                  strings[i].mx[index].price;
+                                              if (a != b) {
+                                                print(a + '' + b);
+                                                indId =
+                                                    strings[i].id.toString();
+                                                chid = strings[i].mx[index].id;
+                                                chname =
+                                                    strings[i].mx[index].name;
+                                                chprice =
+                                                    strings[i].mx[index].price;
 
-                                              myindex = index;
-                                              print(myindex);
-                                              print(index);
-                                              print(chid);
+                                                myindex = index;
+                                                print(myindex);
+                                                print(index);
+                                                print(chid);
 
-                                              myDrinks[ind].mid =
-                                                  strings[i].mx[index].name;
-                                              myDrinks[ind].mprice =
-                                                  strings[i].mx[index].price;
-                                              mname = strings[i].name;
+                                                myDrinks[ind].mid =
+                                                    strings[i].mx[index].name;
+                                                myDrinks[ind].mprice =
+                                                    strings[i].mx[index].price;
+                                                mname = strings[i].name;
+                                              }
                                             });
 
                                             modsetState(() {
-                                              if (strings[i].name ==
-                                                  strings[i].mx[index].name) {
-                                                strings[i].name =
-                                                    strings[i].mx[index].name;
-                                              } else {
-                                                strings[i].name =
-                                                    strings[i].name;
-                                              }
+                                              if (a != b) {
+                                                if (strings[i].name ==
+                                                    strings[i].mx[index].name) {
+                                                  strings[i].name =
+                                                      strings[i].mx[index].name;
+                                                } else {
+                                                  strings[i].name =
+                                                      strings[i].name;
+                                                }
 
-                                              myDrinks[ind].mid =
-                                                  strings[i].mx[index].name;
-                                              myDrinks[ind].mprice =
-                                                  strings[i].mx[index].price;
-                                              select = myindex;
-                                              int Row = index;
+                                                myDrinks[ind].mid =
+                                                    strings[i].mx[index].name;
+                                                myDrinks[ind].mprice =
+                                                    strings[i].mx[index].price;
+                                                select = myindex;
+                                                int Row = index;
+                                              }
                                             });
                                           },
                                           child: Container(
