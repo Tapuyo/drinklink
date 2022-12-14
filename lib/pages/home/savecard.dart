@@ -100,9 +100,10 @@ class WebViewExampleState extends State<SaveCardWeb> {
     final response = await http.post(Uri.parse(url), headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
-    String mystate =
-        json.decode(response.body)['_embedded']['payment'][0]['state'];
+   
     try {
+       String mystate =
+        json.decode(response.body)['_embedded']['payment'][0]['state'];
       if (mystate.toLowerCase() == ('REVERSED').toLowerCase() ||
           mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
         Navigator.pop(context, 'Added');
@@ -128,6 +129,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
   Widget build(BuildContext context) {
     return WebView(
       initialUrl: murl,
+      javascriptMode: JavascriptMode.unrestricted,
       navigationDelegate: (action) {
       print("This is url: " + action.url);
       try {
