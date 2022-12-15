@@ -255,7 +255,7 @@ class _MenuPageState extends State<MenuPage> {
 
   loadBill() async {
     Prefs.load();
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     String unamex = '';
     switch (uName) {
       case '':
@@ -268,9 +268,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = '';
         }
         break;
-      case 'guest':
+      case 'Guest Mode':
         {
-          unamex = 'guest';
+          unamex = 'Guest Mode';
         }
         break;
       case 'None':
@@ -320,7 +320,7 @@ class _MenuPageState extends State<MenuPage> {
 
   saveTempopraryDetails() async {
     Prefs.load();
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     String unamex = '';
     switch (uName) {
       case '':
@@ -362,7 +362,7 @@ class _MenuPageState extends State<MenuPage> {
 
   getTempopraryDetails() async {
     Prefs.load();
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     String unamex = '';
     switch (uName) {
       case '':
@@ -404,7 +404,7 @@ class _MenuPageState extends State<MenuPage> {
 
   getDefaultSettings() async {
     Prefs.load();
-    uName = Prefs.getString('uname');
+    uName = Prefs.getString('uname') ?? '';
     String unamex = '';
     switch (uName) {
       case '':
@@ -5968,7 +5968,7 @@ class _MenuPageState extends State<MenuPage> {
                                   switch (uName) {
                                     case '':
                                       {
-                                        unamex = '';
+                                        unamex = 'Guest Mode';
                                       }
                                       break;
                                     case ' ':
@@ -5981,9 +5981,9 @@ class _MenuPageState extends State<MenuPage> {
                                         unamex = 'None';
                                       }
                                       break;
-                                    case 'guest':
+                                    case 'Guest Mode':
                                       {
-                                        unamex = 'guest';
+                                        unamex = 'Guest Mode';
                                       }
                                       break;
                                     default:
