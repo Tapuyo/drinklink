@@ -61,6 +61,8 @@ class _helpignPageState extends State<help> {
     // String username = 'leepe@drinklinkph.com';
     // String password = 'P@ssw0rd';
 
+    // String username = 'leepeapp1@gmail.com';
+    // String password = 'ioafduzyrulejpqj';
     String username = 'leepeapp1@gmail.com';
     String password = 'ioafduzyrulejpqj';
 
@@ -72,7 +74,7 @@ class _helpignPageState extends State<help> {
       ..recipients.add(emailController.text)
       // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
       // ..bccRecipients.add(Address('bccAddress@example.com'))
-      ..subject = 'DrinkLink@support : ${DateTime.now()}'
+      ..subject = 'support@drinklink.info : ${DateTime.now()}'
       // ..text = messageController.text;
       ..html = "<h5>Hello " +
           nameController.text +
@@ -84,7 +86,7 @@ class _helpignPageState extends State<help> {
               "\n"
               "<p>Sincerely,</p>"
               "\n"
-              "DrinkLinkTeamSupport";
+              "support@drinklink.info";
 
     // try {
     //   final sendReport = await send(message, smtpServer);
@@ -100,12 +102,12 @@ class _helpignPageState extends State<help> {
 
     final equivalentMessage = Message()
       ..from = Address(
-          username, 'CS:' + nameController.text + ' : DrinkLinkSupport ')
-      ..recipients.add(Address('jo.leepeoutsourcing@gmail.com.'))
+          username, 'CS:' + nameController.text + ' : support@drinklink.info ')
+      ..recipients.add(Address('support@drinklink.info'))
       // ..ccRecipients
       //     .addAll([Address('destCc1@example.com'), 'destCc2@example.com'])
       // ..bccRecipients.add('bccAddress@example.com')
-      ..subject = 'DrinkLink@support : ${DateTime.now()}'
+      ..subject = 'support@drinklink.info : ${DateTime.now()}'
       // ..text = 'This is the plain text.\nThis is line 2 of the text part.'
       ..html = "<h5> Hi there, </h5>\n" +
           "\n" +
