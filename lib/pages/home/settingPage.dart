@@ -685,21 +685,21 @@ class _setPageState extends State<setPage> {
       ..recipients.add(bemail)
       // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
       // ..bccRecipients.add(Address('bccAddress@example.com'))
-      ..subject = 'DrinkLink@support : ${DateTime.now()}'
+      ..subject = 'support@drinklink.info : ${DateTime.now()}'
       // ..text = messageController.text;
       ..html = "<h5>Hi " +
           bemail +
           " ,</h5>\n<p> We received your request for a single-use OTP to use with your DrinkLink account." +
           "</p>"
               "\n"
-              "<p> Your single-use OTP is:" +
+              "<p> Your single-use OTP is: " +
           otpcode +
           "</p>"
               "\n"
               "<p>If you didn't request this OTP, you can safely ignore this email. Someone else might have typed your email address by mistake</p>"
               "\n"
               "<p>Thanks,</p>"
-              "DrinkLinkTeamSupport";
+              "support@drinklink.info";
 
     var connection = PersistentConnection(smtpServer);
 
