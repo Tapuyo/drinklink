@@ -1982,6 +1982,7 @@ class _MenuPageState extends State<MenuPage> {
                           newChsmx = [];
                           newChsmxRemoved = [];
                           userChecked = [];
+                          chmqty = [];
                         });
                       }
                     },
@@ -2485,6 +2486,7 @@ class _MenuPageState extends State<MenuPage> {
                                             // if (chs.cmid.isNotEmpty) {
                                             //   chs.add(chs);
                                             // }
+
                                             iCancel = true;
                                           }
 
