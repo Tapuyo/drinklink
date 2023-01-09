@@ -2378,137 +2378,152 @@ class _MenuPageState extends State<MenuPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.fromLTRB(32, 20, 32, 0),
+                                padding: EdgeInsets.fromLTRB(20, 20, 32, 0),
                                 child: Row(
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (strings[i].ismSelect != 'true') {
-                                          if (myDrinks[ind]
-                                              .ChMixer
-                                              .isNotEmpty) {
-                                            myDrinks[ind].mid = '';
-                                            setState(() {
-                                              myDrinks[ind].mid = myDrinks[ind]
-                                                  .ChMixer[ind]
-                                                  .cname;
-                                            });
-                                            Navigator.pop(context);
+                                    Visibility(
+                                      visible: strings[i].ismSelect != 'true',
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (strings[i].ismSelect != 'true') {
+                                            if (myDrinks[ind]
+                                                .ChMixer
+                                                .isNotEmpty) {
+                                              myDrinks[ind].mid = '';
+                                              setState(() {
+                                                myDrinks[ind].mid =
+                                                    myDrinks[ind]
+                                                        .ChMixer[ind]
+                                                        .cname;
+                                              });
+                                              Navigator.pop(context);
+                                            } else {
+                                              myDrinks[ind].mid = '';
+                                              Navigator.pop(context);
+                                            }
                                           } else {
-                                            myDrinks[ind].mid = '';
+                                            if (iCancel == false) {
+                                              print(chmqty);
+                                              newChsmx.clear();
+                                              userChecked.clear();
+                                              newChsmx.clear();
+                                              List<chossenMixer> newChs =
+                                                  myDrinks[ind].ChMixer;
+                                              print(newChs);
+                                              // newChs.clear();
+
+                                              for (var i = 0;
+                                                  i < newChsmx.length;
+                                                  i++) {
+                                                newChs.removeWhere((element) =>
+                                                    element.cname ==
+                                                    newChsmx[i].cname);
+                                                chossenMixer chs = chossenMixer(
+                                                    Ids,
+                                                    newChsmx[i].cmid,
+                                                    newChsmx[i].cname,
+                                                    newChsmx[i].cprice);
+                                                if (chs.cmid.isNotEmpty) {
+                                                  newChs.add(chs);
+                                                }
+                                              }
+                                              if (chmqty == null) {
+                                                chmqty = [];
+                                              }
+
+                                              for (var a = 0;
+                                                  a < chmqty.length;
+                                                  a++) {
+                                                chossenMixerMultiple chsa =
+                                                    chossenMixerMultiple(
+                                                        chmqty[a].indId,
+                                                        chmqty[a].cmid,
+                                                        chmqty[a].cname,
+                                                        chmqty[a].cprice);
+                                                // chossenMixer chs = chossenMixer(
+                                                //     indId, chid, chname, chprice);
+                                                if (chsa.cmid.isNotEmpty) {
+                                                  newChsmx.add(chsa);
+                                                }
+                                              }
+                                              print(newChsmx);
+
+                                              for (var b = 0;
+                                                  b < newChsmx.length;
+                                                  b++) {
+                                                chossenMixer cm = chossenMixer(
+                                                    newChsmx[b].indId,
+                                                    newChsmx[b].cmid,
+                                                    newChsmx[b].cname,
+                                                    newChsmx[b].cprice);
+                                                if (cm.cmid.isNotEmpty) {
+                                                  setState(() {
+                                                    newChs.add(cm);
+                                                  });
+                                                }
+                                              }
+                                              print(newChs);
+                                              for (var bx = 0;
+                                                  bx < newChs.length;
+                                                  bx++) {
+                                                if (newChs[bx]
+                                                    .cname
+                                                    .isNotEmpty) {
+                                                  setState(() {
+                                                    chossenMixerMultiple chsa =
+                                                        chossenMixerMultiple(
+                                                            newChs[bx].indId,
+                                                            newChs[bx].cmid,
+                                                            newChs[bx].cname,
+                                                            newChs[bx].cprice);
+                                                    userChecked
+                                                        .add(newChs[bx].cname);
+                                                    newChsmx.add(chsa);
+                                                  });
+                                                }
+                                              }
+                                              print(userChecked);
+                                              // chossenMixer chs = chossenMixer(
+                                              //     Ids,
+                                              //     newChsmx[i].cmid,
+                                              //     newChsmx[i].cname,
+                                              //     newChsmx[i].cprice);
+                                              // if (chs.cmid.isNotEmpty) {
+                                              //   chs.add(chs);
+                                              // }
+
+                                              iCancel = true;
+                                            }
+
+                                            // indId = '';
+                                            // chid = '';
+                                            // chname = 'None';
+                                            // chprice = '0';
                                             Navigator.pop(context);
                                           }
-                                        } else {
-                                          if (iCancel == false) {
-                                            print(chmqty);
-                                            newChsmx.clear();
-                                            userChecked.clear();
-                                            newChsmx.clear();
-                                            List<chossenMixer> newChs =
-                                                myDrinks[ind].ChMixer;
-                                            print(newChs);
-                                            // newChs.clear();
-
-                                            for (var i = 0;
-                                                i < newChsmx.length;
-                                                i++) {
-                                              newChs.removeWhere((element) =>
-                                                  element.cname ==
-                                                  newChsmx[i].cname);
-                                              chossenMixer chs = chossenMixer(
-                                                  Ids,
-                                                  newChsmx[i].cmid,
-                                                  newChsmx[i].cname,
-                                                  newChsmx[i].cprice);
-                                              if (chs.cmid.isNotEmpty) {
-                                                newChs.add(chs);
-                                              }
-                                            }
-                                            if (chmqty == null) {
-                                              chmqty = [];
-                                            }
-
-                                            for (var a = 0;
-                                                a < chmqty.length;
-                                                a++) {
-                                              chossenMixerMultiple chsa =
-                                                  chossenMixerMultiple(
-                                                      chmqty[a].indId,
-                                                      chmqty[a].cmid,
-                                                      chmqty[a].cname,
-                                                      chmqty[a].cprice);
-                                              // chossenMixer chs = chossenMixer(
-                                              //     indId, chid, chname, chprice);
-                                              if (chsa.cmid.isNotEmpty) {
-                                                newChsmx.add(chsa);
-                                              }
-                                            }
-                                            print(newChsmx);
-
-                                            for (var b = 0;
-                                                b < newChsmx.length;
-                                                b++) {
-                                              chossenMixer cm = chossenMixer(
-                                                  newChsmx[b].indId,
-                                                  newChsmx[b].cmid,
-                                                  newChsmx[b].cname,
-                                                  newChsmx[b].cprice);
-                                              if (cm.cmid.isNotEmpty) {
-                                                setState(() {
-                                                  newChs.add(cm);
-                                                });
-                                              }
-                                            }
-                                            print(newChs);
-                                            for (var bx = 0;
-                                                bx < newChs.length;
-                                                bx++) {
-                                              if (newChs[bx].cname.isNotEmpty) {
-                                                setState(() {
-                                                  chossenMixerMultiple chsa =
-                                                      chossenMixerMultiple(
-                                                          newChs[bx].indId,
-                                                          newChs[bx].cmid,
-                                                          newChs[bx].cname,
-                                                          newChs[bx].cprice);
-                                                  userChecked
-                                                      .add(newChs[bx].cname);
-                                                  newChsmx.add(chsa);
-                                                });
-                                              }
-                                            }
-                                            print(userChecked);
-                                            // chossenMixer chs = chossenMixer(
-                                            //     Ids,
-                                            //     newChsmx[i].cmid,
-                                            //     newChsmx[i].cname,
-                                            //     newChsmx[i].cprice);
-                                            // if (chs.cmid.isNotEmpty) {
-                                            //   chs.add(chs);
-                                            // }
-
-                                            iCancel = true;
-                                          }
-
-                                          // indId = '';
-                                          // chid = '';
-                                          // chname = 'None';
-                                          // chprice = '0';
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                      child: SizedBox(
-                                        width: 100,
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                  color: Colors.deepOrange,
-                                                  fontSize: 16),
-                                            ),
-                                          ],
+                                        },
+                                        child: SizedBox(
+                                          width: 100,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                    color: Colors.deepOrange,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
                                         ),
+                                      ),
+                                    ),
+                                    Visibility(
+                                      visible: strings[i].ismSelect == 'true',
+                                      child: Text(
+                                        "Choose Multiple Mixers",
+                                        style: TextStyle(
+                                            color: Colors.deepOrange,
+                                            fontSize: 16),
                                       ),
                                     ),
                                     // Visibility(
