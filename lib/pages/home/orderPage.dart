@@ -279,7 +279,6 @@ class _setPageState extends State<orderPage> {
                   height: 40,
                   width: 120,
                   padding: EdgeInsets.all(5.0),
-                  
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton(
                       dropdownColor: Color(0xFF2b2b61),
@@ -329,8 +328,6 @@ class _setPageState extends State<orderPage> {
       ),
     );
   }
-
-  
 
   mybody() {
     return orderList.length > 0
@@ -419,31 +416,34 @@ class _setPageState extends State<orderPage> {
                                                     ]))
                                             : null,
                                       ),
-                                      Container(
-                                        //visible: snapshot.data[index].mixer == null ? false:true,
-                                        child: snapshot.data[index].mixrs !=
-                                                null
-                                            ? Container(
-                                                padding: EdgeInsets.fromLTRB(
-                                                    10, 0, 0, 10),
-                                                height: 28,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                child: ListView(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 15),
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    children: [
-                                                      getCartMixWidgets(
-                                                          snapshot.data[index]
-                                                              .mixrs,
-                                                          index),
-                                                    ]))
-                                            : null,
+                                      SizedBox(
+                                        height: 10,
                                       ),
+                                      // Container(
+                                      //   //visible: snapshot.data[index].mixer == null ? false:true,
+                                      //   child: snapshot.data[index].mixrs !=
+                                      //           null
+                                      //       ? Container(
+                                      //           padding: EdgeInsets.fromLTRB(
+                                      //               10, 0, 0, 10),
+                                      //           height: 28,
+                                      //           width: MediaQuery.of(context)
+                                      //               .size
+                                      //               .width,
+                                      //           child: ListView(
+                                      //               padding:
+                                      //                   EdgeInsets.symmetric(
+                                      //                       horizontal: 15),
+                                      //               scrollDirection:
+                                      //                   Axis.horizontal,
+                                      //               children: [
+                                      //                 getCartMixWidgets(
+                                      //                     snapshot.data[index]
+                                      //                         .mixrs,
+                                      //                     index),
+                                      //               ]))
+                                      //       : null,
+                                      // ),
                                       showSated(
                                           snapshot.data[index].id,
                                           snapshot.data[index].ref,
