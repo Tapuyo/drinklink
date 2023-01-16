@@ -53,7 +53,8 @@ class _HomePageState extends State<HomePage> {
       String url =
           ApiCon.baseurl() + '/auth/users/currentUser/notificationToken';
 
-      final response = await http.patch(Uri.parse(url), headers: headers, body: bod);
+      final response =
+          await http.patch(Uri.parse(url), headers: headers, body: bod);
       print(response.body);
       print(response.statusCode);
       print('set notif \n \n ');
@@ -192,129 +193,134 @@ class _HomePageState extends State<HomePage> {
     });
     Prefs.load();
     String mytoken = Prefs.getString('token');
-try{
-    Map<String, String> headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ' + mytoken
-    };
-    final response = await http.get(
-        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
-        headers: headers);
-    var jsondata = json.decode(response.body);
+    try {
+      Map<String, String> headers = {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ' + mytoken
+      };
+      final response = await http.get(
+          Uri.parse(ApiCon.baseurl() +
+              '/users/currentUser/orders?pageSize=1&pageNumber=1'),
+          headers: headers);
+      var jsondata = json.decode(response.body);
 
-    for (var i = 0; i < jsondata.length; i++) {
-      String cState = json.decode(response.body)[i]['currentState'].toString();
-      String id = json.decode(response.body)[i]['id'].toString();
-      String ref = json.decode(response.body)[i]['orderReference'].toString();
-      //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
-      var jsondata1 = await json.decode(response.body)[i]['items'];
+      for (var i = 0; i < jsondata.length; i++) {
+        String cState =
+            json.decode(response.body)[i]['currentState'].toString();
+        String id = json.decode(response.body)[i]['id'].toString();
+        String ref = json.decode(response.body)[i]['orderReference'].toString();
+        //if(cState == '1' || cState == '2' || cState == '3' || cState == '4'){
+        var jsondata1 = await json.decode(response.body)[i]['items'];
 
-      List<MyItems> newItem = [];
-      for (var x in jsondata1) {
-        MyItems nt = new MyItems(x['drink']['name'], x['quantity'].toString());
+        List<MyItems> newItem = [];
+        for (var x in jsondata1) {
+          MyItems nt =
+              new MyItems(x['drink']['name'], x['quantity'].toString());
 
-        newItem.add(nt);
-      }
-      String st = json.decode(response.body)[i]['timestamp'].toString();
-      String mprice = json.decode(response.body)[i]['finalPrice'].toString();
-
-      String dt = '';
-      String stt = '';
-      final toDayDate = DateTime.now();
-      var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
-      if (different < 60) {
-        if (toDayDate.difference(DateTime.parse(st)).inMinutes <= 1) {
-          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-              ' min';
-        } else {
-          dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
-              ' mins';
+          newItem.add(nt);
         }
-      } else if (different > 60 && different < 1440) {
-        if (toDayDate.difference(DateTime.parse(st)).inHours <= 1) {
-          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-              ' hour';
+        String st = json.decode(response.body)[i]['timestamp'].toString();
+        String mprice = json.decode(response.body)[i]['finalPrice'].toString();
+
+        String dt = '';
+        String stt = '';
+        final toDayDate = DateTime.now();
+        var different = toDayDate.difference(DateTime.parse(st)).inMinutes;
+        if (different < 60) {
+          if (toDayDate.difference(DateTime.parse(st)).inMinutes <= 1) {
+            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+                ' min';
+          } else {
+            dt = toDayDate.difference(DateTime.parse(st)).inMinutes.toString() +
+                ' mins';
+          }
+        } else if (different > 60 && different < 1440) {
+          if (toDayDate.difference(DateTime.parse(st)).inHours <= 1) {
+            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+                ' hour';
+          } else {
+            dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
+                ' hours';
+          }
         } else {
-          dt = toDayDate.difference(DateTime.parse(st)).inHours.toString() +
-              ' hours';
+          if (toDayDate.difference(DateTime.parse(st)).inDays <= 1) {
+            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+                ' day';
+          } else {
+            dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
+                ' days';
+          }
         }
-      } else {
-        if (toDayDate.difference(DateTime.parse(st)).inDays <= 1) {
-          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-              ' day';
+        String bar = json.decode(response.body)[i]['tableId'].toString();
+
+        // String cState = json.decode(response.body)[i]['currentState'].toString();
+        if (cState == '0') {
+          stt = 'Order Created';
+        } else if (cState == '1') {
+          stt = 'Pending';
+        } else if (cState == '2') {
+          stt = 'Accepted';
+        } else if (cState == '3') {
+          stt = 'Payment Processed';
+        } else if (cState == '4') {
+          stt = 'Ready';
+        } else if (cState == '5') {
+          stt = 'Completed';
+        } else if (cState == '101') {
+          stt = 'Failed';
+        } else if (cState == '102') {
+          stt = 'Canceled';
+        } else if (cState == '103') {
+          stt = 'Rejected';
+        } else if (cState == '104') {
+          stt = 'Not Collected';
+        } else if (cState == '105') {
+          stt = 'Payment Failed';
+        } else if (cState == '106') {
+          stt = 'Payment Cancelled';
+        }
+
+        String outletname =
+            json.decode(response.body)[i]['facilityName'].toString();
+
+        String timeToCollect =
+            json.decode(response.body)[i]['timeToCollectMins'];
+        final format = DateFormat('hh:mm:ss');
+        final dtCollect = format.parse(timeToCollect, true);
+
+        double sec = Duration(milliseconds: dtCollect.millisecondsSinceEpoch)
+                .inMilliseconds /
+            1000;
+
+        print('in seconds');
+        print(sec.toString());
+
+        if (int.parse(sec.round().toString()) > 0) {
+          startTimer(int.parse(sec.round().toString()) + 60 ?? 0);
         } else {
-          dt = toDayDate.difference(DateTime.parse(st)).inDays.toString() +
-              ' days';
+          startTimer(0);
         }
+
+        setState(() {
+          Order myorder = new Order(
+              json.decode(response.body)[i]['id'].toString(),
+              json.decode(response.body)[i]['orderReference'].toString(),
+              dt.toString(),
+              newItem,
+              bar,
+              stt,
+              cState,
+              outletname,
+              newItem.length.toString(),
+              mprice,
+              timeToCollect.toString());
+
+          orderList.add(myorder);
+        });
+        // }
+
       }
-      String bar = json.decode(response.body)[i]['tableId'].toString();
-
-      // String cState = json.decode(response.body)[i]['currentState'].toString();
-      if (cState == '0') {
-        stt = 'Order Created';
-      } else if (cState == '1') {
-        stt = 'Pending';
-      } else if (cState == '2') {
-        stt = 'Accepted';
-      } else if (cState == '3') {
-        stt = 'Payment Processed';
-      } else if (cState == '4') {
-        stt = 'Ready';
-      } else if (cState == '5') {
-        stt = 'Completed';
-      } else if (cState == '101') {
-        stt = 'Failed';
-      } else if (cState == '102') {
-        stt = 'Canceled';
-      } else if (cState == '103') {
-        stt = 'Rejected';
-      } else if (cState == '104') {
-        stt = 'Not Collected';
-      } else if (cState == '105') {
-        stt = 'Payment Failed';
-      } else if (cState == '106') {
-        stt = 'Payment Cancelled';
-      }
-
-      String outletname =  json.decode(response.body)[i]['facilityName'].toString();
-      
-      String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
-      final format = DateFormat('hh:mm:ss');
-      final dtCollect = format.parse(timeToCollect, true);
-
-      double sec = Duration(milliseconds: dtCollect.millisecondsSinceEpoch)
-              .inMilliseconds /
-          1000;
-
-      print('in seconds');
-      print(sec.toString());
-
-      if (int.parse(sec.round().toString()) > 0) {
-        startTimer(int.parse(sec.round().toString()) + 60 ?? 0);
-      } else {
-        startTimer(0);
-      }
-
-      setState(() {
-        Order myorder = new Order(
-            json.decode(response.body)[i]['id'].toString(),
-            json.decode(response.body)[i]['orderReference'].toString(),
-            dt.toString(),
-            newItem,
-            bar,
-            stt,
-            cState,
-            outletname,
-            newItem.length.toString(),
-            mprice,
-            timeToCollect.toString());
-
-        orderList.add(myorder);
-      });
-      // }
-
-    }
-    return orderList;
+      return orderList;
     } catch (e) {
       return null;
     }
@@ -490,7 +496,7 @@ try{
       } else {
         String storename = u['name'].toString().toLowerCase();
         String storeaddress = u['address'].toString().toLowerCase();
-        if (storename.contains(setext) || storeaddress.contains(setext) ) {
+        if (storename.contains(setext) || storeaddress.contains(setext)) {
           print(u['name']);
           String id,
               name,
@@ -575,9 +581,9 @@ try{
     } else {
       stoken = token;
     }
-    if(uName.isEmpty){
-    uName ='Guest Mode';
-    }else{
+    if (uName.isEmpty) {
+      uName = 'Guest Mode';
+    } else {
       uName = uName;
     }
     return MaterialApp(
@@ -1081,7 +1087,7 @@ try{
             } else {
               return Container(
                 height: 500,
-                width: 300,
+                width: 250,
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
                     physics: NeverScrollableScrollPhysics(),
@@ -1162,7 +1168,9 @@ try{
                                           ),
                                           Spacer(),
                                           Text(
-                                             mins.toString() + ':' + secs.toString(),
+                                            mins.toString() +
+                                                ':' +
+                                                secs.toString(),
                                             style: TextStyle(
                                                 color: Colors.deepOrange,
                                                 fontSize: 14),
