@@ -1087,7 +1087,7 @@ class _HomePageState extends State<HomePage> {
             } else {
               return Container(
                 height: 500,
-                width: 250,
+                width: 260,
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
                     physics: NeverScrollableScrollPhysics(),
