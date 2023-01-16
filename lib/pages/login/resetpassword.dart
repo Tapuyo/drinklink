@@ -97,7 +97,8 @@ class _ResetPassPageState extends State<ResetPass> {
       var body = json.encode(map['data']);
       String url = ApiCon.baseurl() + '/auth/users/$encoded/resetpassword';
       print(url);
-      final response = await http.post(Uri.parse(url), headers: headers, body: body);
+      final response =
+          await http.post(Uri.parse(url), headers: headers, body: body);
       print(response.body);
       if (response.statusCode == 200 || response.statusCode == 201) {
         Navigator.pushReplacement(
@@ -113,7 +114,7 @@ class _ResetPassPageState extends State<ResetPass> {
           _showDialog('Reset Password', 'Please input correct code.');
           return;
         } else if (response.body.contains('Could not reset password')) {
-           Alert(
+          Alert(
             context: context,
             title: "Reset Password",
             content: Container(
@@ -135,7 +136,7 @@ class _ResetPassPageState extends State<ResetPass> {
           ).show();
           return;
         } else if (response.body.contains('Password mismatched')) {
-           Alert(
+          Alert(
             context: context,
             title: "Reset Password",
             content: Container(
@@ -156,7 +157,7 @@ class _ResetPassPageState extends State<ResetPass> {
             ],
           ).show();
           return;
-        } else  {
+        } else {
           Alert(
             context: context,
             title: "Reset Password",
@@ -383,8 +384,15 @@ class _ResetPassPageState extends State<ResetPass> {
                           new TextStyle(color: const Color(0xFF424242))),
                 ),
               ),
+              Container(
+                  padding: EdgeInsets.fromLTRB(15, 10, 0, 10),
+                  child: Text(
+                    'Minimum length 8 characters. At least ONE digit and ONE upper case letter.',
+                    style: TextStyle(
+                        wordSpacing: 3, color: Colors.white, fontSize: 16),
+                  )),
               SizedBox(
-                height: 150,
+                height: 90,
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 15),
@@ -411,6 +419,7 @@ class _ResetPassPageState extends State<ResetPass> {
                               //   width: 30.0,
                               // ),
                               //SizedBox(width: 10,),
+
                               Text(
                                 'RESET PASSWORD',
                                 style: TextStyle(
