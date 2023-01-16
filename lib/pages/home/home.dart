@@ -1263,7 +1263,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -1290,7 +1290,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
