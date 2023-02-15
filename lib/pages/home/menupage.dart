@@ -1552,9 +1552,15 @@ class _MenuPageState extends State<MenuPage> {
                                   _pc.close();
                                 });
                               }
+                            
+                               String tk = Prefs.getString('token');
 
-
-                                OrderCalculate();
+    if (tk == null || tk == '') {
+      SignUpCalculate();
+    } else {
+       OrderCalculate();
+    }
+                               
                             },
                             child: Container(
                                 width: MediaQuery.of(context).size.width,
@@ -6400,6 +6406,38 @@ class _MenuPageState extends State<MenuPage> {
       //getPaymentLink();
     }
   }
+    SignUpCalculate() async {
+    String su = uuid.v1();
+    String nname = su.replaceAll(new RegExp(r'[^\w\s]+'), '');
+    String em = nname + "@gmail.com";
+    print(nname);
+    String pss = "Asd12345678!";
+    String uname = nname;
+    print('Singup');
+    Prefs.load();
+    Prefs.setString('email', em);
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    Map map = {
+      'data': {
+        "email": em,
+        "passwordConfirmed": pss,
+        "password": pss,
+        "userName": uname
+      },
+    };
+    var body = json.encode(map['data']);
+    print(body);
+    String url = ApiCon.baseurl() + '/auth/users';
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    //var jsondata = json.decode(response.headers);
+    print(response.body.toString());
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      print(response.statusCode);
+      logintoCalculate(uname, pss);
+    }
+  }
 
   SignUpPay() async {
     String su = uuid.v1();
@@ -6431,6 +6469,35 @@ class _MenuPageState extends State<MenuPage> {
     if (response.statusCode == 200) {
       print(response.statusCode);
       logintoPay(uname, pss);
+    }
+  }
+
+    logintoCalculate(String uname, pass) async {
+    //   String nname = uname.replaceAll(new RegExp(r'[^\w\s]+'),'');
+
+    print('login');
+    Map<String, String> headers = {"Content-Type": "application/json"};
+    Map map = {
+      'data': {
+        "userName": uname,
+        "password": pass,
+      },
+    };
+    var body = json.encode(map['data']);
+    String url = ApiCon.baseurl() + '/auth/Token';
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    print(response.body);
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      String token = json.decode(response.body)['token'];
+      print(token);
+      setState(() {
+        Prefs.setString('token', token);
+      });
+      // setNotif(token, uname);
+      OrderCalculate();
+      //getPaymentLink();
     }
   }
 
@@ -6768,12 +6835,12 @@ class _MenuPageState extends State<MenuPage> {
     if (cardToken == '') {
       map = {
         "billingAddress": {
-          "address": eaddress,
+          "address": "eaddress",
           "city": "Fr",
           "countryCode": "Fr",
-          "email": em,
-          "firstName": firsname,
-          "lastName": lastname,
+          "email": "drinklink@mail.com",
+          "firstName": "Drink",
+          "lastName": "Link",
           "id": 0
         },
         "discountId": discountID,
@@ -6790,12 +6857,12 @@ class _MenuPageState extends State<MenuPage> {
     } else {
       map = {
         "billingAddress": {
-          "address": eaddress,
+          "address": "address",
           "city": "Fr",
           "countryCode": "Fr",
-          "email": em,
-          "firstName": firsname,
-          "lastName": lastname,
+          "email": "drinklink@mail.com",
+          "firstName": "Drink",
+          "lastName": "Link",
           "id": 0
         },
         "discountId": discountID,
