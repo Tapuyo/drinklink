@@ -137,6 +137,9 @@ class _MenuPageState extends State<MenuPage> {
   bool isbaddress = true;
   bool isemail = true;
   bool isedit = false;
+
+  String additionalCharge = '0.00';
+
   counteraddord1(String addminus) {
     if (addminus == 'add') {
       setState(() {
@@ -1494,7 +1497,7 @@ class _MenuPageState extends State<MenuPage> {
                                     //     'Service Charge!');
 
                                     // percentagefee = chrx;
-                                    finaltotwithdiscount = a + chrx;
+                                    finaltotwithdiscount = a + chrx + double.parse(additionalCharge);
                                     // finaltotwithdiscount = double.parse(
                                     //     finaltotwithdiscount
                                     //         .toStringAsFixed(5));
@@ -1530,7 +1533,7 @@ class _MenuPageState extends State<MenuPage> {
                                     mdicount = percentagefee;
                                     finaltotwithdiscount = finaltot +
                                         _tip +
-                                        chrx +
+                                        chrx + double.parse(additionalCharge) + 
                                         c -
                                         percentagefee;
                                     // finaltotwithdiscount = double.parse(
@@ -1549,6 +1552,9 @@ class _MenuPageState extends State<MenuPage> {
                                   _pc.close();
                                 });
                               }
+
+
+                                OrderCalculate();
                             },
                             child: Container(
                                 width: MediaQuery.of(context).size.width,
@@ -3938,7 +3944,7 @@ class _MenuPageState extends State<MenuPage> {
                                     // var splitag1 = splitag[0];
                                     // var splitag2 = splitag[1];
 
-                                    finaltotwithdiscount = temp;
+                                    finaltotwithdiscount = temp + double.parse(additionalCharge);
 
                                     // try {
                                     //   var secs1 = splitag2.substring(0, 1);
@@ -4008,7 +4014,7 @@ class _MenuPageState extends State<MenuPage> {
                                     // chrx = roundDouble(chr, 2);
                                     chrx = chr;
                                     double temp = tmptot + chrx;
-                                    finaltotwithdiscount = temp;
+                                    finaltotwithdiscount = temp + double.parse(additionalCharge);
                                     // double.parse(temp.toStringAsFixed(2));
                                     Navigator.pop(context);
                                   }
@@ -4304,7 +4310,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4333,7 +4339,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4412,7 +4418,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4988,7 +4994,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -5069,7 +5075,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -5098,7 +5104,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -5178,7 +5184,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -5207,7 +5213,7 @@ class _MenuPageState extends State<MenuPage> {
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
                                                     finaltotwithdiscount =
-                                                        chrx + temp;
+                                                        chrx + temp + double.parse(additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -5374,7 +5380,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                         // chrx = roundDouble(chr, 2);
                                         chrx = chr;
-                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = chrx + temp + double.parse(additionalCharge);
                                         // finaltotwithdiscount = double.parse(
                                         //     finaltotwithdiscount
                                         //         .toStringAsFixed(3));
@@ -5392,7 +5398,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                         // chrx = roundDouble(chr, 2);
                                         chrx = chr;
-                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = chrx + temp + double.parse(additionalCharge);
                                         // finaltotwithdiscount = double.parse(
                                         //     finaltotwithdiscount
                                         //         .toStringAsFixed(3));
@@ -5420,7 +5426,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                         // chrx = roundDouble(chr, 2);
                                         chrx = chr;
-                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = chrx + temp + double.parse(additionalCharge);
                                         // finaltotwithdiscount = double.parse(
                                         //     finaltotwithdiscount
                                         //         .toStringAsFixed(3));
@@ -5438,7 +5444,7 @@ class _MenuPageState extends State<MenuPage> {
 
                                         // chrx = roundDouble(chr, 2);
                                         chrx = chr;
-                                        finaltotwithdiscount = chrx + temp;
+                                        finaltotwithdiscount = chrx + temp + double.parse(additionalCharge);
                                         // finaltotwithdiscount = double.parse(
                                         //     finaltotwithdiscount
                                         //         .toStringAsFixed(3));
@@ -5508,6 +5514,34 @@ class _MenuPageState extends State<MenuPage> {
                               // ((fee / 100) * finaltot).toStringAsFixed(2),
                               roundDouble(chrx, 2).toString(),
                               // (chrx).toStringAsFixed(2),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              ' AED',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                          ],
+                        )),
+                    Divider(
+                      color: Colors.white,
+                    ),
+                     Container(
+                        height: 50,
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                        child: Row(
+                          children: [
+                            Text(
+                              'Additional Charge:',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 14),
+                            ),
+                            Spacer(),
+                            Text(additionalCharge,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -6364,7 +6398,6 @@ class _MenuPageState extends State<MenuPage> {
       OrderNow(uname);
       // isloading = false;
       //getPaymentLink();
-
     }
   }
 
@@ -6537,8 +6570,9 @@ class _MenuPageState extends State<MenuPage> {
     print(cardToken);
     print(fjs);
     Map<String, String> headers = {
-      "Content-Type": "application/json",
-      'Authorization': 'Bearer ' + token
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/merge-patch+json',
+      // 'api-version': '2.0'
     };
     Map<String, String> items = {"items": drinksorderall.toString()};
     Map map;
@@ -6600,12 +6634,12 @@ class _MenuPageState extends State<MenuPage> {
 
     var body = json.encode(map);
     print(body.toString());
+    print(headers.toString());
     String url = ApiCon.baseurl() + '/orders';
     String _cm = '';
     final response =
         await http.post(Uri.parse(url), headers: headers, body: body);
-    //var jsondata = json.decode(response.headers);
-    //print(response.body.toString());
+
     if (response.statusCode == 200 || response.statusCode == 201) {
       print('success');
       print(response.body.toString());
@@ -6635,6 +6669,212 @@ class _MenuPageState extends State<MenuPage> {
       Navigator.pop(context);
       return false;
     }
+  }
+
+  OrderCalculate() async {
+    Prefs.load();
+    String token = Prefs.getString('token');
+    print(token);
+    String em = billemail.text.trimLeft();
+    String ename = billname.text.trimLeft();
+    String eaddress = billadd.text.trimLeft();
+    var fullname = ename.split(' ');
+    String firsname = '';
+    String lastname = '';
+    try {
+      firsname = fullname[0];
+      lastname = fullname[1];
+    } catch (e) {
+      // _showDialog('DrinkLink', 'Please input full name.');
+    }
+
+    print(token);
+    int facility = Prefs.getInt('Facility');
+    double price = Prefs.getDouble('Price');
+
+    String drinksorderall = '';
+
+    List<PayDrinks> myPydr = [];
+
+    for (var i = 0; i < myOrder.length; i++) {
+      PayOrder ord = PayOrder(myOrder[i].drinkId.toString(),
+          myOrder[i].CatId.toString(), myOrder[i].origPrice.toString());
+      List<PayMixer> mymixer = [];
+      PayMixer ord1;
+      List strings = [];
+      for (var jo = 0; jo < myOrder[i].mxir.length; jo++) {
+        if (myOrder[i].mxir[jo].id.toString() != '') {
+          ord1 = PayMixer(myOrder[i].mxir[jo].id.toString(),
+              myOrder[i].mxir[jo].price.toString());
+          mymixer.add(ord1);
+          strings.add(ord1);
+          for (var j = 0; j < myOrder[i].mxir.length; j++) {
+            print(myOrder[i].mxir[j].id.toString());
+          }
+        } else {
+          ord1 = null;
+        }
+      }
+      print(strings);
+      double price = double.parse(myOrder[i].Quant.toString()) *
+          double.parse(myOrder[i].Price.toString());
+      PayDrinks pydr = PayDrinks(myOrder[i].Quant.toString(),
+          price.toStringAsFixed(2), myOrder[i].aIce, ord, mymixer);
+
+      String jsonUser = jsonEncode(pydr);
+
+      drinksorderall = drinksorderall + jsonUser.toString() + ',';
+      myPydr.add(pydr);
+    }
+
+    //print(drinksorderall);
+    var tagsJson = jsonEncode(myPydr);
+    //print(tagsJson.toString());
+    // var fjs = json.decode(tagsJson.toString());
+    var fjs = json.decode(tagsJson.toString());
+    print(fjs.toString());
+    String totalPrice = '0';
+
+    //var ftd = finaltotwithdiscount.toStringAsFixed(2);
+    //double percentagefee = (fee/100) * finaltot;
+
+    //finaltotwithdiscount = finaltot + percentagefee;
+
+    //totalPrice = roundDouble(finaltotwithdiscount, 3).toStringAsFixed(2);
+    print(finaltotwithdiscount);
+    totalPrice = calCulateDecimatPlace(finaltotwithdiscount).toString();
+    // totalPrice = finaltotwithdiscount.toStringAsFixed(2);
+    //totalPrice = '1.08';
+    print(totalPrice);
+    print('Total price:' + totalPrice);
+    double finalcharge = charge / 100;
+
+    double vpc = 0;
+    if (vipcharge == true) {
+      vpc = vip;
+    } else {
+      vpc = 0;
+    }
+
+    print(cardToken);
+    print(fjs);
+    Map<String, String> headers = {
+      'Authorization': 'Bearer ' + token,
+      'Content-Type': 'application/merge-patch+json',
+      // 'api-version': '2.0'
+    };
+    Map<String, String> items = {"items": drinksorderall.toString()};
+    Map map;
+    if (cardToken == '') {
+      map = {
+        "billingAddress": {
+          "address": eaddress,
+          "city": "Fr",
+          "countryCode": "Fr",
+          "email": em,
+          "firstName": firsname,
+          "lastName": lastname,
+          "id": 0
+        },
+        "discountId": discountID,
+        "facilityId": facility,
+        "finalPrice": totalPrice,
+        "isVip": vipcharge,
+        "items": fjs,
+        "originalPrice": price,
+        "saveCardInfo": checkedValue,
+        "serviceCharge": finalcharge,
+        "tip": mtip,
+        "vipCharge": vpc,
+      };
+    } else {
+      map = {
+        "billingAddress": {
+          "address": eaddress,
+          "city": "Fr",
+          "countryCode": "Fr",
+          "email": em,
+          "firstName": firsname,
+          "lastName": lastname,
+          "id": 0
+        },
+        "discountId": discountID,
+        "facilityId": facility,
+        "finalPrice": totalPrice,
+        "isVip": vipcharge,
+        "items": fjs,
+        "originalPrice": price,
+        "saveCardInfo": checkedValue,
+        "serviceCharge": finalcharge,
+        "tip": mtip,
+        "vipCharge": vpc,
+
+        "savedCard": {
+          "cardToken": cardToken,
+          "cardholderName": cardholderName,
+          "expiry": expiry,
+          "maskedPan": maskedPan,
+          "scheme": scheme
+        }
+
+        //'discount': discount
+      };
+    }
+
+    var body = json.encode(map);
+    print(body.toString());
+    print(headers.toString());
+    // String url = ApiCon.baseurl() + '/orders';
+    // String _cm = '';
+    // final response =
+    //     await http.post(Uri.parse(url), headers: headers, body: body);
+
+    String url = ApiCon.baseurl() + '/orders/PriceBreakdown/';
+    String _cm = '';
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+    print(response.body.toString());
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      String addCharge =
+          json.decode(response.body)['additionalCharge'].toStringAsFixed(2);
+      setState(() {
+        additionalCharge = addCharge;
+        finaltotwithdiscount = finaltotwithdiscount + double.parse(additionalCharge);
+      });
+      print('success');
+    } else {
+      print('Error price breakdown');
+    }
+
+    // if (response.statusCode == 200 || response.statusCode == 201) {
+    //   print('success');
+    //   print(response.body.toString());
+    //   getPaymentLink(
+    //       json.decode(response.body)['id'].toString(),
+    //       json.decode(response.body)['paymentLink'].toString(),
+    //       json.decode(response.body)['orderReference'].toString(),
+    //       json.decode(response.body)['paymentOrderCode'].toString(),
+    //       uname);
+    // } else {
+    //   print('error');
+    //   print(response.statusCode.toString());
+    //   print(response.body.toString());
+    //   if (response.body.toString().isEmpty) {
+    //     _cm = '[' +
+    //         response.statusCode.toString() +
+    //         '] ' +
+    //         'Please contact Administrator!';
+    //   } else if (response.body
+    //       .toString()
+    //       .contains("Not accepting orders at the moment")) {
+    //     _cm = "Not accepting orders at the moment.";
+    //   } else {
+    //     _cm = response.body.toString();
+    //   }
+    //   _showDialog('DrinkLink', _cm);
+    //   Navigator.pop(context);
+    //   return false;
+    // }
   }
 
   double roundDouble(double value, int places) {

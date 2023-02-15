@@ -188,8 +188,9 @@ class WebViewExampleState extends State<WebPage> {
               color: Colors.white,
             ),
             onPressed: () {
-              cancel_order();
+              
               Navigator.pop(context, 'cancel');
+              cancel_order();
             },
           ),
         ),
