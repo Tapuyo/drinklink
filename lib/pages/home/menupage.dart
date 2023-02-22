@@ -6937,10 +6937,9 @@ class _MenuPageState extends State<MenuPage> {
             json.decode(response.body)['additionalCharge'].toStringAsFixed(2);
         if (additionalCharge == '0.00') {
           additionalCharge = addCharge;
+          finaltotwithdiscount =
+              finaltotwithdiscount + double.parse(additionalCharge);
         }
-
-        // finaltotwithdiscount =
-        //     finaltotwithdiscount + double.parse(additionalCharge);
       });
       print('success');
     } else {
