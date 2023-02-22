@@ -6932,12 +6932,15 @@ class _MenuPageState extends State<MenuPage> {
         await http.post(Uri.parse(url), headers: headers, body: body);
     print(response.body.toString());
     if (response.statusCode == 200 || response.statusCode == 201) {
-      String addCharge =
-          json.decode(response.body)['additionalCharge'].toStringAsFixed(2);
       setState(() {
-        additionalCharge = addCharge;
-        finaltotwithdiscount =
-            finaltotwithdiscount + double.parse(additionalCharge);
+        String addCharge =
+            json.decode(response.body)['additionalCharge'].toStringAsFixed(2);
+        if (additionalCharge == '0.00') {
+          additionalCharge = addCharge;
+        }
+
+        // finaltotwithdiscount =
+        //     finaltotwithdiscount + double.parse(additionalCharge);
       });
       print('success');
     } else {
