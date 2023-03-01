@@ -4463,8 +4463,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4543,8 +4545,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4572,8 +4576,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4652,8 +4658,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4681,8 +4689,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4761,8 +4771,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4790,8 +4802,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4870,8 +4884,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4899,8 +4915,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
@@ -4979,8 +4997,10 @@ class _MenuPageState extends State<MenuPage> {
 
                                                     // chrx = roundDouble(chr, 2);
                                                     chrx = chr;
-                                                    finaltotwithdiscount =
-                                                        chrx + temp;
+                                                    finaltotwithdiscount = chrx +
+                                                        temp +
+                                                        double.parse(
+                                                            additionalCharge);
                                                     // finaltotwithdiscount =
                                                     //     double.parse(
                                                     //         finaltotwithdiscount
