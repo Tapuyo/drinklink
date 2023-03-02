@@ -2405,10 +2405,12 @@ class _MenuPageState extends State<MenuPage> {
                                                 .isNotEmpty) {
                                               myDrinks[ind].mid = '';
                                               setState(() {
-                                                myDrinks[ind].mid =
-                                                    myDrinks[ind]
-                                                        .ChMixer[ind]
-                                                        .cname;
+                                                try {
+                                                  myDrinks[ind].mid =
+                                                      myDrinks[ind]
+                                                          .ChMixer[ind]
+                                                          .cname;
+                                                } catch (e) {}
                                               });
                                               Navigator.pop(context);
                                             } else {
@@ -2417,102 +2419,126 @@ class _MenuPageState extends State<MenuPage> {
                                             }
                                           } else {
                                             if (iCancel == false) {
-                                              print(chmqty);
-                                              newChsmx.clear();
-                                              userChecked.clear();
-                                              newChsmx.clear();
-                                              List<chossenMixer> newChs =
-                                                  myDrinks[ind].ChMixer;
-                                              print(newChs);
-                                              // newChs.clear();
+                                              //   List<chossenMixer> newChs =
+                                              //       myDrinks[ind].ChMixer;
+                                              //   // newChs = [];
+                                              //   print(newChs);
+                                              //   if (newChsmxRemoved.length > 0) {
+                                              //     for (var ia = 0;
+                                              //         ia < newChsmxRemoved.length;
+                                              //         ia++) {
+                                              //       newChsmx.removeWhere(
+                                              //           (element) =>
+                                              //               element.cname ==
+                                              //               newChsmxRemoved[ia]
+                                              //                   .cname);
+                                              //       newChs.removeWhere((element) =>
+                                              //           element.cname ==
+                                              //           newChsmxRemoved[ia].cname);
+                                              //     }
+                                              //   }
+                                              //   // bool isContain = false;
+                                              //   // for (var ib = 0;
+                                              //   //     ib < newChsmx.length;
+                                              //   //     ib++) {
+                                              //   //   for (var ic = 0;
+                                              //   //       ic < newChs.length;
+                                              //   //       ic++) {
+                                              //   //     if (newChsmx[ib].cname ==
+                                              //   //         newChs[ic].cname) {
+                                              //   //       isContain = true;
+                                              //   //       break;
+                                              //   //     }
+                                              //   //   }
+                                              //   // }
 
-                                              for (var i = 0;
-                                                  i < newChsmx.length;
-                                                  i++) {
-                                                newChs.removeWhere((element) =>
-                                                    element.cname ==
-                                                    newChsmx[i].cname);
-                                                chossenMixer chs = chossenMixer(
-                                                    Ids,
-                                                    newChsmx[i].cmid,
-                                                    newChsmx[i].cname,
-                                                    newChsmx[i].cprice);
-                                                if (chs.cmid.isNotEmpty) {
-                                                  newChs.add(chs);
-                                                }
-                                              }
-                                              if (chmqty == null) {
-                                                chmqty = [];
-                                              }
+                                              //   // if (isContain == false) {
+                                              //   // newChsmx.remove(newChsmxRemoved);
+                                              //   print(newChsmx);
+                                              //   // newChsmx.removeWhere(
+                                              //   //     (element) =>
+                                              //   //         element.indId ==
+                                              //   //         strings[i]
+                                              //   //             .id
+                                              //   //             .toString());
 
-                                              for (var a = 0;
-                                                  a < chmqty.length;
-                                                  a++) {
-                                                chossenMixerMultiple chsa =
-                                                    chossenMixerMultiple(
-                                                        chmqty[a].indId,
-                                                        chmqty[a].cmid,
-                                                        chmqty[a].cname,
-                                                        chmqty[a].cprice);
-                                                // chossenMixer chs = chossenMixer(
-                                                //     indId, chid, chname, chprice);
-                                                if (chsa.cmid.isNotEmpty) {
-                                                  newChsmx.add(chsa);
-                                                }
-                                              }
-                                              print(newChsmx);
+                                              //   for (var i = 0;
+                                              //       i < newChsmx.length;
+                                              //       i++) {
+                                              //     newChs.removeWhere((element) =>
+                                              //         element.cname ==
+                                              //         newChsmx[i].cname);
+                                              //     chossenMixer chs = chossenMixer(
+                                              //         Ids,
+                                              //         newChsmx[i].cmid,
+                                              //         newChsmx[i].cname,
+                                              //         newChsmx[i].cprice);
+                                              //     if (chs.cmid.isNotEmpty) {
+                                              //       newChs.add(chs);
+                                              //     }
+                                              //   }
+                                              //   // }
 
-                                              for (var b = 0;
-                                                  b < newChsmx.length;
-                                                  b++) {
-                                                chossenMixer cm = chossenMixer(
-                                                    newChsmx[b].indId,
-                                                    newChsmx[b].cmid,
-                                                    newChsmx[b].cname,
-                                                    newChsmx[b].cprice);
-                                                if (cm.cmid.isNotEmpty) {
-                                                  setState(() {
-                                                    newChs.add(cm);
-                                                  });
-                                                }
-                                              }
-                                              print(newChs);
-                                              for (var bx = 0;
-                                                  bx < newChs.length;
-                                                  bx++) {
-                                                if (newChs[bx]
-                                                    .cname
-                                                    .isNotEmpty) {
-                                                  setState(() {
-                                                    chossenMixerMultiple chsa =
-                                                        chossenMixerMultiple(
-                                                            newChs[bx].indId,
-                                                            newChs[bx].cmid,
-                                                            newChs[bx].cname,
-                                                            newChs[bx].cprice);
-                                                    userChecked
-                                                        .add(newChs[bx].cname);
-                                                    newChsmx.add(chsa);
-                                                  });
-                                                }
-                                              }
-                                              print(userChecked);
-                                              // chossenMixer chs = chossenMixer(
-                                              //     Ids,
-                                              //     newChsmx[i].cmid,
-                                              //     newChsmx[i].cname,
-                                              //     newChsmx[i].cprice);
-                                              // if (chs.cmid.isNotEmpty) {
-                                              //   chs.add(chs);
+                                              //   myDrinks[ind].ChMixer = newChs;
+
+                                              //   print(strings[i].mx.length);
+
+                                              //   double mixertotal = 0;
+                                              //   for (var i = 0;
+                                              //       i < newChs.length;
+                                              //       i++) {
+                                              //     double cprice = double.parse(
+                                              //         newChs[i].cprice);
+                                              //     setState(() {
+                                              //       mixertotal += cprice;
+                                              //     });
+                                              //   }
+
+                                              //   double tot = double.parse(
+                                              //           myDrinks[ind].origPrice) +
+                                              //       mixertotal;
+                                              //   myDrinks[ind].price =
+                                              //       tot.toStringAsFixed(2);
+                                              //   // qty = double.parse(
+                                              //   //     newChs.length.toString());
+                                              //   var indx = strings[i].id.toString();
+                                              //   chmqty = [];
+
+                                              //   for (var i = 0;
+                                              //       i < newChsmx.length;
+                                              //       i++) {
+                                              //     if (indx == newChsmx[i].indId) {
+                                              //       chossenMixerMultipleQty chqty =
+                                              //           chossenMixerMultipleQty(
+                                              //               newChsmx[i].indId,
+                                              //               newChsmx[i].cmid,
+                                              //               newChsmx[i].cname,
+                                              //               newChsmx[i].cprice);
+                                              //       chmqty.add(chqty);
+                                              //     }
+                                              //   }
+
+                                              //   qty = double.parse(
+                                              //       chmqty.length.toString());
+
+                                              //   if (qty <= 0) {
+                                              //     strings[i].name = 'None';
+                                              //   } else {
+                                              //     strings[i].name =
+                                              //         qty.toStringAsFixed(0) +
+                                              //             'x Add Ons';
+                                              //   }
                                               // }
 
-                                              iCancel = true;
-                                            }
+                                              // print(userChecked);
+                                              // newChsmxRemoved = [];
+                                              // iCancel = false;
+                                              // chmqty = [];
 
-                                            // indId = '';
-                                            // chid = '';
-                                            // chname = 'None';
-                                            // chprice = '0';
+                                              // if (qty != 0) {
+                                              //   qty = 0;
+                                              //
+                                            }
                                             Navigator.pop(context);
                                           }
                                         },
@@ -2546,7 +2572,6 @@ class _MenuPageState extends State<MenuPage> {
                                     //     onTap: () {
                                     //       setState(() {
                                     //         modsetState(() {
-                                    //           close = false;
                                     //           isedit = true;
                                     //           userChecked = [];
                                     //           newChsmx = [];
@@ -2861,45 +2886,51 @@ class _MenuPageState extends State<MenuPage> {
                               if (strings[i].ismSelect != 'true')
                                 (Container(
                                   color: Colors.white,
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 5),
+                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                   height: 40,
                                   child: ListView.builder(
-                                      padding: EdgeInsets.all(10.0),
-                                      shrinkWrap: false,
+                                      // padding: EdgeInsets.all(10.0),
+
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       itemCount: 1,
                                       itemBuilder:
                                           (BuildContext context, int index) {
-                                        return GestureDetector(
-                                          child: Container(
-                                            padding: EdgeInsets.fromLTRB(
-                                                0, 0, 0, 20),
-                                            child: Row(children: [
-                                              Icon(
-                                                Icons.circle,
-                                                color: myDrinks[ind].mid == none
-                                                    ? Colors.deepOrange[700]
-                                                    : Colors.black
-                                                        .withOpacity(.5),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
+                                        return CheckboxListTile(
+                                          shape: CircleBorder(),
+                                          checkboxShape: CircleBorder(),
+                                          tileColor: Colors.black54,
+                                          title: Row(
+                                            children: [
                                               Expanded(
                                                 flex: 1,
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
                                                       Axis.horizontal,
                                                   child: Text(
-                                                    'None',
+                                                    "None",
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
                                                   ),
                                                 ),
                                               ),
-                                            ]),
+                                              // SizedBox(
+                                              //   width: 10,
+                                              // ),
+                                              // Text(
+                                              //   "None",
+                                              //   style: TextStyle(
+                                              //       color: Colors.black,
+                                              //       fontSize: 16),
+                                              // ),
+                                            ],
                                           ),
-                                          onTap: () {
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: myDrinks[ind].mid == none,
+                                          onChanged: (val) {
                                             setState(() {
                                               modsetState(() {
                                                 _isnone = true;
@@ -2921,7 +2952,62 @@ class _MenuPageState extends State<MenuPage> {
                                               });
                                             });
                                           },
+                                          activeColor: Colors.deepOrange,
+                                          checkColor: Colors.deepOrange,
                                         );
+                                        // return GestureDetector(
+                                        //   child: Container(
+                                        //     padding: EdgeInsets.fromLTRB(
+                                        //         0, 0, 0, 20),
+                                        //     child: Row(children: [
+                                        //       Icon(
+                                        //         Icons.circle,
+                                        //         color: myDrinks[ind].mid == none
+                                        //             ? Colors.deepOrange[700]
+                                        //             : Colors.black
+                                        //                 .withOpacity(.5),
+                                        //       ),
+                                        //       SizedBox(
+                                        //         width: 10,
+                                        //       ),
+                                        //       Expanded(
+                                        //         flex: 1,
+                                        //         child: SingleChildScrollView(
+                                        //           scrollDirection:
+                                        //               Axis.horizontal,
+                                        //           child: Text(
+                                        //             'None',
+                                        //             style: TextStyle(
+                                        //                 color: Colors.black,
+                                        //                 fontSize: 16),
+                                        //           ),
+                                        //         ),
+                                        //       ),
+                                        //     ]),
+                                        //   ),
+                                        //   onTap: () {
+                                        //     setState(() {
+                                        //       modsetState(() {
+                                        //         _isnone = true;
+                                        //         none = 'None';
+                                        //         myDrinks[ind].mid = 'None';
+
+                                        //         chid = '';
+                                        //         chname = 'None';
+                                        //         chprice = '0';
+
+                                        //         myindex = index;
+                                        //         print(myindex);
+                                        //         print(index);
+                                        //         print(chid);
+
+                                        //         myDrinks[ind].mid = 'None';
+                                        //         myDrinks[ind].mprice = '0';
+                                        //         mname = strings[i].name;
+                                        //       });
+                                        //     });
+                                        //   },
+                                        // );
                                       }),
                                 )),
                               if (strings[i].mx.length <= 0)
@@ -2947,286 +3033,535 @@ class _MenuPageState extends State<MenuPage> {
                                       // }
 
                                       if (strings[i].ismSelect == 'true') {
-                                        return Theme(
-                                          data: ThemeData(
-                                            checkboxTheme: CheckboxThemeData(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                              ),
-                                            ),
-                                            unselectedWidgetColor:
-                                                Colors.black54,
-                                            backgroundColor: Colors.black54,
-                                          ),
-                                          child: ListTileTheme(
-                                            // contentPadding: EdgeInsets.all(0),
-                                            child: CheckboxListTile(
-                                              // shape: CircleBorder(),
-                                              tileColor: Colors.black54,
-                                              title: Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Text(
-                                                        strings[i]
-                                                            .mx[index]
-                                                            .name,
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    strings[i]
-                                                            .mx[index]
-                                                            .price
-                                                            .toString() +
-                                                        " AED",
+                                        return CheckboxListTile(
+                                          shape: CircleBorder(),
+                                          checkboxShape: CircleBorder(),
+                                          tileColor: Colors.black54,
+                                          title: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Text(
+                                                    strings[i].mx[index].name,
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
                                                   ),
-                                                ],
+                                                ),
                                               ),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: userChecked.contains(
-                                                  strings[i].mx[index].name),
-                                              onChanged: (val) {
-                                                modsetState(() {
-                                                  // if (isedit == true) {
-                                                  iCancel = false;
-                                                  if (val == true) {
-                                                    setState(() {
-                                                      // if (newChsmx.length > 0) {
-                                                      //   newChsmx = [];
-                                                      // }
-                                                      userChecked.add(strings[i]
-                                                          .mx[index]
-                                                          .name);
-
-                                                      indId = strings[i]
-                                                          .id
-                                                          .toString();
-                                                      chid = strings[i]
-                                                          .mx[index]
-                                                          .id;
-                                                      chname = strings[i]
-                                                          .mx[index]
-                                                          .name;
-                                                      chprice = strings[i]
-                                                          .mx[index]
-                                                          .price;
-                                                      qty += 1;
-                                                      chossenMixerMultiple chs =
-                                                          chossenMixerMultiple(
-                                                              indId,
-                                                              chid,
-                                                              chname,
-                                                              chprice);
-                                                      if (chs.cmid.isNotEmpty) {
-                                                        var isContain = newChsmx
-                                                            .contains(chs);
-                                                        if (isContain ==
-                                                            false) {
-                                                          newChsmx.add(chs);
-                                                        }
-                                                      }
-                                                      print(newChsmx);
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      userChecked.remove(
-                                                          strings[i]
-                                                              .mx[index]
-                                                              .name);
-                                                      indId = strings[i]
-                                                          .id
-                                                          .toString();
-                                                      chid = strings[i]
-                                                          .mx[index]
-                                                          .id;
-                                                      chname = strings[i]
-                                                          .mx[index]
-                                                          .name;
-                                                      chprice = strings[i]
-                                                          .mx[index]
-                                                          .price;
-                                                      if (qty > 0) {
-                                                        qty = qty - 1;
-                                                      }
-
-                                                      chossenMixerMultipleRemoved
-                                                          chs =
-                                                          chossenMixerMultipleRemoved(
-                                                              indId,
-                                                              chid,
-                                                              chname,
-                                                              chprice);
-                                                      if (chs.cmid.isNotEmpty) {
-                                                        var isContain =
-                                                            newChsmxRemoved
-                                                                .contains(chs);
-                                                        if (isContain ==
-                                                            false) {
-                                                          newChsmxRemoved
-                                                              .add(chs);
-                                                        }
-                                                      }
-                                                      List<chossenMixer>
-                                                          newChs =
-                                                          myDrinks[ind].ChMixer;
-                                                      if (newChsmxRemoved
-                                                              .length >
-                                                          0) {
-                                                        for (var ia = 0;
-                                                            ia <
-                                                                newChsmxRemoved
-                                                                    .length;
-                                                            ia++) {
-                                                          newChsmx.removeWhere(
-                                                              (element) =>
-                                                                  element
-                                                                      .cname ==
-                                                                  newChsmxRemoved[
-                                                                          ia]
-                                                                      .cname);
-                                                          newChs.removeWhere(
-                                                              (element) =>
-                                                                  element
-                                                                      .cname ==
-                                                                  newChsmxRemoved[
-                                                                          ia]
-                                                                      .cname);
-                                                        }
-                                                      }
-                                                      print(newChsmx);
-                                                    });
-                                                  }
-                                                  // }
-                                                });
-                                              },
-                                              activeColor: Colors.deepOrange,
-                                              checkColor: Colors.deepOrange,
-                                            ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                strings[i]
+                                                        .mx[index]
+                                                        .price
+                                                        .toString() +
+                                                    " AED",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
                                           ),
-                                        );
-                                      } else {
-                                        return GestureDetector(
-                                          onTap: () {
-                                            var a = myDrinks[ind].mid;
-                                            var b = strings[i].mx[index].name;
-                                            setState(() {
-                                              if (a != b) {
-                                                print(a + '' + b);
-                                                indId =
-                                                    strings[i].id.toString();
-                                                chid = strings[i].mx[index].id;
-                                                chname =
-                                                    strings[i].mx[index].name;
-                                                chprice =
-                                                    strings[i].mx[index].price;
-
-                                                myindex = index;
-                                                print(myindex);
-                                                print(index);
-                                                print(chid);
-
-                                                myDrinks[ind].mid =
-                                                    strings[i].mx[index].name;
-                                                myDrinks[ind].mprice =
-                                                    strings[i].mx[index].price;
-                                                mname = strings[i].name;
-                                              }
-                                            });
-
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: userChecked.contains(
+                                              strings[i].mx[index].name),
+                                          onChanged: (val) {
                                             modsetState(() {
-                                              if (a != b) {
-                                                if (strings[i].name ==
-                                                    strings[i].mx[index].name) {
-                                                  strings[i].name =
-                                                      strings[i].mx[index].name;
-                                                } else {
-                                                  strings[i].name =
-                                                      strings[i].name;
-                                                }
+                                              // if (isedit == true) {
+                                              iCancel = false;
+                                              if (val == true) {
+                                                setState(() {
+                                                  // if (newChsmx.length > 0) {
+                                                  //   newChsmx = [];
+                                                  // }
+                                                  userChecked.add(strings[i]
+                                                      .mx[index]
+                                                      .name);
 
-                                                myDrinks[ind].mid =
-                                                    strings[i].mx[index].name;
-                                                myDrinks[ind].mprice =
-                                                    strings[i].mx[index].price;
-                                                select = myindex;
-                                                int Row = index;
+                                                  indId =
+                                                      strings[i].id.toString();
+                                                  chid =
+                                                      strings[i].mx[index].id;
+                                                  chname =
+                                                      strings[i].mx[index].name;
+                                                  chprice = strings[i]
+                                                      .mx[index]
+                                                      .price;
+                                                  qty += 1;
+                                                  chossenMixerMultiple chs =
+                                                      chossenMixerMultiple(
+                                                          indId,
+                                                          chid,
+                                                          chname,
+                                                          chprice);
+                                                  if (chs.cmid.isNotEmpty) {
+                                                    var isContain =
+                                                        newChsmx.contains(chs);
+                                                    if (isContain == false) {
+                                                      newChsmx.add(chs);
+                                                    }
+                                                  }
+                                                  print(newChsmx);
+                                                });
+                                              } else {
+                                                setState(() {
+                                                  userChecked.remove(strings[i]
+                                                      .mx[index]
+                                                      .name);
+                                                  indId =
+                                                      strings[i].id.toString();
+                                                  chid =
+                                                      strings[i].mx[index].id;
+                                                  chname =
+                                                      strings[i].mx[index].name;
+                                                  chprice = strings[i]
+                                                      .mx[index]
+                                                      .price;
+                                                  if (qty > 0) {
+                                                    qty = qty - 1;
+                                                  }
+
+                                                  chossenMixerMultipleRemoved
+                                                      chs =
+                                                      chossenMixerMultipleRemoved(
+                                                          indId,
+                                                          chid,
+                                                          chname,
+                                                          chprice);
+                                                  if (chs.cmid.isNotEmpty) {
+                                                    var isContain =
+                                                        newChsmxRemoved
+                                                            .contains(chs);
+                                                    if (isContain == false) {
+                                                      newChsmxRemoved.add(chs);
+                                                    }
+                                                  }
+                                                  List<chossenMixer> newChs =
+                                                      myDrinks[ind].ChMixer;
+                                                  if (newChsmxRemoved.length >
+                                                      0) {
+                                                    for (var ia = 0;
+                                                        ia <
+                                                            newChsmxRemoved
+                                                                .length;
+                                                        ia++) {
+                                                      newChsmx.removeWhere(
+                                                          (element) =>
+                                                              element.cname ==
+                                                              newChsmxRemoved[
+                                                                      ia]
+                                                                  .cname);
+                                                      newChs.removeWhere(
+                                                          (element) =>
+                                                              element.cname ==
+                                                              newChsmxRemoved[
+                                                                      ia]
+                                                                  .cname);
+                                                    }
+                                                  }
+                                                  print(newChsmx);
+                                                });
                                               }
+                                              // }
                                             });
                                           },
-                                          child: Container(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  20, 5, 20, 25),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons.circle,
-                                                    color: myDrinks[ind].mid ==
-                                                            strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                        ? Colors.deepOrange[700]
-                                                        : Colors.black
-                                                            .withOpacity(.5),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child:
-                                                        SingleChildScrollView(
-                                                      scrollDirection:
-                                                          Axis.horizontal,
-                                                      child: Text(
-                                                        strings[i]
-                                                                    .mx[index]
-                                                                    .name
-                                                                    .toString() !=
-                                                                null
-                                                            ? strings[i]
-                                                                .mx[index]
-                                                                .name
-                                                                .toString()
-                                                            : '',
-                                                        style: TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 16),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
+                                          activeColor: Colors.deepOrange,
+                                          checkColor: Colors.deepOrange,
+                                        );
+                                        // return Theme(
+                                        //   data: ThemeData(
+                                        //     checkboxTheme: CheckboxThemeData(
+                                        //       shape: RoundedRectangleBorder(
+                                        //         borderRadius:
+                                        //             BorderRadius.circular(10),
+                                        //       ),
+                                        //     ),
+                                        //     unselectedWidgetColor:
+                                        //         Colors.black54,
+                                        //     backgroundColor: Colors.black54,
+                                        //   ),
+                                        //   child: ListTileTheme(
+                                        //     // contentPadding: EdgeInsets.all(0),
+                                        //     child: CheckboxListTile(
+                                        //       // shape: CircleBorder(),
+                                        //       tileColor: Colors.black54,
+                                        //       title: Row(
+                                        //         children: [
+                                        //           Expanded(
+                                        //             flex: 1,
+                                        //             child:
+                                        //                 SingleChildScrollView(
+                                        //               scrollDirection:
+                                        //                   Axis.horizontal,
+                                        //               child: Text(
+                                        //                 strings[i]
+                                        //                     .mx[index]
+                                        //                     .name,
+                                        //                 style: TextStyle(
+                                        //                     color: Colors.black,
+                                        //                     fontSize: 16),
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           SizedBox(
+                                        //             width: 10,
+                                        //           ),
+                                        //           Text(
+                                        //             strings[i]
+                                        //                     .mx[index]
+                                        //                     .price
+                                        //                     .toString() +
+                                        //                 " AED",
+                                        //             style: TextStyle(
+                                        //                 color: Colors.black,
+                                        //                 fontSize: 16),
+                                        //           ),
+                                        //         ],
+                                        //       ),
+                                        //       controlAffinity:
+                                        //           ListTileControlAffinity
+                                        //               .leading,
+                                        //       value: userChecked.contains(
+                                        //           strings[i].mx[index].name),
+                                        //       onChanged: (val) {
+                                        //         modsetState(() {
+                                        //           // if (isedit == true) {
+                                        //           iCancel = false;
+                                        //           if (val == true) {
+                                        //             setState(() {
+                                        //               // if (newChsmx.length > 0) {
+                                        //               //   newChsmx = [];
+                                        //               // }
+                                        //               userChecked.add(strings[i]
+                                        //                   .mx[index]
+                                        //                   .name);
+
+                                        //               indId = strings[i]
+                                        //                   .id
+                                        //                   .toString();
+                                        //               chid = strings[i]
+                                        //                   .mx[index]
+                                        //                   .id;
+                                        //               chname = strings[i]
+                                        //                   .mx[index]
+                                        //                   .name;
+                                        //               chprice = strings[i]
+                                        //                   .mx[index]
+                                        //                   .price;
+                                        //               qty += 1;
+                                        //               chossenMixerMultiple chs =
+                                        //                   chossenMixerMultiple(
+                                        //                       indId,
+                                        //                       chid,
+                                        //                       chname,
+                                        //                       chprice);
+                                        //               if (chs.cmid.isNotEmpty) {
+                                        //                 var isContain = newChsmx
+                                        //                     .contains(chs);
+                                        //                 if (isContain ==
+                                        //                     false) {
+                                        //                   newChsmx.add(chs);
+                                        //                 }
+                                        //               }
+                                        //               print(newChsmx);
+                                        //             });
+                                        //           } else {
+                                        //             setState(() {
+                                        //               userChecked.remove(
+                                        //                   strings[i]
+                                        //                       .mx[index]
+                                        //                       .name);
+                                        //               indId = strings[i]
+                                        //                   .id
+                                        //                   .toString();
+                                        //               chid = strings[i]
+                                        //                   .mx[index]
+                                        //                   .id;
+                                        //               chname = strings[i]
+                                        //                   .mx[index]
+                                        //                   .name;
+                                        //               chprice = strings[i]
+                                        //                   .mx[index]
+                                        //                   .price;
+                                        //               if (qty > 0) {
+                                        //                 qty = qty - 1;
+                                        //               }
+
+                                        //               chossenMixerMultipleRemoved
+                                        //                   chs =
+                                        //                   chossenMixerMultipleRemoved(
+                                        //                       indId,
+                                        //                       chid,
+                                        //                       chname,
+                                        //                       chprice);
+                                        //               if (chs.cmid.isNotEmpty) {
+                                        //                 var isContain =
+                                        //                     newChsmxRemoved
+                                        //                         .contains(chs);
+                                        //                 if (isContain ==
+                                        //                     false) {
+                                        //                   newChsmxRemoved
+                                        //                       .add(chs);
+                                        //                 }
+                                        //               }
+                                        //               List<chossenMixer>
+                                        //                   newChs =
+                                        //                   myDrinks[ind].ChMixer;
+                                        //               if (newChsmxRemoved
+                                        //                       .length >
+                                        //                   0) {
+                                        //                 for (var ia = 0;
+                                        //                     ia <
+                                        //                         newChsmxRemoved
+                                        //                             .length;
+                                        //                     ia++) {
+                                        //                   newChsmx.removeWhere(
+                                        //                       (element) =>
+                                        //                           element
+                                        //                               .cname ==
+                                        //                           newChsmxRemoved[
+                                        //                                   ia]
+                                        //                               .cname);
+                                        //                   newChs.removeWhere(
+                                        //                       (element) =>
+                                        //                           element
+                                        //                               .cname ==
+                                        //                           newChsmxRemoved[
+                                        //                                   ia]
+                                        //                               .cname);
+                                        //                 }
+                                        //               }
+                                        //               print(newChsmx);
+                                        //             });
+                                        //           }
+                                        //           // }
+                                        //         });
+                                        //       },
+                                        //       activeColor: Colors.deepOrange,
+                                        //       checkColor: Colors.deepOrange,
+                                        //     ),
+                                        //   ),
+                                        // );
+                                      } else {
+                                        return CheckboxListTile(
+                                          shape: CircleBorder(),
+                                          checkboxShape: CircleBorder(),
+                                          tileColor: Colors.black54,
+                                          title: Row(
+                                            children: [
+                                              Expanded(
+                                                flex: 1,
+                                                child: SingleChildScrollView(
+                                                  scrollDirection:
+                                                      Axis.horizontal,
+                                                  child: Text(
                                                     strings[i]
+                                                                .mx[index]
+                                                                .name
+                                                                .toString() !=
+                                                            null
+                                                        ? strings[i]
                                                             .mx[index]
-                                                            .price
-                                                            .toString() +
-                                                        " AED",
+                                                            .name
+                                                            .toString()
+                                                        : '',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 16),
                                                   ),
-                                                ],
-                                              )),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                strings[i]
+                                                        .mx[index]
+                                                        .price
+                                                        .toString() +
+                                                    " AED",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 16),
+                                              ),
+                                            ],
+                                          ),
+                                          controlAffinity:
+                                              ListTileControlAffinity.leading,
+                                          value: myDrinks[ind].mid ==
+                                              strings[i].mx[index].name,
+                                          onChanged: (val) {
+                                            modsetState(() {
+                                              var a = myDrinks[ind].mid;
+                                              var b = strings[i].mx[index].name;
+                                              setState(() {
+                                                if (a != b) {
+                                                  print(a + '' + b);
+                                                  indId =
+                                                      strings[i].id.toString();
+                                                  chid =
+                                                      strings[i].mx[index].id;
+                                                  chname =
+                                                      strings[i].mx[index].name;
+                                                  chprice = strings[i]
+                                                      .mx[index]
+                                                      .price;
+
+                                                  myindex = index;
+                                                  print(myindex);
+                                                  print(index);
+                                                  print(chid);
+
+                                                  myDrinks[ind].mid =
+                                                      strings[i].mx[index].name;
+                                                  myDrinks[ind].mprice =
+                                                      strings[i]
+                                                          .mx[index]
+                                                          .price;
+                                                  mname = strings[i].name;
+                                                }
+                                              });
+
+                                              modsetState(() {
+                                                if (a != b) {
+                                                  if (strings[i].name ==
+                                                      strings[i]
+                                                          .mx[index]
+                                                          .name) {
+                                                    strings[i].name = strings[i]
+                                                        .mx[index]
+                                                        .name;
+                                                  } else {
+                                                    strings[i].name =
+                                                        strings[i].name;
+                                                  }
+
+                                                  myDrinks[ind].mid =
+                                                      strings[i].mx[index].name;
+                                                  myDrinks[ind].mprice =
+                                                      strings[i]
+                                                          .mx[index]
+                                                          .price;
+                                                  select = myindex;
+                                                  int Row = index;
+                                                }
+                                              });
+                                            });
+                                          },
+                                          activeColor: Colors.deepOrange,
+                                          checkColor: Colors.deepOrange,
                                         );
+                                        // return GestureDetector(
+                                        //   onTap: () {
+                                        //     var a = myDrinks[ind].mid;
+                                        //     var b = strings[i].mx[index].name;
+                                        //     setState(() {
+                                        //       if (a != b) {
+                                        //         print(a + '' + b);
+                                        //         indId =
+                                        //             strings[i].id.toString();
+                                        //         chid = strings[i].mx[index].id;
+                                        //         chname =
+                                        //             strings[i].mx[index].name;
+                                        //         chprice =
+                                        //             strings[i].mx[index].price;
+
+                                        //         myindex = index;
+                                        //         print(myindex);
+                                        //         print(index);
+                                        //         print(chid);
+
+                                        //         myDrinks[ind].mid =
+                                        //             strings[i].mx[index].name;
+                                        //         myDrinks[ind].mprice =
+                                        //             strings[i].mx[index].price;
+                                        //         mname = strings[i].name;
+                                        //       }
+                                        //     });
+
+                                        //     modsetState(() {
+                                        //       if (a != b) {
+                                        //         if (strings[i].name ==
+                                        //             strings[i].mx[index].name) {
+                                        //           strings[i].name =
+                                        //               strings[i].mx[index].name;
+                                        //         } else {
+                                        //           strings[i].name =
+                                        //               strings[i].name;
+                                        //         }
+
+                                        //         myDrinks[ind].mid =
+                                        //             strings[i].mx[index].name;
+                                        //         myDrinks[ind].mprice =
+                                        //             strings[i].mx[index].price;
+                                        //         select = myindex;
+                                        //         int Row = index;
+                                        //       }
+                                        //     });
+                                        //   },
+                                        //   child: Container(
+                                        //       padding: EdgeInsets.fromLTRB(
+                                        //           20, 5, 20, 25),
+                                        //       child: Row(
+                                        //         children: [
+                                        //           Icon(
+                                        //             Icons.circle,
+                                        //             color: myDrinks[ind].mid ==
+                                        //                     strings[i]
+                                        //                         .mx[index]
+                                        //                         .name
+                                        //                 ? Colors.deepOrange[700]
+                                        //                 : Colors.black
+                                        //                     .withOpacity(.5),
+                                        //           ),
+                                        //           SizedBox(
+                                        //             width: 10,
+                                        //           ),
+                                        //           Expanded(
+                                        //             flex: 1,
+                                        //             child:
+                                        //                 SingleChildScrollView(
+                                        //               scrollDirection:
+                                        //                   Axis.horizontal,
+                                        //               child: Text(
+                                        //                 strings[i]
+                                        //                             .mx[index]
+                                        //                             .name
+                                        //                             .toString() !=
+                                        //                         null
+                                        //                     ? strings[i]
+                                        //                         .mx[index]
+                                        //                         .name
+                                        //                         .toString()
+                                        //                     : '',
+                                        //                 style: TextStyle(
+                                        //                     color: Colors.black,
+                                        //                     fontSize: 16),
+                                        //               ),
+                                        //             ),
+                                        //           ),
+                                        //           SizedBox(
+                                        //             width: 10,
+                                        //           ),
+                                        //           Text(
+                                        //             strings[i]
+                                        //                     .mx[index]
+                                        //                     .price
+                                        //                     .toString() +
+                                        //                 " AED",
+                                        //             style: TextStyle(
+                                        //                 color: Colors.black,
+                                        //                 fontSize: 16),
+                                        //           ),
+                                        //         ],
+                                        //       )),
+                                        // );
                                       }
                                     },
                                   ),
