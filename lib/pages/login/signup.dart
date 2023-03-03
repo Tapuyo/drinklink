@@ -139,7 +139,8 @@ class _SignPageState extends State<SignUp> {
     };
     var body = json.encode(map['data']);
     String url = ApiCon.baseurl() + '/auth/users';
-    final response = await http.post(Uri.parse(url), headers: headers, body: body);
+    final response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
     //var jsondata = json.decode(response.headers);
     print(response.body.toString());
     if (response.statusCode == 200) {
@@ -255,14 +256,16 @@ class _SignPageState extends State<SignUp> {
             ),
           ],
         ).show();
-      } else if (response.body.toString().contains("Passwords must use at least 6 different characters")) {
+      } else if (response.body
+          .toString()
+          .contains("Passwords must use at least 6 different characters")) {
         Alert(
           context: context,
           title: "Sign up",
           content: Container(
             child: Center(
-              child:
-                  Text("Password does not meet requirements.", textAlign: TextAlign.center),
+              child: Text("Password does not meet requirements.",
+                  textAlign: TextAlign.center),
             ),
           ),
           buttons: [

@@ -163,37 +163,36 @@ class WebViewExampleState extends State<WebPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-          backgroundColor: Color(0xFF2b2b61),
-          title: new Text(
-            "Payment",
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-          //     actions: [
-          //       Padding(
-          //   padding: EdgeInsets.only(right: 20.0),
-          //   child: GestureDetector(
-          //     onTap: () {
-          //       Order();
-          //     },
-          //     child: Icon(
-          //       Icons.search,
-          //       size: 26.0,
-          //     ),
-          //   )
-          // ),
-          //     ],
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              
-              Navigator.pop(context, 'cancel');
-              cancel_order();
-            },
-          ),
+        backgroundColor: Color(0xFF2b2b61),
+        title: new Text(
+          "Payment",
+          style: TextStyle(fontSize: 20, color: Colors.white),
         ),
+        //     actions: [
+        //       Padding(
+        //   padding: EdgeInsets.only(right: 20.0),
+        //   child: GestureDetector(
+        //     onTap: () {
+        //       Order();
+        //     },
+        //     child: Icon(
+        //       Icons.search,
+        //       size: 26.0,
+        //     ),
+        //   )
+        // ),
+        //     ],
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.pop(context, 'cancel');
+            cancel_order();
+          },
+        ),
+      ),
       body: WebView(
         initialUrl: murl,
         javascriptMode: JavascriptMode.unrestricted,
@@ -202,37 +201,38 @@ class WebViewExampleState extends State<WebPage> {
         },
         onProgress: (int progress) {
           print('WebView is loading (progress : $progress%)');
-          child: const Center(
-              child: Text(
-                'Loading......',
-                style: TextStyle(color: Colors.black),
-              ),
-            );
+          child:
+          const Center(
+            child: Text(
+              'Loading......',
+              style: TextStyle(color: Colors.black),
+            ),
+          );
         },
-         navigationDelegate: (action) {
-        // if (action.url.contains('google.com')) {
-        //   // Won't redirect url
-        //   print('Trying to open google');
-        //   Navigator.pop(context); 
-        //   return NavigationDecision.prevent; 
-        // } else if (action.url.contains('youtube.com')) {
-        // // Allow opening url
-        //   print('Trying to open Youtube');
-        //   return NavigationDecision.navigate; 
-        // } else {
-        //   return NavigationDecision.navigate; 
-        // }
-        print("This is url: " + action.url);
-         try {
-          if (action.url != murl) {
-            Order(action.url);
+        navigationDelegate: (action) {
+          // if (action.url.contains('google.com')) {
+          //   // Won't redirect url
+          //   print('Trying to open google');
+          //   Navigator.pop(context);
+          //   return NavigationDecision.prevent;
+          // } else if (action.url.contains('youtube.com')) {
+          // // Allow opening url
+          //   print('Trying to open Youtube');
+          //   return NavigationDecision.navigate;
+          // } else {
+          //   return NavigationDecision.navigate;
+          // }
+          print("This is url: " + action.url);
+          try {
+            if (action.url != murl) {
+              Order(action.url);
+            }
+          } catch (e) {
+            print(e.toString());
           }
-        } catch (e) {
-          print(e.toString());
-        }
-    
-        return NavigationDecision.navigate; 
-      },
+
+          return NavigationDecision.navigate;
+        },
         // appBar: new AppBar(
         //   backgroundColor: Color(0xFF2b2b61),
         //   title: new Text(
