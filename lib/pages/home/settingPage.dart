@@ -611,7 +611,7 @@ class _setPageState extends State<setPage> {
                   children: [
                     Expanded(
                       child: TextButton(
-                          style: flatButtonStyle,
+                          // style: flatButtonStyle,
                           onPressed: () async {
                             if (checkedValue) {
                               if (cardidx.isEmpty) {
