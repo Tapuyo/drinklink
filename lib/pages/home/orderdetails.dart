@@ -322,11 +322,13 @@ class _OrderDetailsState extends State<OrderDetails> {
     print(response.body);
     if (response.statusCode == 200) {
       print(response.statusCode);
+      Navigator.of(context).pop();
       _showDialog_message('My order', 'Successfully cancelled order.', true);
     } else {
+      Navigator.of(context).pop();
       _showDialog_message('My order', 'Failed to cancel order.', false);
     }
-    Navigator.of(context).pop();
+    
   }
 
   getToke() {
