@@ -111,7 +111,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
         Navigator.pop(context, 'failed');
       }
     } catch (x) {
-      Navigator.pop(context, 'failed');
+      // Navigator.pop(context, 'failed');
     }
 
     // if (mystate == 'REVERSED') {
@@ -130,6 +130,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
     return WebView(
       initialUrl: murl,
       javascriptMode: JavascriptMode.unrestricted,
+      // ignore: missing_return
       navigationDelegate: (action) {
       print("This is url: " + action.url);
       try {
@@ -141,7 +142,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
        // Navigator.pop(context, 'failed');
       }
 
-      return NavigationDecision.navigate; 
+      // return NavigationDecision.navigate; 
     },
     );
   }
