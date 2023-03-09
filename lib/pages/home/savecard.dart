@@ -100,10 +100,10 @@ class WebViewExampleState extends State<SaveCardWeb> {
     final response = await http.post(Uri.parse(url), headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
-   
+
     try {
-       String mystate =
-        json.decode(response.body)['_embedded']['payment'][0]['state'];
+      String mystate =
+          json.decode(response.body)['_embedded']['payment'][0]['state'];
       if (mystate.toLowerCase() == ('REVERSED').toLowerCase() ||
           mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
         Navigator.pop(context, 'Added');
@@ -132,18 +132,18 @@ class WebViewExampleState extends State<SaveCardWeb> {
       javascriptMode: JavascriptMode.unrestricted,
       // ignore: missing_return
       navigationDelegate: (action) {
-      print("This is url: " + action.url);
-      try {
-        if (action.url != murl) {
-          //Navigator.pop(context, url);
-          AddCard(action.url);
+        print("This is url: " + action.url);
+        try {
+          if (action.url != murl) {
+            //Navigator.pop(context, url);
+            AddCard(action.url);
+          }
+        } catch (e) {
+          // Navigator.pop(context, 'failed');
         }
-      } catch (e) {
-       // Navigator.pop(context, 'failed');
-      }
 
-      // return NavigationDecision.navigate; 
-    },
+        // return NavigationDecision.navigate;
+      },
     );
   }
 }
