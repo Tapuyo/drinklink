@@ -4075,10 +4075,11 @@ class _MenuPageState extends State<MenuPage> {
       "Accept": "application/json"
     };
     String url = ApiCon.baseurl() + '/places/' + id.toString();
+    print('jomsssss');
+
     final response = await http.get(Uri.parse(url), headers: headers);
-
+    print('jomsssssv2');
     var jsondata = json.decode(response.body)['menu'];
-
     String feeable =
         json.decode(response.body)['isServiceChargeEnabled'].toString();
     if (feeable == 'true') {
@@ -4088,7 +4089,7 @@ class _MenuPageState extends State<MenuPage> {
       fee = 0;
     }
 
-    for (var i = 0; i < jsondata.length - 1; i++) {
+    for (var i = 0; i < jsondata.length; i++) {
       if (jsondata[i]['id'].toString() == dri) {
         print(jsondata[i]['name'].toString() + '|' + dri);
         if (jsondata[i]['subCategories'].toString() == '[]') {
@@ -4123,6 +4124,7 @@ class _MenuPageState extends State<MenuPage> {
               mci++;
             }
 //s['allowIce']
+
             Drinks store = Drinks(
                 jsondata[i]['id'].toString(),
                 u['id'].toString(),
@@ -4141,6 +4143,10 @@ class _MenuPageState extends State<MenuPage> {
                 false);
 
             setState(() {
+              print('jomsssssv3');
+
+              myDrinks.removeWhere(
+                  (element) => element.name == u['name'].toString());
               myDrinks.add(store);
             });
             mi++;
@@ -4209,6 +4215,9 @@ class _MenuPageState extends State<MenuPage> {
                     false);
 
                 setState(() {
+                  print('jomsssssv4');
+                  myDrinks.removeWhere(
+                      (element) => element.name == s['name'].toString());
                   myDrinks.add(store);
                 });
                 //}
@@ -4219,7 +4228,7 @@ class _MenuPageState extends State<MenuPage> {
         }
       }
     }
-    print('My drinks: ' + myDrinks.length.toString());
+
     return myDrinks;
   }
 
