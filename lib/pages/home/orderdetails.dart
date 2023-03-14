@@ -328,7 +328,6 @@ class _OrderDetailsState extends State<OrderDetails> {
       Navigator.of(context).pop();
       _showDialog_message('My order', 'Failed to cancel order.', false);
     }
-    
   }
 
   getToke() {
@@ -550,6 +549,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                   secs = _start.toString();
                 }
               }
+              Prefs.load();
+              Prefs.setString('mins', mins);
+              Prefs.setString('secs', secs);
             });
             //checkORder();
           }
