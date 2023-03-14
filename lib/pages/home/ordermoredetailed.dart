@@ -21,7 +21,7 @@ class _MoreDetailsState extends State<MoreDetails> {
   _MoreDetailsState(this.code, this.byw, this.outlet);
   String state = '';
   Timer _timer;
-  int _start = 10;
+  int _start = 0;
   String mins = '00';
   String secs = '00';
   List<MyItems> orderList = [];
@@ -49,7 +49,8 @@ class _MoreDetailsState extends State<MoreDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
+        Uri.parse(ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 
@@ -85,23 +86,26 @@ class _MoreDetailsState extends State<MoreDetails> {
       } else if (cState == '3') {
         stt = 'Payment Processed';
       } else if (cState == '4') {
-         setState(() {
-          String timeToCollect = json.decode(response.body)[i]['timeToCollectMins'];
-          
+        setState(() {
+          String timeToCollect =
+              json.decode(response.body)[i]['timeToCollectMins'];
+
           print('time to collect:' + timeToCollect);
           final format = DateFormat('hh:mm:ss');
           final dt = format.parse(timeToCollect, true);
           print(dt.toString());
-          double sec = Duration(milliseconds: dt.millisecondsSinceEpoch).inMilliseconds / 1000;
-        
+          double sec =
+              Duration(milliseconds: dt.millisecondsSinceEpoch).inMilliseconds /
+                  1000;
+
           print('in seconds');
           print(sec.toString());
-         
-                       if (mounted) {
+
+          if (mounted) {
             _start = int.parse(sec.round().toString()) ?? 0;
           }
-                    });
-          stt = 'Ready';
+        });
+        stt = 'Ready';
       } else if (cState == '5') {
         _timer.cancel();
         stt = 'Collected';
@@ -142,24 +146,28 @@ class _MoreDetailsState extends State<MoreDetails> {
           });
         } else {
           setState(() {
-            _start--;
-            if (_start > 60) {
-              double val = _start / 60 - 1;
-              mins = val.ceil().toStringAsFixed(0);
-              int rem = _start % 60;
-              if (rem < 10) {
-                secs = '0' + rem.toString();
-              } else {
-                secs = rem.toString();
-              }
-            } else {
-              mins = '00';
-              if (_start < 10) {
-                secs = '0' + _start.toString();
-              } else {
-                secs = _start.toString();
-              }
-            }
+            String minsc = Prefs.getString('mins');
+            String secsc = Prefs.getString('secs');
+            mins = minsc;
+            secs = secsc;
+            // _start--;
+            // if (_start > 60) {
+            //   double val = _start / 60 - 1;
+            //   mins = val.ceil().toStringAsFixed(0);
+            //   int rem = _start % 60;
+            //   if (rem < 10) {
+            //     secs = '0' + rem.toString();
+            //   } else {
+            //     secs = rem.toString();
+            //   }
+            // } else {
+            //   mins = '00';
+            //   if (_start < 10) {
+            //     secs = '0' + _start.toString();
+            //   } else {
+            //     secs = _start.toString();
+            //   }
+            // }
           });
           //checkORder();
         }
@@ -398,7 +406,8 @@ class _MoreDetailsState extends State<MoreDetails> {
       'Authorization': 'Bearer ' + token
     };
     final response = await http.get(
-        Uri.parse(ApiCon.baseurl() + '/users/currentUser/orders?pageSize=1&pageNumber=1'),
+        Uri.parse(ApiCon.baseurl() +
+            '/users/currentUser/orders?pageSize=1&pageNumber=1'),
         headers: headers);
     var jsondata = json.decode(response.body);
 
