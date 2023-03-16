@@ -23,6 +23,7 @@ class setPage extends StatefulWidget {
 }
 
 class _setPageState extends State<setPage> {
+  bool card;
   bool sound = true;
   bool ring = true;
   bool checkedValue = false;
@@ -613,13 +614,16 @@ class _setPageState extends State<setPage> {
                       child: TextButton(
                           // style: flatButtonStyle,
                           onPressed: () async {
-                            if (checkedValue) {
-                              if (cardidx.isEmpty) {
-                                _messageDialog('Select Card',
-                                    'Please choose your default card.', '');
-                                return;
+                            if (card) {
+                              if (checkedValue) {
+                                if (cardidx.isEmpty) {
+                                  _messageDialog('Select Card',
+                                      'Please choose your default card.', '');
+                                  return;
+                                }
                               }
                             }
+
                             var email = billemail.text.trim();
                             final bool isValid = EmailValidator.validate(email);
                             print(isValid);
@@ -1234,6 +1238,11 @@ class _setPageState extends State<setPage> {
   }
 
   showCardDetails() {
+    if (myCardList.length <= 0) {
+      card = true;
+    } else {
+      card = true;
+    }
     return Container(
       height: 60 * myCardList.length.toDouble(),
       child: FutureBuilder(
