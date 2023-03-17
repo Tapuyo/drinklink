@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/menupage.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -28,6 +29,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
 
   @override
   void initState() {
+    print(murl);
     super.initState();
     // final flutterWebviewPlugin = new WebView();
     // flutterWebViewPlugin.in.listen((String url) {
@@ -127,23 +129,36 @@ class WebViewExampleState extends State<SaveCardWeb> {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: murl,
-      javascriptMode: JavascriptMode.unrestricted,
-      // ignore: missing_return
-      navigationDelegate: (action) {
-        print("This is url: " + action.url);
-        try {
-          if (action.url != murl) {
-            //Navigator.pop(context, url);
-            AddCard(action.url);
-          }
-        } catch (e) {
-          // Navigator.pop(context, 'failed');
-        }
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context, 'failed');
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: kColorBlue,
+            )),
+      ),
+      body: WebView(
+        initialUrl: murl,
+        javascriptMode: JavascriptMode.unrestricted,
+        // ignore: missing_return
+        //   navigationDelegate: (action) {
+        //     print("This is url: " + action.url);
+        //     try {
+        //       if (action.url != murl) {
+        //         //Navigator.pop(context, url);
+        //         AddCard(action.url);
+        //       }
+        //     } catch (e) {
+        //        Navigator.pop(context, 'failed');
+        //     }
 
-        // return NavigationDecision.navigate;
-      },
+        //      return NavigationDecision.navigate;
+        //   },
+      ),
     );
   }
 }
