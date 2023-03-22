@@ -145,19 +145,19 @@ class WebViewExampleState extends State<SaveCardWeb> {
         initialUrl: murl,
         javascriptMode: JavascriptMode.unrestricted,
         // ignore: missing_return
-        //   navigationDelegate: (action) {
-        //     print("This is url: " + action.url);
-        //     try {
-        //       if (action.url != murl) {
-        //         //Navigator.pop(context, url);
-        //         AddCard(action.url);
-        //       }
-        //     } catch (e) {
-        //        Navigator.pop(context, 'failed');
-        //     }
+        navigationDelegate: (action) {
+          print("This is url: " + action.url);
+          try {
+            if (action.url != murl) {
+              //Navigator.pop(context, url);
+              AddCard(action.url);
+            }
+          } catch (e) {
+            Navigator.pop(context, 'failed');
+          }
 
-        //      return NavigationDecision.navigate;
-        //   },
+          return NavigationDecision.navigate;
+        },
       ),
     );
   }
