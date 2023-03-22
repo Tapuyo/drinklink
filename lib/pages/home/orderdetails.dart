@@ -362,18 +362,29 @@ class _OrderDetailsState extends State<OrderDetails> {
     super.initState();
     getDayofweek();
     getOrders();
+
     FirebaseMessaging.instance
         .getInitialMessage()
-        .then((RemoteMessage message) {});
+        .then((RemoteMessage message) {
+      setState(() {
+        getOrders();
+      });
+    });
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
-      getOrders();
+      setState(() {
+        getOrders();
+      });
     });
 
     //
     //
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {});
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      setState(() {
+        getOrders();
+      });
+    });
   }
 
   Future<List<Order>> getOrders() async {
