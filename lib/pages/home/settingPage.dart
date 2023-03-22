@@ -274,7 +274,7 @@ class _setPageState extends State<setPage> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: ()async {
+                onTap: () async {
                   if (isActive) {
                     _showDialog('ADD CREDIT CARD',
                         "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
@@ -283,12 +283,12 @@ class _setPageState extends State<setPage> {
                     });
                   }
                   print(isActive);
-                //   final result = await Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //       builder: (context) =>
-                //           SaveCardWeb('https://www.google.com/', 'reference')),
-                // );
+                  //   final result = await Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           SaveCardWeb('https://www.google.com/', 'reference')),
+                  // );
                 },
                 child: Container(
                     height: 40,
