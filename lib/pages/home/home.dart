@@ -154,7 +154,11 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
-      print(event.notification.body);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => orderPage()));
+      // print(event.notification.body);
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => orderPage()));
       // showDialog(
       //     context: context,
       //     builder: (BuildContext context) {
@@ -175,6 +179,8 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => orderPage()));
     });
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
