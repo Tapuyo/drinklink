@@ -3618,7 +3618,10 @@ class _MenuPageState extends State<MenuPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: Text(
+                    'No record found.',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               );
             } else {
@@ -7406,7 +7409,7 @@ class _MenuPageState extends State<MenuPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -7433,7 +7436,7 @@ class _MenuPageState extends State<MenuPage> {
               },
             ),
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),

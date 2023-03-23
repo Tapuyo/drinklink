@@ -1,5 +1,3 @@
-
-
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/paymentsample.dart';
 import 'package:driklink/pages/splash/splash_page.dart';
@@ -19,10 +17,6 @@ class RouteGenerator {
         return CupertinoPageRoute(builder: (_) => HomePage());
       case Routes.payment:
         return CupertinoPageRoute(builder: (_) => PaymentSample());
-
-
-
-
 
       default:
         return _errorRoute();
