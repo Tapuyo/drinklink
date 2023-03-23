@@ -7409,7 +7409,7 @@ class _MenuPageState extends State<MenuPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'Yes',
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -7436,7 +7436,7 @@ class _MenuPageState extends State<MenuPage> {
               },
             ),
             TextButton(
-              style: flatButtonStyle,
+              // style: flatButtonStyle,
               child: Text(
                 'No',
                 style: TextStyle(color: Colors.white, fontSize: 18),
