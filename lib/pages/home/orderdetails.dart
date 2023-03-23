@@ -366,6 +366,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
+      print(message);
       // setState(() {
       //   getOrders();
       // });
@@ -379,6 +380,7 @@ class _OrderDetailsState extends State<OrderDetails> {
     //
     //
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print(message);
       getOrders();
     });
   }

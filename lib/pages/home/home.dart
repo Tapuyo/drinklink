@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
       //   Navigator.pushNamed(context, '/message',
       //       arguments: MessageArguments(message, true));
       // }
-      print(message);
+      print("FirebaseMessaging.getInitialMessage $message");
     });
 
     FirebaseMessaging.instance
@@ -161,8 +161,8 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => orderPage()));
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => orderPage()));
       // print(event.notification.body);
       // Navigator.pushReplacement(
       //     context, MaterialPageRoute(builder: (context) => orderPage()));
@@ -186,8 +186,10 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => orderPage()));
+      if (message != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => orderPage()));
+      }
     });
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
