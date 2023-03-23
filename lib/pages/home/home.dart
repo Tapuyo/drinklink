@@ -25,6 +25,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey(debugLabel: "Main Navigator");
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController seedit = new TextEditingController();
   Future myStore;
@@ -131,6 +133,11 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
+      if (message != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => orderPage()));
+      }
+
       // if (message != null) {
       //   Navigator.pushNamed(context, '/message',
       //       arguments: MessageArguments(message, true));
