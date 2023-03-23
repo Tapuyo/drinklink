@@ -3618,7 +3618,10 @@ class _MenuPageState extends State<MenuPage> {
             if (!snapshot.hasData) {
               return Container(
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: Text(
+                    'No record found.',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               );
             } else {
