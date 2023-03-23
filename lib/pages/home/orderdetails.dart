@@ -366,25 +366,28 @@ class _OrderDetailsState extends State<OrderDetails> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
-      setState(() {
-        getOrders();
-      });
+      // setState(() {
+      //   getOrders();
+      // });
     });
     //
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
-      setState(() {
-        getOrders();
-      });
+      getOrders();
     });
 
     //
     //
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      setState(() {
-        getOrders();
-      });
+      getOrders();
     });
+  }
+
+  @override
+  void dispose() {
+    _start = 0;
+    _timer.cancel();
+    super.dispose();
   }
 
   Future<List<Order>> getOrders() async {
@@ -569,13 +572,6 @@ class _OrderDetailsState extends State<OrderDetails> {
         },
       );
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _start = 0;
-    _timer.cancel();
   }
 
   void getFacilityInfo(
