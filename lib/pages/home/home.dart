@@ -137,20 +137,7 @@ class _HomePageState extends State<HomePage> {
       if (message.notification != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => orderPage()));
-        // Timer(
-        //     Duration(seconds: 2),
-        //     () => {
-        //           Navigator.pushReplacement(
-        //             context,
-        //             MaterialPageRoute(builder: (context) => orderPage()),
-        //           )
-        //         });
       }
-
-      // if (message != null) {
-      //   Navigator.pushNamed(context, '/message',
-      //       arguments: MessageArguments(message, true));
-      // }
       print("FirebaseMessaging.getInitialMessage $message");
     });
 
