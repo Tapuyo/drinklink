@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
-      if (message != null) {
+      if (message.notification != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => orderPage()));
       }
