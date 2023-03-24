@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:driklink/auth_provider.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/menupage.dart';
@@ -25,6 +26,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<NavigatorState> navigatorKey =
+      GlobalKey(debugLabel: "Main Navigator");
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   TextEditingController seedit = new TextEditingController();
   Future myStore;
@@ -131,11 +134,11 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
-      // if (message != null) {
-      //   Navigator.pushNamed(context, '/message',
-      //       arguments: MessageArguments(message, true));
-      // }
-      print(message);
+      if (message.notification != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => orderPage()));
+      }
+      print("FirebaseMessaging.getInitialMessage $message");
     });
 
     FirebaseMessaging.instance
@@ -154,7 +157,11 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("message recieved");
-      print(event.notification.body);
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => orderPage()));
+      // print(event.notification.body);
+      // Navigator.pushReplacement(
+      //     context, MaterialPageRoute(builder: (context) => orderPage()));
       // showDialog(
       //     context: context,
       //     builder: (BuildContext context) {
@@ -175,6 +182,10 @@ class _HomePageState extends State<HomePage> {
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       print('Message clicked!');
+      if (message.notification != null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => orderPage()));
+      }
     });
 
     FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
