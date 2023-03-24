@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:driklink/auth_provider.dart';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/menupage.dart';
@@ -133,9 +134,17 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {
-      if (message != null) {
+      if (message.notification != null) {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => orderPage()));
+        // Timer(
+        //     Duration(seconds: 2),
+        //     () => {
+        //           Navigator.pushReplacement(
+        //             context,
+        //             MaterialPageRoute(builder: (context) => orderPage()),
+        //           )
+        //         });
       }
 
       // if (message != null) {
