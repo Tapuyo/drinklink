@@ -687,7 +687,11 @@ class _MenuPageState extends State<MenuPage> {
     return mydicount;
   }
 
+  bool subItemLoading = false;
   Future<List<Store>> getStore() async {
+    setState(() {
+      subItemLoading = true;
+    });
     print(id.toString());
     Map<String, String> headers = {
       "Content-type": "application/json",
@@ -714,6 +718,10 @@ class _MenuPageState extends State<MenuPage> {
 
       myList.add(store);
     }
+
+    setState(() {
+      subItemLoading = false;
+    });
 
     return myList;
   }
@@ -2043,23 +2051,31 @@ class _MenuPageState extends State<MenuPage> {
         child: FutureBuilder(
             future: myStore,
             builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) {
+              if (subItemLoading) {
                 return Container(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 );
               } else {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (context, index) {
-                      return subbody(
-                          snapshot.data[index].id,
-                          snapshot.data[index].ImageUrl,
-                          snapshot.data[index].Name,
-                          snapshot.data[index].Description,
-                          snapshot.data[index].cat);
-                    });
+                if (!snapshot.hasData) {
+                  return Container(
+                    child: Center(
+                      child: Text('No Data Found.'),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context, index) {
+                        return subbody(
+                            snapshot.data[index].id,
+                            snapshot.data[index].ImageUrl,
+                            snapshot.data[index].Name,
+                            snapshot.data[index].Description,
+                            snapshot.data[index].cat);
+                      });
+                }
               }
             }),
       );
@@ -3615,460 +3631,465 @@ class _MenuPageState extends State<MenuPage> {
       child: FutureBuilder(
           future: myTempCart,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (!snapshot.hasData) {
+            if (drinksLoading) {
               return Container(
-                child: Center(
-                  child: Text(
-                    'No record found.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+                child: Center(child: CircularProgressIndicator()),
               );
             } else {
-              return ListView.builder(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 150),
-                  //physics: NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {});
-                          },
-                          child: Container(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              color: Colors.transparent,
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                2,
-                                        child: Text(
-                                          snapshot.data[index].name != null
-                                              ? snapshot.data[index].name
-                                              : '',
-                                          style: GoogleFonts.lato(
-                                            textStyle: TextStyle(
-                                                color: Colors.deepOrange,
-                                                letterSpacing: .5,
-                                                fontSize: 18),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
+              if (myDrinks.length <= 0) {
+                return Container(
+                  child: Center(
+                    child: Text(
+                      'No record found.',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 150),
+                    //physics: NeverScrollableScrollPhysics(),
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {});
+                            },
+                            child: Container(
+                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                color: Colors.transparent,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
                                               2,
                                           child: Text(
-                                            snapshot.data[index].desciption !=
-                                                    'null'
-                                                ? snapshot
-                                                    .data[index].desciption
+                                            snapshot.data[index].name != null
+                                                ? snapshot.data[index].name
                                                 : '',
                                             style: GoogleFonts.lato(
                                               textStyle: TextStyle(
-                                                  color: Colors.white,
+                                                  color: Colors.deepOrange,
                                                   letterSpacing: .5,
-                                                  fontSize: 12),
+                                                  fontSize: 18),
                                             ),
-                                          )),
-                                      SizedBox(
-                                        height: 5,
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              snapshot.data[index].price !=
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                2,
+                                            child: Text(
+                                              snapshot.data[index].desciption !=
                                                       'null'
-                                                  ? snapshot.data[index].price
+                                                  ? snapshot
+                                                      .data[index].desciption
                                                   : '',
                                               style: GoogleFonts.lato(
                                                 textStyle: TextStyle(
-                                                    fontWeight: FontWeight.bold,
                                                     color: Colors.white,
                                                     letterSpacing: .5,
-                                                    fontSize: 14),
+                                                    fontSize: 12),
                                               ),
-                                            ),
-                                            Text(
-                                              ' AED',
-                                              style: GoogleFonts.lato(
-                                                textStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    letterSpacing: .5,
-                                                    fontSize: 14),
-                                              ),
-                                            ),
-                                          ],
+                                            )),
+                                        SizedBox(
+                                          height: 5,
                                         ),
-                                      ),
-                                      Container(
-                                          padding:
-                                              EdgeInsets.fromLTRB(0, 2, 0, 2),
-                                          child: snapshot.data[index].allowIce
-                                              ? Row(
-                                                  children: [
-                                                    Visibility(
-                                                        visible: snapshot
-                                                            .data[index]
-                                                            .allowIce,
-                                                        child: GestureDetector(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                if (snapshot
-                                                                        .data[
-                                                                            index]
-                                                                        .addIce ==
-                                                                    false) {
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .addIce = true;
-                                                                  addICe = true;
-                                                                } else {
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .addIce = false;
-                                                                }
-                                                              });
-                                                            },
-                                                            child: Container(
-                                                              padding:
-                                                                  EdgeInsets
-                                                                      .fromLTRB(
-                                                                          2,
-                                                                          0,
-                                                                          5,
-                                                                          0),
-                                                              decoration: BoxDecoration(
-                                                                  border: Border.all(
-                                                                      color: Colors
-                                                                          .white),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              10),
-                                                                  color: snapshot
-                                                                              .data[
-                                                                                  index]
-                                                                              .addIce ==
-                                                                          false
-                                                                      ? Colors
-                                                                          .transparent
-                                                                      : Colors
-                                                                          .white
-                                                                          .withOpacity(
-                                                                              .2)),
-                                                              child: Row(
-                                                                children: [
-                                                                  Container(
-                                                                      color: Colors
-                                                                          .transparent,
-                                                                      width: 30,
-                                                                      height:
-                                                                          30,
-                                                                      child: Image
-                                                                          .asset(
-                                                                              'assets/images/ic_ice_cubes.png')),
-                                                                  Text(
-                                                                    snapshot.data[index].addIce ==
-                                                                            false
-                                                                        ? "Add ice"
-                                                                        : "ice",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white),
-                                                                  )
-                                                                ],
-                                                              ),
-                                                            ))),
-                                                  ],
-                                                )
-                                              : null),
-                                      SizedBox(
-                                        height: snapshot.data[index].imagePath
-                                                    .toString()
-                                                    .isNotEmpty ==
-                                                true
-                                            ? 10
-                                            : 0,
-                                      ),
-                                      Container(
-                                        child: snapshot.data[index].imagePath
-                                                    .toString()
-                                                    .isNotEmpty ==
-                                                true
-                                            ? GestureDetector(
-                                                onTap: () {
-                                                  Alert(
-                                                    context: context,
-                                                    title: "Image",
-                                                    content: Container(
-                                                      child: Container(
-                                                          color: Colors
-                                                              .transparent,
-                                                          width: 200,
-                                                          height: 200,
-                                                          child: Image.network(
-                                                              ApiCon.baseurl() +
-                                                                  snapshot
-                                                                      .data[
-                                                                          index]
-                                                                      .imagePath)),
-                                                    ),
-                                                    buttons: [
-                                                      DialogButton(
-                                                        child: Text(
-                                                          "Close",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 20),
-                                                        ),
-                                                        onPressed: () =>
-                                                            Navigator.of(
-                                                                    context,
-                                                                    rootNavigator:
-                                                                        true)
-                                                                .pop(),
-                                                        color:
-                                                            Colors.deepOrange,
-                                                      )
-                                                    ],
-                                                  ).show();
-                                                },
-                                                child: Icon(
-                                                  Icons.photo,
-                                                  color: Colors.white,
+                                        Container(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                snapshot.data[index].price !=
+                                                        'null'
+                                                    ? snapshot.data[index].price
+                                                    : '',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      letterSpacing: .5,
+                                                      fontSize: 14),
                                                 ),
-                                              )
-                                            : null,
-                                      ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            if (myDrinks[index].Quant > 0) {
-                                              myDrinks[index].Quant =
-                                                  myDrinks[index].Quant - 1;
-                                            }
+                                              ),
+                                              Text(
+                                                ' AED',
+                                                style: GoogleFonts.lato(
+                                                  textStyle: TextStyle(
+                                                      color: Colors.white,
+                                                      letterSpacing: .5,
+                                                      fontSize: 14),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                            padding:
+                                                EdgeInsets.fromLTRB(0, 2, 0, 2),
+                                            child: snapshot.data[index].allowIce
+                                                ? Row(
+                                                    children: [
+                                                      Visibility(
+                                                          visible: snapshot
+                                                              .data[index]
+                                                              .allowIce,
+                                                          child:
+                                                              GestureDetector(
+                                                                  onTap: () {
+                                                                    setState(
+                                                                        () {
+                                                                      if (snapshot
+                                                                              .data[index]
+                                                                              .addIce ==
+                                                                          false) {
+                                                                        snapshot
+                                                                            .data[index]
+                                                                            .addIce = true;
+                                                                        addICe =
+                                                                            true;
+                                                                      } else {
+                                                                        snapshot
+                                                                            .data[index]
+                                                                            .addIce = false;
+                                                                      }
+                                                                    });
+                                                                  },
+                                                                  child:
+                                                                      Container(
+                                                                    padding: EdgeInsets
+                                                                        .fromLTRB(
+                                                                            2,
+                                                                            0,
+                                                                            5,
+                                                                            0),
+                                                                    decoration: BoxDecoration(
+                                                                        border: Border.all(
+                                                                            color: Colors
+                                                                                .white),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                10),
+                                                                        color: snapshot.data[index].addIce ==
+                                                                                false
+                                                                            ? Colors.transparent
+                                                                            : Colors.white.withOpacity(.2)),
+                                                                    child: Row(
+                                                                      children: [
+                                                                        Container(
+                                                                            color: Colors
+                                                                                .transparent,
+                                                                            width:
+                                                                                30,
+                                                                            height:
+                                                                                30,
+                                                                            child:
+                                                                                Image.asset('assets/images/ic_ice_cubes.png')),
+                                                                        Text(
+                                                                          snapshot.data[index].addIce == false
+                                                                              ? "Add ice"
+                                                                              : "ice",
+                                                                          style:
+                                                                              TextStyle(color: Colors.white),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ))),
+                                                    ],
+                                                  )
+                                                : null),
+                                        SizedBox(
+                                          height: snapshot.data[index].imagePath
+                                                      .toString()
+                                                      .isNotEmpty ==
+                                                  true
+                                              ? 10
+                                              : 0,
+                                        ),
+                                        Container(
+                                          child: snapshot.data[index].imagePath
+                                                      .toString()
+                                                      .isNotEmpty ==
+                                                  true
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Alert(
+                                                      context: context,
+                                                      title: "Image",
+                                                      content: Container(
+                                                        child: Container(
+                                                            color: Colors
+                                                                .transparent,
+                                                            width: 200,
+                                                            height: 200,
+                                                            child: Image.network(ApiCon
+                                                                    .baseurl() +
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .imagePath)),
+                                                      ),
+                                                      buttons: [
+                                                        DialogButton(
+                                                          child: Text(
+                                                            "Close",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20),
+                                                          ),
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true)
+                                                                  .pop(),
+                                                          color:
+                                                              Colors.deepOrange,
+                                                        )
+                                                      ],
+                                                    ).show();
+                                                  },
+                                                  child: Icon(
+                                                    Icons.photo,
+                                                    color: Colors.white,
+                                                  ),
+                                                )
+                                              : null,
+                                        ),
+                                      ],
+                                    ),
+                                    Spacer(),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              if (myDrinks[index].Quant > 0) {
+                                                myDrinks[index].Quant =
+                                                    myDrinks[index].Quant - 1;
+                                              }
+                                              if (orderlenght > 0) {
+                                                orderlenght = orderlenght - 1;
+                                              }
+                                            });
                                             if (orderlenght > 0) {
-                                              orderlenght = orderlenght - 1;
+                                              setState(() {
+                                                btnaddcolor = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                btnaddcolor = false;
+                                              });
                                             }
-                                          });
-                                          if (orderlenght > 0) {
-                                            setState(() {
-                                              btnaddcolor = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              btnaddcolor = false;
-                                            });
-                                          }
-                                          // counteraddord2('minus');
-                                          // bool exists = temporder.any((temporder) => temporder.CatId == snapshot.data[index].id);
-                                          // if(exists == false){
-                                          //   TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, int.parse(ord2),snapshot.data[index].price);
-                                          //   temporder.add(tmp);
-                                          // }else{
-                                          //   for(var i = 0; i < temporder.length; i++){
-                                          //     if(temporder[i].CatId == snapshot.data[index].id){
-                                          //       print(temporder[i].Name);
-                                          //       int tq = temporder[i].Quant;
-                                          //       print(tq);
-                                          //       int newtq = tq - 1;
-                                          //       temporder.removeAt(i);
-                                          //       TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, newtq,snapshot.data[index].price);
-                                          //       temporder.add(tmp);
-                                          //     }
-                                          //   }
-                                          // }
-                                          //
-                                          // for(var i = 0; i < temporder.length; i++){
-                                          //   print(temporder[i].CatId);
-                                          //   print(temporder[i].Name);
-                                          //   print(temporder[i].Quant);
-                                          // }
-                                        },
-                                        child: Container(
-                                            child: Center(
-                                                child: Text('−',
-                                                    style: TextStyle(
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors
-                                                            .deepOrange)))),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                          child: Center(
-                                              child: Text(
-                                        snapshot.data[index].Quant.toString(),
-                                        style: TextStyle(
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ))),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            Prefs.setInt(
-                                                'drinkCatId',
-                                                int.parse(snapshot
-                                                    .data[index].drinkCategoryId
-                                                    .toString()));
-                                            Prefs.setInt(
-                                                'drinkId',
-                                                int.parse(snapshot
-                                                    .data[index].id
-                                                    .toString()));
-                                            myDrinks[index].Quant =
-                                                myDrinks[index].Quant + 1;
-                                            orderlenght = orderlenght + 1;
-                                          });
-                                          for (var i = 0;
-                                              i < myDrinks.length;
-                                              i++) {
-                                            print(myDrinks[i].id.toString() +
-                                                " | " +
-                                                myDrinks[i]
-                                                    .drinkCategoryId
-                                                    .toString() +
-                                                " | " +
-                                                myDrinks[i].name.toString() +
-                                                " | " +
-                                                myDrinks[i].Quant.toString() +
-                                                " | " +
-                                                myDrinks[i].price.toString());
-                                          }
-                                          if (orderlenght > 0) {
-                                            setState(() {
-                                              btnaddcolor = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              btnaddcolor = false;
-                                            });
-                                          }
-                                          // counteraddord2('add');
-                                          // bool exists = temporder.any((temporder) => temporder.CatId == snapshot.data[index].id);
-                                          //
-                                          // if(exists == false){
-                                          //   TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, int.parse(ord2),snapshot.data[index].price);
-                                          //   temporder.add(tmp);
-                                          // }else{
-                                          //   for(var i = 0; i < temporder.length; i++){
-                                          //     if(temporder[i].CatId == snapshot.data[index].id){
-                                          //       print(temporder[i].Name);
-                                          //       int tq = temporder[i].Quant;
-                                          //       print(tq);
-                                          //       int newtq = tq + 1;
-                                          //       temporder.removeAt(i);
-                                          //       TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, newtq,snapshot.data[index].price);
-                                          //       temporder.add(tmp);
-                                          //     }
-                                          //   }
-                                          // }
-
-                                          // for(var i = 0; i < temporder.length; i++){
-                                          //   print(temporder[i].CatId);
-                                          //   print(temporder[i].Name);
-                                          //   print(temporder[i].Quant);
-                                          // }
-                                        },
-                                        child: Container(
+                                            // counteraddord2('minus');
+                                            // bool exists = temporder.any((temporder) => temporder.CatId == snapshot.data[index].id);
+                                            // if(exists == false){
+                                            //   TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, int.parse(ord2),snapshot.data[index].price);
+                                            //   temporder.add(tmp);
+                                            // }else{
+                                            //   for(var i = 0; i < temporder.length; i++){
+                                            //     if(temporder[i].CatId == snapshot.data[index].id){
+                                            //       print(temporder[i].Name);
+                                            //       int tq = temporder[i].Quant;
+                                            //       print(tq);
+                                            //       int newtq = tq - 1;
+                                            //       temporder.removeAt(i);
+                                            //       TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, newtq,snapshot.data[index].price);
+                                            //       temporder.add(tmp);
+                                            //     }
+                                            //   }
+                                            // }
+                                            //
+                                            // for(var i = 0; i < temporder.length; i++){
+                                            //   print(temporder[i].CatId);
+                                            //   print(temporder[i].Name);
+                                            //   print(temporder[i].Quant);
+                                            // }
+                                          },
+                                          child: Container(
+                                              child: Center(
+                                                  child: Text('−',
+                                                      style: TextStyle(
+                                                          fontSize: 30,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors
+                                                              .deepOrange)))),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
                                             child: Center(
                                                 child: Text(
-                                          '+',
+                                          snapshot.data[index].Quant.toString(),
                                           style: TextStyle(
                                               fontSize: 30,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.deepOrange),
+                                              color: Colors.white),
                                         ))),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )),
-                        ),
-                        Container(
-                          //visible: snapshot.data[index].mixer == null ? false:true,
-                          child: snapshot.data[index].mixer.isEmpty
-                              ? Container()
-                              : Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Container(
-                                    height: snapshot.data[index].mixer.isEmpty
-                                        ? 0
-                                        : 40,
-                                    child: ListView(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        scrollDirection: Axis.horizontal,
-                                        children: [
-                                          Container(
-                                              // color: Colors.green,
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10, 0, 0, 0),
-                                              child: getTextWidgets(
-                                                  snapshot.data[index].mixer,
-                                                  index)),
-                                        ]),
-                                  )),
-                        ),
-                        SizedBox(
-                          height: snapshot.data[index].mixer.isEmpty ? 0 : 10,
-                        )
-                      ],
-                    );
-                  });
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              Prefs.setInt(
+                                                  'drinkCatId',
+                                                  int.parse(snapshot.data[index]
+                                                      .drinkCategoryId
+                                                      .toString()));
+                                              Prefs.setInt(
+                                                  'drinkId',
+                                                  int.parse(snapshot
+                                                      .data[index].id
+                                                      .toString()));
+                                              myDrinks[index].Quant =
+                                                  myDrinks[index].Quant + 1;
+                                              orderlenght = orderlenght + 1;
+                                            });
+                                            for (var i = 0;
+                                                i < myDrinks.length;
+                                                i++) {
+                                              print(myDrinks[i].id.toString() +
+                                                  " | " +
+                                                  myDrinks[i]
+                                                      .drinkCategoryId
+                                                      .toString() +
+                                                  " | " +
+                                                  myDrinks[i].name.toString() +
+                                                  " | " +
+                                                  myDrinks[i].Quant.toString() +
+                                                  " | " +
+                                                  myDrinks[i].price.toString());
+                                            }
+                                            if (orderlenght > 0) {
+                                              setState(() {
+                                                btnaddcolor = true;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                btnaddcolor = false;
+                                              });
+                                            }
+                                            // counteraddord2('add');
+                                            // bool exists = temporder.any((temporder) => temporder.CatId == snapshot.data[index].id);
+                                            //
+                                            // if(exists == false){
+                                            //   TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, int.parse(ord2),snapshot.data[index].price);
+                                            //   temporder.add(tmp);
+                                            // }else{
+                                            //   for(var i = 0; i < temporder.length; i++){
+                                            //     if(temporder[i].CatId == snapshot.data[index].id){
+                                            //       print(temporder[i].Name);
+                                            //       int tq = temporder[i].Quant;
+                                            //       print(tq);
+                                            //       int newtq = tq + 1;
+                                            //       temporder.removeAt(i);
+                                            //       TempOrder tmp = TempOrder(snapshot.data[index].drinkid,snapshot.data[index].id, snapshot.data[index].name, newtq,snapshot.data[index].price);
+                                            //       temporder.add(tmp);
+                                            //     }
+                                            //   }
+                                            // }
+
+                                            // for(var i = 0; i < temporder.length; i++){
+                                            //   print(temporder[i].CatId);
+                                            //   print(temporder[i].Name);
+                                            //   print(temporder[i].Quant);
+                                            // }
+                                          },
+                                          child: Container(
+                                              child: Center(
+                                                  child: Text(
+                                            '+',
+                                            style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.deepOrange),
+                                          ))),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          Container(
+                            //visible: snapshot.data[index].mixer == null ? false:true,
+                            child: snapshot.data[index].mixer.isEmpty
+                                ? Container()
+                                : Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Container(
+                                      height: snapshot.data[index].mixer.isEmpty
+                                          ? 0
+                                          : 40,
+                                      child: ListView(
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 10),
+                                          scrollDirection: Axis.horizontal,
+                                          children: [
+                                            Container(
+                                                // color: Colors.green,
+                                                padding: EdgeInsets.fromLTRB(
+                                                    10, 0, 0, 0),
+                                                child: getTextWidgets(
+                                                    snapshot.data[index].mixer,
+                                                    index)),
+                                          ]),
+                                    )),
+                          ),
+                          SizedBox(
+                            height: snapshot.data[index].mixer.isEmpty ? 0 : 10,
+                          )
+                        ],
+                      );
+                    });
+              }
             }
           }),
     );
   }
 
+  bool drinksLoading = false;
   Future<List<Drinks>> getDrinks() async {
+    setState(() {
+      drinksLoading = true;
+    });
     myDrinks = [];
     print('drinks');
     print(dri);
@@ -4231,6 +4252,9 @@ class _MenuPageState extends State<MenuPage> {
         }
       }
     }
+    setState(() {
+      drinksLoading = false;
+    });
 
     return myDrinks;
   }
