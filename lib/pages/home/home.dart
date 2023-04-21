@@ -593,7 +593,7 @@ class _HomePageState extends State<HomePage> {
       stoken = token;
     }
     if (uName.isEmpty) {
-      uName = 'Guest Mode';
+      uName = 'Guest';
     } else {
       uName = uName;
     }
