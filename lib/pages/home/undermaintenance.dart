@@ -23,7 +23,7 @@ class _UnderMaintenanceState extends State<UnderMaintenance> {
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Center(
                   child: Text(
-                'This site is under maintenance',
+                'DrinkLink is under maintenance',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
