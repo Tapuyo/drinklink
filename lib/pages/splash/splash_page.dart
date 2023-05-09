@@ -1,11 +1,15 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/paymentsample.dart';
 import 'package:driklink/routes/routes.dart';
 import 'package:driklink/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:driklink/pages/home/undermaintenance.dart';
+
+import '../Api.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -17,14 +21,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
 
-    Timer(
-        Duration(seconds: 1),
-        () => {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              )
-            });
+    Timer(Duration(seconds: 1), () => {checkurl()});
   }
 
   @override
@@ -62,5 +59,31 @@ class _SplashPageState extends State<SplashPage> {
             ],
           )),
     );
+  }
+
+  checkurl() async {
+    try {
+      String url = ApiCon.baseurl() +
+          'https://drinklink-prod-be.azurewebsites.net/api/places';
+
+      final response = await http.get(Uri.parse(url));
+      print(response.body);
+      print(response.statusCode);
+      print('set notif \n \n ');
+      if (response.body.contains('403')) {
+        print(response.body.contains('403'));
+        if (response.reasonPhrase.contains("Site Disabled"))
+          print(response.reasonPhrase);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UnderMaintenance()),
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+    } catch (e) {}
   }
 }

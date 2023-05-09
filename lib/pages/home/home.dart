@@ -19,6 +19,7 @@ import 'dart:convert';
 import 'package:driklink/pages/Api.dart';
 import 'package:provider/provider.dart';
 import 'package:driklink/pages/login/help.dart';
+import 'package:driklink/pages/home/undermaintenance.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -61,6 +62,14 @@ class _HomePageState extends State<HomePage> {
       print(response.body);
       print(response.statusCode);
       print('set notif \n \n ');
+      if (response.body.contains('403')) {
+        if (response.reasonPhrase.contains("Site Disabled"))
+          print(response.reasonPhrase);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => UnderMaintenance()),
+        );
+      }
     } catch (e) {}
   }
 
@@ -593,7 +602,7 @@ class _HomePageState extends State<HomePage> {
       stoken = token;
     }
     if (uName.isEmpty) {
-      uName = 'Guest Mode';
+      uName = 'Guest';
     } else {
       uName = uName;
     }

@@ -670,7 +670,7 @@ class _OrderDetailsState extends State<OrderDetails> {
       stoken = token;
     }
     if (uName.isEmpty) {
-      uName = 'Guest Mode';
+      uName = 'Guest';
     } else {
       uName = uName;
     }

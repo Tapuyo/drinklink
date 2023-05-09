@@ -263,7 +263,7 @@ class _MenuPageState extends State<MenuPage> {
     switch (uName) {
       case '':
         {
-          unamex = 'Guest Mode';
+          unamex = 'Guest';
         }
         break;
       case ' ':
@@ -271,9 +271,9 @@ class _MenuPageState extends State<MenuPage> {
           unamex = '';
         }
         break;
-      case 'Guest Mode':
+      case 'Guest':
         {
-          unamex = 'Guest Mode';
+          unamex = 'Guest';
         }
         break;
       case 'None':
@@ -769,7 +769,7 @@ class _MenuPageState extends State<MenuPage> {
       stoken = token;
     }
     if (uName.isEmpty) {
-      uName = 'Guest Mode';
+      uName = 'Guest';
     } else {
       uName = uName;
     }
@@ -3631,12 +3631,12 @@ class _MenuPageState extends State<MenuPage> {
       child: FutureBuilder(
           future: myTempCart,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (drinksLoading) {
+            if (!snapshot.hasData && drinksLoading) {
               return Container(
                 child: Center(child: CircularProgressIndicator()),
               );
             } else {
-              if (myDrinks.length <= 0) {
+              if (!snapshot.hasData) {
                 return Container(
                   child: Center(
                     child: Text(
@@ -6460,7 +6460,7 @@ class _MenuPageState extends State<MenuPage> {
                                   switch (uName) {
                                     case '':
                                       {
-                                        unamex = 'Guest Mode';
+                                        unamex = 'Guest';
                                       }
                                       break;
                                     case ' ':
@@ -6473,9 +6473,9 @@ class _MenuPageState extends State<MenuPage> {
                                         unamex = 'None';
                                       }
                                       break;
-                                    case 'Guest Mode':
+                                    case 'Guest':
                                       {
-                                        unamex = 'Guest Mode';
+                                        unamex = 'Guest';
                                       }
                                       break;
                                     default:
