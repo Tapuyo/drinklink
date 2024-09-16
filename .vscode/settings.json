@@ -21,5 +21,9 @@
     "files.watcherExclude": {
       "**/.fvm": true
     },
-    "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\2.0.6"
+<<<<<<< HEAD
+    "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\3.3.9"
+=======
+    "dart.flutterSdkPath": "C:\\Users\\carga\\fvm\\versions\\3.3.8"
+>>>>>>> 4678496d6d92c03532a759bd0b4e26590547b785
   }

@@ -2,6 +2,7 @@ import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/Api.dart';
 import 'package:driklink/pages/home/home.dart';
 import 'package:driklink/pages/home/savecard.dart';
+import 'package:driklink/pages/login/signin.dart';
 import 'package:driklink/utils/constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class setPage extends StatefulWidget {
 }
 
 class _setPageState extends State<setPage> {
+  bool card;
   bool sound = true;
   bool ring = true;
   bool checkedValue = false;
@@ -272,7 +274,7 @@ class _setPageState extends State<setPage> {
                 height: 10,
               ),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   if (isActive) {
                     _showDialog('ADD CREDIT CARD',
                         "1 AED will be authorized and then released in order to validate your credit card. Do you want to continue?");
@@ -281,6 +283,12 @@ class _setPageState extends State<setPage> {
                     });
                   }
                   print(isActive);
+                  //   final result = await Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //       builder: (context) =>
+                  //           SaveCardWeb('https://www.google.com/', 'reference')),
+                  // );
                 },
                 child: Container(
                     height: 40,
@@ -610,15 +618,18 @@ class _setPageState extends State<setPage> {
                   children: [
                     Expanded(
                       child: TextButton(
-                          style: flatButtonStyle,
+                          // style: flatButtonStyle,
                           onPressed: () async {
-                            if (checkedValue) {
-                              if (cardidx.isEmpty) {
-                                _messageDialog('Select Card',
-                                    'Please choose your default card.', '');
-                                return;
+                            if (card) {
+                              if (checkedValue) {
+                                if (cardidx.isEmpty) {
+                                  _messageDialog('Select Card',
+                                      'Please choose your default card.', '');
+                                  return;
+                                }
                               }
                             }
+
                             var email = billemail.text.trim();
                             final bool isValid = EmailValidator.validate(email);
                             print(isValid);
@@ -670,33 +681,35 @@ class _setPageState extends State<setPage> {
   sendOTP() async {
     _loadPreview();
     print(otpcode);
-    String username = 'leepe@drinklinkph.com';
-    String password = 'P@ssw0rd';
+    // String username = 'leepe@drinklinkph.com';
+    // String password = 'P@ssw0rd';
+    String username = 'leepeapp1@gmail.com';
+    String password = 'ioafduzyrulejpqj';
     String bemail = billemail.text.trim();
 
     final smtpServer =
-        SmtpServer('plesk5600.is.cc', username: username, password: password);
+        SmtpServer('smtp.gmail.com', username: username, password: password);
 
     final message = Message()
       ..from = Address(username, bemail)
       ..recipients.add(bemail)
       // ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com'])
       // ..bccRecipients.add(Address('bccAddress@example.com'))
-      ..subject = 'DrinkLink@support : ${DateTime.now()}'
+      ..subject = 'support@drinklink.info : ${DateTime.now()}'
       // ..text = messageController.text;
       ..html = "<h5>Hi " +
           bemail +
           " ,</h5>\n<p> We received your request for a single-use OTP to use with your DrinkLink account." +
           "</p>"
               "\n"
-              "<p> Your single-use OTP is:" +
+              "<p> Your single-use OTP is: " +
           otpcode +
           "</p>"
               "\n"
               "<p>If you didn't request this OTP, you can safely ignore this email. Someone else might have typed your email address by mistake</p>"
               "\n"
               "<p>Thanks,</p>"
-              "DrinkLinkTeamSupport";
+              "support@drinklink.info";
 
     var connection = PersistentConnection(smtpServer);
 
@@ -875,7 +888,7 @@ class _setPageState extends State<setPage> {
     );
   }
 
-  _showDialog1(String title, String message) {
+  _showDialog1(String title, String message, String action) {
     showDialog(
       barrierDismissible: false,
       context: context,
@@ -896,12 +909,23 @@ class _setPageState extends State<setPage> {
           backgroundColor: Color(0xFF2b2b61),
           actions: <Widget>[
             TextButton(
+              // style: flatButtonStyle,
               child: Text(
                 'OK',
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
+                switch (action) {
+                  case 'login':
+                    Navigator.of(context, rootNavigator: true).pop();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => SignIn()),
+                    );
+                    break;
+                  default:
+                    Navigator.of(context, rootNavigator: true).pop();
+                }
               },
             ),
           ],
@@ -1125,7 +1149,7 @@ class _setPageState extends State<setPage> {
         isActive = true;
         print(isActive);
       });
-      _showDialog1('DrinkLink', 'Please login first.');
+      _showDialog1('DrinkLink', 'Please login first.', 'login');
     }
   }
 
@@ -1205,10 +1229,10 @@ class _setPageState extends State<setPage> {
                 );
 
                 if (result == 'Added') {
-                  _showDialog1('DrinkLink', 'New card saved.');
+                  _showDialog1('DrinkLink', 'New card saved.', '');
                 } else {
                   print(result);
-                  _showDialog1('DrinkLink', 'Failed to save card.');
+                  _showDialog1('DrinkLink', 'Failed to save card.', '');
                 }
                 myCardFuture = getCard();
               },
@@ -1220,6 +1244,11 @@ class _setPageState extends State<setPage> {
   }
 
   showCardDetails() {
+    if (myCardList.length <= 0) {
+      card = true;
+    } else {
+      card = true;
+    }
     return Container(
       height: 60 * myCardList.length.toDouble(),
       child: FutureBuilder(
@@ -1244,121 +1273,126 @@ class _setPageState extends State<setPage> {
                   itemCount: snapshot.data.length,
                   // physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                          padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
-                          color: Colors.transparent,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                child: Text(
-                                  snapshot.data[index].scheme,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.data[index].cardholderName,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                    Text(
-                                      snapshot.data[index].showmask +
-                                          "  " +
-                                          snapshot.data[index].expiry,
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 14),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    if (checkedValue) {
-                                      cardnamex =
-                                          snapshot.data[index].cardholderName;
-                                      cardidx = snapshot.data[index].cardid;
-                                      myCardList = [];
-                                      myCardFuture = getCard();
-                                    }
-                                  });
-                                },
-                              ),
-
-                              GestureDetector(
-                                child: Container(
-                                  padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
-                                  child: Icon(
-                                    Icons.cancel_outlined,
-                                    color: Colors.white,
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                            padding: EdgeInsets.fromLTRB(5, 10, 5, 5),
+                            color: Colors.transparent,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    snapshot.data[index].scheme,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
                                   ),
                                 ),
-                                onTap: () {
-                                  cardnamex =
-                                      snapshot.data[index].cardholderName;
-                                  cardidx = snapshot.data[index].cardid;
-                                  _showDialog_Deletecard(
-                                      'Delete card',
-                                      'Are you sure you want to delete this card?',
-                                      snapshot.data[index].cardToken);
-                                }, //Delete card
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              if (checkedValue == true)
-                                Visibility(
-                                  visible:
-                                      cardidx == snapshot.data[index].cardid
-                                          ? true
-                                          : false,
-                                  child: GestureDetector(
-                                    child: Container(
-                                      // padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
-                                      child: Icon(
-                                        Icons.check_circle,
-                                        color: Colors.deepOrange,
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                GestureDetector(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        snapshot.data[index].cardholderName,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 20),
                                       ),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
+                                      Text(
+                                        snapshot.data[index].showmask +
+                                            "  " +
+                                            snapshot.data[index].expiry,
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      if (checkedValue) {
                                         cardnamex =
                                             snapshot.data[index].cardholderName;
                                         cardidx = snapshot.data[index].cardid;
                                         myCardList = [];
                                         myCardFuture = getCard();
-                                      });
-                                      // _showDialog_Deletecard(
-                                      //     'Delete card',
-                                      //     'Are you sure you want to delete this card?',
-                                      //     snapshot.data[index].cardToken);
-                                    }, //Delete card
-                                  ),
-                                )
+                                      }
+                                    });
+                                  },
+                                ),
 
-                              // Container(
-                              //   padding: EdgeInsets.fromLTRB(63, 0, 0, 0),
-                              //   child: FlatButton(
-                              //     onPressed: () {},
-                              //     child: Icon(
-                              //       Icons.close,
-                              //       color: Colors.white,
-                              //     ),
-                              //     height: 48,
-                              //   ),
-                              // )
-                            ],
-                          )),
+                                GestureDetector(
+                                  child: Container(
+                                    padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                    child: Icon(
+                                      Icons.cancel_outlined,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    cardnamex =
+                                        snapshot.data[index].cardholderName;
+                                    cardidx = snapshot.data[index].cardid;
+                                    _showDialog_Deletecard(
+                                        'Delete card',
+                                        'Are you sure you want to delete this card?',
+                                        snapshot.data[index].cardToken);
+                                  }, //Delete card
+                                ),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                if (checkedValue == true)
+                                  Visibility(
+                                    visible:
+                                        cardidx == snapshot.data[index].cardid
+                                            ? true
+                                            : false,
+                                    child: GestureDetector(
+                                      child: Container(
+                                        // padding: EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                        child: Icon(
+                                          Icons.check_circle,
+                                          color: Colors.deepOrange,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          cardnamex = snapshot
+                                              .data[index].cardholderName;
+                                          cardidx = snapshot.data[index].cardid;
+                                          myCardList = [];
+                                          myCardFuture = getCard();
+                                        });
+                                        // _showDialog_Deletecard(
+                                        //     'Delete card',
+                                        //     'Are you sure you want to delete this card?',
+                                        //     snapshot.data[index].cardToken);
+                                      }, //Delete card
+                                    ),
+                                  )
+
+                                // Container(
+                                //   padding: EdgeInsets.fromLTRB(63, 0, 0, 0),
+                                //   child: FlatButton(
+                                //     onPressed: () {},
+                                //     child: Icon(
+                                //       Icons.close,
+                                //       color: Colors.white,
+                                //     ),
+                                //     height: 48,
+                                //   ),
+                                // )
+                              ],
+                            )),
+                      ),
                     );
                   });
             }

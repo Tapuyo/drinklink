@@ -17,6 +17,5 @@ class Routes {
   static const String publishskill = '/publishskill';
   static const String publishfinish = '/publishfinish';
   static const String community = '/community';
-
-
+  static const String orderpage = '/orderpage';
 }

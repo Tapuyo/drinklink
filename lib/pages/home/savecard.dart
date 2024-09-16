@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:driklink/data/pref_manager.dart';
 import 'package:driklink/pages/home/menupage.dart';
+import 'package:driklink/utils/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:developer' as dev;
 import '../Api.dart';
@@ -24,23 +25,24 @@ class WebViewExampleState extends State<SaveCardWeb> {
   String reference;
 
   WebViewExampleState(this.murl, this.reference);
-  final flutterWebViewPlugin = FlutterWebviewPlugin();
+  final flutterWebViewPlugin = WebView();
 
   @override
   void initState() {
+    print(murl);
     super.initState();
-    final flutterWebviewPlugin = new FlutterWebviewPlugin();
-    flutterWebViewPlugin.onUrlChanged.listen((String url) {
-      print("This is url: " + url);
-      try {
-        if (url != murl) {
-          //Navigator.pop(context, url);
-          AddCard(url);
-        }
-      } catch (e) {
-       // Navigator.pop(context, 'failed');
-      }
-    });
+    // final flutterWebviewPlugin = new WebView();
+    // flutterWebViewPlugin.in.listen((String url) {
+    //   print("This is url: " + url);
+    //   try {
+    //     if (url != murl) {
+    //       //Navigator.pop(context, url);
+    //       AddCard(url);
+    //     }
+    //   } catch (e) {
+    //    // Navigator.pop(context, 'failed');
+    //   }
+    // });
   }
 
   checkUrlRes(String url) async {
@@ -100,9 +102,10 @@ class WebViewExampleState extends State<SaveCardWeb> {
     final response = await http.post(Uri.parse(url), headers: headers);
     //var jsondata = json.decode(response.headers);
     dev.log(response.body.toString());
-    String mystate =
-        json.decode(response.body)['_embedded']['payment'][0]['state'];
+
     try {
+      String mystate =
+          json.decode(response.body)['_embedded']['payment'][0]['state'];
       if (mystate.toLowerCase() == ('REVERSED').toLowerCase() ||
           mystate.toLowerCase() == ('AUTHORISED').toLowerCase()) {
         Navigator.pop(context, 'Added');
@@ -110,7 +113,7 @@ class WebViewExampleState extends State<SaveCardWeb> {
         Navigator.pop(context, 'failed');
       }
     } catch (x) {
-      Navigator.pop(context, 'failed');
+      // Navigator.pop(context, 'failed');
     }
 
     // if (mystate == 'REVERSED') {
@@ -126,29 +129,35 @@ class WebViewExampleState extends State<SaveCardWeb> {
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: murl,
-      appBar: new AppBar(
-        backgroundColor: Color(0xFF2b2b61),
-        title: new Text(
-          "Save Card",
-          style: TextStyle(fontSize: 20, color: Colors.white),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context, 'failed');
-          },
-        ),
+            onPressed: () {
+              Navigator.pop(context, 'failed');
+            },
+            icon: Icon(
+              Icons.arrow_back_ios,
+              color: kColorBlue,
+            )),
       ),
-      initialChild: Container(
-        color: Colors.white,
-        child: const Center(
-          child: Text('Waiting.....'),
-        ),
+      body: WebView(
+        initialUrl: murl,
+        javascriptMode: JavascriptMode.unrestricted,
+        // ignore: missing_return
+        navigationDelegate: (action) {
+          print("This is url: " + action.url);
+          try {
+            if (action.url != murl) {
+              //Navigator.pop(context, url);
+              AddCard(action.url);
+            }
+          } catch (e) {
+            Navigator.pop(context, 'failed');
+          }
+
+          return NavigationDecision.navigate;
+        },
       ),
     );
   }
